@@ -41,7 +41,7 @@ class InteractiveMainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     topBar = {
                         TopAppBar(
-                            title = { Text("Serenity AI Therapist") },
+                            title = { Text("AI Therapist") },
                             colors = TopAppBarDefaults.topAppBarColors(
                                 containerColor = MaterialTheme.colorScheme.primaryContainer
                             )

@@ -1,4 +1,4 @@
-# Serenity AI Therapist
+# AI Therapist
 
 An Android application that provides AI-powered therapeutic support and mental health assistance through interactive conversations.
 
@@ -49,10 +49,3 @@ app/src/main/java/com/serenityai/
 └── utils/               # Utility classes and helpers
 ```
 
-## Development Status
-
-This is an initial version of the app with core functionality implemented. The app includes basic AI conversation capabilities, mood tracking, and therapeutic exercise features.
-
-## License
-
-This project is for educational and personal use.
