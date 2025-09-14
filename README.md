@@ -37,48 +37,6 @@ An Android application that provides AI-powered therapeutic support and mental h
 - `RECORD_AUDIO`: For voice input functionality
 - `INTERNET`: For API calls and data synchronization
 
-## Use Cases Implementation
-
-### **US-01: User Registration (3)**
-**Modules:**
-- `app/src/main/java/com/serenityai/data/remote/FirebaseSource.kt` - Contains `createUser()` method (currently TODO)
-- `app/src/main/java/com/serenityai/data/models/User.kt` - User data model
-- `app/src/main/java/com/serenityai/data/models/UserProfile.kt` - Extended user profile model
-
-### **US-02: User Login (2)**
-**Modules:**
-- `app/src/main/java/com/serenityai/ui/auth/LoginScreen.kt` - Login UI screen with email/password fields
-- `app/src/main/java/com/serenityai/data/remote/FirebaseSource.kt` - Firebase authentication integration
-
-### **US-03: Display Disclaimer (1)**
-**Modules:**
-- `app/src/main/java/com/serenityai/ui/disclaimer/DisclaimerScreen.kt` - Disclaimer UI screen with terms and acceptance
-
-### **US-04: Initiate AI Chat (3)**
-**Modules:**
-- `app/src/main/java/com/serenityai/InteractiveMainActivity.kt` - Main activity with `ChatScreen()` composable
-- `app/src/main/java/com/serenityai/ui/chat/ChatScreen.kt` - Dedicated chat screen component
-- `app/src/main/java/com/serenityai/data/models/Session.kt` - Session and ChatMessage data models
-
-### **US-05: Send & Receive Messages (8)**
-**Modules:**
-- `app/src/main/java/com/serenityai/InteractiveMainActivity.kt` - `generateAIResponse()` function and message handling
-- `app/src/main/java/com/serenityai/data/remote/OpenAIApiService.kt` - OpenAI API integration
-- `app/src/main/java/com/serenityai/data/remote/OpenAIApiService.kt` - `OpenAIRepository` class
-- `app/src/main/java/com/serenityai/utils/SpeechUtils.kt` - Voice input/output functionality
-- `app/src/main/java/com/serenityai/data/models/ChatMessage.kt` - Message data structure
-- `app/src/main/java/com/serenityai/data/models/AITherapist.kt` - AI response models and types
-- `app/src/main/java/com/serenityai/ui/chat/ChatScreen.kt` - Message display and input UI
-- `app/src/main/java/com/serenityai/data/models/Session.kt` - Session management for message history
-
-### **US-06: Crisis Detection (5)**
-**Modules:**
-- `app/src/main/java/com/serenityai/InteractiveMainActivity.kt` - Crisis detection logic in `generateAIResponse()` function
-- `app/src/main/java/com/serenityai/data/models/AITherapist.kt` - `ResponseType.CRISIS_SUPPORT` enum
-- `app/src/main/java/com/serenityai/data/models/AITherapist.kt` - Crisis response data structures
-- `app/src/main/java/com/serenityai/InteractiveMainActivity.kt` - Crisis support UI button ("🚨 Crisis Support")
-- `app/src/main/java/com/serenityai/utils/Constants.kt` - Crisis-related constants and error messages
-
 ## Project Structure
 
 ```
