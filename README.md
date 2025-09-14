@@ -32,10 +32,11 @@ An Android application that provides AI-powered therapeutic support and mental h
 4. Configure your OpenAI API key in the app settings
 5. Build and run the application
 
-## Permissions
+## AI Technology
 
-- `RECORD_AUDIO`: For voice input functionality
-- `INTERNET`: For API calls and data synchronization
+- **OpenAI GPT-3.5-turbo**: Powers the therapeutic chatbot with compassionate, evidence-based responses
+- **Voice Integration**: Text-to-Speech and Speech-to-Text capabilities for accessible communication
+- **Therapeutic AI**: Specialized in mental health support, anxiety management, and emotional guidance
 
 ## Project Structure
 
