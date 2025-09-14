@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.serenityai.data.models.*
 import com.serenityai.ui.theme.AITherapistTheme
+import com.serenityai.ui.disclaimer.DisclaimerScreen
 import com.serenityai.utils.SampleData
 import com.serenityai.utils.SpeechUtils
 import com.serenityai.utils.rememberSpeechUtils
@@ -64,11 +65,22 @@ class InteractiveMainActivity : ComponentActivity() {
 
 @Composable
 fun AITherpistDashboard(modifier: Modifier = Modifier) {
-    var selectedScreen by remember { mutableStateOf("home") }
+    var selectedScreen by remember { mutableStateOf("disclaimer") }
     var showDialog by remember { mutableStateOf(false) }
     var dialogContent by remember { mutableStateOf("") }
+    var disclaimerAccepted by remember { mutableStateOf(false) }
     
     when (selectedScreen) {
+        "disclaimer" -> DisclaimerScreen(
+            onAccept = { 
+                disclaimerAccepted = true
+                selectedScreen = "home" 
+            },
+            onDecline = { 
+                // Handle decline - could show exit dialog or return to disclaimer
+                selectedScreen = "disclaimer"
+            }
+        )
         "home" -> HomeScreen(
             onNavigate = { selectedScreen = it },
             onShowDialog = { content -> 
@@ -368,9 +380,10 @@ fun ChatScreen(
 ) {
     var message by remember { mutableStateOf("") }
     var messages by remember { mutableStateOf(listOf(
-        "Hello! I'm here to listen and understand what you're experiencing.",
-        "I want you to know that whatever you're feeling right now is valid and real. I'm here to help you explore your thoughts and emotions with compassion and insight."
+        "AI: Hi there! I'm your AI mental health companion, and I'm here to support you on your wellness journey.",
+        "AI: Feel free to share what's on your mind - whether it's stress, anxiety, sadness, or just needing someone to talk to. I'm here to listen and help you work through whatever you're experiencing."
     )) }
+    var isQuickOptionsExpanded by remember { mutableStateOf(false) }
     
     val speechUtils = rememberSpeechUtils()
     val isSpeaking by speechUtils.isSpeaking.collectAsState()
@@ -439,21 +452,70 @@ fun ChatScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = onBack) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-            }
-            Text(
-                text = "AI Chat Therapist",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
+        // AI Introduction Card
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer
             )
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Psychology,
+                        contentDescription = "AI Therapist",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Your AI Mental Health Companion",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                }
+                
+                Spacer(modifier = Modifier.height(12.dp))
+                
+                Text(
+                    text = "I specialize in providing compassionate, evidence-based mental health support. I can help you with:",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+                
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                Text(
+                    text = "• Managing anxiety, stress, and overwhelming emotions\n• Processing difficult thoughts and feelings\n• Developing healthy coping strategies\n• Building emotional resilience and self-awareness\n• Providing crisis support and professional referrals",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+                
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                Text(
+                    text = "I'm here to listen without judgment and offer gentle guidance. Remember, I'm a supportive tool, not a replacement for professional mental health care.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
+                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
+                )
+            }
         }
         
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         
         // Speech status indicator
         if (isSpeaking || isListening) {
@@ -512,25 +574,23 @@ fun ChatScreen(
         ) {
             items(messages) { msg ->
                 val isUser = msg.startsWith("You: ")
-                val messageText = if (isUser) msg.substring(5) else msg
+                val messageText = if (isUser) msg.substring(5) else if (msg.startsWith("AI: ")) msg.substring(4) else msg
                 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = if (isUser) Arrangement.End else Arrangement.Start
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = if (isUser) 16.dp else 0.dp),
+                    elevation = CardDefaults.cardElevation(
+                        defaultElevation = if (isUser) 2.dp else 4.dp
+                    ),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (isUser) 
+                            MaterialTheme.colorScheme.primary 
+                        else 
+                            MaterialTheme.colorScheme.surfaceVariant
+                    ),
+                    shape = MaterialTheme.shapes.medium
                 ) {
-                    Card(
-                        modifier = Modifier.widthIn(max = 280.dp),
-                        elevation = CardDefaults.cardElevation(
-                            defaultElevation = if (isUser) 2.dp else 4.dp
-                        ),
-                        colors = CardDefaults.cardColors(
-                            containerColor = if (isUser) 
-                                MaterialTheme.colorScheme.primary 
-                            else 
-                                MaterialTheme.colorScheme.surfaceVariant
-                        ),
-                        shape = MaterialTheme.shapes.extraLarge
-                    ) {
                         Column(
                             modifier = Modifier.padding(16.dp)
                         ) {
@@ -540,7 +600,8 @@ fun ChatScreen(
                                 color = if (isUser) 
                                     MaterialTheme.colorScheme.onPrimary 
                                 else 
-                                    MaterialTheme.colorScheme.onSurfaceVariant
+                                    MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.fillMaxWidth()
                             )
                             
                             // Add read-aloud button for AI messages
@@ -586,18 +647,37 @@ fun ChatScreen(
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
-                // Quick action chips
-                Text(
-                    text = "Quick Actions",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                
-                LazyColumn(
-                    modifier = Modifier.height(120.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                // Quick action chips with collapsible functionality
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Text(
+                        text = "Quick Actions",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    
+                    IconButton(
+                        onClick = { isQuickOptionsExpanded = !isQuickOptionsExpanded },
+                        modifier = Modifier.size(24.dp)
+                    ) {
+                        Icon(
+                            imageVector = if (isQuickOptionsExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                            contentDescription = if (isQuickOptionsExpanded) "Collapse" else "Expand",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+                
+                if (isQuickOptionsExpanded) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    LazyColumn(
+                        modifier = Modifier.height(120.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
                     item {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -664,6 +744,7 @@ fun ChatScreen(
                         }
                     }
                 }
+                }
                 
                 Spacer(modifier = Modifier.height(16.dp))
                 
@@ -722,7 +803,7 @@ fun ChatScreen(
                                 if (message.isNotBlank()) {
                                     messages = messages + "You: $message"
                                     val aiResponse = generateAIResponse(message)
-                                    messages = messages + aiResponse
+                                    messages = messages + "AI: $aiResponse"
                                     message = ""
                                 }
                             },
@@ -741,7 +822,6 @@ fun ChatScreen(
             }
         }
     }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
