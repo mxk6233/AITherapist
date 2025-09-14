@@ -2,6 +2,8 @@
 
 An Android application that provides AI-powered therapeutic support and mental health assistance through interactive conversations.
 
+This app is created for users who need help but prefer to have complete privacy. They can discuss all their issues and have a specialist guide them to self-heal and find coping mechanisms, as well as learn how to stay mentally healthy through tough times.
+
 ## Features
 
 - **AI-Powered Conversations**: Interactive chat interface with therapeutic AI responses
