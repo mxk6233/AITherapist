@@ -2,7 +2,7 @@
 
 An Android application that provides AI-powered therapeutic support and mental health assistance through interactive conversations.
 
-This app is created for users who need help but prefer to have complete privacy. They can discuss all their issues and have a specialist guide them to self-heal and find coping mechanisms, as well as learn how to stay mentally healthy through tough times.
+Designed for individuals seeking confidential mental health support, this application offers a private, judgment-free environment where users can explore their concerns and receive professional guidance. The AI specialist helps users develop effective coping strategies, build emotional resilience, and maintain mental wellness during challenging periods.
 
 ## Features
 
