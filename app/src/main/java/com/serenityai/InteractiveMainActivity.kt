@@ -6,9 +6,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -16,12 +18,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.serenityai.data.models.*
 import com.serenityai.ui.theme.AITherapistTheme
 import com.serenityai.ui.disclaimer.DisclaimerScreen
+import com.serenityai.ui.auth.LoginScreen
 import com.serenityai.utils.SampleData
 import com.serenityai.utils.SpeechUtils
 import com.serenityai.utils.rememberSpeechUtils
@@ -65,20 +69,55 @@ class InteractiveMainActivity : ComponentActivity() {
 
 @Composable
 fun AITherpistDashboard(modifier: Modifier = Modifier) {
-    var selectedScreen by remember { mutableStateOf("disclaimer") }
+    var selectedScreen by remember { mutableStateOf("login") }
     var showDialog by remember { mutableStateOf(false) }
     var dialogContent by remember { mutableStateOf("") }
     var disclaimerAccepted by remember { mutableStateOf(false) }
+    var isLoggedIn by remember { mutableStateOf(false) }
     
     when (selectedScreen) {
+        "login" -> LoginScreen(
+            onLoginClick = { email, password ->
+                // Simple login logic - in real app, this would validate credentials
+                if (email.isNotBlank() && password.isNotBlank()) {
+                    isLoggedIn = true
+                    selectedScreen = "disclaimer"
+                } else {
+                    showDialog = true
+                    dialogContent = "Please enter both email and password"
+                }
+            },
+            onSignUpClick = {
+                selectedScreen = "signup"
+            },
+            isLoading = false,
+            error = null
+        )
+        "signup" -> SignUpScreen(
+            onSignUpClick = { email, password, confirmPassword ->
+                // Simple signup logic - in real app, this would create account
+                if (email.isNotBlank() && password.isNotBlank() && password == confirmPassword) {
+                    isLoggedIn = true
+                    selectedScreen = "disclaimer"
+                } else {
+                    showDialog = true
+                    dialogContent = "Please fill all fields and ensure passwords match"
+                }
+            },
+            onBackToLogin = {
+                selectedScreen = "login"
+            },
+            isLoading = false,
+            error = null
+        )
         "disclaimer" -> DisclaimerScreen(
             onAccept = { 
                 disclaimerAccepted = true
                 selectedScreen = "home" 
             },
             onDecline = { 
-                // Handle decline - could show exit dialog or return to disclaimer
-                selectedScreen = "disclaimer"
+                // Handle decline - return to login
+                selectedScreen = "login"
             }
         )
         "home" -> HomeScreen(
@@ -86,6 +125,10 @@ fun AITherpistDashboard(modifier: Modifier = Modifier) {
             onShowDialog = { content -> 
                 dialogContent = content
                 showDialog = true 
+            },
+            onLogout = {
+                isLoggedIn = false
+                selectedScreen = "login"
             }
         )
         "chat" -> ChatScreen(
@@ -146,117 +189,137 @@ fun AITherpistDashboard(modifier: Modifier = Modifier) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     onNavigate: (String) -> Unit,
-    onShowDialog: (String) -> Unit
+    onShowDialog: (String) -> Unit,
+    onLogout: () -> Unit = {}
 ) {
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(20.dp),
-        contentPadding = PaddingValues(vertical = 8.dp)
+            .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
-        item {
-            // Welcome header with modern design
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                ),
-                shape = MaterialTheme.shapes.extraLarge
-            ) {
-                Column(
-                    modifier = Modifier.padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Welcome to Serenity AI",
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                    
-                    Spacer(modifier = Modifier.height(8.dp))
-                    
-                    Text(
-                        text = "Your AI-powered mental wellness companion",
-                        style = MaterialTheme.typography.bodyLarge,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
+        // Logout button at the top
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            TextButton(onClick = onLogout) {
+                Icon(
+                    imageVector = Icons.Default.ExitToApp,
+                    contentDescription = "Logout",
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text("Logout")
             }
         }
         
-        item {
-            // Feature grid with modern cards
+        Spacer(modifier = Modifier.height(8.dp))
+        
+        // Main Action Buttons - Full Width
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            // Primary Action - AI Chat
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                ),
+                shape = MaterialTheme.shapes.medium,
+                onClick = { onNavigate("chat") }
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Chat,
+                        contentDescription = "AI Chat",
+                        modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = "Start AI Therapy Session",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                        Text(
+                            text = "Begin your mental health journey",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
+                        )
+                    }
+                    Icon(
+                        imageVector = Icons.Default.ArrowForward,
+                        contentDescription = "Navigate",
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+            }
+            
+            // Secondary Actions Grid
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
-                modifier = Modifier.height(400.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                modifier = Modifier.height(200.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 item {
                     ModernFeatureCard(
-                        title = "🤖 AI Chat",
-                        description = "Talk to your AI therapist",
-                        icon = Icons.Default.Chat,
-                        onClick = { onNavigate("chat") },
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer
-                    )
-                }
-                
-                item {
-                    ModernFeatureCard(
-                        title = "📊 Mood",
-                        description = "Track your moods",
-                        icon = Icons.Default.TrendingUp,
+                        title = "Mood",
+                        description = "Track emotions",
+                        icon = Icons.Default.Mood,
                         onClick = { onNavigate("mood") },
-                        containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        isCompact = true
                     )
                 }
                 
                 item {
                     ModernFeatureCard(
-                        title = "📝 Journal",
-                        description = "Express yourself",
+                        title = "Journal",
+                        description = "Reflect & write",
                         icon = Icons.Default.Edit,
                         onClick = { onNavigate("journal") },
-                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        isCompact = true
                     )
                 }
                 
                 item {
                     ModernFeatureCard(
-                        title = "🎯 Challenges",
-                        description = "Daily wellness",
-                        icon = Icons.Default.Star,
-                        onClick = { onNavigate("challenges") },
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant
-                    )
-                }
-                
-                item {
-                    ModernFeatureCard(
-                        title = "🏆 Rewards",
-                        description = "Your achievements",
+                        title = "Challenges",
+                        description = "Wellness goals",
                         icon = Icons.Default.EmojiEvents,
-                        onClick = { onNavigate("rewards") },
-                        containerColor = MaterialTheme.colorScheme.errorContainer
+                        onClick = { onNavigate("challenges") },
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        isCompact = true
                     )
                 }
                 
                 item {
                     ModernFeatureCard(
-                        title = "📈 Dashboard",
-                        description = "Progress insights",
-                        icon = Icons.Default.Analytics,
-                        onClick = { onNavigate("dashboard") },
-                        containerColor = MaterialTheme.colorScheme.surface
+                        title = "Rewards",
+                        description = "Track progress",
+                        icon = Icons.Default.Star,
+                        onClick = { onNavigate("rewards") },
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        isCompact = true
                     )
                 }
             }
@@ -272,51 +335,89 @@ fun ModernFeatureCard(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     onClick: () -> Unit,
     containerColor: androidx.compose.ui.graphics.Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isCompact: Boolean = false
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(120.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+            .height(if (isCompact) 80.dp else 100.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
         colors = CardDefaults.cardColors(containerColor = containerColor),
-        shape = MaterialTheme.shapes.extraLarge,
+        shape = MaterialTheme.shapes.medium,
         onClick = onClick
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                modifier = Modifier.size(32.dp),
-                tint = MaterialTheme.colorScheme.primary
-            )
-            
-            Spacer(modifier = Modifier.height(8.dp))
-            
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            
-            Spacer(modifier = Modifier.height(4.dp))
-            
-            Text(
-                text = description,
-                style = MaterialTheme.typography.bodySmall,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 2,
-                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
-            )
+        if (isCompact) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                
+                Spacer(modifier = Modifier.width(12.dp))
+                
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                    )
+                }
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    modifier = Modifier.size(32.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                
+                Spacer(modifier = Modifier.height(4.dp))
+                
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 2,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                )
+            }
         }
     }
 }
@@ -450,72 +551,35 @@ fun ChatScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(horizontal = 8.dp)
     ) {
-        // AI Introduction Card
-        Card(
+        // Simple back button - minimal space
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer
-            )
+                .padding(vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(
-                modifier = Modifier.padding(16.dp)
+            IconButton(
+                onClick = onBack,
+                modifier = Modifier.size(32.dp)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Psychology,
-                        contentDescription = "AI Therapist",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Your AI Mental Health Companion",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                }
-                
-                Spacer(modifier = Modifier.height(12.dp))
-                
-                Text(
-                    text = "I specialize in providing compassionate, evidence-based mental health support. I can help you with:",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-                
-                Spacer(modifier = Modifier.height(8.dp))
-                
-                Text(
-                    text = "• Managing anxiety, stress, and overwhelming emotions\n• Processing difficult thoughts and feelings\n• Developing healthy coping strategies\n• Building emotional resilience and self-awareness\n• Providing crisis support and professional referrals",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-                
-                Spacer(modifier = Modifier.height(8.dp))
-                
-                Text(
-                    text = "I'm here to listen without judgment and offer gentle guidance. Remember, I'm a supportive tool, not a replacement for professional mental health care.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
+                Icon(
+                    Icons.Default.ArrowBack, 
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
             }
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = "AI Therapist",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
         }
         
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         
         // Speech status indicator
         if (isSpeaking || isListening) {
@@ -562,15 +626,11 @@ fun ChatScreen(
             Spacer(modifier = Modifier.height(8.dp))
         }
         
-        // Quick action buttons - moved to bottom
-        Spacer(modifier = Modifier.weight(1f))
-        
-        Spacer(modifier = Modifier.height(16.dp))
-        
+        // Chat messages area - use most of the screen
         LazyColumn(
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(vertical = 8.dp)
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+            contentPadding = PaddingValues(vertical = 4.dp)
         ) {
             items(messages) { msg ->
                 val isUser = msg.startsWith("You: ")
@@ -648,99 +708,211 @@ fun ChatScreen(
                 modifier = Modifier.padding(16.dp)
             ) {
                 // Quick action chips with collapsible functionality
-                Row(
+                // Sleek Quick Actions Header
+                Card(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                    ),
+                    shape = MaterialTheme.shapes.small,
+                    onClick = { isQuickOptionsExpanded = !isQuickOptionsExpanded }
                 ) {
-                    Text(
-                        text = "Quick Actions",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    
-                    IconButton(
-                        onClick = { isQuickOptionsExpanded = !isQuickOptionsExpanded },
-                        modifier = Modifier.size(24.dp)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
+                        Icon(
+                            imageVector = Icons.Default.Lightbulb,
+                            contentDescription = "Quick Actions",
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Quick Actions",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
                         Icon(
                             imageVector = if (isQuickOptionsExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
                             contentDescription = if (isQuickOptionsExpanded) "Collapse" else "Expand",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                 }
                 
                 if (isQuickOptionsExpanded) {
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
                     
                     LazyColumn(
-                        modifier = Modifier.height(120.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        modifier = Modifier.height(100.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                     item {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            FilterChip(
-                                onClick = { message = "I'm feeling sad today" },
-                                label = { Text("😢 I'm sad") },
-                                selected = false,
-                                modifier = Modifier.weight(1f)
-                            )
-                            FilterChip(
-                                onClick = { message = "I'm feeling anxious and worried" },
-                                label = { Text("😰 I'm anxious") },
-                                selected = false,
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                    }
-                    
-                    item {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            FilterChip(
-                                onClick = { message = "I'm stressed about work" },
-                                label = { Text("💼 Work stress") },
-                                selected = false,
-                                modifier = Modifier.weight(1f)
-                            )
-                            FilterChip(
-                                onClick = { message = "I need help with my relationships" },
-                                label = { Text("💕 Relationships") },
-                                selected = false,
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                    }
-                    
-                    item {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            FilterChip(
-                                onClick = { message = "I need immediate help and support" },
-                                label = { Text("🚨 Crisis Support") },
-                                selected = false,
+                            Card(
                                 modifier = Modifier.weight(1f),
-                                colors = FilterChipDefaults.filterChipColors(
-                                    containerColor = MaterialTheme.colorScheme.errorContainer
-                                )
-                            )
-                            FilterChip(
-                                onClick = { message = "I want to explore solutions to my problems" },
-                                label = { Text("💡 Find Solutions") },
-                                selected = false,
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                                ),
+                                shape = MaterialTheme.shapes.small,
+                                onClick = { message = "I'm feeling sad today" }
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text("😢", style = MaterialTheme.typography.titleSmall)
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = "I'm sad",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                                    )
+                                }
+                            }
+                            Card(
                                 modifier = Modifier.weight(1f),
-                                colors = FilterChipDefaults.filterChipColors(
+                                colors = CardDefaults.cardColors(
                                     containerColor = MaterialTheme.colorScheme.tertiaryContainer
-                                )
-                            )
+                                ),
+                                shape = MaterialTheme.shapes.small,
+                                onClick = { message = "I'm feeling anxious and worried" }
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text("😰", style = MaterialTheme.typography.titleSmall)
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = "I'm anxious",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onTertiaryContainer
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    
+                    item {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Card(
+                                modifier = Modifier.weight(1f),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                                ),
+                                shape = MaterialTheme.shapes.small,
+                                onClick = { message = "I'm stressed about work" }
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(12.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text("💼", style = MaterialTheme.typography.titleMedium)
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = "Work stress",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                                    )
+                                }
+                            }
+                            Card(
+                                modifier = Modifier.weight(1f),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.errorContainer
+                                ),
+                                shape = MaterialTheme.shapes.small,
+                                onClick = { message = "I need help with my relationships" }
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(12.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text("💕", style = MaterialTheme.typography.titleMedium)
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = "Relationships",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onErrorContainer
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    
+                    item {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.errorContainer
+                                ),
+                                shape = MaterialTheme.shapes.small,
+                                onClick = { message = "I need immediate help and support" }
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(12.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text("🚨", style = MaterialTheme.typography.titleMedium)
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = "Crisis Support - I need immediate help",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        fontWeight = FontWeight.Medium,
+                                        color = MaterialTheme.colorScheme.onErrorContainer
+                                    )
+                                }
+                            }
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                                ),
+                                shape = MaterialTheme.shapes.small,
+                                onClick = { message = "I want to explore solutions to my problems" }
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(12.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text("💡", style = MaterialTheme.typography.titleMedium)
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = "Find Solutions",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onTertiaryContainer
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -1544,6 +1716,88 @@ fun DashboardScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun SignUpScreen(
+    onSignUpClick: (String, String, String) -> Unit,
+    onBackToLogin: () -> Unit,
+    isLoading: Boolean = false,
+    error: String? = null
+) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "Create Account",
+            style = MaterialTheme.typography.headlineMedium
+        )
+        
+        Spacer(modifier = Modifier.height(32.dp))
+        
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Password") },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth()
+        )
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        OutlinedTextField(
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
+            label = { Text("Confirm Password") },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth()
+        )
+        
+        Spacer(modifier = Modifier.height(24.dp))
+        
+        Button(
+            onClick = { onSignUpClick(email, password, confirmPassword) },
+            enabled = !isLoading,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            if (isLoading) {
+                CircularProgressIndicator(modifier = Modifier.size(16.dp))
+            } else {
+                Text("Sign Up")
+            }
+        }
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        TextButton(onClick = onBackToLogin) {
+            Text("Already have an account? Login")
+        }
+        
+        error?.let {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = it,
+                color = MaterialTheme.colorScheme.error
+            )
         }
     }
 }
