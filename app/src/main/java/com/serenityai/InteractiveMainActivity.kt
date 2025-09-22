@@ -553,16 +553,16 @@ fun ChatScreen(
             .fillMaxSize()
             .padding(horizontal = 8.dp)
     ) {
-        // Simple back button - minimal space
+        // Minimal back button only - no redundant title
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 4.dp),
+                .padding(vertical = 2.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
                 onClick = onBack,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(28.dp)
             ) {
                 Icon(
                     Icons.Default.ArrowBack, 
@@ -570,16 +570,9 @@ fun ChatScreen(
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(
-                text = "AI Therapist",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
-            )
         }
         
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(2.dp))
         
         // Speech status indicator
         if (isSpeaking || isListening) {
@@ -626,11 +619,11 @@ fun ChatScreen(
             Spacer(modifier = Modifier.height(8.dp))
         }
         
-        // Chat messages area - use most of the screen
+        // Chat messages area - use most of the screen with proper spacing
         LazyColumn(
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(6.dp),
-            contentPadding = PaddingValues(vertical = 4.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            contentPadding = PaddingValues(vertical = 2.dp)
         ) {
             items(messages) { msg ->
                 val isUser = msg.startsWith("You: ")
@@ -639,9 +632,9 @@ fun ChatScreen(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = if (isUser) 16.dp else 0.dp),
+                        .padding(horizontal = if (isUser) 12.dp else 0.dp),
                     elevation = CardDefaults.cardElevation(
-                        defaultElevation = if (isUser) 2.dp else 4.dp
+                        defaultElevation = if (isUser) 2.dp else 3.dp
                     ),
                     colors = CardDefaults.cardColors(
                         containerColor = if (isUser) 
@@ -652,7 +645,7 @@ fun ChatScreen(
                     shape = MaterialTheme.shapes.medium
                 ) {
                         Column(
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(12.dp)
                         ) {
                             Text(
                                 text = messageText,
@@ -666,7 +659,7 @@ fun ChatScreen(
                             
                             // Add read-aloud button for AI messages
                             if (!isUser) {
-                                Spacer(modifier = Modifier.height(8.dp))
+                                Spacer(modifier = Modifier.height(4.dp))
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.End
@@ -679,13 +672,13 @@ fun ChatScreen(
                                                 speechUtils.speak(messageText)
                                             }
                                         },
-                                        modifier = Modifier.size(32.dp)
+                                        modifier = Modifier.size(28.dp)
                                     ) {
                                         Icon(
                                             imageVector = if (isSpeaking) Icons.Default.Stop else Icons.Default.VolumeUp,
                                             contentDescription = if (isSpeaking) "Stop reading" else "Read aloud",
                                             tint = MaterialTheme.colorScheme.primary,
-                                            modifier = Modifier.size(16.dp)
+                                            modifier = Modifier.size(14.dp)
                                         )
                                     }
                                 }
@@ -696,229 +689,113 @@ fun ChatScreen(
             }
         }
         
-        // Modern input section with floating action buttons
+        // Compact input section with floating action buttons
         Card(
             modifier = Modifier.fillMaxWidth(),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface
             )
         ) {
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(12.dp)
             ) {
-                // Quick action chips with collapsible functionality
-                // Sleek Quick Actions Header
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                    ),
-                    shape = MaterialTheme.shapes.small,
-                    onClick = { isQuickOptionsExpanded = !isQuickOptionsExpanded }
+                // Compact Quick Actions - Always visible, horizontal scroll
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 4.dp)
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Lightbulb,
-                            contentDescription = "Quick Actions",
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Quick Actions",
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        Icon(
-                            imageVector = if (isQuickOptionsExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                            contentDescription = if (isQuickOptionsExpanded) "Collapse" else "Expand",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.size(20.dp)
-                        )
+                    item {
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.secondaryContainer
+                            ),
+                            shape = MaterialTheme.shapes.small,
+                            onClick = { message = "I'm feeling sad today" }
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text("😢", style = MaterialTheme.typography.bodySmall)
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "Sad",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                                )
+                            }
+                        }
+                    }
+                    item {
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                            ),
+                            shape = MaterialTheme.shapes.small,
+                            onClick = { message = "I'm feeling anxious and worried" }
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text("😰", style = MaterialTheme.typography.bodySmall)
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "Anxious",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                                )
+                            }
+                        }
+                    }
+                    item {
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer
+                            ),
+                            shape = MaterialTheme.shapes.small,
+                            onClick = { message = "I'm stressed about work" }
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text("💼", style = MaterialTheme.typography.bodySmall)
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "Work",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
+                            }
+                        }
+                    }
+                    item {
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.errorContainer
+                            ),
+                            shape = MaterialTheme.shapes.small,
+                            onClick = { message = "I need immediate help and support" }
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text("🚨", style = MaterialTheme.typography.bodySmall)
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "Crisis",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onErrorContainer
+                                )
+                            }
+                        }
                     }
                 }
                 
-                if (isQuickOptionsExpanded) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    
-                    LazyColumn(
-                        modifier = Modifier.height(100.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                    item {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Card(
-                                modifier = Modifier.weight(1f),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.secondaryContainer
-                                ),
-                                shape = MaterialTheme.shapes.small,
-                                onClick = { message = "I'm feeling sad today" }
-                            ) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(8.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text("😢", style = MaterialTheme.typography.titleSmall)
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Text(
-                                        text = "I'm sad",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSecondaryContainer
-                                    )
-                                }
-                            }
-                            Card(
-                                modifier = Modifier.weight(1f),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.tertiaryContainer
-                                ),
-                                shape = MaterialTheme.shapes.small,
-                                onClick = { message = "I'm feeling anxious and worried" }
-                            ) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(8.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text("😰", style = MaterialTheme.typography.titleSmall)
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Text(
-                                        text = "I'm anxious",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onTertiaryContainer
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    
-                    item {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Card(
-                                modifier = Modifier.weight(1f),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                                ),
-                                shape = MaterialTheme.shapes.small,
-                                onClick = { message = "I'm stressed about work" }
-                            ) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(12.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text("💼", style = MaterialTheme.typography.titleMedium)
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(
-                                        text = "Work stress",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                                    )
-                                }
-                            }
-                            Card(
-                                modifier = Modifier.weight(1f),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.errorContainer
-                                ),
-                                shape = MaterialTheme.shapes.small,
-                                onClick = { message = "I need help with my relationships" }
-                            ) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(12.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text("💕", style = MaterialTheme.typography.titleMedium)
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(
-                                        text = "Relationships",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onErrorContainer
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    
-                    item {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Card(
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.errorContainer
-                                ),
-                                shape = MaterialTheme.shapes.small,
-                                onClick = { message = "I need immediate help and support" }
-                            ) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(12.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text("🚨", style = MaterialTheme.typography.titleMedium)
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(
-                                        text = "Crisis Support - I need immediate help",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        fontWeight = FontWeight.Medium,
-                                        color = MaterialTheme.colorScheme.onErrorContainer
-                                    )
-                                }
-                            }
-                            Card(
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.tertiaryContainer
-                                ),
-                                shape = MaterialTheme.shapes.small,
-                                onClick = { message = "I want to explore solutions to my problems" }
-                            ) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(12.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text("💡", style = MaterialTheme.typography.titleMedium)
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(
-                                        text = "Find Solutions",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onTertiaryContainer
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-                }
-                
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 
                 // Input row with modern design
                 Row(
@@ -930,18 +807,18 @@ fun ChatScreen(
                         onValueChange = { message = it },
                         placeholder = { Text("Type your message or use voice...") },
                         modifier = Modifier.weight(1f),
-                        shape = MaterialTheme.shapes.extraLarge,
+                        shape = MaterialTheme.shapes.medium,
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = MaterialTheme.colorScheme.primary,
                             unfocusedBorderColor = MaterialTheme.colorScheme.outline
                         )
                     )
                     
-                    Spacer(modifier = Modifier.width(12.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
                     
-                    // Modern floating action buttons
+                    // Compact floating action buttons
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         // Speech-to-Text button
                         FloatingActionButton(
@@ -952,7 +829,7 @@ fun ChatScreen(
                                     speechUtils.startListening()
                                 }
                             },
-                            modifier = Modifier.size(48.dp),
+                            modifier = Modifier.size(40.dp),
                             containerColor = if (isListening) 
                                 MaterialTheme.colorScheme.error 
                             else 
@@ -965,7 +842,7 @@ fun ChatScreen(
                             Icon(
                                 imageVector = if (isListening) Icons.Default.Stop else Icons.Default.Mic,
                                 contentDescription = if (isListening) "Stop listening" else "Start voice input",
-                                modifier = Modifier.size(20.dp)
+                                modifier = Modifier.size(18.dp)
                             )
                         }
                         
@@ -979,14 +856,14 @@ fun ChatScreen(
                                     message = ""
                                 }
                             },
-                            modifier = Modifier.size(48.dp),
+                            modifier = Modifier.size(40.dp),
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = MaterialTheme.colorScheme.onPrimary
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Send,
                                 contentDescription = "Send",
-                                modifier = Modifier.size(20.dp)
+                                modifier = Modifier.size(18.dp)
                             )
                         }
                     }
