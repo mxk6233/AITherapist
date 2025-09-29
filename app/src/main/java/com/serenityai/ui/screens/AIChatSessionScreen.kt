@@ -15,7 +15,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import androidx.compose.material3.ExperimentalMaterial3Api
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,7 +33,23 @@ fun AIChatSessionScreen(
     var messageText by remember { mutableStateOf("") }
     var messages by remember { mutableStateOf<List<ChatMessage>>(emptyList()) }
     var isLoading by remember { mutableStateOf(false) }
+    var pendingResponse by remember { mutableStateOf<String?>(null) }
     val listState = rememberLazyListState()
+    
+    // Handle AI response with LaunchedEffect
+    LaunchedEffect(pendingResponse) {
+        pendingResponse?.let { userMessage ->
+            delay(1500)
+            val aiResponse = ChatMessage(
+                id = (System.currentTimeMillis() + 1).toString(),
+                text = generateAIResponse(userMessage),
+                isFromUser = false
+            )
+            messages = messages + aiResponse
+            isLoading = false
+            pendingResponse = null
+        }
+    }
     
     // Initial welcome message
     LaunchedEffect(Unit) {
@@ -140,18 +155,7 @@ fun AIChatSessionScreen(
                             messages = messages + userMessage
                             messageText = ""
                             isLoading = true
-                            
-                            // Simulate AI response
-                            kotlinx.coroutines.GlobalScope.launch {
-                                delay(1500)
-                                val aiResponse = ChatMessage(
-                                    id = (System.currentTimeMillis() + 1).toString(),
-                                    text = generateAIResponse(userMessage.text),
-                                    isFromUser = false
-                                )
-                                messages = messages + aiResponse
-                                isLoading = false
-                            }
+                            pendingResponse = userMessage.text
                         }
                     },
                     modifier = Modifier.size(48.dp)
@@ -207,7 +211,7 @@ fun ChatMessageBubble(message: ChatMessage) {
     }
 }
 
-private fun generateAIResponse(userMessage: String): String {
+fun generateAIResponse(userMessage: String): String {
     val responses = listOf(
         "I understand how you're feeling. Can you tell me more about what's been on your mind?",
         "That sounds challenging. It's important to acknowledge these feelings. What do you think might help you feel better?",
@@ -221,7 +225,7 @@ private fun generateAIResponse(userMessage: String): String {
     return responses.random()
 }
 
-private fun formatTime(timestamp: Long): String {
+fun formatTime(timestamp: Long): String {
     val time = java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault())
     return time.format(java.util.Date(timestamp))
 }

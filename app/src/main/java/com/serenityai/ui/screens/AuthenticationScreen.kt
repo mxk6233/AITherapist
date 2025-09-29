@@ -15,9 +15,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
+import androidx.compose.runtime.LaunchedEffect
 
 @Composable
 fun AuthenticationScreen(
@@ -31,6 +30,22 @@ fun AuthenticationScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
+    var shouldAuthenticate by remember { mutableStateOf(false) }
+    var isSignUp by remember { mutableStateOf(false) }
+    
+    // Handle authentication with LaunchedEffect
+    LaunchedEffect(shouldAuthenticate) {
+        if (shouldAuthenticate) {
+            delay(1000) // Simulate network delay
+            isLoading = false
+            shouldAuthenticate = false
+            if (isSignUp) {
+                onSignUpSuccess()
+            } else {
+                onLoginSuccess()
+            }
+        }
+    }
     
     Column(
         modifier = Modifier
@@ -135,12 +150,8 @@ fun AuthenticationScreen(
                     else -> {
                         isLoading = true
                         errorMessage = ""
-                        // Simulate authentication
-                        kotlinx.coroutines.GlobalScope.launch {
-                            kotlinx.coroutines.delay(1000)
-                            isLoading = false
-                            if (isLoginMode) onLoginSuccess() else onSignUpSuccess()
-                        }
+                        isSignUp = !isLoginMode
+                        shouldAuthenticate = true
                     }
                 }
             },
