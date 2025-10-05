@@ -67,30 +67,6 @@ Designed for individuals seeking confidential mental health support, this applic
 - All dependencies are defined in `gradle/libs.versions.toml`
 - Debug builds are configured for development testing
 
-## Model Providers
-
-- **OpenAI GPT-3.5-turbo**: Primary AI model for therapeutic conversations
-- **OpenAI GPT-4**: Available for enhanced responses (configurable)
-- **Text-to-Speech**: Android's built-in TTS engine for voice responses
-- **Speech-to-Text**: Google Speech Recognition for voice input
-- **Firebase ML Kit**: Optional integration for on-device text processing
-
-## AI Technology
-
-- **OpenAI GPT-3.5-turbo**: Powers the therapeutic chatbot with compassionate, evidence-based responses
-- **Voice Integration**: Text-to-Speech and Speech-to-Text capabilities for accessible communication
-- **Therapeutic AI**: Specialized in mental health support, anxiety management, and emotional guidance
-
-## Testing & Quality Assurance
-
-### Test Results Summary
-- **Unit Tests**: ✅ 198 tests passing (100% success rate)
-- **Test Duration**: 0.169 seconds
-- **Code Coverage**: JaCoCo integrated for comprehensive coverage reporting
-- **Test Framework**: JUnit5 + Mockito + MockK for unit tests
-- **UI Testing**: Espresso + ComposeTestRule for instrumented tests
-- **Test Automation**: Fully automated with Gradle tasks
-
 ### Test Coverage Report
 JaCoCo coverage reports are available at:
 - **HTML Report**: `app/build/reports/jacoco/jacocoTestReport/html/index.html`
