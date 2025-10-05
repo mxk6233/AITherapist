@@ -3,7 +3,7 @@ package com.serenityai.usecases
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.serenityai.AITherpistDashboard
+import com.serenityai.InteractiveMainActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,7 +17,7 @@ class UserProfileUITest {
     @Test
     fun testUserProfileUI() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test user profile interface
@@ -30,7 +30,7 @@ class UserProfileUITest {
     @Test
     fun testProfileInformation() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test profile information
@@ -44,7 +44,7 @@ class UserProfileUITest {
     @Test
     fun testEditProfile() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test edit profile
@@ -58,7 +58,7 @@ class UserProfileUITest {
     @Test
     fun testProfilePicture() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test profile picture
@@ -71,7 +71,7 @@ class UserProfileUITest {
     @Test
     fun testProfileSettings() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test profile settings
@@ -85,7 +85,7 @@ class UserProfileUITest {
     @Test
     fun testNotificationSettings() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test notification settings
@@ -99,7 +99,7 @@ class UserProfileUITest {
     @Test
     fun testPrivacySettings() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test privacy settings
@@ -112,7 +112,7 @@ class UserProfileUITest {
     @Test
     fun testSecuritySettings() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test security settings
@@ -125,7 +125,7 @@ class UserProfileUITest {
     @Test
     fun testPreferencesSettings() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test preferences settings
@@ -139,7 +139,7 @@ class UserProfileUITest {
     @Test
     fun testProfileExport() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test profile export
@@ -152,7 +152,7 @@ class UserProfileUITest {
     @Test
     fun testProfileDeletion() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test profile deletion

@@ -16,7 +16,7 @@ class IntegrationTest {
     @Test
     fun fullAppFlow_loginToChatToMoodToHome() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Step 1: Login
@@ -60,7 +60,7 @@ class IntegrationTest {
     @Test
     fun fullAppFlow_signUpFlow() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Step 1: Start sign up process
@@ -84,7 +84,7 @@ class IntegrationTest {
     @Test
     fun fullAppFlow_journalFlow() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Step 1: Login
@@ -116,7 +116,7 @@ class IntegrationTest {
     @Test
     fun fullAppFlow_challengesFlow() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Step 1: Login
@@ -144,7 +144,7 @@ class IntegrationTest {
     @Test
     fun fullAppFlow_rewardsFlow() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Step 1: Login
@@ -174,7 +174,7 @@ class IntegrationTest {
     @Test
     fun fullAppFlow_logoutFlow() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Step 1: Login
@@ -198,7 +198,7 @@ class IntegrationTest {
     @Test
     fun fullAppFlow_errorHandling() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Step 1: Try to login with empty credentials

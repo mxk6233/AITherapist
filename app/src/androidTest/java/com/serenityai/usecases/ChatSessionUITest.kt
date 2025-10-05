@@ -3,7 +3,7 @@ package com.serenityai.usecases
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.serenityai.AITherpistDashboard
+import com.serenityai.InteractiveMainActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,7 +17,7 @@ class ChatSessionUITest {
     @Test
     fun testChatSessionUI() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test chat interface elements
@@ -29,7 +29,7 @@ class ChatSessionUITest {
     @Test
     fun testSendMessageFlow() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test sending a message
@@ -44,7 +44,7 @@ class ChatSessionUITest {
     @Test
     fun testVoiceInputFlow() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test voice input
@@ -55,7 +55,7 @@ class ChatSessionUITest {
     @Test
     fun testQuickActions() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test quick action buttons

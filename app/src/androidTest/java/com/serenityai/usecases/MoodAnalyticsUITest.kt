@@ -3,7 +3,7 @@ package com.serenityai.usecases
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.serenityai.AITherpistDashboard
+import com.serenityai.InteractiveMainActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,7 +17,7 @@ class MoodAnalyticsUITest {
     @Test
     fun testMoodAnalyticsUI() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test mood analytics interface
@@ -30,7 +30,7 @@ class MoodAnalyticsUITest {
     @Test
     fun testMoodTrendsChart() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test mood trends chart
@@ -43,7 +43,7 @@ class MoodAnalyticsUITest {
     @Test
     fun testMoodPatterns() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test mood patterns
@@ -56,7 +56,7 @@ class MoodAnalyticsUITest {
     @Test
     fun testMoodInsights() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test mood insights
@@ -69,7 +69,7 @@ class MoodAnalyticsUITest {
     @Test
     fun testMoodStatistics() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test mood statistics
@@ -82,7 +82,7 @@ class MoodAnalyticsUITest {
     @Test
     fun testMoodCorrelations() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test mood correlations
@@ -95,7 +95,7 @@ class MoodAnalyticsUITest {
     @Test
     fun testMoodReports() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test mood reports
@@ -108,7 +108,7 @@ class MoodAnalyticsUITest {
     @Test
     fun testMoodPredictions() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test mood predictions
@@ -121,7 +121,7 @@ class MoodAnalyticsUITest {
     @Test
     fun testMoodVisualizations() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test mood visualizations
@@ -135,7 +135,7 @@ class MoodAnalyticsUITest {
     @Test
     fun testMoodExport() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test mood export

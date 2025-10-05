@@ -6,7 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import com.serenityai.AITherpistDashboard
+import com.serenityai.InteractiveMainActivity
 
 @RunWith(AndroidJUnit4::class)
 class ChatScreenTest {
@@ -17,7 +17,7 @@ class ChatScreenTest {
     @Test
     fun chatScreen_displaysCorrectElements() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Navigate to chat screen
@@ -38,7 +38,7 @@ class ChatScreenTest {
     @Test
     fun chatScreen_allowsMessageInput() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Navigate to chat screen
@@ -53,7 +53,7 @@ class ChatScreenTest {
     @Test
     fun chatScreen_sendsMessage() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Navigate to chat screen
@@ -76,7 +76,7 @@ class ChatScreenTest {
     @Test
     fun chatScreen_quickActionsWork() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Navigate to chat screen
@@ -102,7 +102,7 @@ class ChatScreenTest {
     @Test
     fun chatScreen_handlesVoiceInput() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Navigate to chat screen
@@ -121,7 +121,7 @@ class ChatScreenTest {
     @Test
     fun chatScreen_displaysInitialMessages() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Navigate to chat screen
@@ -135,7 +135,7 @@ class ChatScreenTest {
     @Test
     fun chatScreen_navigatesBackCorrectly() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Navigate to chat screen
@@ -154,7 +154,7 @@ class ChatScreenTest {
     @Test
     fun chatScreen_handlesEmptyMessage() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Navigate to chat screen

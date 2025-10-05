@@ -6,7 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import com.serenityai.AITherpistDashboard
+import com.serenityai.InteractiveMainActivity
 
 @RunWith(AndroidJUnit4::class)
 class HomeScreenTest {
@@ -17,7 +17,7 @@ class HomeScreenTest {
     @Test
     fun homeScreen_displaysCorrectElements() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Check if main home screen elements are displayed
@@ -36,7 +36,7 @@ class HomeScreenTest {
     @Test
     fun homeScreen_navigatesToChatScreen() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Click on AI Therapy Session button
@@ -49,7 +49,7 @@ class HomeScreenTest {
     @Test
     fun homeScreen_navigatesToMoodScreen() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Click on Mood button
@@ -62,7 +62,7 @@ class HomeScreenTest {
     @Test
     fun homeScreen_navigatesToJournalScreen() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Click on Journal button
@@ -75,7 +75,7 @@ class HomeScreenTest {
     @Test
     fun homeScreen_navigatesToChallengesScreen() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Click on Challenges button
@@ -88,7 +88,7 @@ class HomeScreenTest {
     @Test
     fun homeScreen_navigatesToRewardsScreen() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Click on Rewards button
@@ -101,7 +101,7 @@ class HomeScreenTest {
     @Test
     fun homeScreen_displaysLogoutButton() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Check if logout button is displayed
@@ -111,7 +111,7 @@ class HomeScreenTest {
     @Test
     fun homeScreen_logoutFunctionality() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Click logout button
@@ -124,7 +124,7 @@ class HomeScreenTest {
     @Test
     fun homeScreen_displaysCorrectIcons() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Check if icons are displayed (using content descriptions)
@@ -135,7 +135,7 @@ class HomeScreenTest {
     @Test
     fun homeScreen_hasProperLayout() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Verify the main therapy session button is prominent

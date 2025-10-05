@@ -3,7 +3,7 @@ package com.serenityai.usecases
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.serenityai.AITherpistDashboard
+import com.serenityai.InteractiveMainActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,7 +17,7 @@ class MoodLoggingUITest {
     @Test
     fun testMoodLoggingUI() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test mood logging interface
@@ -29,7 +29,7 @@ class MoodLoggingUITest {
     @Test
     fun testMoodSelection() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test mood selection (1-10 scale)
@@ -42,7 +42,7 @@ class MoodLoggingUITest {
     @Test
     fun testMoodNotes() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test adding mood notes
@@ -54,7 +54,7 @@ class MoodLoggingUITest {
     @Test
     fun testMoodFactors() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test mood factors
@@ -67,7 +67,7 @@ class MoodLoggingUITest {
     @Test
     fun testMoodHistory() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test mood history view

@@ -187,118 +187,12 @@ fun MoodFeatureCard(feature: MoodFeature) {
     }
 }
 
-// Individual feature screens
+// LogDailyMoodScreen is now implemented in MoodLoggingScreen.kt
+// This function is kept for backward compatibility but redirects to the new implementation
 @Composable
-fun MoodLoggingScreen(onNavigateBack: () -> Unit) {
-    var selectedMood by remember { mutableStateOf(3) }
-    var notes by remember { mutableStateOf("") }
-    
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = onNavigateBack) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-            }
-            Text(
-                text = "Log Daily Mood",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(start = 8.dp)
-            )
-        }
-        
-        Spacer(modifier = Modifier.height(24.dp))
-        
-        Card(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier.padding(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "How are you feeling today?",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    repeat(5) { index ->
-                        IconButton(
-                            onClick = { selectedMood = index + 1 }
-                        ) {
-                            Icon(
-                                Icons.Default.SentimentSatisfied,
-                                contentDescription = null,
-                                tint = if (index < selectedMood) 
-                                    MaterialTheme.colorScheme.primary 
-                                else 
-                                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
-                                modifier = Modifier.size(48.dp)
-                            )
-                        }
-                    }
-                }
-                
-                Spacer(modifier = Modifier.height(16.dp))
-                
-                Text(
-                    text = when (selectedMood) {
-                        1 -> "Very Bad"
-                        2 -> "Bad"
-                        3 -> "Neutral"
-                        4 -> "Good"
-                        5 -> "Very Good"
-                        else -> "Neutral"
-                    },
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-        }
-        
-        Spacer(modifier = Modifier.height(24.dp))
-        
-        Card(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier.padding(20.dp)
-            ) {
-                Text(
-                    text = "Additional Notes",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                OutlinedTextField(
-                    value = notes,
-                    onValueChange = { notes = it },
-                    placeholder = { Text("How was your day? What's on your mind?") },
-                    modifier = Modifier.fillMaxWidth(),
-                    maxLines = 4
-                )
-            }
-        }
-        
-        Spacer(modifier = Modifier.height(24.dp))
-        
-        Button(
-            onClick = { /* Save mood entry */ },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Save Mood Entry")
-        }
-    }
+fun LogDailyMoodScreen(onNavigateBack: () -> Unit) {
+    // Use the comprehensive MoodLoggingScreen from MoodLoggingScreen.kt
+    LogDailyMoodScreenDetailed(onNavigateBack = onNavigateBack)
 }
 
 @Composable

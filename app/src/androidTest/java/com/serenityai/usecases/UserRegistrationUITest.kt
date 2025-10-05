@@ -3,7 +3,7 @@ package com.serenityai.usecases
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.serenityai.AITherpistDashboard
+import com.serenityai.InteractiveMainActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,7 +17,7 @@ class UserRegistrationUITest {
     @Test
     fun testRegistrationUI() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test registration interface
@@ -31,7 +31,7 @@ class UserRegistrationUITest {
     @Test
     fun testRegistrationForm() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test registration form
@@ -46,7 +46,7 @@ class UserRegistrationUITest {
     @Test
     fun testEmailValidation() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test email validation
@@ -58,7 +58,7 @@ class UserRegistrationUITest {
     @Test
     fun testPasswordValidation() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test password validation
@@ -70,7 +70,7 @@ class UserRegistrationUITest {
     @Test
     fun testPasswordMismatch() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test password mismatch
@@ -83,7 +83,7 @@ class UserRegistrationUITest {
     @Test
     fun testTermsAndConditions() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test terms and conditions

@@ -28,7 +28,22 @@ fun AppNavigation(navController: NavHostController) {
                     navController.navigate(Screen.MainDashboard.route)
                 },
                 onSignUpSuccess = {
-                    navController.navigate(Screen.MainDashboard.route)
+                    navController.navigate(Screen.PersonalityOnboarding.route)
+                }
+            )
+        }
+        
+        // Personality Onboarding Flow
+        composable(Screen.PersonalityOnboarding.route) {
+            PersonalityOnboardingScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                },
+                onComplete = { profile ->
+                    // Save personality profile and navigate to main dashboard
+                    navController.navigate(Screen.MainDashboard.route) {
+                        popUpTo(Screen.Authentication.route) { inclusive = true }
+                    }
                 }
             )
         }
@@ -125,7 +140,7 @@ fun AppNavigation(navController: NavHostController) {
         
         // Log Daily Mood (UC3)
         composable(Screen.MoodLogging.route) {
-            MoodLoggingScreen(
+            LogDailyMoodScreen(
                 onNavigateBack = {
                     navController.popBackStack()
                 }

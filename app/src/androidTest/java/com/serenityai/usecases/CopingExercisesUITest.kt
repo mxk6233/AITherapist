@@ -3,7 +3,7 @@ package com.serenityai.usecases
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.serenityai.AITherpistDashboard
+import com.serenityai.InteractiveMainActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,7 +17,7 @@ class CopingExercisesUITest {
     @Test
     fun testCopingExercisesUI() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test coping exercises interface
@@ -30,7 +30,7 @@ class CopingExercisesUITest {
     @Test
     fun testExerciseCategories() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test exercise categories
@@ -43,7 +43,7 @@ class CopingExercisesUITest {
     @Test
     fun testExerciseSelection() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test exercise selection
@@ -56,7 +56,7 @@ class CopingExercisesUITest {
     @Test
     fun testExerciseExecution() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test exercise execution
@@ -70,7 +70,7 @@ class CopingExercisesUITest {
     @Test
     fun testExerciseProgress() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test exercise progress
@@ -83,7 +83,7 @@ class CopingExercisesUITest {
     @Test
     fun testExerciseCompletion() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test exercise completion
@@ -97,7 +97,7 @@ class CopingExercisesUITest {
     @Test
     fun testPersonalizedRecommendations() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test personalized recommendations
@@ -110,7 +110,7 @@ class CopingExercisesUITest {
     @Test
     fun testExerciseHistory() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test exercise history
@@ -123,7 +123,7 @@ class CopingExercisesUITest {
     @Test
     fun testExerciseReminders() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test exercise reminders

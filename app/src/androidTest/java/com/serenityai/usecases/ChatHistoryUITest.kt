@@ -3,7 +3,7 @@ package com.serenityai.usecases
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.serenityai.AITherpistDashboard
+import com.serenityai.InteractiveMainActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,7 +17,7 @@ class ChatHistoryUITest {
     @Test
     fun testChatHistoryUI() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test chat history interface
@@ -30,7 +30,7 @@ class ChatHistoryUITest {
     @Test
     fun testChatHistoryList() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test chat history list
@@ -42,7 +42,7 @@ class ChatHistoryUITest {
     @Test
     fun testChatHistorySearch() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test chat history search
@@ -55,7 +55,7 @@ class ChatHistoryUITest {
     @Test
     fun testChatHistoryFilter() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test chat history filter
@@ -69,7 +69,7 @@ class ChatHistoryUITest {
     @Test
     fun testChatHistoryExport() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test chat history export
@@ -82,7 +82,7 @@ class ChatHistoryUITest {
     @Test
     fun testChatSessionDetails() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test chat session details
@@ -97,7 +97,7 @@ class ChatHistoryUITest {
     @Test
     fun testChatHistoryAnalytics() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test chat history analytics

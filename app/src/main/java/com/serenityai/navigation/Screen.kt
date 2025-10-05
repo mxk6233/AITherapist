@@ -4,6 +4,7 @@ sealed class Screen(val route: String) {
     // Main Flow
     object Splash : Screen("splash")
     object Authentication : Screen("authentication")
+    object PersonalityOnboarding : Screen("personality_onboarding") // UC5
     object MainDashboard : Screen("main_dashboard")
     
     // Chat Features

@@ -3,7 +3,7 @@ package com.serenityai.usecases
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.serenityai.AITherpistDashboard
+import com.serenityai.InteractiveMainActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,7 +17,7 @@ class CrisisInterventionUITest {
     @Test
     fun testCrisisDetectionUI() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test crisis detection elements
@@ -29,7 +29,7 @@ class CrisisInterventionUITest {
     @Test
     fun testCrisisResponseFlow() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test crisis response flow
@@ -42,7 +42,7 @@ class CrisisInterventionUITest {
     @Test
     fun testEmergencyContacts() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test emergency contacts
@@ -55,7 +55,7 @@ class CrisisInterventionUITest {
     @Test
     fun testSafetyPlanning() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test safety planning

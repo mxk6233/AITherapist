@@ -3,7 +3,7 @@ package com.serenityai.usecases
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.serenityai.AITherpistDashboard
+import com.serenityai.InteractiveMainActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,7 +17,7 @@ class PersonalityOnboardingUITest {
     @Test
     fun testPersonalityAssessmentUI() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test personality assessment interface
@@ -30,7 +30,7 @@ class PersonalityOnboardingUITest {
     @Test
     fun testPersonalityQuestions() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test personality questions
@@ -46,7 +46,7 @@ class PersonalityOnboardingUITest {
     @Test
     fun testAssessmentProgress() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test assessment progress
@@ -63,7 +63,7 @@ class PersonalityOnboardingUITest {
     @Test
     fun testPersonalityResults() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test personality results
@@ -77,7 +77,7 @@ class PersonalityOnboardingUITest {
     @Test
     fun testPersonalizedRecommendations() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test personalized recommendations
@@ -90,7 +90,7 @@ class PersonalityOnboardingUITest {
     @Test
     fun testUIPreferences() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test UI preferences

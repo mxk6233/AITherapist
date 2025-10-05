@@ -6,7 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import com.serenityai.AITherpistDashboard
+import com.serenityai.InteractiveMainActivity
 
 @RunWith(AndroidJUnit4::class)
 class MoodScreenTest {
@@ -19,7 +19,7 @@ class MoodScreenTest {
         composeTestRule.setContent {
             // We need to import the MoodScreen from the main activity
             // For now, we'll test the main activity which contains the mood screen
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Navigate to mood screen first
@@ -35,7 +35,7 @@ class MoodScreenTest {
     @Test
     fun moodScreen_allowsMoodSelection() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Navigate to mood screen
@@ -55,7 +55,7 @@ class MoodScreenTest {
     @Test
     fun moodScreen_allowsNotesInput() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Navigate to mood screen
@@ -72,7 +72,7 @@ class MoodScreenTest {
         var dialogShown = false
         
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Navigate to mood screen
@@ -95,7 +95,7 @@ class MoodScreenTest {
     @Test
     fun moodScreen_navigatesBackCorrectly() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Navigate to mood screen

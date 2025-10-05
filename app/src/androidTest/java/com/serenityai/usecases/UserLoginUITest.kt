@@ -3,7 +3,7 @@ package com.serenityai.usecases
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.serenityai.AITherpistDashboard
+import com.serenityai.InteractiveMainActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,7 +17,7 @@ class UserLoginUITest {
     @Test
     fun testLoginUI() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test login interface
@@ -31,7 +31,7 @@ class UserLoginUITest {
     @Test
     fun testLoginForm() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test login form
@@ -44,7 +44,7 @@ class UserLoginUITest {
     @Test
     fun testLoginValidation() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test login validation
@@ -57,7 +57,7 @@ class UserLoginUITest {
     @Test
     fun testForgotPassword() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test forgot password
@@ -71,7 +71,7 @@ class UserLoginUITest {
     @Test
     fun testBiometricLogin() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test biometric login
@@ -84,7 +84,7 @@ class UserLoginUITest {
     @Test
     fun testSocialLogin() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test social login
@@ -96,7 +96,7 @@ class UserLoginUITest {
     @Test
     fun testLoginErrorHandling() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test login error handling
@@ -109,7 +109,7 @@ class UserLoginUITest {
     @Test
     fun testLoginSuccess() {
         composeTestRule.setContent {
-            AITherpistDashboard()
+            InteractiveMainActivity()
         }
 
         // Test successful login
