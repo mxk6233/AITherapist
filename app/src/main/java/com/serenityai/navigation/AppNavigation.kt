@@ -101,6 +101,10 @@ fun AppNavigation(navController: NavHostController) {
             ChatHistoryScreen(
                 onNavigateBack = {
                     navController.popBackStack()
+                },
+                onNavigateToChat = { chatId ->
+                    // Navigate to specific chat session
+                    navController.navigate(Screen.AIChatSession.route)
                 }
             )
         }
@@ -161,6 +165,10 @@ fun AppNavigation(navController: NavHostController) {
             MoodForecastingScreen(
                 onNavigateBack = {
                     navController.popBackStack()
+                },
+                onViewDetailedForecast = {
+                    // Navigate to detailed forecast view
+                    // For now, just show a toast
                 }
             )
         }
@@ -179,6 +187,10 @@ fun AppNavigation(navController: NavHostController) {
             RelapsePreventionScreen(
                 onNavigateBack = {
                     navController.popBackStack()
+                },
+                onEmergencyContact = {
+                    // Navigate to emergency contact screen or show emergency dialog
+                    // For now, just show a toast
                 }
             )
         }
@@ -209,15 +221,23 @@ fun AppNavigation(navController: NavHostController) {
             CopingExercisesScreen(
                 onNavigateBack = {
                     navController.popBackStack()
+                },
+                onStartExercise = { exerciseId ->
+                    // Navigate to exercise session
+                    // For now, just show a toast or navigate to a generic exercise screen
                 }
             )
         }
         
         // Journal Prompts (UC32)
         composable(Screen.JournalPrompts.route) {
-            JournalPromptsScreen(
+            JournalingPromptsScreen(
                 onNavigateBack = {
                     navController.popBackStack()
+                },
+                onStartJournaling = { promptId ->
+                    // Navigate to journaling session
+                    // For now, just show a toast or navigate to a generic journaling screen
                 }
             )
         }

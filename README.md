@@ -106,5 +106,77 @@ The project includes comprehensive automated testing with the following Gradle t
 - **`validateTestCoverage`**: Validates test coverage meets requirements
 - **`runUseCaseTests`**: Runs tests for all implemented use cases
 
+## User Stories & Sprint Planning
+
+### Week 7 (October 6 - October 12)
+- **Use Case 24: Personalize User Experience**
+  - Implement user preference customization
+  - Create personalized content recommendations
+  - Develop adaptive UI based on user behavior
+  - Add theme and layout personalization options
+
+- **Use Case 27: Guided Breathing & Meditation Sessions**
+  - Build guided breathing exercise interface
+  - Implement meditation session timers
+  - Create audio-guided relaxation sessions
+  - Add progress tracking for wellness activities
+
+- **Use Case 17: Implement Accessibility Features**
+  - Add screen reader compatibility
+  - Implement high contrast mode
+  - Create font size adjustment options
+  - Ensure keyboard navigation support
+
+### Week 8 (October 13 - October 19)
+- **Use Case 13: Set Application Preferences/Configurations**
+  - Build comprehensive settings interface
+  - Implement data sync preferences
+  - Add privacy and security settings
+  - Create backup and restore options
+
+- **Use Case 18: Manage Notifications**
+  - Design notification management system
+  - Implement smart notification scheduling
+  - Add notification categories and priorities
+  - Create notification history and analytics
+
+### Week 9 (October 20 - October 26)
+- **Use Case 6: View Chat History**
+  - Implement chat session history interface
+  - Add search and filter functionality
+  - Create conversation export options
+  - Build chat analytics and insights
+
+- **Use Case 8: Suggest Coping Exercises**
+  - Develop personalized exercise recommendations
+  - Create interactive exercise library
+  - Implement progress tracking for exercises
+  - Add exercise effectiveness feedback
+
+- **Use Case 9: View Mood Analytics**
+  - Build comprehensive mood analytics dashboard
+  - Implement trend visualization and charts
+  - Create mood pattern recognition
+  - Add insights and recommendations based on data
+
+### Week 10 (October 27 - November 2)
+- **Use Case 26: AI-Powered Mood Forecasting**
+  - Implement predictive mood analysis algorithms
+  - Create mood trend predictions
+  - Build early warning systems for mood changes
+  - Add proactive intervention suggestions
+
+- **Use Case 35: Relapse Prevention Alerts**
+  - Develop relapse risk assessment tools
+  - Implement early warning notification system
+  - Create personalized prevention strategies
+  - Add emergency intervention protocols
+
+- **Use Case 32: AI-Generated Journaling Prompts**
+  - Build AI-powered prompt generation system
+  - Create personalized journaling suggestions
+  - Implement mood-based prompt selection
+  - Add journaling progress tracking and insights
+
 
 
