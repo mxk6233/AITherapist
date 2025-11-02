@@ -288,18 +288,21 @@ This document provides all test cases for all 22 use cases in a simplified forma
 
 | ID | Type | Description | Expected Result |
 |----|------|-------------|-----------------|
-| TC-UC22-01 | Unit | system implements core UC22 functionality | Core functionality implemented |
-| TC-UC22-02 | Unit | system monitors application performance metrics for optimization | Performance metrics monitored |
-| TC-UC22-03 | Unit | system tracks resource usage for system health assessment | Resource usage tracked |
-| TC-UC22-04 | Unit | system detects service availability issues for reliability | Availability issues detected |
-| TC-UC22-05 | Unit | system generates health reports for system assessment | Health reports generated |
-| TC-UC22-06 | Unit | system alerts on critical health issues for immediate attention | Critical alerts triggered |
-| TC-UC22-07 | Integration | health metrics collected through metrics system integration | Metrics collected, stored, available |
-| TC-UC22-08 | Integration | health status calculated through metrics integration | Status calculated, healthy when good, reported |
-| TC-UC22-09 | Integration | health alerts triggered through alerting system integration | Thresholds monitored, alerts triggered, sent |
-| TC-UC22-10 | Integration | health recovery notifications sent through alerting integration | Recovery detected, notifications sent, confirmed |
-| TC-UC22-11 | Integration | performance metrics tracked through health monitoring integration | Metrics tracked, analyzed, bottlenecks identified |
-| TC-UC22-12 | Integration | health diagnostics provided through performance data integration | Diagnostics generated, issues identified, recommendations provided |
+| TC-UC22-01 | UAT | As a user, I want the app to perform well so I have a smooth experience | App performs well, response time acceptable |
+| TC-UC22-02 | UAT | As a user, I want the app to use resources efficiently so my device doesn't slow down | App uses resources efficiently |
+| TC-UC22-03 | UAT | As a user, I want services to be available so the app works when I need it | All services available when needed |
+| TC-UC22-04 | Unit | system implements core UC22 functionality | Core functionality implemented |
+| TC-UC22-05 | Unit | system monitors application performance metrics for optimization | Performance metrics monitored |
+| TC-UC22-06 | Unit | system tracks resource usage for system health assessment | Resource usage tracked |
+| TC-UC22-07 | Unit | system detects service availability issues for reliability | Availability issues detected |
+| TC-UC22-08 | Unit | system generates health reports for system assessment | Health reports generated |
+| TC-UC22-09 | Unit | system alerts on critical health issues for immediate attention | Critical alerts triggered |
+| TC-UC22-10 | Integration | health metrics collected through metrics system integration | Metrics collected, stored, available |
+| TC-UC22-11 | Integration | health status calculated through metrics integration | Status calculated, healthy when good, reported |
+| TC-UC22-12 | Integration | health alerts triggered through alerting system integration | Thresholds monitored, alerts triggered, sent |
+| TC-UC22-13 | Integration | health recovery notifications sent through alerting integration | Recovery detected, notifications sent, confirmed |
+| TC-UC22-14 | Integration | performance metrics tracked through health monitoring integration | Metrics tracked, analyzed, bottlenecks identified |
+| TC-UC22-15 | Integration | health diagnostics provided through performance data integration | Diagnostics generated, issues identified, recommendations provided |
 
 ---
 
@@ -431,14 +434,14 @@ This document provides all test cases for all 22 use cases in a simplified forma
 | UC17 | 11 | 0 | 5 | 6 |
 | UC18 | 11 | 0 | 5 | 6 |
 | UC20 | 11 | 0 | 5 | 6 |
-| UC22 | 12 | 0 | 6 | 6 |
+| UC22 | 15 | 3 | 6 | 6 |
 | UC23 | 12 | 0 | 6 | 6 |
 | UC24 | 11 | 0 | 5 | 6 |
 | UC26 | 11 | 0 | 5 | 6 |
 | UC27 | 11 | 0 | 5 | 6 |
 | UC32 | 11 | 0 | 5 | 6 |
 | UC35 | 11 | 0 | 5 | 6 |
-| **Total** | **237** | **6** | **116** | **132** |
+| **Total** | **240** | **9** | **116** | **132** |
 
 ---
 

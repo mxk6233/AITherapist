@@ -19,6 +19,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
+import com.serenityai.usecases.MoodForecastingUseCase
+import com.serenityai.data.models.*
+import java.util.Calendar
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,30 +30,34 @@ fun MoodForecastingScreen(
     onNavigateBack: () -> Unit,
     onViewDetailedForecast: () -> Unit
 ) {
+    val useCase = remember { MoodForecastingUseCase() }
     var selectedForecastPeriod by remember { mutableStateOf("7 Days") }
     var showInsightsDialog by remember { mutableStateOf(false) }
+    var moodForecast by remember { mutableStateOf<MoodForecast?>(null) }
+    var isLoading by remember { mutableStateOf(false) }
     
     val forecastPeriods = listOf("7 Days", "14 Days", "30 Days", "90 Days")
     
-    val forecastData = remember {
-        listOf(
-            ForecastDay("Today", 4.2f, "Expected to remain stable"),
-            ForecastDay("Tomorrow", 3.8f, "Slight decline expected"),
-            ForecastDay("Day 3", 4.1f, "Recovery predicted"),
-            ForecastDay("Day 4", 4.5f, "Positive trend"),
-            ForecastDay("Day 5", 4.3f, "Maintaining stability"),
-            ForecastDay("Day 6", 4.6f, "Peak mood expected"),
-            ForecastDay("Day 7", 4.4f, "Slight decrease"),
-        )
+    // Sample historical mood data - in production would come from repository
+    val historicalMoodData = remember {
+        // Generate sample data for demonstration
+        generateHistoricalMoodData()
     }
     
-    val predictions = remember {
-        listOf(
-            MoodPrediction("Weekend Boost", "Mood typically improves on weekends", 85.0f),
-            MoodPrediction("Midweek Dip", "Slight decline on Wednesdays", 70.0f),
-            MoodPrediction("Exercise Impact", "Positive mood after exercise days", 90.0f),
-        )
+    // Generate forecast when screen loads
+    LaunchedEffect(Unit) {
+        isLoading = true
+        moodForecast = useCase.generate7DayForecast(historicalMoodData)
+        isLoading = false
     }
+    
+    val forecastData = moodForecast?.forecastDays?.map { 
+        ForecastDay(it.day, it.predictedMood, it.note) 
+    } ?: emptyList()
+    
+    val predictions = moodForecast?.predictions?.map {
+        MoodPrediction(it.title, it.description, it.confidence)
+    } ?: emptyList()
     
     Scaffold(
         topBar = {
@@ -432,6 +440,8 @@ fun PredictionCard(prediction: MoodPrediction) {
     }
 }
 
+// Data classes moved to com.serenityai.data.models.MoodForecast
+// Keeping these for backward compatibility with existing code
 data class ForecastDay(
     val day: String,
     val predictedMood: Float,
@@ -443,3 +453,38 @@ data class MoodPrediction(
     val description: String,
     val confidence: Float
 )
+
+// Helper function to generate sample historical data
+private fun generateHistoricalMoodData(): List<com.serenityai.data.models.MoodEntry> {
+    val entries = mutableListOf<com.serenityai.data.models.MoodEntry>()
+    val calendar = Calendar.getInstance()
+    
+    // Generate 30 days of historical data
+    repeat(30) { dayOffset ->
+        calendar.time = Date(System.currentTimeMillis() - (30 - dayOffset) * 86400000L)
+        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+        
+        // Simulate weekend boost pattern
+        val baseMood = 3.5
+        val mood = when {
+            dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY -> baseMood + 0.5 + Math.random() * 0.5
+            dayOfWeek == Calendar.WEDNESDAY -> baseMood - 0.3 + Math.random() * 0.3
+            else -> baseMood + Math.random() * 0.5 - 0.25
+        }.coerceIn(1.0, 5.0).toInt()
+        
+        entries.add(
+            com.serenityai.data.models.MoodEntry(
+                id = "entry-$dayOffset",
+                userId = "user-123",
+                date = calendar.time,
+                mood = mood,
+                energy = 5,
+                stress = 5,
+                anxiety = 5,
+                sleep = 5
+            )
+        )
+    }
+    
+    return entries
+}

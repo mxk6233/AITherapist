@@ -384,6 +384,7 @@ fun SettingsScreen(
     onNavigateToAccessibility: () -> Unit,
     onNavigateToNotifications: () -> Unit,
     onNavigateToAppPreferences: () -> Unit,
+    onNavigateToSystemHealth: () -> Unit,
     onNavigateBack: () -> Unit
 ) {
     val settingsItems = listOf(
@@ -391,7 +392,8 @@ fun SettingsScreen(
         Pair("Personalization", onNavigateToPersonalization),
         Pair("Accessibility", onNavigateToAccessibility),
         Pair("Notifications", onNavigateToNotifications),
-        Pair("App Preferences", onNavigateToAppPreferences)
+        Pair("App Preferences", onNavigateToAppPreferences),
+        Pair("System Health", onNavigateToSystemHealth)
     )
 
     Scaffold(

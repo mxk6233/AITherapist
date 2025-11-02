@@ -22,95 +22,83 @@ import androidx.compose.ui.unit.sp
 import java.text.SimpleDateFormat
 import java.util.*
 
+import com.serenityai.usecases.JournalingPromptsUseCase
+import com.serenityai.data.models.*
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JournalingPromptsScreen(
     onNavigateBack: () -> Unit,
     onStartJournaling: (String) -> Unit
 ) {
+    val useCase = remember { JournalingPromptsUseCase() }
     var selectedCategory by remember { mutableStateOf("All") }
     var selectedMood by remember { mutableStateOf("All") }
     var showCustomPromptDialog by remember { mutableStateOf(false) }
     var customPrompt by remember { mutableStateOf("") }
     
+    // Sample data - in production would come from repositories
+    val sampleMoodEntries = remember { generateSampleMoodEntries() }
+    val sampleJournalHistory = remember { emptyList<com.serenityai.data.models.JournalEntry>() }
+    
     val categories = listOf("All", "Reflection", "Gratitude", "Growth", "Relationships", "Goals", "Challenges")
     val moods = listOf("All", "Happy", "Sad", "Anxious", "Grateful", "Motivated", "Stressed")
     
-    val aiPrompts = remember {
-        listOf(
-            JournalPrompt(
-                id = "1",
-                title = "Daily Reflection",
-                prompt = "What was the most meaningful moment of your day? How did it make you feel?",
-                category = "Reflection",
-                moodTags = listOf("All"),
-                difficulty = "Easy",
-                estimatedTime = "5-10 minutes",
-                isAIGenerated = true,
-                timesUsed = 3
-            ),
-            JournalPrompt(
-                id = "2",
-                title = "Gratitude Practice",
-                prompt = "Write about three things you're grateful for today. What makes each one special?",
-                category = "Gratitude",
-                moodTags = listOf("Happy", "Grateful"),
-                difficulty = "Easy",
-                estimatedTime = "5 minutes",
-                isAIGenerated = true,
-                timesUsed = 7
-            ),
-            JournalPrompt(
-                id = "3",
-                title = "Growth Mindset",
-                prompt = "Describe a challenge you faced recently. What did you learn from it? How did it help you grow?",
-                category = "Growth",
-                moodTags = listOf("Motivated", "Stressed"),
-                difficulty = "Medium",
-                estimatedTime = "10-15 minutes",
-                isAIGenerated = true,
-                timesUsed = 2
-            ),
-            JournalPrompt(
-                id = "4",
-                title = "Relationship Reflection",
-                prompt = "Think about a recent interaction with someone important to you. What went well? What would you do differently?",
-                category = "Relationships",
-                moodTags = listOf("All"),
-                difficulty = "Medium",
-                estimatedTime = "10 minutes",
-                isAIGenerated = true,
-                timesUsed = 1
-            ),
-            JournalPrompt(
-                id = "5",
-                title = "Goal Setting",
-                prompt = "What is one goal you want to achieve this week? What steps will you take to make it happen?",
-                category = "Goals",
-                moodTags = listOf("Motivated", "Happy"),
-                difficulty = "Easy",
-                estimatedTime = "8 minutes",
-                isAIGenerated = true,
-                timesUsed = 4
-            ),
-            JournalPrompt(
-                id = "6",
-                title = "Emotional Processing",
-                prompt = "Describe a recent emotion you experienced. What triggered it? How did you respond? What would you do differently next time?",
-                category = "Challenges",
-                moodTags = listOf("Sad", "Anxious", "Stressed"),
-                difficulty = "Medium",
-                estimatedTime = "12-15 minutes",
-                isAIGenerated = true,
-                timesUsed = 2
-            )
+    // Generate personalized prompts
+    val promptRecommendation = remember {
+        useCase.getRecommendedPrompts(
+            userId = "user-123",
+            currentMood = sampleMoodEntries.lastOrNull()?.mood,
+            recentMoodEntries = sampleMoodEntries.takeLast(7),
+            journalingHistory = sampleJournalHistory
         )
     }
     
-    val filteredPrompts = aiPrompts.filter { prompt ->
-        val matchesCategory = selectedCategory == "All" || prompt.category == selectedCategory
-        val matchesMood = selectedMood == "All" || prompt.moodTags.contains(selectedMood) || prompt.moodTags.contains("All")
-        matchesCategory && matchesMood
+    // Get all prompts
+    val allPrompts = remember {
+        useCase.generatePersonalizedPrompts(
+            request = PromptGenerationRequest(
+                userId = "user-123",
+                currentMood = sampleMoodEntries.lastOrNull()?.mood,
+                moodTags = extractMoodTagsFromMoodEntries(sampleMoodEntries)
+            ),
+            recentMoodEntries = sampleMoodEntries.takeLast(7),
+            journalingHistory = sampleJournalHistory
+        )
+    }
+    
+    // Convert to UI model
+    val aiPrompts = allPrompts.map { prompt ->
+        JournalPrompt(
+            id = prompt.id,
+            title = prompt.title,
+            prompt = prompt.prompt,
+            category = prompt.category.name.replace("_", " "),
+            moodTags = prompt.moodTags.map { it.name.lowercase().replaceFirstChar { it.uppercase() } },
+            difficulty = prompt.difficulty.name.replaceFirstChar { it.uppercase() },
+            estimatedTime = "${prompt.estimatedTime} minutes",
+            isAIGenerated = prompt.isAIGenerated,
+            timesUsed = prompt.timesUsed
+        )
+    }
+    
+    // Filter prompts
+    val filteredPrompts = useCase.filterPrompts(
+        prompts = allPrompts,
+        category = if (selectedCategory == "All") null else parseCategory(selectedCategory),
+        moodTags = if (selectedMood == "All") emptyList() else listOf(parseMoodTag(selectedMood))
+    ).map { prompt ->
+        JournalPrompt(
+            id = prompt.id,
+            title = prompt.title,
+            prompt = prompt.prompt,
+            category = prompt.category.name.replace("_", " "),
+            moodTags = prompt.moodTags.map { it.name.lowercase().replaceFirstChar { it.uppercase() } },
+            difficulty = prompt.difficulty.name.replaceFirstChar { it.uppercase() },
+            estimatedTime = "${prompt.estimatedTime} minutes",
+            isAIGenerated = prompt.isAIGenerated,
+            timesUsed = prompt.timesUsed
+        )
     }
     
     Scaffold(
@@ -181,7 +169,7 @@ fun JournalingPromptsScreen(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Personalization: 92% accuracy",
+                            text = "Personalization: ${(promptRecommendation.personalizationScore * 100).toInt()}% accuracy",
                             style = MaterialTheme.typography.bodySmall,
                             color = Color(0xFF4CAF50)
                         )
@@ -290,7 +278,19 @@ fun JournalingPromptsScreen(
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        items(aiPrompts.take(3)) { prompt ->
+                        items(promptRecommendation.recommendedPrompts.take(3).map { prompt ->
+                            JournalPrompt(
+                                id = prompt.id,
+                                title = prompt.title,
+                                prompt = prompt.prompt,
+                                category = prompt.category.name.replace("_", " "),
+                                moodTags = prompt.moodTags.map { it.name.lowercase().replaceFirstChar { it.uppercase() } },
+                                difficulty = prompt.difficulty.name.replaceFirstChar { it.uppercase() },
+                                estimatedTime = "${prompt.estimatedTime} minutes",
+                                isAIGenerated = prompt.isAIGenerated,
+                                timesUsed = prompt.timesUsed
+                            )
+                        }) { prompt ->
                             RecommendationCard(
                                 prompt = prompt,
                                 onClick = { onStartJournaling(prompt.id) }
@@ -540,6 +540,8 @@ fun CategoryChip(category: String) {
     }
 }
 
+// Data class for UI - keeping for backward compatibility
+// Main data model is in com.serenityai.data.models.JournalingPrompt
 data class JournalPrompt(
     val id: String,
     val title: String,
@@ -551,3 +553,72 @@ data class JournalPrompt(
     val isAIGenerated: Boolean,
     val timesUsed: Int
 )
+
+// Helper functions
+private fun generateSampleMoodEntries(): List<com.serenityai.data.models.MoodEntry> {
+    val entries = mutableListOf<com.serenityai.data.models.MoodEntry>()
+    val calendar = Calendar.getInstance()
+    
+    repeat(7) { dayOffset ->
+        calendar.time = Date(System.currentTimeMillis() - (7 - dayOffset) * 86400000L)
+        entries.add(
+            com.serenityai.data.models.MoodEntry(
+                id = "mood-$dayOffset",
+                userId = "user-123",
+                date = calendar.time,
+                mood = (3 + Math.random() * 4).toInt().coerceIn(1, 10),
+                energy = 5,
+                stress = 5,
+                anxiety = 5,
+                sleep = 6
+            )
+        )
+    }
+    
+    return entries
+}
+
+private fun extractMoodTagsFromMoodEntries(entries: List<com.serenityai.data.models.MoodEntry>): List<MoodTag> {
+    if (entries.isEmpty()) return emptyList()
+    val averageMood = entries.map { it.mood.toDouble() }.average().toInt()
+    return listOf(determineMoodTagFromValue(averageMood))
+}
+
+private fun determineMoodTagFromValue(mood: Int): MoodTag {
+    return when {
+        mood >= 8 -> MoodTag.HAPPY
+        mood >= 7 -> MoodTag.GRATEFUL
+        mood >= 6 -> MoodTag.CALM
+        mood >= 5 -> MoodTag.MOTIVATED
+        mood >= 4 -> MoodTag.STRESSED
+        mood >= 3 -> MoodTag.SAD
+        mood >= 2 -> MoodTag.ANXIOUS
+        else -> MoodTag.OVERWHELMED
+    }
+}
+
+private fun parseCategory(category: String): PromptCategory? {
+    return when (category.lowercase()) {
+        "reflection" -> PromptCategory.REFLECTION
+        "gratitude" -> PromptCategory.GRATITUDE
+        "growth" -> PromptCategory.GROWTH
+        "relationships" -> PromptCategory.RELATIONSHIPS
+        "goals" -> PromptCategory.GOALS
+        "challenges" -> PromptCategory.CHALLENGES
+        else -> null
+    }
+}
+
+private fun parseMoodTag(mood: String): MoodTag {
+    return when (mood.lowercase()) {
+        "happy" -> MoodTag.HAPPY
+        "sad" -> MoodTag.SAD
+        "anxious" -> MoodTag.ANXIOUS
+        "grateful" -> MoodTag.GRATEFUL
+        "motivated" -> MoodTag.MOTIVATED
+        "stressed" -> MoodTag.STRESSED
+        "calm" -> MoodTag.CALM
+        "overwhelmed" -> MoodTag.OVERWHELMED
+        else -> MoodTag.ALL
+    }
+}

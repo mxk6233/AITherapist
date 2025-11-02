@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.text.SimpleDateFormat
 import java.util.*
+import com.serenityai.usecases.RelapsePreventionUseCase
+import com.serenityai.data.models.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,49 +28,39 @@ fun RelapsePreventionScreen(
     onNavigateBack: () -> Unit,
     onEmergencyContact: () -> Unit
 ) {
+    val useCase = remember { RelapsePreventionUseCase() }
     var showRiskAssessment by remember { mutableStateOf(false) }
     var showSafetyPlan by remember { mutableStateOf(false) }
     var isMonitoringEnabled by remember { mutableStateOf(true) }
+    var riskAssessment by remember { mutableStateOf<RiskAssessment?>(null) }
+    var isLoading by remember { mutableStateOf(false) }
     
-    val riskFactors = remember {
-        listOf(
-            RiskIndicator("Sleep Pattern", 75, "Irregular sleep increases relapse risk"),
-            RiskIndicator("Stress Level", 60, "High stress detected in recent patterns"),
-            RiskIndicator("Social Support", 40, "Limited social interaction this week"),
-            RiskIndicator("Medication Adherence", 90, "Good adherence to treatment plan"),
-            RiskIndicator("Trigger Exposure", 30, "Low exposure to known triggers")
-        )
+    // Sample historical data - in production would come from repository
+    val sampleMoodEntries = remember {
+        generateSampleMoodEntries()
     }
     
-    val earlyWarnings = remember {
-        listOf(
-            EarlyWarning(
-                "Sleep Disruption",
-                "3 consecutive nights of poor sleep detected",
-                "High",
-                "Schedule sleep hygiene activities"
-            ),
-            EarlyWarning(
-                "Social Isolation",
-                "Decreased social activity over 5 days",
-                "Medium",
-                "Plan social interactions this weekend"
-            ),
-            EarlyWarning(
-                "Stress Accumulation",
-                "Work stress levels increasing",
-                "Medium",
-                "Practice stress management techniques"
-            )
-        )
-    }
-    
+    // Generate safety plan - in production would come from repository
     val safetyPlan = remember {
-        SafetyPlan(
+        com.serenityai.data.models.SafetyPlan(
+            userId = "user-123",
             emergencyContacts = listOf(
-                EmergencyContact("Dr. Sarah Johnson", "Therapist", "+1-555-0123"),
-                EmergencyContact("Mike Chen", "Support Person", "+1-555-0456"),
-                EmergencyContact("Crisis Hotline", "24/7 Support", "988")
+                com.serenityai.data.models.EmergencyContact(
+                    name = "Dr. Sarah Johnson",
+                    role = "Therapist",
+                    phone = "+1-555-0123"
+                ),
+                com.serenityai.data.models.EmergencyContact(
+                    name = "Mike Chen",
+                    role = "Support Person",
+                    phone = "+1-555-0456"
+                ),
+                com.serenityai.data.models.EmergencyContact(
+                    name = "Crisis Hotline",
+                    role = "24/7 Support",
+                    phone = "988",
+                    availability = ContactAvailability.TWENTY_FOUR_SEVEN
+                )
             ),
             copingStrategies = listOf(
                 "Deep breathing exercises",
@@ -86,6 +78,56 @@ fun RelapsePreventionScreen(
             )
         )
     }
+    
+    // Perform risk assessment when screen loads
+    LaunchedEffect(Unit) {
+        if (isMonitoringEnabled) {
+            isLoading = true
+            riskAssessment = useCase.assessRiskLevel(
+                moodEntries = sampleMoodEntries,
+                sleepData = generateSampleSleepData(),
+                stressLevels = generateSampleStressData()
+            )
+            isLoading = false
+        }
+    }
+    
+    // Refresh assessment periodically
+    LaunchedEffect(isMonitoringEnabled) {
+        if (isMonitoringEnabled) {
+            while (true) {
+                kotlinx.coroutines.delay(300000) // Every 5 minutes
+                riskAssessment = useCase.assessRiskLevel(
+                    moodEntries = sampleMoodEntries,
+                    sleepData = generateSampleSleepData(),
+                    stressLevels = generateSampleStressData()
+                )
+            }
+        }
+    }
+    
+    // Convert data models to UI models for backward compatibility
+    val riskFactors = riskAssessment?.riskIndicators?.map {
+        RiskIndicator(it.name, it.riskLevel, it.description)
+    } ?: emptyList()
+    
+    val earlyWarnings = riskAssessment?.earlyWarnings?.map {
+        EarlyWarning(
+            it.title,
+            it.description,
+            it.severity.name,
+            it.recommendedAction
+        )
+    } ?: emptyList()
+    
+    // Convert SafetyPlan to UI model (UI data class)
+    val uiSafetyPlan = com.serenityai.ui.screens.SafetyPlan(
+        emergencyContacts = safetyPlan.emergencyContacts.map {
+            com.serenityai.ui.screens.EmergencyContact(it.name, it.role, it.phone)
+        },
+        copingStrategies = safetyPlan.copingStrategies,
+        warningSigns = safetyPlan.warningSigns
+    )
     
     Scaffold(
         topBar = {
@@ -150,9 +192,12 @@ fun RelapsePreventionScreen(
                         Spacer(modifier = Modifier.height(8.dp))
                         
                         Text(
-                            text = if (isMonitoringEnabled) 
-                                "AI monitoring active - Risk level: LOW" 
-                            else "Monitoring disabled - Manual assessment required",
+                            text = if (isMonitoringEnabled) {
+                                val riskLevelText = riskAssessment?.overallRiskLevel?.name ?: "ASSESSING"
+                                "AI monitoring active - Risk level: $riskLevelText"
+                            } else {
+                                "Monitoring disabled - Manual assessment required"
+                            },
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -163,15 +208,24 @@ fun RelapsePreventionScreen(
                             Row(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Icon(
-                                    Icons.Default.CheckCircle,
-                                    contentDescription = null,
-                                    tint = Color(0xFF4CAF50),
-                                    modifier = Modifier.size(16.dp)
-                                )
+                                if (isLoading) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(16.dp),
+                                        strokeWidth = 2.dp
+                                    )
+                                } else {
+                                    Icon(
+                                        Icons.Default.CheckCircle,
+                                        contentDescription = null,
+                                        tint = Color(0xFF4CAF50),
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                }
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = "Last assessment: 2 hours ago",
+                                    text = riskAssessment?.let {
+                                        "Last assessment: ${SimpleDateFormat("MMM dd, HH:mm", Locale.getDefault()).format(it.assessedAt)}"
+                                    } ?: "Assessing...",
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.primary
                                 )
@@ -303,7 +357,7 @@ fun RelapsePreventionScreen(
                         
                         Spacer(modifier = Modifier.height(4.dp))
                         
-                        safetyPlan.emergencyContacts.take(2).forEach { contact ->
+                        uiSafetyPlan.emergencyContacts.take(2).forEach { contact ->
                             ContactPreview(contact = contact)
                         }
                         
@@ -318,7 +372,7 @@ fun RelapsePreventionScreen(
                         
                         Spacer(modifier = Modifier.height(4.dp))
                         
-                        safetyPlan.copingStrategies.take(3).forEach { strategy ->
+                        uiSafetyPlan.copingStrategies.take(3).forEach { strategy ->
                             Text(
                                 text = "• $strategy",
                                 style = MaterialTheme.typography.bodySmall,
@@ -418,21 +472,21 @@ fun RelapsePreventionScreen(
             text = {
                 Column {
                     Text("Emergency Contacts:")
-                    safetyPlan.emergencyContacts.forEach { contact ->
+                    uiSafetyPlan.emergencyContacts.forEach { contact ->
                         Text("• ${contact.name} (${contact.role}): ${contact.phone}")
                     }
                     
                     Spacer(modifier = Modifier.height(8.dp))
                     
                     Text("Warning Signs:")
-                    safetyPlan.warningSigns.forEach { sign ->
+                    uiSafetyPlan.warningSigns.forEach { sign ->
                         Text("• $sign")
                     }
                     
                     Spacer(modifier = Modifier.height(8.dp))
                     
                     Text("Coping Strategies:")
-                    safetyPlan.copingStrategies.forEach { strategy ->
+                    uiSafetyPlan.copingStrategies.forEach { strategy ->
                         Text("• $strategy")
                     }
                 }
@@ -640,6 +694,8 @@ fun PreventionStrategyCard(
     }
 }
 
+// Data classes moved to com.serenityai.data.models.RelapsePrevention
+// Keeping these for backward compatibility with existing code
 data class RiskIndicator(
     val name: String,
     val riskLevel: Int,
@@ -664,3 +720,60 @@ data class EmergencyContact(
     val role: String,
     val phone: String
 )
+
+// Helper functions to generate sample data
+private fun generateSampleMoodEntries(): List<com.serenityai.data.models.MoodEntry> {
+    val entries = mutableListOf<com.serenityai.data.models.MoodEntry>()
+    val calendar = Calendar.getInstance()
+    
+    // Generate 14 days of mood data with some decline pattern
+    repeat(14) { dayOffset ->
+        calendar.time = Date(System.currentTimeMillis() - (14 - dayOffset) * 86400000L)
+        
+        // Simulate mood decline pattern
+        val baseMood = 4.0
+        val moodAdjustment = when {
+            dayOffset >= 10 -> -1.5 // Recent decline
+            dayOffset >= 7 -> -0.5  // Moderate decline
+            else -> 0.0
+        }
+        val mood = (baseMood + moodAdjustment + Math.random() * 0.5 - 0.25).coerceIn(1.0, 5.0).toInt()
+        
+        entries.add(
+            com.serenityai.data.models.MoodEntry(
+                id = "entry-$dayOffset",
+                userId = "user-123",
+                date = calendar.time,
+                mood = mood,
+                energy = 5,
+                stress = if (dayOffset >= 10) 7 else 5,
+                anxiety = if (dayOffset >= 10) 6 else 5,
+                sleep = if (dayOffset >= 10) 4 else 6
+            )
+        )
+    }
+    
+    return entries
+}
+
+private fun generateSampleSleepData(): List<com.serenityai.usecases.SleepData> {
+    val calendar = Calendar.getInstance()
+    return (0..6).map { dayOffset ->
+        calendar.time = Date(System.currentTimeMillis() - (7 - dayOffset) * 86400000L)
+        com.serenityai.usecases.SleepData(
+            date = calendar.time,
+            hours = if (dayOffset >= 4) 5.5 + Math.random() * 1.0 else 7.0 + Math.random() * 1.0
+        )
+    }
+}
+
+private fun generateSampleStressData(): List<com.serenityai.usecases.StressData> {
+    val calendar = Calendar.getInstance()
+    return (0..6).map { dayOffset ->
+        calendar.time = Date(System.currentTimeMillis() - (7 - dayOffset) * 86400000L)
+        com.serenityai.usecases.StressData(
+            date = calendar.time,
+            level = if (dayOffset >= 4) (6 + Math.random() * 2).toInt() else (4 + Math.random() * 2).toInt()
+        )
+    }
+}

@@ -311,6 +311,9 @@ fun AppNavigation(navController: NavHostController) {
                 onNavigateToAppPreferences = {
                     navController.navigate(Screen.AppPreferences.route)
                 },
+                onNavigateToSystemHealth = {
+                    navController.navigate(Screen.SystemHealth.route)
+                },
                 onNavigateBack = {
                     navController.popBackStack()
                 }
@@ -356,6 +359,15 @@ fun AppNavigation(navController: NavHostController) {
         // App Preferences (UC13)
         composable(Screen.AppPreferences.route) {
             AppPreferencesScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        
+        // System Health (UC22)
+        composable(Screen.SystemHealth.route) {
+            SystemHealthScreen(
                 onNavigateBack = {
                     navController.popBackStack()
                 }

@@ -40,4 +40,5 @@ sealed class Screen(val route: String) {
     object Accessibility : Screen("accessibility") // UC17
     object Notifications : Screen("notifications") // UC18
     object AppPreferences : Screen("app_preferences") // UC13
+    object SystemHealth : Screen("system_health") // UC22
 }
