@@ -1,4 +1,4 @@
-package com.serenityai.tests.integration.integration.integration
+package com.serenityai.tests.integration
 
 import com.serenityai.ui.screens.generateAIResponse
 import org.junit.jupiter.api.Test
