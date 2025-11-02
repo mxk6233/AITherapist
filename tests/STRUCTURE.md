@@ -78,9 +78,9 @@ tests/
 ## Use Case Coverage
 
 All 22 use cases from the sprint plan have:
-- ✅ Implementation in `app/src/main/`
-- ✅ Unit tests in `tests/unit/usecases/`
-- ✅ 2 use cases also have UAT tests (UC26, UC35)
+-  Implementation in `app/src/main/`
+-  Unit tests in `tests/unit/usecases/`
+-  2 use cases also have UAT tests (UC26, UC35)
 
 ## Running Tests
 

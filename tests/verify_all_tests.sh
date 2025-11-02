@@ -42,7 +42,7 @@ for uc in 1 2 3 4 5 6 7 8 9 13 14 15 17 18 20 22 23 24 26 27 32 35; do
   if [ -f "$test_file" ]; then
     count=$(grep -c "@Nested" "$test_file" 2>/dev/null || echo "0")
     if [ "$count" -eq 3 ]; then
-      printf "✅ UC%2d: %-35s [3/3 test cases]\n" "$uc" "$name"
+      printf " UC%2d: %-35s [3/3 test cases]\n" "$uc" "$name"
       complete=$((complete + 1))
     else
       printf "⚠️  UC%2d: %-35s [%d/3 test cases]\n" "$uc" "$name" "$count"
@@ -63,8 +63,8 @@ echo "Coverage: $((complete * 100 / total))%"
 echo ""
 
 if [ -z "$missing" ] && [ "$complete" -eq "$total" ]; then
-  echo "✅ ALL USE CASES HAVE 3 TEST CASES EACH"
-  echo "✅ TOTAL: $total use cases × 3 = $((total * 3)) test cases"
+  echo " ALL USE CASES HAVE 3 TEST CASES EACH"
+  echo " TOTAL: $total use cases × 3 = $((total * 3)) test cases"
   exit 0
 else
   echo "❌ VERIFICATION FAILED"

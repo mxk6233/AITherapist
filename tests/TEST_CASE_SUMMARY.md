@@ -26,32 +26,32 @@ class {UseCaseName}UseCaseUnitTests {
 ## Use Cases with 3 Test Cases
 
 ### Sprint 1: User Creation and Safety Protocol
-- ✅ **UC1: Conduct AI Chat Session** - 3 test cases
-- ✅ **UC2: Handle Crisis Intervention** - 3 test cases
-- ✅ **UC4: User Registration** - 3 test cases
-- ✅ **UC7: User Login** - 3 test cases
-- ✅ **UC15: Handle Network Connectivity Issues** - 3 test cases
-- ✅ **UC20: Handle Application Errors** - 3 test cases
-- ✅ **UC23: Implement Security Protocols** - 3 test cases
+-  **UC1: Conduct AI Chat Session** - 3 test cases
+-  **UC2: Handle Crisis Intervention** - 3 test cases
+-  **UC4: User Registration** - 3 test cases
+-  **UC7: User Login** - 3 test cases
+-  **UC15: Handle Network Connectivity Issues** - 3 test cases
+-  **UC20: Handle Application Errors** - 3 test cases
+-  **UC23: Implement Security Protocols** - 3 test cases
 
 ### Sprint 2: Enhanced User Experience & Mood Tracking
-- ✅ **UC3: Log Daily Mood** - 3 test cases
-- ✅ **UC5: Personality Onboarding for UX** - 3 test cases
-- ✅ **UC13: Set Application Preferences** - 3 test cases
-- ✅ **UC14: Receive Daily Affirmations** - 3 test cases
-- ✅ **UC17: Implement Accessibility Features** - 3 test cases
-- ✅ **UC18: Manage Notifications** - 3 test cases
-- ✅ **UC24: Personalize User Experience** - 3 test cases
-- ✅ **UC27: Guided Breathing & Meditation** - 3 test cases
+-  **UC3: Log Daily Mood** - 3 test cases
+-  **UC5: Personality Onboarding for UX** - 3 test cases
+-  **UC13: Set Application Preferences** - 3 test cases
+-  **UC14: Receive Daily Affirmations** - 3 test cases
+-  **UC17: Implement Accessibility Features** - 3 test cases
+-  **UC18: Manage Notifications** - 3 test cases
+-  **UC24: Personalize User Experience** - 3 test cases
+-  **UC27: Guided Breathing & Meditation** - 3 test cases
 
 ### Sprint 3: Advanced Analytics & Support Features
-- ✅ **UC6: View Chat History** - 3 test cases
-- ✅ **UC8: Suggest Coping Exercises** - 3 test cases
-- ✅ **UC9: View Mood Analytics** - 3 test cases
-- ✅ **UC22: Monitor System Health** - 3 test cases
-- ✅ **UC26: AI-Powered Mood Forecasting** - 3 test cases
-- ✅ **UC32: AI-Generated Journaling Prompts** - 3 test cases
-- ✅ **UC35: Relapse Prevention Alerts** - 3 test cases
+-  **UC6: View Chat History** - 3 test cases
+-  **UC8: Suggest Coping Exercises** - 3 test cases
+-  **UC9: View Mood Analytics** - 3 test cases
+-  **UC22: Monitor System Health** - 3 test cases
+-  **UC26: AI-Powered Mood Forecasting** - 3 test cases
+-  **UC32: AI-Generated Journaling Prompts** - 3 test cases
+-  **UC35: Relapse Prevention Alerts** - 3 test cases
 
 ## Test Case Distribution
 
