@@ -19,16 +19,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.serenityai.utils.GreedyCopingStrategySelector
+import com.serenityai.utils.UserConstraints
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CopingExercisesScreen(
     onNavigateBack: () -> Unit,
-    onStartExercise: (String) -> Unit
+    onStartExercise: (String) -> Unit,
+    currentMood: String = "Neutral",
+    availableTimeMinutes: Int = 30,
+    currentEnergyLevel: Int = 7,
+    stressLevel: Int = 5
 ) {
     var selectedCategory by remember { mutableStateOf("All") }
     var selectedMood by remember { mutableStateOf("All") }
     var showProgressDialog by remember { mutableStateOf(false) }
+    var useGreedyAlgorithm by remember { mutableStateOf(true) }
     
     val categories = listOf("All", "Breathing", "Mindfulness", "Physical", "Creative", "Social")
     val moods = listOf("All", "Anxious", "Sad", "Angry", "Stressed", "Overwhelmed")
@@ -173,10 +180,29 @@ fun CopingExercisesScreen(
                     
                     Spacer(modifier = Modifier.height(8.dp))
                     
+                    // Use Greedy Algorithm for optimal recommendations
+                    val greedySelector = remember { GreedyCopingStrategySelector() }
+                    val constraints = remember {
+                        UserConstraints(
+                            availableTimeMinutes = availableTimeMinutes,
+                            currentEnergyLevel = currentEnergyLevel,
+                            currentMood = currentMood,
+                            stressLevel = stressLevel
+                        )
+                    }
+                    
+                    val greedyRecommendations = remember {
+                        if (useGreedyAlgorithm) {
+                            greedySelector.getTopRecommendations(exercises, constraints, 3)
+                        } else {
+                            exercises.take(3)
+                        }
+                    }
+                    
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        items(exercises.take(3)) { exercise ->
+                        items(greedyRecommendations) { exercise ->
                             RecommendationCard(
                                 exercise = exercise,
                                 onClick = { onStartExercise(exercise.id) }

@@ -18,8 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.text.SimpleDateFormat
-import java.util.*
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,39 +26,28 @@ fun MoodForecastingScreen(
     onNavigateBack: () -> Unit,
     onViewDetailedForecast: () -> Unit
 ) {
-    var selectedForecastRange by remember { mutableStateOf("7 Days") }
-    var showSettingsDialog by remember { mutableStateOf(false) }
-    var isForecastingEnabled by remember { mutableStateOf(true) }
+    var selectedForecastPeriod by remember { mutableStateOf("7 Days") }
+    var showInsightsDialog by remember { mutableStateOf(false) }
     
-    val forecastRanges = listOf("3 Days", "7 Days", "14 Days", "30 Days")
+    val forecastPeriods = listOf("7 Days", "14 Days", "30 Days", "90 Days")
     
     val forecastData = remember {
         listOf(
-            ForecastDataPoint("Today", 3.8f, "Work stress expected", 75),
-            ForecastDataPoint("Tomorrow", 4.2f, "Weekend approaching", 82),
-            ForecastDataPoint("Day 3", 3.5f, "Monday blues", 68),
-            ForecastDataPoint("Day 4", 4.0f, "Exercise planned", 78),
-            ForecastDataPoint("Day 5", 4.5f, "Social activity", 85),
-            ForecastDataPoint("Day 6", 4.3f, "Relaxation day", 80),
-            ForecastDataPoint("Day 7", 3.9f, "Work preparation", 72)
+            ForecastDay("Today", 4.2f, "Expected to remain stable"),
+            ForecastDay("Tomorrow", 3.8f, "Slight decline expected"),
+            ForecastDay("Day 3", 4.1f, "Recovery predicted"),
+            ForecastDay("Day 4", 4.5f, "Positive trend"),
+            ForecastDay("Day 5", 4.3f, "Maintaining stability"),
+            ForecastDay("Day 6", 4.6f, "Peak mood expected"),
+            ForecastDay("Day 7", 4.4f, "Slight decrease"),
         )
     }
     
-    val riskFactors = remember {
+    val predictions = remember {
         listOf(
-            RiskFactor("Work Stress", "High", "Monday meetings increase stress"),
-            RiskFactor("Sleep Pattern", "Medium", "Irregular sleep affects mood"),
-            RiskFactor("Social Isolation", "Low", "Limited social interaction"),
-            RiskFactor("Exercise Routine", "Medium", "Inconsistent workout schedule")
-        )
-    }
-    
-    val interventions = remember {
-        listOf(
-            Intervention("Morning Meditation", "Start day with 10-min meditation", "High Impact"),
-            Intervention("Exercise Schedule", "Plan workouts for Tuesday & Thursday", "Medium Impact"),
-            Intervention("Social Planning", "Schedule weekend social activities", "High Impact"),
-            Intervention("Sleep Optimization", "Maintain consistent sleep schedule", "Medium Impact")
+            MoodPrediction("Weekend Boost", "Mood typically improves on weekends", 85.0f),
+            MoodPrediction("Midweek Dip", "Slight decline on Wednesdays", 70.0f),
+            MoodPrediction("Exercise Impact", "Positive mood after exercise days", 90.0f),
         )
     }
     
@@ -73,8 +61,8 @@ fun MoodForecastingScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { showSettingsDialog = true }) {
-                        Icon(Icons.Default.Settings, contentDescription = "Settings")
+                    IconButton(onClick = { showInsightsDialog = true }) {
+                        Icon(Icons.Default.Psychology, contentDescription = "Insights")
                     }
                 }
             )
@@ -87,75 +75,7 @@ fun MoodForecastingScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // AI Status and Controls
-            item {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    Icons.Default.Psychology,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = "AI Mood Forecasting",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                            
-                            Switch(
-                                checked = isForecastingEnabled,
-                                onCheckedChange = { isForecastingEnabled = it }
-                            )
-                        }
-                        
-                        Spacer(modifier = Modifier.height(8.dp))
-                        
-                        Text(
-                            text = if (isForecastingEnabled) 
-                                "AI is analyzing your patterns to predict future mood trends" 
-                            else "Mood forecasting is currently disabled",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        
-                        if (isForecastingEnabled) {
-                            Spacer(modifier = Modifier.height(8.dp))
-                            
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier.size(16.dp),
-                                    strokeWidth = 2.dp
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = "Model accuracy: 87%",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-            
-            // Forecast Range Selector
+            // Period Selector
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -165,7 +85,7 @@ fun MoodForecastingScreen(
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "Forecast Range",
+                            text = "Forecast Period",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -175,11 +95,11 @@ fun MoodForecastingScreen(
                         LazyRow(
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            items(forecastRanges) { range ->
+                            items(forecastPeriods) { period ->
                                 FilterChip(
-                                    onClick = { selectedForecastRange = range },
-                                    label = { Text(range) },
-                                    selected = selectedForecastRange == range
+                                    onClick = { selectedForecastPeriod = period },
+                                    label = { Text(period) },
+                                    selected = selectedForecastPeriod == period
                                 )
                             }
                         }
@@ -187,7 +107,7 @@ fun MoodForecastingScreen(
                 }
             }
             
-            // Mood Forecast Chart
+            // Forecast Summary
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -196,15 +116,21 @@ fun MoodForecastingScreen(
                     Column(
                         modifier = Modifier.padding(16.dp)
                     ) {
-                        Text(
-                            text = "Predicted Mood Trend",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                        
-                        Spacer(modifier = Modifier.height(16.dp))
-                        
-                        ForecastChart(forecastData = forecastData)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                Icons.Default.TrendingUp,
+                                contentDescription = null,
+                                tint = Color(0xFF4CAF50)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Forecast Summary",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                         
                         Spacer(modifier = Modifier.height(16.dp))
                         
@@ -212,23 +138,46 @@ fun MoodForecastingScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text(
-                                text = "Avg Prediction: ${forecastData.map { it.predictedMood }.average().let { "%.1f".format(it) }}/5.0",
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.Medium
+                            ForecastStatCard(
+                                title = "Average Mood",
+                                value = forecastData.map { it.predictedMood }.average().let { "%.1f".format(it) },
+                                subtitle = "Expected range",
+                                color = Color(0xFF2196F3)
                             )
                             
-                            Text(
-                                text = "Confidence: ${forecastData.map { it.confidence }.average().toInt()}%",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.primary
+                            ForecastStatCard(
+                                title = "Stability",
+                                value = "72%",
+                                subtitle = "Low volatility expected",
+                                color = Color(0xFF4CAF50)
+                            )
+                        }
+                        
+                        Spacer(modifier = Modifier.height(12.dp))
+                        
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            ForecastStatCard(
+                                title = "Improvement Trend",
+                                value = "+0.3",
+                                subtitle = "vs current average",
+                                color = Color(0xFF4CAF50)
+                            )
+                            
+                            ForecastStatCard(
+                                title = "Risk Level",
+                                value = "Low",
+                                subtitle = "No alerts expected",
+                                color = Color(0xFFFF9800)
                             )
                         }
                     }
                 }
             }
             
-            // Risk Factors Analysis
+            // Forecast Chart
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -238,30 +187,19 @@ fun MoodForecastingScreen(
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "Risk Factors Analysis",
+                            text = "7-Day Forecast",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
                         
-                        Text(
-                            text = "Factors that may impact your mood in the coming days",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        
-                        Spacer(modifier = Modifier.height(12.dp))
-                        
-                        riskFactors.forEach { factor ->
-                            RiskFactorCard(factor = factor)
-                            Spacer(modifier = Modifier.height(8.dp))
-                        }
+                        ForecastChart(forecastData = forecastData)
                     }
                 }
             }
             
-            // Proactive Interventions
+            // Predictions
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -274,80 +212,35 @@ fun MoodForecastingScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                Icons.Default.Recommend,
+                                Icons.Default.Psychology,
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "Proactive Interventions",
+                                text = "AI Predictions",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
                         }
                         
-                        Spacer(modifier = Modifier.height(8.dp))
-                        
-                        Text(
-                            text = "AI-suggested actions to improve predicted mood",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        
                         Spacer(modifier = Modifier.height(12.dp))
                         
-                        interventions.forEach { intervention ->
-                            InterventionCard(intervention = intervention)
+                        predictions.forEach { prediction ->
+                            PredictionCard(prediction = prediction)
                             Spacer(modifier = Modifier.height(8.dp))
                         }
                     }
                 }
             }
             
-            // Early Warning System
-            item {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                Icons.Default.Warning,
-                                contentDescription = null,
-                                tint = Color(0xFFFF9800)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = "Early Warning System",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                        
-                        Spacer(modifier = Modifier.height(12.dp))
-                        
-                        WarningCard(
-                            title = "Mood Dip Predicted",
-                            message = "AI predicts a potential mood decline on Day 3 (Monday)",
-                            severity = "Medium",
-                            action = "Schedule supportive activities"
-                        )
-                    }
-                }
-            }
-            
-            // Detailed Forecast Button
+            // Detailed Report Button
             item {
                 Button(
                     onClick = onViewDetailedForecast,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(Icons.Default.Timeline, contentDescription = null)
+                    Icon(Icons.Default.Analytics, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("View Detailed Forecast")
                 }
@@ -355,21 +248,21 @@ fun MoodForecastingScreen(
         }
     }
     
-    // Settings Dialog
-    if (showSettingsDialog) {
+    // Insights Dialog
+    if (showInsightsDialog) {
         AlertDialog(
-            onDismissRequest = { showSettingsDialog = false },
-            title = { Text("Forecasting Settings") },
+            onDismissRequest = { showInsightsDialog = false },
+            title = { Text("Forecasting Insights") },
             text = {
                 Column {
-                    Text("• Model Training: Uses 30 days of mood data")
-                    Text("• Update Frequency: Daily at 6 AM")
-                    Text("• Privacy: All data processed locally")
-                    Text("• Accuracy: 87% based on historical data")
+                    Text("• Your mood patterns show a positive trend over the next week")
+                    Text("• Weekends typically boost your mood by 0.5 points")
+                    Text("• Exercise days predict higher mood stability")
+                    Text("• Consider planning activities on Wednesday to offset midweek dip")
                 }
             },
             confirmButton = {
-                TextButton(onClick = { showSettingsDialog = false }) {
+                TextButton(onClick = { showInsightsDialog = false }) {
                     Text("Close")
                 }
             }
@@ -378,69 +271,60 @@ fun MoodForecastingScreen(
 }
 
 @Composable
-fun ForecastChart(forecastData: List<ForecastDataPoint>) {
+fun ForecastChart(forecastData: List<ForecastDay>) {
     val maxValue = 5.0f
     val minValue = 1.0f
     
-    Column {
-        Box(
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(150.dp)
+            .background(
+                Color.LightGray.copy(alpha = 0.1f),
+                RoundedCornerShape(8.dp)
+            )
+    ) {
+        Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp)
-                .background(
-                    Color.LightGray.copy(alpha = 0.1f),
-                    RoundedCornerShape(8.dp)
-                )
+                .fillMaxSize()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.Bottom
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.Bottom
-            ) {
-                forecastData.forEach { dataPoint ->
-                    val height = ((dataPoint.predictedMood - minValue) / (maxValue - minValue)) * 100
+            forecastData.forEach { data ->
+                val height = ((data.predictedMood - minValue) / (maxValue - minValue)) * 100
+                
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .width(30.dp)
+                            .height(height.dp)
+                            .background(
+                                when {
+                                    data.predictedMood >= 4.0f -> Color(0xFF4CAF50)
+                                    data.predictedMood >= 3.0f -> Color(0xFFFF9800)
+                                    else -> Color(0xFFF44336)
+                                },
+                                RoundedCornerShape(4.dp)
+                            )
+                    )
                     
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .width(20.dp)
-                                .height(height.dp)
-                                .background(
-                                    when {
-                                        dataPoint.predictedMood >= 4.0f -> Color(0xFF4CAF50)
-                                        dataPoint.predictedMood >= 3.0f -> Color(0xFFFF9800)
-                                        else -> Color(0xFFF44336)
-                                    },
-                                    RoundedCornerShape(4.dp)
-                                )
-                        )
-                        
-                        Spacer(modifier = Modifier.height(4.dp))
-                        
-                        Text(
-                            text = dataPoint.day,
-                            style = MaterialTheme.typography.bodySmall,
-                            fontSize = 10.sp
-                        )
-                        
-                        Text(
-                            text = dataPoint.predictedMood.toString(),
-                            style = MaterialTheme.typography.bodySmall,
-                            fontSize = 8.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        
-                        Text(
-                            text = "${dataPoint.confidence}%",
-                            style = MaterialTheme.typography.bodySmall,
-                            fontSize = 8.sp,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    
+                    Text(
+                        text = data.day,
+                        style = MaterialTheme.typography.bodySmall,
+                        fontSize = 9.sp
+                    )
+                    
+                    Text(
+                        text = data.predictedMood.toString(),
+                        style = MaterialTheme.typography.bodySmall,
+                        fontSize = 8.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
         }
@@ -448,171 +332,114 @@ fun ForecastChart(forecastData: List<ForecastDataPoint>) {
 }
 
 @Composable
-fun RiskFactorCard(factor: RiskFactor) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-    ) {
-        Row(
-            modifier = Modifier.padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            val riskColor = when (factor.level.lowercase()) {
-                "high" -> Color(0xFFF44336)
-                "medium" -> Color(0xFFFF9800)
-                "low" -> Color(0xFF4CAF50)
-                else -> MaterialTheme.colorScheme.primary
-            }
-            
-            Box(
-                modifier = Modifier
-                    .size(8.dp)
-                    .background(riskColor, RoundedCornerShape(4.dp))
-            )
-            
-            Spacer(modifier = Modifier.width(12.dp))
-            
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = factor.name,
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Medium
-                )
-                
-                Text(
-                    text = factor.description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            
-            Text(
-                text = factor.level,
-                style = MaterialTheme.typography.bodySmall,
-                color = riskColor,
-                fontWeight = FontWeight.Medium
-            )
-        }
-    }
-}
-
-@Composable
-fun InterventionCard(intervention: Intervention) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-    ) {
-        Row(
-            modifier = Modifier.padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                Icons.Default.Lightbulb,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(20.dp)
-            )
-            
-            Spacer(modifier = Modifier.width(12.dp))
-            
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = intervention.title,
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Medium
-                )
-                
-                Text(
-                    text = intervention.description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            
-            val impactColor = when (intervention.impact.lowercase()) {
-                "high impact" -> Color(0xFF4CAF50)
-                "medium impact" -> Color(0xFFFF9800)
-                "low impact" -> Color(0xFF2196F3)
-                else -> MaterialTheme.colorScheme.primary
-            }
-            
-            Text(
-                text = intervention.impact,
-                style = MaterialTheme.typography.bodySmall,
-                color = impactColor,
-                fontWeight = FontWeight.Medium
-            )
-        }
-    }
-}
-
-@Composable
-fun WarningCard(
+fun ForecastStatCard(
     title: String,
-    message: String,
-    severity: String,
-    action: String
+    value: String,
+    subtitle: String,
+    color: Color
 ) {
-    val severityColor = when (severity.lowercase()) {
-        "high" -> Color(0xFFF44336)
-        "medium" -> Color(0xFFFF9800)
-        "low" -> Color(0xFF4CAF50)
-        else -> MaterialTheme.colorScheme.primary
-    }
-    
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
-            modifier = Modifier.padding(12.dp)
+            modifier = Modifier.padding(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold,
-                color = severityColor
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center
             )
             
             Spacer(modifier = Modifier.height(4.dp))
             
             Text(
-                text = message,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                text = value,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = color,
+                textAlign = TextAlign.Center
             )
             
-            Spacer(modifier = Modifier.height(8.dp))
-            
             Text(
-                text = "💡 Recommended Action: $action",
+                text = subtitle,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Medium
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                fontSize = 10.sp
             )
         }
     }
 }
 
-data class ForecastDataPoint(
+@Composable
+fun PredictionCard(prediction: MoodPrediction) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.primaryContainer),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    Icons.Default.Lightbulb,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+            
+            Spacer(modifier = Modifier.width(12.dp))
+            
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = prediction.title,
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                    
+                    Text(
+                        text = "${prediction.confidence}%",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+                
+                Text(
+                    text = prediction.description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+data class ForecastDay(
     val day: String,
     val predictedMood: Float,
-    val note: String,
-    val confidence: Int
+    val note: String
 )
 
-data class RiskFactor(
-    val name: String,
-    val level: String,
-    val description: String
-)
-
-data class Intervention(
+data class MoodPrediction(
     val title: String,
     val description: String,
-    val impact: String
+    val confidence: Float
 )

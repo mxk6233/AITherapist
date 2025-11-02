@@ -186,10 +186,60 @@ open app/build/reports/jacoco/jacocoTestReport/html/index.html
 open build/reports/problems/problems-report.html
 ```
 
+### Disabled Test Cases (Advanced Features)
+
+#### 1. **AI-Powered Mood Forecasting** (`MoodForecastingUseCaseTest.kt`) - **UC26**
+**Purpose**: Predictive mood analytics and forecasting functionality
+**Test Categories**:
+- **Trend Prediction**: Tests ML-powered forecasting algorithms and pattern recognition
+- **Proactive Interventions**: Tests mood decline predictions and early intervention recommendations
+- **Personalized Models**: Tests user-specific forecasting models and custom thresholds
+- **Seasonal Analysis**: Tests cyclical mood patterns and seasonal trend detection
+
+**Key Features**:
+- Predictive mood analytics based on historical patterns
+- ML-powered forecasting algorithms
+- Trend prediction and pattern recognition
+- Proactive mood intervention recommendations
+- Seasonal and cyclical mood analysis
+- Personalized forecasting models
+
+#### 2. **Relapse Prevention Alerts** (`RelapsePreventionUseCaseTest.kt`) - **UC35**
+**Purpose**: Early warning system for mood decline and relapse prevention
+**Test Categories**:
+- **Risk Detection**: Tests early warning system and pattern recognition for mood decline
+- **Alert Management**: Tests customizable alert thresholds and notification system
+- **Intervention Recommendations**: Tests automated intervention suggestions and support activation
+- **Progress Monitoring**: Tests milestone tracking and recovery progress measurement
+
+**Key Features**:
+- Early warning system for mood decline patterns
+- Customizable alert thresholds
+- Intervention recommendations based on risk levels
+- Progress tracking and milestone monitoring
+- Automated support system activation
+- Integration with therapy sessions and exercises
+
+#### 3. **AI-Generated Journaling Prompts** (`AIGeneratedJournalingPromptsUseCaseTest.kt`) - **UC32**
+**Purpose**: Dynamic journaling prompt generation and personalization
+**Test Categories**:
+- **Prompt Generation**: Tests mood-based, context-aware, and personalized prompt creation
+- **Category Management**: Tests multiple prompt categories (gratitude, reflection, emotional processing)
+- **Personalization**: Tests user history-based and preference-driven prompt customization
+- **Integration**: Tests integration with mood analytics and therapy progress tracking
+
+**Key Features**:
+- Dynamic journaling prompt generation based on mood state
+- Context-aware prompts (seasonal, holiday-specific, therapeutic themes)
+- Personalized prompts based on user history and preferences
+- Multiple prompt categories (gratitude, reflection, emotional processing)
+- Difficulty and length customization
+- Integration with mood analytics and therapy progress
+
 ### Test Quality Metrics
 - **Coverage Target**: 80%+ code coverage
-- **Test Categories**: 10 main categories (Chat History UC6, Coping Exercises UC8, Mood Analytics UC9, Integration, UAT, Use Case, Accessibility, Preferences, Notifications, Unit)
-- **Test Cases**: 140+ individual test cases across all categories
+- **Test Categories**: 13 main categories (Chat History UC6, Coping Exercises UC8, Mood Analytics UC9, Mood Forecasting UC26, Journaling Prompts UC32, Relapse Prevention UC35, Integration, UAT, Use Case, Accessibility, Preferences, Notifications, Unit)
+- **Test Cases**: 160+ individual test cases across all categories
 - **Accessibility Compliance**: WCAG AA/AAA standards validation
 - **Crisis Response**: Sub-second crisis detection and response
 - **Preference Management**: Complete configuration testing with persistence validation
@@ -197,3 +247,6 @@ open build/reports/problems/problems-report.html
 - **Chat History Management**: Complete conversation storage, search, and organization testing
 - **Exercise Recommendations**: AI-driven therapeutic exercise suggestion and tracking
 - **Mood Analytics**: Advanced pattern recognition and forecasting validation
+- **Mood Forecasting**: Predictive analytics with ML-powered algorithms
+- **Relapse Prevention**: Early warning system with automated intervention support
+- **Journaling Prompts**: AI-generated personalized therapeutic writing guidance
