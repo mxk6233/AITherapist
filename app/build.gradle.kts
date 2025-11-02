@@ -61,12 +61,12 @@ android {
     
     // Add tests directory as test source
     sourceSets {
-        test {
+        getByName("test") {
             java {
                 srcDir("${project.projectDir}/../tests/unit")
             }
         }
-        androidTest {
+        getByName("androidTest") {
             java {
                 srcDir("${project.projectDir}/../tests/integration")
             }
