@@ -58,6 +58,20 @@ android {
             isReturnDefaultValues = true
         }
     }
+    
+    // Add tests directory as test source
+    sourceSets {
+        test {
+            java {
+                srcDir("${project.projectDir}/../tests/unit")
+            }
+        }
+        androidTest {
+            java {
+                srcDir("${project.projectDir}/../tests/integration")
+            }
+        }
+    }
 }
 
 // JaCoCo Configuration
