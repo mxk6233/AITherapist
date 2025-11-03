@@ -1481,7 +1481,7 @@ User Input → UI Screen → Use Case → Data Models → Use Case → UI Displa
    - Recommendations include explanations
 
 3. **Real-Time Updates**
-   - Auto-refresh mechanisms (LaunchedEffect with coroutines)
+   - Auto refresh mechanisms (LaunchedEffect with coroutines)
    - Reactive UI updates (remember, mutableStateOf)
    - Live data updates from use cases
 

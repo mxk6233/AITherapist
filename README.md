@@ -186,48 +186,6 @@ open app/build/reports/jacoco/jacocoTestReport/html/index.html
 open build/reports/problems/problems-report.html
 ```
 
-### Disabled Test Cases (Advanced Features)
-
-#### 1. **AI-Powered Mood Forecasting** (`MoodForecastingUseCaseTest.kt`) - **UC26**
-**Purpose**: Predictive mood analytics and forecasting functionality
-**Test Categories**:
-- **Trend Prediction**: Tests ML-powered forecasting algorithms and pattern recognition
-- **Proactive Interventions**: Tests mood decline predictions and early intervention recommendations
-- **Personalized Models**: Tests user-specific forecasting models and custom thresholds
-- **Seasonal Analysis**: Tests cyclical mood patterns and seasonal trend detection
-
-**Key Features**:
-- Predictive mood analytics based on historical patterns
-- ML-powered forecasting algorithms
-- Trend prediction and pattern recognition
-- Proactive mood intervention recommendations
-- Seasonal and cyclical mood analysis
-- Personalized forecasting models
-
-#### 2. **Relapse Prevention Alerts** (`RelapsePreventionUseCaseTest.kt`) - **UC35**
-**Purpose**: Early warning system for mood decline and relapse prevention
-**Test Categories**:
-- **Risk Detection**: Tests early warning system and pattern recognition for mood decline
-- **Alert Management**: Tests customizable alert thresholds and notification system
-- **Intervention Recommendations**: Tests automated intervention suggestions and support activation
-- **Progress Monitoring**: Tests milestone tracking and recovery progress measurement
-
-**Key Features**:
-- Early warning system for mood decline patterns
-- Customizable alert thresholds
-- Intervention recommendations based on risk levels
-- Progress tracking and milestone monitoring
-- Automated support system activation
-- Integration with therapy sessions and exercises
-
-#### 3. **AI-Generated Journaling Prompts** (`AIGeneratedJournalingPromptsUseCaseTest.kt`) - **UC32**
-**Purpose**: Dynamic journaling prompt generation and personalization
-**Test Categories**:
-- **Prompt Generation**: Tests mood-based, context-aware, and personalized prompt creation
-- **Category Management**: Tests multiple prompt categories (gratitude, reflection, emotional processing)
-- **Personalization**: Tests user history-based and preference-driven prompt customization
-- **Integration**: Tests integration with mood analytics and therapy progress tracking
-
 **Key Features**:
 - Dynamic journaling prompt generation based on mood state
 - Context-aware prompts (seasonal, holiday-specific, therapeutic themes)
@@ -245,8 +203,8 @@ open build/reports/problems/problems-report.html
 - **Preference Management**: Complete configuration testing with persistence validation
 - **Notification System**: Comprehensive notification delivery and management testing
 - **Chat History Management**: Complete conversation storage, search, and organization testing
-- **Exercise Recommendations**: AI-driven therapeutic exercise suggestion and tracking
+- **Exercise Recommendations**: AI driven therapeutic exercise suggestion and tracking
 - **Mood Analytics**: Advanced pattern recognition and forecasting validation
 - **Mood Forecasting**: Predictive analytics with ML-powered algorithms
 - **Relapse Prevention**: Early warning system with automated intervention support
-- **Journaling Prompts**: AI-generated personalized therapeutic writing guidance
+- **Journaling Prompts**: AI generated personalized therapeutic writing guidance
