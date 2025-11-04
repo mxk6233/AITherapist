@@ -48,10 +48,15 @@ class {UseCaseName}UseCaseUnitTests {
 -  **UC6: View Chat History** - 3 test cases
 -  **UC8: Suggest Coping Exercises** - 3 test cases
 -  **UC9: View Mood Analytics** - 3 test cases
+-  **UC16: Access Educational Resources** - 3 test cases
 -  **UC22: Monitor System Health** - 3 test cases
+-  **UC25: Facilitate User Support** - 3 test cases
 -  **UC26: AI-Powered Mood Forecasting** - 3 test cases
 -  **UC32: AI-Generated Journaling Prompts** - 3 test cases
+-  **UC34: Group Therapy Simulation Mode** - 3 test cases
 -  **UC35: Relapse Prevention Alerts** - 3 test cases
+-  **UC37: Predictive Burnout Detection** - 3 test cases
+-  **UC38: Voice Enabled Therapy Sessions** - 3 test cases
 
 ## Test Case Distribution
 

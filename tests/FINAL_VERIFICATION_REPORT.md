@@ -11,17 +11,17 @@
 
 | Metric | Count | Status |
 |--------|-------|--------|
-| **Total Use Cases** | 22 |  |
-| **Test Files Created** | 22 |  |
+| **Total Use Cases** | 27 |  |
+| **Test Files Created** | 27 |  |
 | **Test Cases per Use Case** | 3 |  |
-| **Total Test Cases** | 66 |  |
+| **Total Test Cases** | 81 |  |
 | **Coverage** | 100% |  |
 
 ---
 
 ## Complete Use Case Test Coverage
 
-###  All 22 Use Cases Verified
+###  All 27 Use Cases Verified
 
 1.  **UC1: Conduct AI Chat Session** - 3 test cases
 2.  **UC2: Handle Crisis Intervention** - 3 test cases
@@ -35,16 +35,21 @@
 10.  **UC13: Set Application Preferences/Configurations** - 3 test cases
 11.  **UC14: Receive Daily Affirmations** - 3 test cases
 12.  **UC15: Handle Network Connectivity Issues** - 3 test cases
-13.  **UC17: Implement Accessibility Features** - 3 test cases
-14.  **UC18: Manage Notifications** - 3 test cases
-15.  **UC20: Handle Application Errors** - 3 test cases
-16.  **UC22: Monitor System Health** - 3 test cases
-17.  **UC23: Implement Security Protocols** - 3 test cases
-18.  **UC24: Personalize User Experience** - 3 test cases
-19.  **UC26: AI-Powered Mood Forecasting** - 3 test cases
-20.  **UC27: Guided Breathing & Meditation Sessions** - 3 test cases
-21.  **UC32: AI-Generated Journaling Prompts** - 3 test cases
-22.  **UC35: Relapse Prevention Alerts** - 3 test cases
+13.  **UC16: Access Educational Resources** - 3 test cases
+14.  **UC17: Implement Accessibility Features** - 3 test cases
+15.  **UC18: Manage Notifications** - 3 test cases
+16.  **UC20: Handle Application Errors** - 3 test cases
+17.  **UC22: Monitor System Health** - 3 test cases
+18.  **UC23: Implement Security Protocols** - 3 test cases
+19.  **UC24: Personalize User Experience** - 3 test cases
+20.  **UC25: Facilitate User Support** - 3 test cases
+21.  **UC26: AI-Powered Mood Forecasting** - 3 test cases
+22.  **UC27: Guided Breathing & Meditation Sessions** - 3 test cases
+23.  **UC32: AI-Generated Journaling Prompts** - 3 test cases
+24.  **UC34: Group Therapy Simulation Mode** - 3 test cases
+25.  **UC35: Relapse Prevention Alerts** - 3 test cases
+26.  **UC37: Predictive Burnout Detection** - 3 test cases
+27.  **UC38: Voice Enabled Therapy Sessions** - 3 test cases
 
 ---
 
@@ -55,7 +60,7 @@ All test files are located in: `tests/unit/usecases/`
 ### File Structure
 ```
 tests/unit/usecases/
-├── uc1_ai_chat_session/AIChatSessionUseCaseUnitTests.kt ├── uc2_crisis_intervention/CrisisInterventionUseCaseUnitTests.kt ├── uc3_mood_logging/MoodLoggingUseCaseUnitTests.kt ├── uc4_user_registration/UserRegistrationUseCaseUnitTests.kt ├── uc5_personality_onboarding/PersonalityOnboardingUseCaseUnitTests.kt ├── uc6_chat_history/ChatHistoryUseCaseUnitTests.kt ├── uc7_user_login/UserLoginUseCaseUnitTests.kt ├── uc8_coping_exercises/CopingExercisesUseCaseUnitTests.kt ├── uc9_mood_analytics/MoodAnalyticsUseCaseUnitTests.kt ├── uc13_preferences/AppPreferencesUseCaseUnitTests.kt ├── uc14_daily_affirmations/DailyAffirmationsUseCaseUnitTests.kt ├── uc15_network_connectivity/NetworkConnectivityUseCaseUnitTests.kt ├── uc17_accessibility/AccessibilityUseCaseUnitTests.kt ├── uc18_notifications/NotificationsUseCaseUnitTests.kt ├── uc20_application_errors/ApplicationErrorsUseCaseUnitTests.kt ├── uc22_system_health/SystemHealthUseCaseUnitTests.kt ├── uc23_security_protocols/SecurityProtocolsUseCaseUnitTests.kt ├── uc24_personalization/PersonalizationUseCaseUnitTests.kt ├── uc26_mood_forecasting/MoodForecastingUseCaseUnitTests.kt ├── uc27_guided_breathing/GuidedBreathingUseCaseUnitTests.kt ├── uc32_journaling_prompts/JournalingPromptsUseCaseUnitTests.kt └── uc35_relapse_prevention/RelapsePreventionUseCaseUnitTests.kt ```
+├── uc1_ai_chat_session/AIChatSessionUseCaseUnitTests.kt ├── uc2_crisis_intervention/CrisisInterventionUseCaseUnitTests.kt ├── uc3_mood_logging/MoodLoggingUseCaseUnitTests.kt ├── uc4_user_registration/UserRegistrationUseCaseUnitTests.kt ├── uc5_personality_onboarding/PersonalityOnboardingUseCaseUnitTests.kt ├── uc6_chat_history/ChatHistoryUseCaseUnitTests.kt ├── uc7_user_login/UserLoginUseCaseUnitTests.kt ├── uc8_coping_exercises/CopingExercisesUseCaseUnitTests.kt ├── uc9_mood_analytics/MoodAnalyticsUseCaseUnitTests.kt ├── uc13_preferences/AppPreferencesUseCaseUnitTests.kt ├── uc14_daily_affirmations/DailyAffirmationsUseCaseUnitTests.kt ├── uc15_network_connectivity/NetworkConnectivityUseCaseUnitTests.kt ├── uc17_accessibility/AccessibilityUseCaseUnitTests.kt ├── uc18_notifications/NotificationsUseCaseUnitTests.kt ├── uc20_application_errors/ApplicationErrorsUseCaseUnitTests.kt ├── uc22_system_health/SystemHealthUseCaseUnitTests.kt ├── uc23_security_protocols/SecurityProtocolsUseCaseUnitTests.kt ├── uc24_personalization/PersonalizationUseCaseUnitTests.kt ├── uc26_mood_forecasting/MoodForecastingUseCaseUnitTests.kt ├── uc27_guided_breathing/GuidedBreathingUseCaseUnitTests.kt ├── uc32_journaling_prompts/JournalingPromptsUseCaseUnitTests.kt ├── uc34_group_therapy/GroupTherapySimulationModeUseCaseUnitTests.kt ├── uc35_relapse_prevention/RelapsePreventionUseCaseUnitTests.kt ├── uc16_educational_resources/EducationalResourcesUseCaseUnitTests.kt ├── uc25_user_support/UserSupportUseCaseUnitTests.kt ├── uc37_burnout_detection/PredictiveBurnoutDetectionUseCaseUnitTests.kt └── uc38_voice_therapy/VoiceEnabledTherapyUseCaseUnitTests.kt ```
 
 ---
 
@@ -95,7 +100,7 @@ Each test file contains exactly **3 test cases**, organized as:
 ```bash
 # Verify all test files exist
 find tests/unit/usecases -name "*UnitTests.kt" | wc -l
-# Expected: 22
+# Expected: 27
 
 # Verify all have 3 test cases
 find tests/unit/usecases -name "*UnitTests.kt" -exec grep -c "@Nested" {} \; | sort -u
@@ -109,9 +114,9 @@ find tests/unit/usecases -name "*UnitTests.kt" -exec grep -c "@Nested" {} \; | s
 
 ## Conclusion
 
- **ALL 22 USE CASES HAVE COMPREHENSIVE TEST COVERAGE**  
+ **ALL 27 USE CASES HAVE COMPREHENSIVE TEST COVERAGE**  
  **EACH USE CASE HAS EXACTLY 3 TEST CASES**  
- **TOTAL: 66 TEST CASES ACROSS ALL USE CASES**  
+ **TOTAL: 81 TEST CASES ACROSS ALL USE CASES**  
  **100% COVERAGE OF REQUIRED USE CASES**  
 
 **Status**:  **VERIFICATION COMPLETE AND PASSED**

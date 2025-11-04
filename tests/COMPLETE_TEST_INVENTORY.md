@@ -1,6 +1,6 @@
 # Complete Test Inventory - All Use Cases
 
-This document provides a comprehensive list of all tests (UAT, Unit, and Integration) for all 22 use cases.
+This document provides a comprehensive list of all tests (UAT, Unit, and Integration) for all 27 use cases.
 
 ## Test ID Format
 - **UAT Tests**: `TC-UC{XX}-UAT-{NN}`
@@ -417,15 +417,136 @@ This document provides a comprehensive list of all tests (UAT, Unit, and Integra
 
 ---
 
+---
+
+## UC16: Access Educational Resources
+
+| ID | Type | Description | Expected Result |
+|----|------|-------------|-----------------|
+| TC-UC16-UAT-01 | UAT | As a user, I want to browse educational resources by category so I can find relevant content | User can browse resources by category, see categorized content |
+| TC-UC16-UAT-02 | UAT | As a user, I want to search for educational resources so I can find specific topics quickly | User can search resources, results are relevant and displayed quickly |
+| TC-UC16-UAT-03 | UAT | As a user, I want to track my learning progress so I can see what I've completed | User can track progress, see completion status, view learning history |
+| TC-UC16-UNIT-01 | Unit | system retrieves educational resources filtered by category | Resources filtered by category are returned correctly, all match requested category |
+| TC-UC16-UNIT-02 | Unit | system filters resources by content format (text, video, audio) | Resources filtered by format are returned correctly, all match requested format |
+| TC-UC16-UNIT-03 | Unit | system provides list of available resource categories | Complete list of categories is returned with common categories included |
+| TC-UC16-UNIT-04 | Unit | system searches resources by keyword in title, description, and tags | Matching resources are returned based on search query |
+| TC-UC16-UNIT-05 | Unit | system provides personalized resource recommendations based on user profile | Recommendations are personalized, sorted by relevance, and respect limit parameter |
+| TC-UC16-UNIT-06 | Unit | system validates search input and rejects empty queries | Empty or whitespace-only queries are rejected with IllegalArgumentException |
+| TC-UC16-UNIT-07 | Unit | system tracks learning progress for resources (0-100%) | Progress is tracked correctly with proper validation of bounds |
+| TC-UC16-UNIT-08 | Unit | system marks resources as completed with timestamp | Resources are marked as completed with 100% progress and completion timestamp |
+| TC-UC16-UNIT-09 | Unit | system retrieves user's learning history | Learning history is returned for the user |
+| TC-UC16-INT-01 | Integration | resources personalized through user profile integration | User profile loaded, preferences applied, resources personalized |
+| TC-UC16-INT-02 | Integration | resources retrieved through content repository integration | Content repository connected, resources loaded, content available |
+| TC-UC16-INT-03 | Integration | learning progress tracked through analytics integration | Progress submitted to analytics, analytics updated, insights generated |
+
+---
+
+## UC25: Facilitate User Support
+
+| ID | Type | Description | Expected Result |
+|----|------|-------------|-----------------|
+| TC-UC25-UAT-01 | UAT | As a user, I want to submit a support ticket so I can get help with issues | User can create support ticket, provide details, receive confirmation |
+| TC-UC25-UAT-02 | UAT | As a user, I want to search FAQ so I can find answers quickly | User can search FAQ, see relevant results, find answers |
+| TC-UC25-UAT-03 | UAT | As a user, I want to get help for the current screen so I can understand features | User can access contextual help, see relevant information, get guidance |
+| TC-UC25-UNIT-01 | Unit | system creates support tickets with correct information | Ticket created with unique ID, linked to user, all fields preserved correctly |
+| TC-UC25-UNIT-02 | Unit | system validates ticket creation input and rejects empty fields | Empty subject or description throws IllegalArgumentException |
+| TC-UC25-UNIT-03 | Unit | system allows adding responses to support tickets | Responses are added to tickets correctly with message and source identification |
+| TC-UC25-UNIT-04 | Unit | system retrieves FAQ entries with search capability | FAQs are returned and can be searched by query in question/answer/tags |
+| TC-UC25-UNIT-05 | Unit | system provides contextual help based on current screen/feature | Relevant help content is returned for known contexts, general help for unknown |
+| TC-UC25-UNIT-06 | Unit | system provides available support categories | List of support categories is returned including common categories |
+| TC-UC25-UNIT-07 | Unit | system accepts and tracks user feedback with rating | Feedback is submitted correctly with all fields preserved and status tracked |
+| TC-UC25-UNIT-08 | Unit | system validates feedback input and rejects invalid data | Empty messages and invalid ratings (outside 1-5) are rejected |
+| TC-UC25-UNIT-09 | Unit | system retrieves user's support ticket history | Ticket history is returned for the user |
+| TC-UC25-INT-01 | Integration | support tickets persisted through database integration | Database connected, tickets saved and persisted |
+| TC-UC25-INT-02 | Integration | ticket history retrieved through database integration | Database connected, history queried, tickets retrieved |
+| TC-UC25-INT-03 | Integration | support updates sent through notification system integration | Notification service connected, notifications sent, users notified |
+| TC-UC25-INT-04 | Integration | FAQ search performed through search system integration | Search service connected, search performed, results returned |
+
+---
+
+## UC34: Group Therapy Simulation Mode
+
+| ID | Type | Description | Expected Result |
+|----|------|-------------|-----------------|
+| TC-UC34-UAT-01 | UAT | As a user, I want to join a group therapy session so I can practice in a supportive environment | User can join session, see virtual participants, participate in discussions |
+| TC-UC34-UAT-02 | UAT | As a user, I want to participate in group activities so I can learn from others | User can participate in exercises, discussions, and group activities |
+| TC-UC34-UAT-03 | UAT | As a user, I want to receive peer support so I feel validated and understood | User receives supportive responses, feels validated, understands they're not alone |
+| TC-UC34-UNIT-01 | Unit | system creates group therapy sessions correctly | Session created with unique ID, facilitator set, status ACTIVE |
+| TC-UC34-UNIT-02 | Unit | system validates session creation input and rejects invalid data | Empty session name and invalid max participants are rejected |
+| TC-UC34-UNIT-03 | Unit | system allows users to join group sessions | Users can join sessions up to max capacity, already-joined users return true |
+| TC-UC34-UNIT-04 | Unit | system creates virtual participants with diverse personalities | Virtual participants created with requested count, diverse personalities assigned |
+| TC-UC34-UNIT-05 | Unit | system facilitates group discussions with prompts | Discussion prompts are generated including facilitator prompts and topic references |
+| TC-UC34-UNIT-06 | Unit | system conducts group exercises with instructions | Exercises include instructions, duration, and steps |
+| TC-UC34-UNIT-07 | Unit | system simulates realistic group dynamics | Dynamics metrics include participation level, group cohesion, engagement score |
+| TC-UC34-UNIT-08 | Unit | system provides peer support responses | Supportive responses are generated and provided |
+| TC-UC34-UNIT-09 | Unit | system retrieves active group sessions for user | Active sessions are returned, only ACTIVE status sessions included |
+| TC-UC34-INT-01 | Integration | group sessions managed through session management integration | Session service connected, sessions created and persisted |
+| TC-UC34-INT-02 | Integration | virtual participants generated through AI service integration | AI service connected, participants generated, personalities assigned |
+| TC-UC34-INT-03 | Integration | participant responses generated through AI service integration | AI service connected, responses generated, responses contextual |
+| TC-UC34-INT-04 | Integration | group activities personalized through user profile integration | Profile loaded, activities personalized, recommendations generated |
+
+---
+
+## UC37: Predictive Burnout Detection
+
+| ID | Type | Description | Expected Result |
+|----|------|-------------|-----------------|
+| TC-UC37-UAT-01 | UAT | As a user, I want to see my burnout risk assessment so I can take preventive action | User can view risk assessment, see risk level, understand factors |
+| TC-UC37-UAT-02 | UAT | As a user, I want to receive prevention recommendations so I can prevent burnout | User receives personalized recommendations, can take action, prevent burnout |
+| TC-UC37-UAT-03 | UAT | As a user, I want to receive early warning alerts so I can address burnout risk early | User receives alerts for high risk, understands warnings, can take preventive action |
+| TC-UC37-UNIT-01 | Unit | system assesses burnout risk from multiple factors | Risk assessment includes risk score, level, factors, and early warnings |
+| TC-UC37-UNIT-02 | Unit | system calculates burnout risk level correctly | Risk levels calculated based on risk score (LOW, MODERATE, HIGH, CRITICAL) |
+| TC-UC37-UNIT-03 | Unit | system identifies multiple burnout risk factors | Multiple risk factors identified with severity scores and descriptions |
+| TC-UC37-UNIT-04 | Unit | system detects early warning signs of burnout | Early warnings detected for declining patterns, severity assessed |
+| TC-UC37-UNIT-05 | Unit | system generates personalized prevention recommendations | Recommendations generated based on risk level and factors, personalized |
+| TC-UC37-UNIT-06 | Unit | system triggers interventions for high risk | Interventions triggered for HIGH/CRITICAL risk levels |
+| TC-UC37-UNIT-07 | Unit | system predicts future burnout risk | Future risk predictions generated with projected score, level, trend, and confidence |
+| TC-UC37-UNIT-08 | Unit | system calculates prediction confidence | Confidence scores reflect data quality, comprehensive data yields higher confidence |
+| TC-UC37-UNIT-09 | Unit | system identifies burnout risk trends | Trends identified (INCREASING, DECREASING, STABLE) |
+| TC-UC37-INT-01 | Integration | burnout risk assessed through mood tracking integration | Mood service connected, mood data loaded, risk assessed |
+| TC-UC37-INT-02 | Integration | burnout warnings detected through mood trend integration | Trend service connected, trend analyzed, warnings detected for declining trends |
+| TC-UC37-INT-03 | Integration | burnout risk assessed through activity monitoring integration | Activity service connected, activity data loaded, decline detected |
+| TC-UC37-INT-04 | Integration | burnout interventions sent through notification integration | Notification service connected, interventions triggered, notifications sent |
+
+---
+
+## UC38: Voice Enabled Therapy Sessions
+
+| ID | Type | Description | Expected Result |
+|----|------|-------------|-----------------|
+| TC-UC38-UAT-01 | UAT | As a user, I want to start a voice therapy session so I can talk naturally with the AI therapist | User can start voice session, speak naturally, receive voice responses |
+| TC-UC38-UAT-02 | UAT | As a user, I want to pause and resume voice sessions so I can control the conversation | User can pause/resume sessions, control conversation flow |
+| TC-UC38-UAT-03 | UAT | As a user, I want helpful error messages when voice recognition fails so I can continue | User receives helpful error messages, suggestions, can retry or use alternative methods |
+| TC-UC38-UNIT-01 | Unit | system starts voice therapy sessions correctly | Session created with unique ID, language set, status ACTIVE |
+| TC-UC38-UNIT-02 | Unit | system processes voice input and generates AI responses | Voice transcribed to text, AI response generated, converted to audio |
+| TC-UC38-UNIT-03 | Unit | system processes text input and converts AI response to voice | Text preserved, AI response generated, converted to audio with 100% confidence |
+| TC-UC38-UNIT-04 | Unit | system pauses voice sessions | Sessions can be paused, status changed to PAUSED |
+| TC-UC38-UNIT-05 | Unit | system resumes paused voice sessions | Paused sessions can be resumed, status changed to ACTIVE |
+| TC-UC38-UNIT-06 | Unit | system ends voice sessions and tracks duration | Sessions ended, status COMPLETED, duration tracked |
+| TC-UC38-UNIT-07 | Unit | system validates session operations and rejects invalid requests | Invalid operations rejected with appropriate exceptions |
+| TC-UC38-UNIT-08 | Unit | system retrieves voice session history for user | Session history returned, sorted by start time |
+| TC-UC38-UNIT-09 | Unit | system retrieves active voice session for user | Active session returned, only ACTIVE status sessions included |
+| TC-UC38-UNIT-10 | Unit | system handles voice recognition errors gracefully | Error messages provided, suggestions given, retry allowed |
+| TC-UC38-UNIT-11 | Unit | system provides supported languages | List of supported languages returned with speech recognition and TTS support |
+| TC-UC38-INT-01 | Integration | voice input transcribed through speech recognition integration | Speech service connected, audio processed, speech transcribed to text |
+| TC-UC38-INT-02 | Integration | transcription confidence provided through speech recognition integration | Speech service connected, confidence calculated, confidence valid (0-1) |
+| TC-UC38-INT-03 | Integration | AI responses converted to voice through text-to-speech integration | TTS service connected, text processed, audio generated |
+| TC-UC38-INT-04 | Integration | multi-language support provided through text-to-speech integration | TTS service connected, multiple languages supported, voices available |
+| TC-UC38-INT-05 | Integration | AI responses generated through chat service integration | Chat service connected, input processed, response generated |
+| TC-UC38-INT-06 | Integration | conversation context maintained through chat service integration | Chat service connected, context maintained, responses contextual |
+| TC-UC38-INT-07 | Integration | voice sessions persisted through session storage integration | Storage service connected, sessions saved and persisted |
+
+---
+
 ## Summary Statistics
 
 | Metric | Count |
 |--------|-------|
-| **Total Use Cases** | 22 |
-| **Total UAT Tests** | ~40 |
-| **Total Unit Tests** | ~110 |
-| **Total Integration Tests** | ~66 |
-| **Total Tests** | ~216 |
+| **Total Use Cases** | 27 |
+| **Total UAT Tests** | ~55 |
+| **Total Unit Tests** | ~155 |
+| **Total Integration Tests** | ~81 |
+| **Total Tests** | ~291 |
 
 ---
 

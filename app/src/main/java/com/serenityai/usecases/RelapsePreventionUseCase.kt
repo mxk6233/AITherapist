@@ -106,7 +106,7 @@ class RelapsePreventionUseCase {
                 EarlyWarning(
                     title = "Sleep Disruption",
                     description = "Irregular sleep patterns detected - ${sleepRisk.description}",
-                    severity = if (sleepRisk.riskLevel >= 85) WarningSeverity.HIGH else WarningSeverity.MEDIUM,
+                    severity = if (sleepRisk.riskLevel >= 85) com.serenityai.data.models.WarningSeverity.HIGH else com.serenityai.data.models.WarningSeverity.MEDIUM,
                     recommendedAction = "Schedule sleep hygiene activities and maintain consistent bedtime",
                     category = RiskCategory.SLEEP,
                     relatedRiskIndicators = listOf(sleepRisk.id)
@@ -121,7 +121,7 @@ class RelapsePreventionUseCase {
                 EarlyWarning(
                     title = "Social Isolation",
                     description = "Decreased social activity detected - ${socialRisk.description}",
-                    severity = if (socialRisk.riskLevel >= 80) WarningSeverity.HIGH else WarningSeverity.MEDIUM,
+                    severity = if (socialRisk.riskLevel >= 80) com.serenityai.data.models.WarningSeverity.HIGH else com.serenityai.data.models.WarningSeverity.MEDIUM,
                     recommendedAction = "Plan social interactions and connect with support network",
                     category = RiskCategory.SOCIAL_SUPPORT,
                     relatedRiskIndicators = listOf(socialRisk.id)
@@ -136,7 +136,7 @@ class RelapsePreventionUseCase {
                 EarlyWarning(
                     title = "Stress Accumulation",
                     description = "Elevated stress levels detected - ${stressRisk.description}",
-                    severity = if (stressRisk.riskLevel >= 80) WarningSeverity.HIGH else WarningSeverity.MEDIUM,
+                    severity = if (stressRisk.riskLevel >= 80) com.serenityai.data.models.WarningSeverity.HIGH else com.serenityai.data.models.WarningSeverity.MEDIUM,
                     recommendedAction = "Practice stress management techniques and reduce stressors",
                     category = RiskCategory.STRESS,
                     relatedRiskIndicators = listOf(stressRisk.id)
@@ -153,7 +153,7 @@ class RelapsePreventionUseCase {
                     EarlyWarning(
                         title = "Mood Decline",
                         description = "Significant mood decline detected over recent days",
-                        severity = if (recentMoods.last() <= 2) WarningSeverity.HIGH else WarningSeverity.MEDIUM,
+                        severity = if (recentMoods.last() <= 2) com.serenityai.data.models.WarningSeverity.HIGH else com.serenityai.data.models.WarningSeverity.MEDIUM,
                         recommendedAction = "Engage in coping strategies and contact support network",
                         category = RiskCategory.MOOD_PATTERNS,
                         relatedRiskIndicators = emptyList()
@@ -164,10 +164,10 @@ class RelapsePreventionUseCase {
         
         return warnings.sortedByDescending { 
             when (it.severity) {
-                WarningSeverity.CRITICAL -> 4
-                WarningSeverity.HIGH -> 3
-                WarningSeverity.MEDIUM -> 2
-                WarningSeverity.LOW -> 1
+                com.serenityai.data.models.WarningSeverity.CRITICAL -> 4
+                com.serenityai.data.models.WarningSeverity.HIGH -> 3
+                com.serenityai.data.models.WarningSeverity.MEDIUM -> 2
+                com.serenityai.data.models.WarningSeverity.LOW -> 1
             }
         }
     }
@@ -263,14 +263,14 @@ class RelapsePreventionUseCase {
         
         // Add specific actions based on early warnings
         riskAssessment.earlyWarnings.forEach { warning ->
-            if (warning.severity in listOf(WarningSeverity.HIGH, WarningSeverity.CRITICAL)) {
+            if (warning.severity in listOf(com.serenityai.data.models.WarningSeverity.HIGH, com.serenityai.data.models.WarningSeverity.CRITICAL)) {
                 actions.add(
                     InterventionAction(
                         title = "Address: ${warning.title}",
                         description = warning.recommendedAction,
                         priority = when (warning.severity) {
-                            WarningSeverity.CRITICAL -> ActionPriority.CRITICAL
-                            WarningSeverity.HIGH -> ActionPriority.HIGH
+                            com.serenityai.data.models.WarningSeverity.CRITICAL -> ActionPriority.CRITICAL
+                            com.serenityai.data.models.WarningSeverity.HIGH -> ActionPriority.HIGH
                             else -> ActionPriority.MEDIUM
                         }
                     )
