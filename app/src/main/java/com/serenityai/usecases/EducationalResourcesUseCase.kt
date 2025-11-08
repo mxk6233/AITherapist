@@ -192,6 +192,11 @@ class EducationalResourcesUseCase {
     
     // Private helper methods
     
+    /**
+     * Builds the in-memory catalog of educational resources used for testing and preview scenarios.
+     *
+     * @return Seeded list of `EducationalResource` entries spanning multiple categories and formats.
+     */
     private fun generateEducationalResources(): List<EducationalResource> {
         return listOf(
             EducationalResource(
@@ -262,6 +267,13 @@ class EducationalResourcesUseCase {
         )
     }
     
+    /**
+     * Applies lightweight personalization to the supplied resources for the given user.
+     *
+     * @param resources Candidate resources before personalization.
+     * @param userId Identifier for the user requesting content.
+     * @return List of resources with adjusted relevance scores for the user.
+     */
     private fun personalizeResources(
         resources: List<EducationalResource>,
         userId: String
@@ -273,6 +285,12 @@ class EducationalResourcesUseCase {
         }
     }
     
+    /**
+     * Estimates the amount of time a user typically spends on a resource based on its format.
+     *
+     * @param resourceId Identifier for the resource whose engagement time is being estimated.
+     * @return Estimated consumption time in seconds.
+     */
     private fun estimateTimeSpent(resourceId: String): Float {
         // In production, would calculate based on resource duration and format
         return when {

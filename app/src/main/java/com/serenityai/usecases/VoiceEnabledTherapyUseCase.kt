@@ -291,6 +291,12 @@ class VoiceEnabledTherapyUseCase {
     
     // Private helper methods
     
+    /**
+     * Simulates speech-to-text processing for the provided audio payload.
+     *
+     * @param audioData Raw audio bytes captured from the client device.
+     * @return Transcribed textual representation of the audio input.
+     */
     private fun transcribeVoiceInput(audioData: ByteArray): String {
         // In production, would use actual speech recognition service
         // For now, return a simulated transcription
@@ -301,6 +307,13 @@ class VoiceEnabledTherapyUseCase {
         }
     }
     
+    /**
+     * Produces a contextual AI therapist response tailored to the user's latest message and session state.
+     *
+     * @param userInput Latest input utterance or text message from the user.
+     * @param session Voice session metadata used to provide continuity.
+     * @return AI-authored response text to deliver back to the user.
+     */
     private fun generateAIResponse(userInput: String, session: VoiceSession): String {
         // In production, would integrate with AI service
         // For now, return contextual responses
@@ -322,12 +335,25 @@ class VoiceEnabledTherapyUseCase {
         }
     }
     
+    /**
+     * Simulates text-to-speech conversion for a given message in the target language.
+     *
+     * @param text AI response text to vocalize.
+     * @param language Language code guiding voice selection.
+     * @return Byte array representing synthesized audio output.
+     */
     private fun synthesizeSpeech(text: String, language: String): ByteArray {
         // In production, would use actual text-to-speech service
         // For now, return simulated audio data
         return ByteArray(text.length * 100) // Simulated audio size
     }
     
+    /**
+     * Derives a confidence value for a transcription using simple heuristics on the text content.
+     *
+     * @param transcribedText Speech recognition result to evaluate.
+     * @return Confidence score between 0 and 1 indicating reliability of the transcription.
+     */
     private fun calculateConfidence(transcribedText: String): Float {
         // In production, would use actual confidence from speech recognition
         // For now, return based on text length and clarity

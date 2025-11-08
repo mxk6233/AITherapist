@@ -201,6 +201,11 @@ class UserSupportUseCase {
     
     // Private helper methods
     
+    /**
+     * Generates the canonical FAQ entries leveraged for mocks, previews, and offline testing.
+     *
+     * @return Collection of `FAQEntry` items representing common support questions.
+     */
     private fun generateFAQEntries(): List<FAQEntry> {
         return listOf(
             FAQEntry(
@@ -251,6 +256,11 @@ class UserSupportUseCase {
         )
     }
     
+    /**
+     * Creates contextual help snippets used to surface just-in-time guidance across the app.
+     *
+     * @return List of `HelpContent` definitions keyed by experience context identifiers.
+     */
     private fun generateHelpContents(): List<HelpContent> {
         return listOf(
             HelpContent(

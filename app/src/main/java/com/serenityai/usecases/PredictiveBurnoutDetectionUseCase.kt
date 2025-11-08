@@ -261,6 +261,12 @@ class PredictiveBurnoutDetectionUseCase {
     
     // Private helper methods
     
+    /**
+     * Derives a burnout risk factor by inspecting recent mood entries for average and directional trends.
+     *
+     * @param moodEntries Chronologically ordered mood history for the user.
+     * @return `BurnoutRiskFactor` quantifying mood-related burnout signals.
+     */
     private fun analyzeMoodTrends(moodEntries: List<MoodEntry>): BurnoutRiskFactor {
         if (moodEntries.isEmpty()) {
             return BurnoutRiskFactor(
@@ -295,6 +301,12 @@ class PredictiveBurnoutDetectionUseCase {
         )
     }
     
+    /**
+     * Evaluates engagement data to detect declines in activity that may signal burnout risk.
+     *
+     * @param activityLevels Recorded engagement intensity values.
+     * @return Activity-based `BurnoutRiskFactor` capturing declines in participation.
+     */
     private fun analyzeActivityLevels(activityLevels: List<ActivityLevel>): BurnoutRiskFactor {
         if (activityLevels.isEmpty()) {
             return BurnoutRiskFactor(
@@ -328,6 +340,12 @@ class PredictiveBurnoutDetectionUseCase {
         )
     }
     
+    /**
+     * Aggregates user-reported stress indicators to determine burnout severity related to stress.
+     *
+     * @param stressIndicators Series of stress measurements on a 0-10 scale.
+     * @return Stress accumulation `BurnoutRiskFactor` reflecting intensity and persistence.
+     */
     private fun analyzeStressIndicators(stressIndicators: List<StressIndicator>): BurnoutRiskFactor {
         if (stressIndicators.isEmpty()) {
             return BurnoutRiskFactor(
@@ -359,6 +377,12 @@ class PredictiveBurnoutDetectionUseCase {
         )
     }
     
+    /**
+     * Assesses sleep quality patterns to identify potential burnout driven by rest disruptions.
+     *
+     * @param sleepQuality Collection of nightly sleep quality assessments.
+     * @return Sleep disruption `BurnoutRiskFactor` with severity proportional to sleep degradation.
+     */
     private fun analyzeSleepQuality(sleepQuality: List<SleepQuality>): BurnoutRiskFactor {
         if (sleepQuality.isEmpty()) {
             return BurnoutRiskFactor(
@@ -390,6 +414,12 @@ class PredictiveBurnoutDetectionUseCase {
         )
     }
     
+    /**
+     * Consolidates individual risk factors into a single normalized burnout risk score.
+     *
+     * @param riskFactors Factors derived from mood, activity, stress, and sleep analyses.
+     * @return Overall burnout risk score ranging from 0 to 100.
+     */
     private fun calculateBurnoutRiskScore(riskFactors: List<BurnoutRiskFactor>): Float {
         if (riskFactors.isEmpty()) return 0f
         
@@ -401,6 +431,12 @@ class PredictiveBurnoutDetectionUseCase {
         return (average * 100f).coerceIn(0f, 100f)
     }
     
+    /**
+     * Maps a numeric risk score to the categorical burnout risk level.
+     *
+     * @param riskScore Calculated burnout score on a 0-100 scale.
+     * @return Enumerated burnout risk tier representing severity.
+     */
     private fun determineRiskLevel(riskScore: Float): BurnoutRiskLevel {
         return when {
             riskScore >= 75f -> BurnoutRiskLevel.CRITICAL
@@ -410,6 +446,12 @@ class PredictiveBurnoutDetectionUseCase {
         }
     }
     
+    /**
+     * Synthesizes overall trend direction based on the concentration of high-severity factors.
+     *
+     * @param riskFactors Set of factors from the latest assessment.
+     * @return Directional trend describing whether burnout signals are increasing, decreasing, or stable.
+     */
     private fun analyzeTrend(riskFactors: List<BurnoutRiskFactor>): Trend {
         // Simplified trend analysis
         val highSeverityCount = riskFactors.count { it.severity >= 0.7f }
@@ -420,6 +462,12 @@ class PredictiveBurnoutDetectionUseCase {
         }
     }
     
+    /**
+     * Estimates confidence for future risk predictions using breadth and intensity of available data.
+     *
+     * @param assessment Latest burnout assessment underpinning the forecast.
+     * @return Confidence percentage (0-100) describing prediction reliability.
+     */
     private fun calculatePredictionConfidence(assessment: BurnoutRiskAssessment): Float {
         // Confidence based on number of risk factors and data quality
         val factorCount = assessment.riskFactors.size
