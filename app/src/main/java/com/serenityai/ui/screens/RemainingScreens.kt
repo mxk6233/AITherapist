@@ -1,10 +1,15 @@
 package com.serenityai.ui.screens
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -14,6 +19,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -248,6 +256,103 @@ fun JournalPromptsScreen(onNavigateBack: () -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EducationalResourcesScreen(onNavigateBack: () -> Unit) {
+    val context = LocalContext.current
+    val useCase = remember { com.serenityai.usecases.EducationalResourcesUseCase() }
+    var resources by remember { mutableStateOf<List<com.serenityai.usecases.EducationalResource>>(emptyList()) }
+    var categories by remember { mutableStateOf<List<String>>(emptyList()) }
+    var selectedCategory by remember { mutableStateOf<String?>(null) }
+    var searchQuery by remember { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(true) }
+    var selectedFormat by remember { mutableStateOf<com.serenityai.usecases.ContentFormat>(com.serenityai.usecases.ContentFormat.ALL) }
+    var dataSource by remember { mutableStateOf<String>("Loading...") } // Track data source
+    
+    // Function to open URL in browser
+    fun openResourceUrl(url: String) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            // If URL is invalid or no browser available, show error
+            android.widget.Toast.makeText(
+                context,
+                "Unable to open resource: ${e.message}",
+                android.widget.Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+    
+    // Load resources and categories when screen loads
+    LaunchedEffect(Unit) {
+        isLoading = true
+        try {
+            val loadedResources = useCase.getEducationalResources(
+                category = selectedCategory,
+                format = selectedFormat
+            )
+            resources = loadedResources
+            categories = useCase.getResourceCategories()
+            
+            // Check if data came from Firebase (check Logcat for details)
+            // For now, assume Firebase if we have more than 5 resources (Firebase might have more)
+            dataSource = if (loadedResources.size > 5) "Firebase" else "Fallback Data"
+        } catch (e: Exception) {
+            android.util.Log.e("EducationalResources", "Error loading resources: ${e.message}", e)
+            dataSource = "Error - Using Fallback"
+            // Error handling - try to get fallback data
+            try {
+                resources = useCase.getEducationalResources(
+                    category = null,
+                    format = com.serenityai.usecases.ContentFormat.ALL
+                )
+                categories = useCase.getResourceCategories()
+            } catch (e2: Exception) {
+                // If even fallback fails, show empty state
+                resources = emptyList()
+                categories = emptyList()
+            }
+        }
+        isLoading = false
+    }
+    
+    // Reload when filters change
+    LaunchedEffect(selectedCategory, selectedFormat) {
+        isLoading = true
+        try {
+            resources = useCase.getEducationalResources(
+                category = selectedCategory,
+                format = selectedFormat
+            )
+        } catch (e: Exception) {
+            // Error handling
+        }
+        isLoading = false
+    }
+    
+    // Search functionality
+    LaunchedEffect(searchQuery) {
+        if (searchQuery.isNotBlank()) {
+            isLoading = true
+            try {
+                resources = useCase.searchEducationalResources(searchQuery)
+            } catch (e: Exception) {
+                // Error handling
+            }
+            isLoading = false
+        } else if (searchQuery.isEmpty()) {
+            // Reload all resources when search is cleared
+            isLoading = true
+            try {
+                resources = useCase.getEducationalResources(
+                    category = selectedCategory,
+                    format = selectedFormat
+                )
+            } catch (e: Exception) {
+                // Error handling
+            }
+            isLoading = false
+        }
+    }
+    
     Scaffold(
         topBar = {
             TopAppBar(
@@ -259,7 +364,16 @@ fun EducationalResourcesScreen(onNavigateBack: () -> Unit) {
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
-                )
+                ),
+                actions = {
+                    // Show data source indicator (for debugging)
+                    Text(
+                        text = dataSource,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.padding(end = 16.dp)
+                    )
+                }
             )
         }
     ) { paddingValues ->
@@ -267,12 +381,344 @@ fun EducationalResourcesScreen(onNavigateBack: () -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
         ) {
-            Text("Educational Resources Content (UC16)", fontSize = 20.sp)
-            // Add educational resources UI here
+            // Search Bar
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                placeholder = { Text("Search resources...") },
+                leadingIcon = {
+                    Icon(Icons.Default.Search, contentDescription = "Search")
+                },
+                trailingIcon = {
+                    if (searchQuery.isNotBlank()) {
+                        IconButton(onClick = { searchQuery = "" }) {
+                            Icon(Icons.Default.Clear, contentDescription = "Clear")
+                        }
+                    }
+                },
+                singleLine = true
+            )
+            
+            // Format Filter
+            LazyRow(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                item {
+                    FilterChip(
+                        selected = selectedFormat == com.serenityai.usecases.ContentFormat.ALL,
+                        onClick = { selectedFormat = com.serenityai.usecases.ContentFormat.ALL },
+                        label = { Text("All") }
+                    )
+                }
+                item {
+                    FilterChip(
+                        selected = selectedFormat == com.serenityai.usecases.ContentFormat.TEXT,
+                        onClick = { selectedFormat = com.serenityai.usecases.ContentFormat.TEXT },
+                        label = { Text("Text") }
+                    )
+                }
+                item {
+                    FilterChip(
+                        selected = selectedFormat == com.serenityai.usecases.ContentFormat.VIDEO,
+                        onClick = { selectedFormat = com.serenityai.usecases.ContentFormat.VIDEO },
+                        label = { Text("Video") }
+                    )
+                }
+                item {
+                    FilterChip(
+                        selected = selectedFormat == com.serenityai.usecases.ContentFormat.AUDIO,
+                        onClick = { selectedFormat = com.serenityai.usecases.ContentFormat.AUDIO },
+                        label = { Text("Audio") }
+                    )
+                }
+            }
+            
+            // Category Filter
+            if (categories.isNotEmpty()) {
+                LazyRow(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    item {
+                        FilterChip(
+                            selected = selectedCategory == null,
+                            onClick = { selectedCategory = null },
+                            label = { Text("All Categories") }
+                        )
+                    }
+                    items(categories) { category ->
+                        FilterChip(
+                            selected = selectedCategory == category,
+                            onClick = { 
+                                selectedCategory = if (selectedCategory == category) null else category
+                            },
+                            label = { Text(category) }
+                        )
+                    }
+                }
+            }
+            
+            Spacer(modifier = Modifier.height(8.dp))
+            
+            // Resources List
+            if (isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            } else if (resources.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            Icons.Default.Book,
+                            contentDescription = null,
+                            modifier = Modifier.size(64.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            "No resources found",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        if (searchQuery.isNotBlank()) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                "Try a different search term",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    item {
+                        Text(
+                            "Found ${resources.size} resource${if (resources.size != 1) "s" else ""}",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    }
+                    items(resources) { resource ->
+                        EducationalResourceCard(
+                            resource = resource,
+                            onClick = { openResourceUrl(resource.url) }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun EducationalResourceCard(
+    resource: com.serenityai.usecases.EducationalResource,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        onClick = onClick
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Top
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = resource.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = resource.category,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+                // Format icon
+                Icon(
+                    when (resource.format) {
+                        com.serenityai.usecases.ContentFormat.TEXT -> Icons.Default.Article
+                        com.serenityai.usecases.ContentFormat.VIDEO -> Icons.Default.PlayCircle
+                        com.serenityai.usecases.ContentFormat.AUDIO -> Icons.Default.Headphones
+                        else -> Icons.Default.Book
+                    },
+                    contentDescription = resource.format.name,
+                    modifier = Modifier.size(24.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(8.dp))
+            
+            Text(
+                text = resource.description,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 3
+            )
+            
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.Timer,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "${resource.duration} min",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    // Difficulty badge
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(
+                                when (resource.difficulty) {
+                                    com.serenityai.usecases.DifficultyLevel.BEGINNER -> Color(0xFF4CAF50).copy(alpha = 0.1f)
+                                    com.serenityai.usecases.DifficultyLevel.INTERMEDIATE -> Color(0xFFFF9800).copy(alpha = 0.1f)
+                                    com.serenityai.usecases.DifficultyLevel.ADVANCED -> Color(0xFFF44336).copy(alpha = 0.1f)
+                                }
+                            )
+                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                    ) {
+                        Text(
+                            text = resource.difficulty.name,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = when (resource.difficulty) {
+                                com.serenityai.usecases.DifficultyLevel.BEGINNER -> Color(0xFF4CAF50)
+                                com.serenityai.usecases.DifficultyLevel.INTERMEDIATE -> Color(0xFFFF9800)
+                                com.serenityai.usecases.DifficultyLevel.ADVANCED -> Color(0xFFF44336)
+                            },
+                            fontSize = 10.sp
+                        )
+                    }
+                }
+                
+                // Relevance score
+                if (resource.relevanceScore > 0) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Default.Star,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                            tint = Color(0xFFFFD700)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "${resource.relevanceScore.toInt()}%",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color(0xFFFFD700),
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                }
+            }
+            
+            // Tags
+            if (resource.tags.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    items(resource.tags.take(5)) { tag ->
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(4.dp))
+                                .background(MaterialTheme.colorScheme.secondaryContainer)
+                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                        ) {
+                            Text(
+                                text = tag,
+                                style = MaterialTheme.typography.bodySmall,
+                                fontSize = 10.sp,
+                                color = MaterialTheme.colorScheme.onSecondaryContainer
+                            )
+                        }
+                    }
+                }
+            }
+            
+            // Open button indicator (card is already clickable)
+            Spacer(modifier = Modifier.height(12.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Icon(
+                        when (resource.format) {
+                            com.serenityai.usecases.ContentFormat.VIDEO -> Icons.Default.PlayArrow
+                            com.serenityai.usecases.ContentFormat.AUDIO -> Icons.Default.PlayArrow
+                            else -> Icons.Default.OpenInNew
+                        },
+                        contentDescription = "Open",
+                        modifier = Modifier.size(18.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = when (resource.format) {
+                            com.serenityai.usecases.ContentFormat.VIDEO -> "Watch"
+                            com.serenityai.usecases.ContentFormat.AUDIO -> "Listen"
+                            else -> "Read"
+                        },
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
         }
     }
 }
