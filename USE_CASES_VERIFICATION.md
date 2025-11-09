@@ -11,11 +11,11 @@ All 5 requested use cases have been successfully implemented, tested, and docume
 
 | Use Case | Implementation | Unit Tests | Integration Tests | Documentation | Status |
 |----------|----------------|------------|-------------------|---------------|--------|
-| **UC16: Access Educational Resources** |  |  |  |  | **COMPLETE** |
-| **UC25: Facilitate User Support** |  |  |  |  | **COMPLETE** |
-| **UC34: Group Therapy Simulation Mode** |  |  |  |  | **COMPLETE** |
-| **UC37: Predictive Burnout Detection** |  |  |  |  | **COMPLETE** |
-| **UC38: Voice Enabled Therapy Sessions** |  |  |  |  | **COMPLETE** |
+| **UC16: Access Educational Resources** | `app/src/main/java/com/serenityai/usecases/EducationalResourcesUseCase.kt` | 9 tests<br>`tests/unit/usecases/uc16_educational_resources/EducationalResourcesUseCaseUnitTests.kt` | 3 tests<br>`tests/integration/usecases/uc16_educational_resources/EducationalResourcesUseCaseIntegrationTests.kt` | `FINAL_VERIFICATION_REPORT.md`<br>`COMPLETE_TEST_INVENTORY.md`<br>`TEST_CASE_SUMMARY.md`<br>`NEW_USE_CASES_TEST_RESULTS.md` | **COMPLETE** |
+| **UC25: Facilitate User Support** | `app/src/main/java/com/serenityai/usecases/UserSupportUseCase.kt` | 9 tests<br>`tests/unit/usecases/uc25_user_support/UserSupportUseCaseUnitTests.kt` | 4 tests<br>`tests/integration/usecases/uc25_user_support/UserSupportUseCaseIntegrationTests.kt` | `FINAL_VERIFICATION_REPORT.md`<br>`COMPLETE_TEST_INVENTORY.md`<br>`TEST_CASE_SUMMARY.md`<br>`NEW_USE_CASES_TEST_RESULTS.md` | **COMPLETE** |
+| **UC34: Group Therapy Simulation Mode** | `app/src/main/java/com/serenityai/usecases/GroupTherapySimulationModeUseCase.kt`<br>`app/src/main/java/com/serenityai/ui/screens/RemainingScreens.kt` (UI) | 9 tests<br>`tests/unit/usecases/uc34_group_therapy/GroupTherapySimulationModeUseCaseUnitTests.kt` | 4 tests<br>`tests/integration/usecases/uc34_group_therapy/GroupTherapySimulationModeUseCaseIntegrationTests.kt` | `FINAL_VERIFICATION_REPORT.md`<br>`COMPLETE_TEST_INVENTORY.md`<br>`TEST_CASE_SUMMARY.md`<br>`NEW_USE_CASES_TEST_RESULTS.md` | **COMPLETE** |
+| **UC37: Predictive Burnout Detection** | `app/src/main/java/com/serenityai/usecases/PredictiveBurnoutDetectionUseCase.kt` | 9 tests<br>`tests/unit/usecases/uc37_burnout_detection/PredictiveBurnoutDetectionUseCaseUnitTests.kt` | 4 tests<br>`tests/integration/usecases/uc37_burnout_detection/PredictiveBurnoutDetectionUseCaseIntegrationTests.kt` | `FINAL_VERIFICATION_REPORT.md`<br>`COMPLETE_TEST_INVENTORY.md`<br>`TEST_CASE_SUMMARY.md`<br>`NEW_USE_CASES_TEST_RESULTS.md` | **COMPLETE** |
+| **UC38: Voice Enabled Therapy Sessions** | `app/src/main/java/com/serenityai/usecases/VoiceEnabledTherapyUseCase.kt`<br>`app/src/main/java/com/serenityai/ui/screens/RemainingScreens.kt` (UI) | 11 tests<br>`tests/unit/usecases/uc38_voice_therapy/VoiceEnabledTherapyUseCaseUnitTests.kt` | 7 tests<br>`tests/integration/usecases/uc38_voice_therapy/VoiceEnabledTherapyUseCaseIntegrationTests.kt` | `FINAL_VERIFICATION_REPORT.md`<br>`COMPLETE_TEST_INVENTORY.md`<br>`TEST_CASE_SUMMARY.md`<br>`NEW_USE_CASES_TEST_RESULTS.md` | **COMPLETE** |
 
 ---
 
