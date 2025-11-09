@@ -1,6 +1,6 @@
 # Test Cases for All Use Cases
 
-This document provides all test cases for all 22 use cases in a simplified format.
+This document provides all test cases for all 27 use cases in a simplified format.
 
 ---
 
@@ -415,6 +415,109 @@ This document provides all test cases for all 22 use cases in a simplified forma
 
 ---
 
+## Test Cases for Use Case 16: Access Educational Resources (Completed)
+
+| ID | Type | Description | Expected Result |
+|----|------|-------------|-----------------|
+| TC-UC16-01 | Unit | System retrieves educational resources filtered by category correctly | Resources filtered by category are returned correctly |
+| TC-UC16-02 | Unit | System filters educational resources by content format correctly | Resources filtered by format (text, video, audio) are returned |
+| TC-UC16-03 | Unit | System provides comprehensive list of available resource categories | List of all available categories is returned |
+| TC-UC16-04 | Unit | System searches educational resources by query string | Search finds matching resources in titles, descriptions, and tags |
+| TC-UC16-05 | Unit | System personalizes resource recommendations based on user profile | Recommendations are personalized and relevant to user needs |
+| TC-UC16-06 | Unit | System tracks learning progress for educational resources | Progress tracked (0-100%), completion detected at 100% |
+| TC-UC16-07 | Unit | System saves learning progress persistently | Progress saved, retrievable, completion timestamp recorded |
+| TC-UC16-08 | Unit | System retrieves learning history for user | Learning history retrieved, ordered chronologically |
+| TC-UC16-09 | Unit | System retrieves learning progress for specific resource | Progress retrieved, accurate, completion status correct |
+| TC-UC16-10 | Integration | Resources personalized through user profile integration | Profile loaded, preferences applied, resources personalized |
+| TC-UC16-11 | Integration | Resources retrieved through content repository integration | Resources loaded from repository, data persisted, retrievable |
+| TC-UC16-12 | Integration | Learning progress tracked through analytics integration | Analytics collected, progress tracked, insights generated |
+
+---
+
+## Test Cases for Use Case 25: Facilitate User Support (Completed)
+
+| ID | Type | Description | Expected Result |
+|----|------|-------------|-----------------|
+| TC-UC25-01 | Unit | System creates support ticket with valid input | Ticket created with subject, description, category, and priority |
+| TC-UC25-02 | Unit | System validates support ticket input fields | Valid tickets accepted, invalid input rejected with errors |
+| TC-UC25-03 | Unit | System adds responses to support tickets | Responses added, from user and support team tracked correctly |
+| TC-UC25-04 | Unit | System updates ticket status correctly | Status updated, transitions valid, history maintained |
+| TC-UC25-05 | Unit | System searches FAQ entries by keyword | FAQ entries found matching keywords, search accurate |
+| TC-UC25-06 | Unit | System provides contextual help based on screen/feature | Help content provided, relevant to context, helpful |
+| TC-UC25-07 | Unit | System submits user feedback with rating | Feedback submitted, rating (1-5) recorded, type categorized |
+| TC-UC25-08 | Unit | System validates feedback input before submission | Valid feedback accepted, invalid input rejected |
+| TC-UC25-09 | Unit | System retrieves support history for user | Support history retrieved, tickets and feedback included |
+| TC-UC25-10 | Integration | Support tickets persisted through database integration | Tickets saved, persisted, retrievable, status tracked |
+| TC-UC25-11 | Integration | Support alerts sent through notification system integration | Alerts generated, sent, high priority set, delivered |
+| TC-UC25-12 | Integration | FAQ search integrated with knowledge base | Search performed, results found, knowledge base accessible |
+| TC-UC25-13 | Integration | Support feedback integrated with analytics system | Feedback analyzed, insights generated, trends identified |
+
+---
+
+## Test Cases for Use Case 34: Group Therapy Simulation Mode (Completed)
+
+| ID | Type | Description | Expected Result |
+|----|------|-------------|-----------------|
+| TC-UC34-01 | Unit | System creates group therapy session with valid parameters | Session created with name, topic, participant limits |
+| TC-UC34-02 | Unit | System generates virtual participants with diverse personalities | Participants generated, personalities diverse (supportive, analytical, empathetic, encouraging, practical) |
+| TC-UC34-03 | Unit | System facilitates group discussions with topic-based prompts | Discussion prompts generated, facilitator guidance provided |
+| TC-UC34-04 | Unit | System conducts group exercises with instructions | Exercises conducted, instructions provided, steps followed |
+| TC-UC34-05 | Unit | System simulates realistic group dynamics | Group dynamics simulated, participation, cohesion, engagement metrics calculated |
+| TC-UC34-06 | Unit | System provides peer support responses based on user input | Peer support responses generated, contextual, participant personalities reflected |
+| TC-UC34-07 | Unit | System manages session participation (join, leave) | Users can join/leave sessions, capacity limits enforced |
+| TC-UC34-08 | Unit | System retrieves active sessions for user | Active sessions retrieved, as facilitator or participant tracked |
+| TC-UC34-09 | Unit | System validates session operations | Valid operations accepted, invalid requests rejected |
+| TC-UC34-10 | Integration | Group sessions managed through session management system integration | Sessions created, managed, persisted, state tracked |
+| TC-UC34-11 | Integration | Virtual participants generated through AI service integration | Participants generated, personalities diverse, responses contextual |
+| TC-UC34-12 | Integration | Group dynamics tracked through user profile integration | Dynamics tracked, participation recorded, analytics updated |
+| TC-UC34-13 | Integration | Session participation synchronized through user profile integration | Participation tracked, user sessions updated, history maintained |
+
+---
+
+## Test Cases for Use Case 37: Predictive Burnout Detection (Completed)
+
+| ID | Type | Description | Expected Result |
+|----|------|-------------|-----------------|
+| TC-UC37-01 | Unit | System assesses burnout risk comprehensively from multiple factors | Risk assessment includes risk score, level, and factors |
+| TC-UC37-02 | Unit | System calculates risk score accurately (0-100) | Risk score calculated, within valid range, factors weighted correctly |
+| TC-UC37-03 | Unit | System determines risk level correctly (LOW, MODERATE, HIGH, CRITICAL) | Risk level determined accurately based on score thresholds |
+| TC-UC37-04 | Unit | System identifies specific risk factors with severity scores | Risk factors identified, severity calculated, factors prioritized |
+| TC-UC37-05 | Unit | System detects early warning signs of burnout | Early warnings detected, mood decline, activity decline, stress accumulation identified |
+| TC-UC37-06 | Unit | System generates personalized prevention recommendations | Recommendations generated, relevant to risk level and factors |
+| TC-UC37-07 | Unit | System triggers interventions when risk is HIGH or CRITICAL | Interventions triggered automatically, proactive support activated |
+| TC-UC37-08 | Unit | System predicts future burnout risk with trend analysis | Future risk predicted, trend (INCREASING, DECREASING, STABLE) identified |
+| TC-UC37-09 | Unit | System calculates prediction confidence based on data quality | Confidence calculated, data quality assessed, reliability indicated |
+| TC-UC37-10 | Integration | Burnout risk assessed through mood tracking data integration | Mood data analyzed, trends identified, risk factors detected |
+| TC-UC37-11 | Integration | Burnout alerts sent through notification system integration | Alerts generated, sent, high priority set, user notified |
+| TC-UC37-12 | Integration | Burnout prevention recommendations integrated with activity monitoring | Recommendations provided, activities suggested, monitoring enabled |
+| TC-UC37-13 | Integration | Burnout analytics integrated with reporting system | Analytics collected, reports generated, insights available |
+
+---
+
+## Test Cases for Use Case 38: Voice Enabled Therapy Sessions (Completed)
+
+| ID | Type | Description | Expected Result |
+|----|------|-------------|-----------------|
+| TC-UC38-01 | Unit | System starts voice therapy session with user ID and language | Session started, language configured, session ID generated |
+| TC-UC38-02 | Unit | System processes voice input and converts to text using speech recognition | Voice transcribed to text, confidence score provided |
+| TC-UC38-03 | Unit | System generates AI therapist responses and converts to voice using text-to-speech | AI response generated, converted to voice, audio provided |
+| TC-UC38-04 | Unit | System processes text input and converts AI response to voice | Text input processed, AI response generated, converted to voice |
+| TC-UC38-05 | Unit | System manages voice session lifecycle (start, pause, resume, end) | Session lifecycle managed, state transitions valid, duration tracked |
+| TC-UC38-06 | Unit | System handles voice recognition errors gracefully | Errors handled, helpful suggestions provided, alternative methods offered |
+| TC-UC38-07 | Unit | System supports multiple languages with speech recognition and TTS | Multiple languages supported, capabilities detected, language switching works |
+| TC-UC38-08 | Unit | System retrieves voice session history for user | Session history retrieved, ordered chronologically, complete |
+| TC-UC38-09 | Unit | System retrieves active voice sessions for user | Active sessions retrieved, state tracked, session management enabled |
+| TC-UC38-10 | Unit | System validates session operations and rejects invalid requests | Valid operations accepted, invalid requests rejected, errors handled |
+| TC-UC38-11 | Unit | System calculates transcription confidence scores | Confidence scores calculated, accuracy indicated, quality assessed |
+| TC-UC38-12 | Integration | Voice sessions processed through speech recognition service integration | Speech recognized, transcribed, confidence scores provided |
+| TC-UC38-13 | Integration | AI responses converted to voice through text-to-speech service integration | TTS service used, audio generated, voice quality acceptable |
+| TC-UC38-14 | Integration | Voice sessions integrated with AI chat service for responses | AI service integrated, responses generated, contextual |
+| TC-UC38-15 | Integration | Voice session history persisted through storage integration | Sessions saved, persisted, retrievable, history maintained |
+| TC-UC38-16 | Integration | Voice session errors handled through error handling integration | Errors caught, handled gracefully, user notified, recovery attempted |
+| TC-UC38-17 | Integration | Voice session analytics tracked through analytics integration | Analytics collected, session metrics tracked, insights generated |
+
+---
+
 ## Summary
 
 | Use Case | Total Tests | UAT Tests | Unit Tests | Integration Tests |
@@ -431,19 +534,24 @@ This document provides all test cases for all 22 use cases in a simplified forma
 | UC13 | 11 | 0 | 5 | 6 |
 | UC14 | 11 | 0 | 5 | 6 |
 | UC15 | 11 | 0 | 5 | 6 |
+| UC16 | 12 | 0 | 9 | 3 |
 | UC17 | 11 | 0 | 5 | 6 |
 | UC18 | 11 | 0 | 5 | 6 |
 | UC20 | 11 | 0 | 5 | 6 |
 | UC22 | 15 | 3 | 6 | 6 |
 | UC23 | 12 | 0 | 6 | 6 |
 | UC24 | 11 | 0 | 5 | 6 |
+| UC25 | 13 | 0 | 9 | 4 |
 | UC26 | 11 | 0 | 5 | 6 |
 | UC27 | 11 | 0 | 5 | 6 |
 | UC32 | 11 | 0 | 5 | 6 |
+| UC34 | 13 | 0 | 9 | 4 |
 | UC35 | 11 | 0 | 5 | 6 |
-| **Total** | **240** | **9** | **116** | **132** |
+| UC37 | 13 | 0 | 9 | 4 |
+| UC38 | 17 | 0 | 11 | 6 |
+| **Total** | **309** | **9** | **163** | **137** |
 
 ---
 
-**Note**: Test counts may vary slightly based on specific test implementations. This document provides a comprehensive overview of all test cases for all 22 use cases.
+**Note**: Test counts may vary slightly based on specific test implementations. This document provides a comprehensive overview of all test cases for all 27 use cases (22 original + 5 new use cases).
 
