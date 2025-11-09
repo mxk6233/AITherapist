@@ -2,7 +2,6 @@
 
 ##  VERIFICATION COMPLETE - ALL USE CASES HAVE UNIT TESTS
 
-**Date**: $(date)  
 **Status**:  **100% COMPLETE**
 
 ---

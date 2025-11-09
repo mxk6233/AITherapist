@@ -2,7 +2,6 @@
 
 ##  All 22 Use Cases Now Have UAT Tests
 
-**Date**: $(date)  
 **Status**:  **100% COMPLETE**
 
 ---

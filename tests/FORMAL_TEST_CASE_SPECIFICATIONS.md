@@ -1,7 +1,6 @@
 # Formal Test Case Specifications
 
 **Document Version**: 1.1  
-**Date**: December 2024  
 **Status**: Complete Test Case Specifications for UC16, UC25, UC34, UC37, UC38
 
 ---

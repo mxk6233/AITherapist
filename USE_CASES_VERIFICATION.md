@@ -1,6 +1,5 @@
 # Use Cases Verification Report
 
-**Date**: December 2024  
 **Status**:  **ALL USE CASES VERIFIED AND COMPLETE**
 
 ---
@@ -200,89 +199,89 @@ BUILD SUCCESSFUL in 15s
 
 ## 1.2 Traceability Matrix
 
-| Req ID | Use Case | Test Case ID | Test Type | Status | Timestamp (Updated) | Case Description | Test File |
-|--------|----------|--------------|-----------|--------|---------------------|------------------|-----------|
-| RQ-01 | UC-01: Conduct AI Chat Session | TC-01.1 | Unit | Passed | 2025-11-06 00:00 | Real-time AI chat support for users | tests/unit/usecases/uc1_ai_chat_session/AIChatSessionUseCaseUnitTests.kt |
-| RQ-01 | UC-01: Conduct AI Chat Session | TC-01.2 | Integration | Passed | 2025-11-06 00:00 | Real-time AI chat support for users | tests/integration/usecases/uc1_ai_chat_session/AIChatSessionUseCaseIntegrationTests.kt |
-| RQ-01 | UC-01: Conduct AI Chat Session | TC-01.3 | UAT | Passed | 2025-11-06 00:00 | Real-time AI chat support for users | tests/uat/usecases/uc1_ai_chat_session/AIChatSessionUATTests.kt |
-| RQ-02 | UC-02: Handle Crisis Intervention | TC-02.1 | Unit | Passed | 2025-11-06 00:00 | Detect crises and trigger safety protocols | tests/unit/usecases/uc2_crisis_intervention/CrisisInterventionUseCaseUnitTests.kt |
-| RQ-02 | UC-02: Handle Crisis Intervention | TC-02.2 | Integration | Passed | 2025-11-06 00:00 | Detect crises and trigger safety protocols | tests/integration/usecases/uc2_crisis_intervention/CrisisInterventionUseCaseIntegrationTests.kt |
-| RQ-02 | UC-02: Handle Crisis Intervention | TC-02.3 | UAT | Passed | 2025-11-06 00:00 | Detect crises and trigger safety protocols | tests/uat/usecases/uc2_crisis_intervention/CrisisInterventionUATTests.kt |
-| RQ-03 | UC-03: Log Daily Mood | TC-03.1 | Unit | Passed | 2025-11-06 00:00 | Daily mood logging and history | tests/unit/usecases/uc3_mood_logging/MoodLoggingUseCaseUnitTests.kt |
-| RQ-03 | UC-03: Log Daily Mood | TC-03.2 | Integration | Passed | 2025-11-06 00:00 | Daily mood logging and history | tests/integration/usecases/uc3_mood_logging/MoodLoggingUseCaseIntegrationTests.kt |
-| RQ-03 | UC-03: Log Daily Mood | TC-03.3 | UAT | Passed | 2025-11-06 00:00 | Daily mood logging and history | tests/uat/usecases/uc3_mood_logging/MoodLoggingUATTests.kt |
-| RQ-04 | UC-04: User Registration | TC-04.1 | Unit | Passed | 2025-11-06 00:00 | Create account with input validation | tests/unit/usecases/uc4_user_registration/UserRegistrationUseCaseUnitTests.kt |
-| RQ-04 | UC-04: User Registration | TC-04.2 | Integration | Passed | 2025-11-06 00:00 | Create account with input validation | tests/integration/usecases/uc4_user_registration/UserRegistrationUseCaseIntegrationTests.kt |
-| RQ-04 | UC-04: User Registration | TC-04.3 | UAT | Passed | 2025-11-06 00:00 | Create account with input validation | tests/uat/usecases/uc4_user_registration/UserRegistrationUATTests.kt |
-| RQ-05 | UC-05: Personality Onboarding for UX | TC-05.1 | Unit | Passed | 2025-11-06 00:00 | Collect preferences to personalize UX | tests/unit/usecases/uc5_personality_onboarding/PersonalityOnboardingUseCaseUnitTests.kt |
-| RQ-05 | UC-05: Personality Onboarding for UX | TC-05.2 | Integration | Passed | 2025-11-06 00:00 | Collect preferences to personalize UX | tests/integration/usecases/uc5_personality_onboarding/PersonalityOnboardingUseCaseIntegrationTests.kt |
-| RQ-05 | UC-05: Personality Onboarding for UX | TC-05.3 | UAT | Passed | 2025-11-06 00:00 | Collect preferences to personalize UX | tests/uat/usecases/uc5_personality_onboarding/PersonalityOnboardingUATTests.kt |
-| RQ-06 | UC-06: View Chat History | TC-06.1 | Unit | Passed | 2025-11-06 00:00 | Retrieve, search, and filter chat sessions | tests/unit/usecases/uc6_chat_history/ChatHistoryUseCaseUnitTests.kt |
-| RQ-06 | UC-06: View Chat History | TC-06.2 | Integration | Passed | 2025-11-06 00:00 | Retrieve, search, and filter chat sessions | tests/integration/usecases/uc6_chat_history/ChatHistoryUseCaseIntegrationTests.kt |
-| RQ-06 | UC-06: View Chat History | TC-06.3 | UAT | Passed | 2025-11-06 00:00 | Retrieve, search, and filter chat sessions | tests/uat/usecases/uc6_chat_history/ChatHistoryUATTests.kt |
-| RQ-07 | UC-07: User Login | TC-07.1 | Unit | Passed | 2025-11-06 00:00 | Authenticate users and create sessions | tests/unit/usecases/uc7_user_login/UserLoginUseCaseUnitTests.kt |
-| RQ-07 | UC-07: User Login | TC-07.2 | Integration | Passed | 2025-11-06 00:00 | Authenticate users and create sessions | tests/integration/usecases/uc7_user_login/UserLoginUseCaseIntegrationTests.kt |
-| RQ-07 | UC-07: User Login | TC-07.3 | UAT | Passed | 2025-11-06 00:00 | Authenticate users and create sessions | tests/uat/usecases/uc7_user_login/UserLoginUATTests.kt |
-| RQ-08 | UC-08: Suggest Coping Exercises | TC-08.1 | Unit | Passed | 2025-11-06 00:00 | Recommend evidence-based coping exercises | tests/unit/usecases/uc8_coping_exercises/CopingExercisesUseCaseUnitTests.kt |
-| RQ-08 | UC-08: Suggest Coping Exercises | TC-08.2 | Integration | Passed | 2025-11-06 00:00 | Recommend evidence-based coping exercises | tests/integration/usecases/uc8_coping_exercises/CopingExercisesUseCaseIntegrationTests.kt |
-| RQ-08 | UC-08: Suggest Coping Exercises | TC-08.3 | UAT | Passed | 2025-11-06 00:00 | Recommend evidence-based coping exercises | tests/uat/usecases/uc8_coping_exercises/CopingExercisesUATTests.kt |
-| RQ-09 | UC-09: View Mood Analytics | TC-09.1 | Unit | Passed | 2025-11-06 00:00 | Analyze mood trends and statistics | tests/unit/usecases/uc9_mood_analytics/MoodAnalyticsUseCaseUnitTests.kt |
-| RQ-09 | UC-09: View Mood Analytics | TC-09.2 | Integration | Passed | 2025-11-06 00:00 | Analyze mood trends and statistics | tests/integration/usecases/uc9_mood_analytics/MoodAnalyticsUseCaseIntegrationTests.kt |
-| RQ-09 | UC-09: View Mood Analytics | TC-09.3 | UAT | Passed | 2025-11-06 00:00 | Analyze mood trends and statistics | tests/uat/usecases/uc9_mood_analytics/MoodAnalyticsUATTests.kt |
-| RQ-13 | UC-13: Set Application Preferences | TC-13.1 | Unit | Passed | 2025-11-06 00:00 | Save and apply user settings | tests/unit/usecases/uc13_preferences/AppPreferencesUseCaseUnitTests.kt |
-| RQ-13 | UC-13: Set Application Preferences | TC-13.2 | Integration | Passed | 2025-11-06 00:00 | Save and apply user settings | tests/integration/usecases/uc13_preferences/AppPreferencesUseCaseIntegrationTests.kt |
-| RQ-13 | UC-13: Set Application Preferences | TC-13.3 | UAT | Passed | 2025-11-06 00:00 | Save and apply user settings | tests/uat/usecases/uc13_preferences/AppPreferencesUATTests.kt |
-| RQ-14 | UC-14: Receive Daily Affirmations | TC-14.1 | Unit | Passed | 2025-11-06 00:00 | Deliver personalized daily affirmations | tests/unit/usecases/uc14_daily_affirmations/DailyAffirmationsUseCaseUnitTests.kt |
-| RQ-14 | UC-14: Receive Daily Affirmations | TC-14.2 | Integration | Passed | 2025-11-06 00:00 | Deliver personalized daily affirmations | tests/integration/usecases/uc14_daily_affirmations/DailyAffirmationsUseCaseIntegrationTests.kt |
-| RQ-14 | UC-14: Receive Daily Affirmations | TC-14.3 | UAT | Passed | 2025-11-06 00:00 | Deliver personalized daily affirmations | tests/uat/usecases/uc14_daily_affirmations/DailyAffirmationsUATTests.kt |
-| RQ-15 | UC-15: Handle Network Connectivity Issues | TC-15.1 | Unit | Passed | 2025-11-06 00:00 | Offline handling, cache, and resync | tests/unit/usecases/uc15_network_connectivity/NetworkConnectivityUseCaseUnitTests.kt |
-| RQ-15 | UC-15: Handle Network Connectivity Issues | TC-15.2 | Integration | Passed | 2025-11-06 00:00 | Offline handling, cache, and resync | tests/integration/usecases/uc15_network_connectivity/NetworkConnectivityUseCaseIntegrationTests.kt |
-| RQ-15 | UC-15: Handle Network Connectivity Issues | TC-15.3 | UAT | Passed | 2025-11-06 00:00 | Offline handling, cache, and resync | tests/uat/usecases/uc15_network_connectivity/NetworkConnectivityUATTests.kt |
-| RQ-17 | UC-17: Implement Accessibility Features | TC-17.1 | Unit | Passed | 2025-11-06 00:00 | Accessibility compliance and features | tests/unit/usecases/uc17_accessibility/AccessibilityUseCaseUnitTests.kt |
-| RQ-17 | UC-17: Implement Accessibility Features | TC-17.2 | Integration | Passed | 2025-11-06 00:00 | Accessibility compliance and features | tests/integration/usecases/uc17_accessibility/AccessibilityUseCaseIntegrationTests.kt |
-| RQ-17 | UC-17: Implement Accessibility Features | TC-17.3 | UAT | Passed | 2025-11-06 00:00 | Accessibility compliance and features | tests/uat/usecases/uc17_accessibility/AccessibilityUATTests.kt |
-| RQ-18 | UC-18: Manage Notifications | TC-18.1 | Unit | Passed | 2025-11-06 00:00 | Configure, schedule, and deliver notifications | tests/unit/usecases/uc18_notifications/NotificationsUseCaseUnitTests.kt |
-| RQ-18 | UC-18: Manage Notifications | TC-18.2 | Integration | Passed | 2025-11-06 00:00 | Configure, schedule, and deliver notifications | tests/integration/usecases/uc18_notifications/NotificationsUseCaseIntegrationTests.kt |
-| RQ-18 | UC-18: Manage Notifications | TC-18.3 | UAT | Passed | 2025-11-06 00:00 | Configure, schedule, and deliver notifications | tests/uat/usecases/uc18_notifications/NotificationsUATTests.kt |
-| RQ-20 | UC-20: Handle Application Errors | TC-20.1 | Unit | Passed | 2025-11-06 00:00 | Error logging, user messaging, recovery | tests/unit/usecases/uc20_application_errors/ApplicationErrorsUseCaseUnitTests.kt |
-| RQ-20 | UC-20: Handle Application Errors | TC-20.2 | Integration | Passed | 2025-11-06 00:00 | Error logging, user messaging, recovery | tests/integration/usecases/uc20_application_errors/ApplicationErrorsUseCaseIntegrationTests.kt |
-| RQ-20 | UC-20: Handle Application Errors | TC-20.3 | UAT | Passed | 2025-11-06 00:00 | Error logging, user messaging, recovery | tests/uat/usecases/uc20_application_errors/ApplicationErrorsUATTests.kt |
-| RQ-22 | UC-22: Monitor System Health | TC-22.1 | Unit | Passed | 2025-11-06 00:00 | Track performance and health metrics | tests/unit/usecases/uc22_system_health/SystemHealthUseCaseUnitTests.kt |
-| RQ-22 | UC-22: Monitor System Health | TC-22.2 | Integration | Passed | 2025-11-06 00:00 | Track performance and health metrics | tests/integration/usecases/uc22_system_health/SystemHealthUseCaseIntegrationTests.kt |
-| RQ-22 | UC-22: Monitor System Health | TC-22.3 | UAT | Passed | 2025-11-06 00:00 | Track performance and health metrics | tests/uat/usecases/uc22_system_health/SystemHealthUATTests.kt |
-| RQ-23 | UC-23: Implement Security Protocols | TC-23.1 | Unit | Passed | 2025-11-06 00:00 | Encryption, auth, and secure comms | tests/unit/usecases/uc23_security_protocols/SecurityProtocolsUseCaseUnitTests.kt |
-| RQ-23 | UC-23: Implement Security Protocols | TC-23.2 | Integration | Passed | 2025-11-06 00:00 | Encryption, auth, and secure comms | tests/integration/usecases/uc23_security_protocols/SecurityProtocolsUseCaseIntegrationTests.kt |
-| RQ-23 | UC-23: Implement Security Protocols | TC-23.3 | UAT | Passed | 2025-11-06 00:00 | Encryption, auth, and secure comms | tests/uat/usecases/uc23_security_protocols/SecurityProtocolsUATTests.kt |
-| RQ-24 | UC-24: Personalize User Experience | TC-24.1 | Unit | Passed | 2025-11-06 00:00 | Personalized content and adaptive UI | tests/unit/usecases/uc24_personalization/PersonalizationUseCaseUnitTests.kt |
-| RQ-24 | UC-24: Personalize User Experience | TC-24.2 | Integration | Passed | 2025-11-06 00:00 | Personalized content and adaptive UI | tests/integration/usecases/uc24_personalization/PersonalizationUseCaseIntegrationTests.kt |
-| RQ-24 | UC-24: Personalize User Experience | TC-24.3 | UAT | Passed | 2025-11-06 00:00 | Personalized content and adaptive UI | tests/uat/usecases/uc24_personalization/PersonalizationUATTests.kt |
-| RQ-26 | UC-26: AI-Powered Mood Forecasting | TC-26.1 | Unit | Passed | 2025-11-06 00:00 | 7-day mood predictions and insights | tests/unit/usecases/uc26_mood_forecasting/MoodForecastingUseCaseUnitTests.kt |
-| RQ-26 | UC-26: AI-Powered Mood Forecasting | TC-26.2 | Integration | Passed | 2025-11-06 00:00 | 7-day mood predictions and insights | tests/integration/usecases/uc26_mood_forecasting/MoodForecastingUseCaseIntegrationTests.kt |
-| RQ-26 | UC-26: AI-Powered Mood Forecasting | TC-26.3 | UAT | Passed | 2025-11-06 00:00 | 7-day mood predictions and insights | tests/uat/usecases/uc26_mood_forecasting/MoodForecastingUATTests.kt |
-| RQ-27 | UC-27: Guided Breathing & Meditation | TC-27.1 | Unit | Passed | 2025-11-06 00:00 | Guided breathing and audio sessions | tests/unit/usecases/uc27_guided_breathing/GuidedBreathingUseCaseUnitTests.kt |
-| RQ-27 | UC-27: Guided Breathing & Meditation | TC-27.2 | Integration | Passed | 2025-11-06 00:00 | Guided breathing and audio sessions | tests/integration/usecases/uc27_guided_breathing/GuidedBreathingUseCaseIntegrationTests.kt |
-| RQ-27 | UC-27: Guided Breathing & Meditation | TC-27.3 | UAT | Passed | 2025-11-06 00:00 | Guided breathing and audio sessions | tests/uat/usecases/uc27_guided_breathing/GuidedBreathingUATTests.kt |
-| RQ-32 | UC-32: AI-Generated Journaling Prompts | TC-32.1 | Unit | Passed | 2025-11-06 00:00 | Personalized journaling prompts via AI | tests/unit/usecases/uc32_journaling_prompts/JournalingPromptsUseCaseUnitTests.kt |
-| RQ-32 | UC-32: AI-Generated Journaling Prompts | TC-32.2 | Integration | Passed | 2025-11-06 00:00 | Personalized journaling prompts via AI | tests/integration/usecases/uc32_journaling_prompts/JournalingPromptsUseCaseIntegrationTests.kt |
-| RQ-32 | UC-32: AI-Generated Journaling Prompts | TC-32.3 | UAT | Passed | 2025-11-06 00:00 | Personalized journaling prompts via AI | tests/uat/usecases/uc32_journaling_prompts/JournalingPromptsUATTests.kt |
-| RQ-34 | UC-34: Group Therapy Simulation Mode | TC-34.1 | Unit | Passed | 2025-11-06 00:00 | Simulated group sessions with virtual peers | tests/unit/usecases/uc34_group_therapy/GroupTherapySimulationModeUseCaseUnitTests.kt |
-| RQ-34 | UC-34: Group Therapy Simulation Mode | TC-34.2 | Integration | Passed | 2025-11-06 00:00 | Simulated group sessions with virtual peers | tests/integration/usecases/uc34_group_therapy/GroupTherapySimulationModeUseCaseIntegrationTests.kt |
-| RQ-34 | UC-34: Group Therapy Simulation Mode | TC-34.3 | UAT | Passed | 2025-11-06 00:00 | Simulated group sessions with virtual peers | N/A |
-| RQ-35 | UC-35: Relapse Prevention Alerts | TC-35.1 | Unit | Passed | 2025-11-06 00:00 | Detect relapse risk and trigger alerts | tests/unit/usecases/uc35_relapse_prevention/RelapsePreventionUseCaseUnitTests.kt |
-| RQ-35 | UC-35: Relapse Prevention Alerts | TC-35.2 | Integration | Passed | 2025-11-06 00:00 | Detect relapse risk and trigger alerts | tests/integration/usecases/uc35_relapse_prevention/RelapsePreventionUseCaseIntegrationTests.kt |
-| RQ-35 | UC-35: Relapse Prevention Alerts | TC-35.3 | UAT | Passed | 2025-11-06 00:00 | Detect relapse risk and trigger alerts | tests/uat/usecases/uc35_relapse_prevention/RelapsePreventionUATTests.kt |
-| RQ-16 | UC-16: Access Educational Resources | TC-16.1 | Unit | Passed | 2025-11-06 00:00 | Educational content access and progress | tests/unit/usecases/uc16_educational_resources/EducationalResourcesUseCaseUnitTests.kt |
-| RQ-16 | UC-16: Access Educational Resources | TC-16.2 | Integration | Passed | 2025-11-06 00:00 | Educational content access and progress | tests/integration/usecases/uc16_educational_resources/EducationalResourcesUseCaseIntegrationTests.kt |
-| RQ-16 | UC-16: Access Educational Resources | TC-16.3 | UAT | Passed | 2025-11-06 00:00 | Educational content access and progress | N/A |
-| RQ-25 | UC-25: Facilitate User Support | TC-25.1 | Unit | Passed | 2025-11-06 00:00 | Tickets, FAQ, contextual help, feedback | tests/unit/usecases/uc25_user_support/UserSupportUseCaseUnitTests.kt |
-| RQ-25 | UC-25: Facilitate User Support | TC-25.2 | Integration | Passed | 2025-11-06 00:00 | Tickets, FAQ, contextual help, feedback | tests/integration/usecases/uc25_user_support/UserSupportUseCaseIntegrationTests.kt |
-| RQ-25 | UC-25: Facilitate User Support | TC-25.3 | UAT | Passed | 2025-11-06 00:00 | Tickets, FAQ, contextual help, feedback | N/A |
-| RQ-37 | UC-37: Predictive Burnout Detection | TC-37.1 | Unit | Passed | 2025-11-06 00:00 | Multi-factor burnout risk assessment | tests/unit/usecases/uc37_burnout_detection/PredictiveBurnoutDetectionUseCaseUnitTests.kt |
-| RQ-37 | UC-37: Predictive Burnout Detection | TC-37.2 | Integration | Passed | 2025-11-06 00:00 | Multi-factor burnout risk assessment | tests/integration/usecases/uc37_burnout_detection/PredictiveBurnoutDetectionUseCaseIntegrationTests.kt |
-| RQ-37 | UC-37: Predictive Burnout Detection | TC-37.3 | UAT | Passed | 2025-11-06 00:00 | Multi-factor burnout risk assessment | N/A |
-| RQ-38 | UC-38: Voice Enabled Therapy Sessions | TC-38.1 | Unit | Passed | 2025-11-06 00:00 | Voice-based therapy (ASR + TTS) with session control | tests/unit/usecases/uc38_voice_therapy/VoiceEnabledTherapyUseCaseUnitTests.kt |
-| RQ-38 | UC-38: Voice Enabled Therapy Sessions | TC-38.2 | Integration | Passed | 2025-11-06 00:00 | Voice-based therapy (ASR + TTS) with session control | tests/integration/usecases/uc38_voice_therapy/VoiceEnabledTherapyUseCaseIntegrationTests.kt |
-| RQ-38 | UC-38: Voice Enabled Therapy Sessions | TC-38.3 | UAT | Passed | 2025-11-06 00:00 | Voice-based therapy (ASR + TTS) with session control | N/A |
+| Req ID | Use Case | Test Case ID | Test Type | Status | Case Description | Test File |
+|--------|----------|--------------|-----------|--------|------------------|-----------|
+| RQ-01 | UC-01: Conduct AI Chat Session | TC-01.1 | Unit | Passed | Real-time AI chat support for users | tests/unit/usecases/uc1_ai_chat_session/AIChatSessionUseCaseUnitTests.kt |
+| RQ-01 | UC-01: Conduct AI Chat Session | TC-01.2 | Integration | Passed | Real-time AI chat support for users | tests/integration/usecases/uc1_ai_chat_session/AIChatSessionUseCaseIntegrationTests.kt |
+| RQ-01 | UC-01: Conduct AI Chat Session | TC-01.3 | UAT | Passed | Real-time AI chat support for users | tests/uat/usecases/uc1_ai_chat_session/AIChatSessionUATTests.kt |
+| RQ-02 | UC-02: Handle Crisis Intervention | TC-02.1 | Unit | Passed | Detect crises and trigger safety protocols | tests/unit/usecases/uc2_crisis_intervention/CrisisInterventionUseCaseUnitTests.kt |
+| RQ-02 | UC-02: Handle Crisis Intervention | TC-02.2 | Integration | Passed | Detect crises and trigger safety protocols | tests/integration/usecases/uc2_crisis_intervention/CrisisInterventionUseCaseIntegrationTests.kt |
+| RQ-02 | UC-02: Handle Crisis Intervention | TC-02.3 | UAT | Passed | Detect crises and trigger safety protocols | tests/uat/usecases/uc2_crisis_intervention/CrisisInterventionUATTests.kt |
+| RQ-03 | UC-03: Log Daily Mood | TC-03.1 | Unit | Passed | Daily mood logging and history | tests/unit/usecases/uc3_mood_logging/MoodLoggingUseCaseUnitTests.kt |
+| RQ-03 | UC-03: Log Daily Mood | TC-03.2 | Integration | Passed | Daily mood logging and history | tests/integration/usecases/uc3_mood_logging/MoodLoggingUseCaseIntegrationTests.kt |
+| RQ-03 | UC-03: Log Daily Mood | TC-03.3 | UAT | Passed | Daily mood logging and history | tests/uat/usecases/uc3_mood_logging/MoodLoggingUATTests.kt |
+| RQ-04 | UC-04: User Registration | TC-04.1 | Unit | Passed | Create account with input validation | tests/unit/usecases/uc4_user_registration/UserRegistrationUseCaseUnitTests.kt |
+| RQ-04 | UC-04: User Registration | TC-04.2 | Integration | Passed | Create account with input validation | tests/integration/usecases/uc4_user_registration/UserRegistrationUseCaseIntegrationTests.kt |
+| RQ-04 | UC-04: User Registration | TC-04.3 | UAT | Passed | Create account with input validation | tests/uat/usecases/uc4_user_registration/UserRegistrationUATTests.kt |
+| RQ-05 | UC-05: Personality Onboarding for UX | TC-05.1 | Unit | Passed | Collect preferences to personalize UX | tests/unit/usecases/uc5_personality_onboarding/PersonalityOnboardingUseCaseUnitTests.kt |
+| RQ-05 | UC-05: Personality Onboarding for UX | TC-05.2 | Integration | Passed | Collect preferences to personalize UX | tests/integration/usecases/uc5_personality_onboarding/PersonalityOnboardingUseCaseIntegrationTests.kt |
+| RQ-05 | UC-05: Personality Onboarding for UX | TC-05.3 | UAT | Passed | Collect preferences to personalize UX | tests/uat/usecases/uc5_personality_onboarding/PersonalityOnboardingUATTests.kt |
+| RQ-06 | UC-06: View Chat History | TC-06.1 | Unit | Passed | Retrieve, search, and filter chat sessions | tests/unit/usecases/uc6_chat_history/ChatHistoryUseCaseUnitTests.kt |
+| RQ-06 | UC-06: View Chat History | TC-06.2 | Integration | Passed | Retrieve, search, and filter chat sessions | tests/integration/usecases/uc6_chat_history/ChatHistoryUseCaseIntegrationTests.kt |
+| RQ-06 | UC-06: View Chat History | TC-06.3 | UAT | Passed | Retrieve, search, and filter chat sessions | tests/uat/usecases/uc6_chat_history/ChatHistoryUATTests.kt |
+| RQ-07 | UC-07: User Login | TC-07.1 | Unit | Passed | Authenticate users and create sessions | tests/unit/usecases/uc7_user_login/UserLoginUseCaseUnitTests.kt |
+| RQ-07 | UC-07: User Login | TC-07.2 | Integration | Passed | Authenticate users and create sessions | tests/integration/usecases/uc7_user_login/UserLoginUseCaseIntegrationTests.kt |
+| RQ-07 | UC-07: User Login | TC-07.3 | UAT | Passed | Authenticate users and create sessions | tests/uat/usecases/uc7_user_login/UserLoginUATTests.kt |
+| RQ-08 | UC-08: Suggest Coping Exercises | TC-08.1 | Unit | Passed | Recommend evidence-based coping exercises | tests/unit/usecases/uc8_coping_exercises/CopingExercisesUseCaseUnitTests.kt |
+| RQ-08 | UC-08: Suggest Coping Exercises | TC-08.2 | Integration | Passed | Recommend evidence-based coping exercises | tests/integration/usecases/uc8_coping_exercises/CopingExercisesUseCaseIntegrationTests.kt |
+| RQ-08 | UC-08: Suggest Coping Exercises | TC-08.3 | UAT | Passed | Recommend evidence-based coping exercises | tests/uat/usecases/uc8_coping_exercises/CopingExercisesUATTests.kt |
+| RQ-09 | UC-09: View Mood Analytics | TC-09.1 | Unit | Passed | Analyze mood trends and statistics | tests/unit/usecases/uc9_mood_analytics/MoodAnalyticsUseCaseUnitTests.kt |
+| RQ-09 | UC-09: View Mood Analytics | TC-09.2 | Integration | Passed | Analyze mood trends and statistics | tests/integration/usecases/uc9_mood_analytics/MoodAnalyticsUseCaseIntegrationTests.kt |
+| RQ-09 | UC-09: View Mood Analytics | TC-09.3 | UAT | Passed | Analyze mood trends and statistics | tests/uat/usecases/uc9_mood_analytics/MoodAnalyticsUATTests.kt |
+| RQ-13 | UC-13: Set Application Preferences | TC-13.1 | Unit | Passed | Save and apply user settings | tests/unit/usecases/uc13_preferences/AppPreferencesUseCaseUnitTests.kt |
+| RQ-13 | UC-13: Set Application Preferences | TC-13.2 | Integration | Passed | Save and apply user settings | tests/integration/usecases/uc13_preferences/AppPreferencesUseCaseIntegrationTests.kt |
+| RQ-13 | UC-13: Set Application Preferences | TC-13.3 | UAT | Passed | Save and apply user settings | tests/uat/usecases/uc13_preferences/AppPreferencesUATTests.kt |
+| RQ-14 | UC-14: Receive Daily Affirmations | TC-14.1 | Unit | Passed | Deliver personalized daily affirmations | tests/unit/usecases/uc14_daily_affirmations/DailyAffirmationsUseCaseUnitTests.kt |
+| RQ-14 | UC-14: Receive Daily Affirmations | TC-14.2 | Integration | Passed | Deliver personalized daily affirmations | tests/integration/usecases/uc14_daily_affirmations/DailyAffirmationsUseCaseIntegrationTests.kt |
+| RQ-14 | UC-14: Receive Daily Affirmations | TC-14.3 | UAT | Passed | Deliver personalized daily affirmations | tests/uat/usecases/uc14_daily_affirmations/DailyAffirmationsUATTests.kt |
+| RQ-15 | UC-15: Handle Network Connectivity Issues | TC-15.1 | Unit | Passed | Offline handling, cache, and resync | tests/unit/usecases/uc15_network_connectivity/NetworkConnectivityUseCaseUnitTests.kt |
+| RQ-15 | UC-15: Handle Network Connectivity Issues | TC-15.2 | Integration | Passed | Offline handling, cache, and resync | tests/integration/usecases/uc15_network_connectivity/NetworkConnectivityUseCaseIntegrationTests.kt |
+| RQ-15 | UC-15: Handle Network Connectivity Issues | TC-15.3 | UAT | Passed | Offline handling, cache, and resync | tests/uat/usecases/uc15_network_connectivity/NetworkConnectivityUATTests.kt |
+| RQ-17 | UC-17: Implement Accessibility Features | TC-17.1 | Unit | Passed | Accessibility compliance and features | tests/unit/usecases/uc17_accessibility/AccessibilityUseCaseUnitTests.kt |
+| RQ-17 | UC-17: Implement Accessibility Features | TC-17.2 | Integration | Passed | Accessibility compliance and features | tests/integration/usecases/uc17_accessibility/AccessibilityUseCaseIntegrationTests.kt |
+| RQ-17 | UC-17: Implement Accessibility Features | TC-17.3 | UAT | Passed | Accessibility compliance and features | tests/uat/usecases/uc17_accessibility/AccessibilityUATTests.kt |
+| RQ-18 | UC-18: Manage Notifications | TC-18.1 | Unit | Passed | Configure, schedule, and deliver notifications | tests/unit/usecases/uc18_notifications/NotificationsUseCaseUnitTests.kt |
+| RQ-18 | UC-18: Manage Notifications | TC-18.2 | Integration | Passed | Configure, schedule, and deliver notifications | tests/integration/usecases/uc18_notifications/NotificationsUseCaseIntegrationTests.kt |
+| RQ-18 | UC-18: Manage Notifications | TC-18.3 | UAT | Passed | Configure, schedule, and deliver notifications | tests/uat/usecases/uc18_notifications/NotificationsUATTests.kt |
+| RQ-20 | UC-20: Handle Application Errors | TC-20.1 | Unit | Passed | Error logging, user messaging, recovery | tests/unit/usecases/uc20_application_errors/ApplicationErrorsUseCaseUnitTests.kt |
+| RQ-20 | UC-20: Handle Application Errors | TC-20.2 | Integration | Passed | Error logging, user messaging, recovery | tests/integration/usecases/uc20_application_errors/ApplicationErrorsUseCaseIntegrationTests.kt |
+| RQ-20 | UC-20: Handle Application Errors | TC-20.3 | UAT | Passed | Error logging, user messaging, recovery | tests/uat/usecases/uc20_application_errors/ApplicationErrorsUATTests.kt |
+| RQ-22 | UC-22: Monitor System Health | TC-22.1 | Unit | Passed | Track performance and health metrics | tests/unit/usecases/uc22_system_health/SystemHealthUseCaseUnitTests.kt |
+| RQ-22 | UC-22: Monitor System Health | TC-22.2 | Integration | Passed | Track performance and health metrics | tests/integration/usecases/uc22_system_health/SystemHealthUseCaseIntegrationTests.kt |
+| RQ-22 | UC-22: Monitor System Health | TC-22.3 | UAT | Passed | Track performance and health metrics | tests/uat/usecases/uc22_system_health/SystemHealthUATTests.kt |
+| RQ-23 | UC-23: Implement Security Protocols | TC-23.1 | Unit | Passed | Encryption, auth, and secure comms | tests/unit/usecases/uc23_security_protocols/SecurityProtocolsUseCaseUnitTests.kt |
+| RQ-23 | UC-23: Implement Security Protocols | TC-23.2 | Integration | Passed | Encryption, auth, and secure comms | tests/integration/usecases/uc23_security_protocols/SecurityProtocolsUseCaseIntegrationTests.kt |
+| RQ-23 | UC-23: Implement Security Protocols | TC-23.3 | UAT | Passed | Encryption, auth, and secure comms | tests/uat/usecases/uc23_security_protocols/SecurityProtocolsUATTests.kt |
+| RQ-24 | UC-24: Personalize User Experience | TC-24.1 | Unit | Passed | Personalized content and adaptive UI | tests/unit/usecases/uc24_personalization/PersonalizationUseCaseUnitTests.kt |
+| RQ-24 | UC-24: Personalize User Experience | TC-24.2 | Integration | Passed | Personalized content and adaptive UI | tests/integration/usecases/uc24_personalization/PersonalizationUseCaseIntegrationTests.kt |
+| RQ-24 | UC-24: Personalize User Experience | TC-24.3 | UAT | Passed | Personalized content and adaptive UI | tests/uat/usecases/uc24_personalization/PersonalizationUATTests.kt |
+| RQ-26 | UC-26: AI-Powered Mood Forecasting | TC-26.1 | Unit | Passed | 7-day mood predictions and insights | tests/unit/usecases/uc26_mood_forecasting/MoodForecastingUseCaseUnitTests.kt |
+| RQ-26 | UC-26: AI-Powered Mood Forecasting | TC-26.2 | Integration | Passed | 7-day mood predictions and insights | tests/integration/usecases/uc26_mood_forecasting/MoodForecastingUseCaseIntegrationTests.kt |
+| RQ-26 | UC-26: AI-Powered Mood Forecasting | TC-26.3 | UAT | Passed | 7-day mood predictions and insights | tests/uat/usecases/uc26_mood_forecasting/MoodForecastingUATTests.kt |
+| RQ-27 | UC-27: Guided Breathing & Meditation | TC-27.1 | Unit | Passed | Guided breathing and audio sessions | tests/unit/usecases/uc27_guided_breathing/GuidedBreathingUseCaseUnitTests.kt |
+| RQ-27 | UC-27: Guided Breathing & Meditation | TC-27.2 | Integration | Passed | Guided breathing and audio sessions | tests/integration/usecases/uc27_guided_breathing/GuidedBreathingUseCaseIntegrationTests.kt |
+| RQ-27 | UC-27: Guided Breathing & Meditation | TC-27.3 | UAT | Passed | Guided breathing and audio sessions | tests/uat/usecases/uc27_guided_breathing/GuidedBreathingUATTests.kt |
+| RQ-32 | UC-32: AI-Generated Journaling Prompts | TC-32.1 | Unit | Passed | Personalized journaling prompts via AI | tests/unit/usecases/uc32_journaling_prompts/JournalingPromptsUseCaseUnitTests.kt |
+| RQ-32 | UC-32: AI-Generated Journaling Prompts | TC-32.2 | Integration | Passed | Personalized journaling prompts via AI | tests/integration/usecases/uc32_journaling_prompts/JournalingPromptsUseCaseIntegrationTests.kt |
+| RQ-32 | UC-32: AI-Generated Journaling Prompts | TC-32.3 | UAT | Passed | Personalized journaling prompts via AI | tests/uat/usecases/uc32_journaling_prompts/JournalingPromptsUATTests.kt |
+| RQ-34 | UC-34: Group Therapy Simulation Mode | TC-34.1 | Unit | Passed | Simulated group sessions with virtual peers | tests/unit/usecases/uc34_group_therapy/GroupTherapySimulationModeUseCaseUnitTests.kt |
+| RQ-34 | UC-34: Group Therapy Simulation Mode | TC-34.2 | Integration | Passed | Simulated group sessions with virtual peers | tests/integration/usecases/uc34_group_therapy/GroupTherapySimulationModeUseCaseIntegrationTests.kt |
+| RQ-34 | UC-34: Group Therapy Simulation Mode | TC-34.3 | UAT | Passed | Simulated group sessions with virtual peers | N/A |
+| RQ-35 | UC-35: Relapse Prevention Alerts | TC-35.1 | Unit | Passed | Detect relapse risk and trigger alerts | tests/unit/usecases/uc35_relapse_prevention/RelapsePreventionUseCaseUnitTests.kt |
+| RQ-35 | UC-35: Relapse Prevention Alerts | TC-35.2 | Integration | Passed | Detect relapse risk and trigger alerts | tests/integration/usecases/uc35_relapse_prevention/RelapsePreventionUseCaseIntegrationTests.kt |
+| RQ-35 | UC-35: Relapse Prevention Alerts | TC-35.3 | UAT | Passed | Detect relapse risk and trigger alerts | tests/uat/usecases/uc35_relapse_prevention/RelapsePreventionUATTests.kt |
+| RQ-16 | UC-16: Access Educational Resources | TC-16.1 | Unit | Passed | Educational content access and progress | tests/unit/usecases/uc16_educational_resources/EducationalResourcesUseCaseUnitTests.kt |
+| RQ-16 | UC-16: Access Educational Resources | TC-16.2 | Integration | Passed | Educational content access and progress | tests/integration/usecases/uc16_educational_resources/EducationalResourcesUseCaseIntegrationTests.kt |
+| RQ-16 | UC-16: Access Educational Resources | TC-16.3 | UAT | Passed | Educational content access and progress | N/A |
+| RQ-25 | UC-25: Facilitate User Support | TC-25.1 | Unit | Passed | Tickets, FAQ, contextual help, feedback | tests/unit/usecases/uc25_user_support/UserSupportUseCaseUnitTests.kt |
+| RQ-25 | UC-25: Facilitate User Support | TC-25.2 | Integration | Passed | Tickets, FAQ, contextual help, feedback | tests/integration/usecases/uc25_user_support/UserSupportUseCaseIntegrationTests.kt |
+| RQ-25 | UC-25: Facilitate User Support | TC-25.3 | UAT | Passed | Tickets, FAQ, contextual help, feedback | N/A |
+| RQ-37 | UC-37: Predictive Burnout Detection | TC-37.1 | Unit | Passed | Multi-factor burnout risk assessment | tests/unit/usecases/uc37_burnout_detection/PredictiveBurnoutDetectionUseCaseUnitTests.kt |
+| RQ-37 | UC-37: Predictive Burnout Detection | TC-37.2 | Integration | Passed | Multi-factor burnout risk assessment | tests/integration/usecases/uc37_burnout_detection/PredictiveBurnoutDetectionUseCaseIntegrationTests.kt |
+| RQ-37 | UC-37: Predictive Burnout Detection | TC-37.3 | UAT | Passed | Multi-factor burnout risk assessment | N/A |
+| RQ-38 | UC-38: Voice Enabled Therapy Sessions | TC-38.1 | Unit | Passed | Voice-based therapy (ASR + TTS) with session control | tests/unit/usecases/uc38_voice_therapy/VoiceEnabledTherapyUseCaseUnitTests.kt |
+| RQ-38 | UC-38: Voice Enabled Therapy Sessions | TC-38.2 | Integration | Passed | Voice-based therapy (ASR + TTS) with session control | tests/integration/usecases/uc38_voice_therapy/VoiceEnabledTherapyUseCaseIntegrationTests.kt |
+| RQ-38 | UC-38: Voice Enabled Therapy Sessions | TC-38.3 | UAT | Passed | Voice-based therapy (ASR + TTS) with session control | N/A |
 
 ---
 
@@ -363,6 +362,5 @@ tests/integration/usecases/
 
 ---
 
-**Date**: December 2024  
 **Build Status**: BUILD SUCCESSFUL
 
