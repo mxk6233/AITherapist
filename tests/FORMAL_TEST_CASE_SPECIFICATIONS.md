@@ -1,14 +1,14 @@
 # Formal Test Case Specifications
 
-**Document Version**: 1.0  
+**Document Version**: 1.1  
 **Date**: December 2024  
-**Status**: Complete Test Case Specifications for UC16, UC25, UC37, UC38
+**Status**: Complete Test Case Specifications for UC16, UC25, UC34, UC37, UC38
 
 ---
 
 ## Document Purpose
 
-This document provides formal test case specifications with detailed acceptance criteria, preconditions, test steps, and expected results for the four use cases: UC16, UC25, UC37, and UC38. Each test case includes clear traceability to requirements and measurable expected outcomes.
+This document provides formal test case specifications with detailed acceptance criteria, preconditions, test steps, and expected results for the five use cases: UC16, UC25, UC34, UC37, and UC38. Each test case includes clear traceability to requirements and measurable expected outcomes.
 
 ---
 
@@ -556,6 +556,364 @@ Provide comprehensive user support through multiple channels including in-app he
 
 **Acceptance Criteria Validation**:
 -  AC-UC25-09: Support ticket history is retrievable
+
+---
+
+## UC34: Group Therapy Simulation Mode
+
+### Use Case Goal
+Provide users with simulated group therapy sessions using AI-powered virtual participants to create a supportive group environment for practice and learning.
+
+### Acceptance Criteria
+
+**AC-UC34-01**: System MUST create group therapy sessions with name, facilitator ID, max participants, and optional topic  
+**AC-UC34-02**: System MUST validate session creation input and reject empty session names or invalid max participants (<= 0)  
+**AC-UC34-03**: System MUST allow users to join group sessions up to maximum capacity  
+**AC-UC34-04**: System MUST prevent users from joining full sessions  
+**AC-UC34-05**: System MUST allow users to leave group sessions (except facilitator)  
+**AC-UC34-06**: System MUST create virtual participants with diverse personalities for group sessions  
+**AC-UC34-07**: System MUST facilitate group discussions with prompts based on topic  
+**AC-UC34-08**: System MUST conduct group exercises with instructions, duration, and steps  
+**AC-UC34-09**: System MUST simulate realistic group dynamics with participation level, cohesion, and engagement metrics  
+**AC-UC34-10**: System MUST provide peer support responses based on user input  
+**AC-UC34-11**: System MUST retrieve active group sessions for a user (as facilitator or participant)
+
+---
+
+### Test Case TC-UC34-UNIT-01: Create Group Session
+
+**Test Case ID**: TC-UC34-UNIT-01  
+**Test Type**: Unit Test  
+**Priority**: High  
+**Requirement**: AC-UC34-01
+
+**Preconditions**:
+- User with ID "user123" exists
+- GroupTherapySimulationModeUseCase instance is initialized
+
+**Test Steps**:
+1. Invoke `createGroupSession(sessionName = "Anxiety Support Group", facilitatorId = "user123", maxParticipants = 8, topic = "Anxiety Management")`
+2. Store the returned `GroupSession` as `session`
+
+**Expected Results**:
+- `session.id` is not empty and starts with "session_"
+- `session.name == "Anxiety Support Group"` (exact match)
+- `session.facilitatorId == "user123"` (exact match)
+- `session.maxParticipants == 8` (exact match)
+- `session.topic == "Anxiety Management"` (exact match)
+- `session.status == SessionStatus.ACTIVE` (new sessions are ACTIVE)
+- `session.participants.contains("user123")` (facilitator is automatically added to participants)
+- `session.participants.size == 1` (only facilitator initially)
+- `session.createdAt != null` (creation timestamp is set)
+- `session.updatedAt != null` (update timestamp is set)
+
+**Acceptance Criteria Validation**:
+- AC-UC34-01: Group sessions are created with all required fields correctly set
+
+---
+
+### Test Case TC-UC34-UNIT-02: Validate Session Creation Input
+
+**Test Case ID**: TC-UC34-UNIT-02  
+**Test Type**: Unit Test  
+**Priority**: High  
+**Requirement**: AC-UC34-02
+
+**Preconditions**:
+- User with ID "user123" exists
+- GroupTherapySimulationModeUseCase instance is initialized
+
+**Test Steps**:
+1. Attempt to invoke `createGroupSession(sessionName = "", facilitatorId = "user123")`
+2. Attempt to invoke `createGroupSession(sessionName = "   ", facilitatorId = "user123")`
+3. Attempt to invoke `createGroupSession(sessionName = "Valid Name", facilitatorId = "user123", maxParticipants = 0)`
+4. Attempt to invoke `createGroupSession(sessionName = "Valid Name", facilitatorId = "user123", maxParticipants = -1)`
+
+**Expected Results**:
+- Step 1 throws `IllegalArgumentException` with message containing "Session name cannot be empty"
+- Step 2 throws `IllegalArgumentException` with message containing "Session name cannot be empty" (whitespace-only is treated as empty)
+- Step 3 throws `IllegalArgumentException` with message containing "Max participants must be greater than 0"
+- Step 4 throws `IllegalArgumentException` with message containing "Max participants must be greater than 0"
+
+**Acceptance Criteria Validation**:
+- AC-UC34-02: Empty session names and invalid max participants are rejected with appropriate exceptions
+
+---
+
+### Test Case TC-UC34-UNIT-03: Join Group Session
+
+**Test Case ID**: TC-UC34-UNIT-03  
+**Test Type**: Unit Test  
+**Priority**: High  
+**Requirement**: AC-UC34-03
+
+**Preconditions**:
+- User with ID "user123" exists
+- User with ID "user456" exists
+- GroupTherapySimulationModeUseCase instance is initialized
+
+**Test Steps**:
+1. Create session: `createGroupSession(sessionName = "Support Group", facilitatorId = "user123", maxParticipants = 5)` → store as `session`
+2. Invoke `joinGroupSession(sessionId = session.id, userId = "user456")`
+3. Store the returned boolean as `joinResult1`
+4. Retrieve session: `getActiveGroupSessions("user123")` → find session by ID → store as `updatedSession`
+5. Invoke `joinGroupSession(sessionId = session.id, userId = "user456")` again (user already in session)
+6. Store the returned boolean as `joinResult2`
+
+**Expected Results**:
+- `joinResult1 == true` (user successfully joins session)
+- `updatedSession.participants.contains("user456")` (user is added to participants list)
+- `updatedSession.participants.size == 2` (facilitator + new participant)
+- `joinResult2 == true` (already-joined users return true, no error)
+
+**Acceptance Criteria Validation**:
+- AC-UC34-03: Users can join group sessions successfully
+
+---
+
+### Test Case TC-UC34-UNIT-04: Prevent Joining Full Sessions
+
+**Test Case ID**: TC-UC34-UNIT-04  
+**Test Type**: Unit Test  
+**Priority**: High  
+**Requirement**: AC-UC34-04
+
+**Preconditions**:
+- User with ID "user123" exists
+- Users with IDs "user1" through "user5" exist
+- GroupTherapySimulationModeUseCase instance is initialized
+
+**Test Steps**:
+1. Create session: `createGroupSession(sessionName = "Full Group", facilitatorId = "user123", maxParticipants = 3)` → store as `session`
+2. Join user1: `joinGroupSession(session.id, "user1")` → store result as `join1`
+3. Join user2: `joinGroupSession(session.id, "user2")` → store result as `join2`
+4. Attempt to join user3: `joinGroupSession(session.id, "user3")` → store result as `join3`
+5. Attempt to join user4: `joinGroupSession(session.id, "user4")` → store result as `join4`
+
+**Expected Results**:
+- `join1 == true` (user1 joins successfully)
+- `join2 == true` (user2 joins successfully)
+- `join3 == true` (user3 joins - session now full: facilitator + 2 participants = 3 total)
+- `join4 == false` (user4 cannot join - session is full)
+
+**Acceptance Criteria Validation**:
+- AC-UC34-04: Full sessions prevent additional users from joining
+
+---
+
+### Test Case TC-UC34-UNIT-05: Leave Group Session
+
+**Test Case ID**: TC-UC34-UNIT-05  
+**Test Type**: Unit Test  
+**Priority**: High  
+**Requirement**: AC-UC34-05
+
+**Preconditions**:
+- User with ID "user123" exists (facilitator)
+- User with ID "user456" exists (participant)
+- GroupTherapySimulationModeUseCase instance is initialized
+
+**Test Steps**:
+1. Create session: `createGroupSession(sessionName = "Test Group", facilitatorId = "user123")` → store as `session`
+2. Join participant: `joinGroupSession(session.id, "user456")` → store result as `joinResult`
+3. Invoke `leaveGroupSession(sessionId = session.id, userId = "user456")`
+4. Store the returned boolean as `leaveResult`
+5. Retrieve session: `getActiveGroupSessions("user123")` → find session by ID → store as `updatedSession`
+6. Attempt to invoke `leaveGroupSession(sessionId = session.id, userId = "user123")` (facilitator cannot leave)
+7. Store the returned boolean as `facilitatorLeaveResult`
+
+**Expected Results**:
+- `joinResult == true` (participant joins successfully)
+- `leaveResult == true` (participant leaves successfully)
+- `updatedSession.participants.contains("user456") == false` (participant is removed from list)
+- `updatedSession.participants.size == 1` (only facilitator remains)
+- `facilitatorLeaveResult == false` (facilitator cannot leave session)
+
+**Acceptance Criteria Validation**:
+- AC-UC34-05: Participants can leave sessions, but facilitator cannot
+
+---
+
+### Test Case TC-UC34-UNIT-06: Create Virtual Participants
+
+**Test Case ID**: TC-UC34-UNIT-06  
+**Test Type**: Unit Test  
+**Priority**: High  
+**Requirement**: AC-UC34-06
+
+**Preconditions**:
+- Group session exists (created via `createGroupSession`)
+- GroupTherapySimulationModeUseCase instance is initialized
+
+**Test Steps**:
+1. Create session: `createGroupSession(sessionName = "Virtual Group", facilitatorId = "user123")` → store as `session`
+2. Invoke `createVirtualParticipants(sessionId = session.id, participantCount = 5)`
+3. Store the returned list as `participants`
+
+**Expected Results**:
+- `participants.size == 5` (exact number of participants requested)
+- All items in `participants` have:
+  - `id.isNotBlank()` (all participants have unique IDs)
+  - `name.isNotBlank()` (all participants have names)
+  - `personality.isNotBlank()` (all participants have personality types)
+- `participants.map { it.personality }.distinct().size >= 2` (participants have diverse personalities - at least 2 different types)
+- All participant IDs are unique: `participants.map { it.id }.distinct().size == participants.size`
+
+**Acceptance Criteria Validation**:
+- AC-UC34-06: Virtual participants are created with diverse personalities
+
+---
+
+### Test Case TC-UC34-UNIT-07: Facilitate Group Discussion
+
+**Test Case ID**: TC-UC34-UNIT-07  
+**Test Type**: Unit Test  
+**Priority**: High  
+**Requirement**: AC-UC34-07
+
+**Preconditions**:
+- Group session exists
+- GroupTherapySimulationModeUseCase instance is initialized
+
+**Test Steps**:
+1. Create session: `createGroupSession(sessionName = "Discussion Group", facilitatorId = "user123", topic = "Stress Management")` → store as `session`
+2. Create virtual participants: `createVirtualParticipants(session.id, 3)` → store as `participants`
+3. Invoke `facilitateGroupDiscussion(sessionId = session.id, topic = "coping strategies")`
+4. Store the returned list as `discussionPrompts`
+
+**Expected Results**:
+- `discussionPrompts.isNotEmpty()` (discussion prompts are generated)
+- `discussionPrompts.size >= 3` (multiple prompts are provided)
+- At least one prompt in `discussionPrompts` contains "coping strategies" (case-insensitive) OR "coping" (case-insensitive)
+- At least one prompt contains "Facilitator" (case-insensitive) OR "facilitate" (case-insensitive)
+- All items in `discussionPrompts` are non-empty strings
+- All prompts are unique: `discussionPrompts.distinct().size == discussionPrompts.size`
+
+**Acceptance Criteria Validation**:
+- AC-UC34-07: Group discussions are facilitated with topic-based prompts
+
+---
+
+### Test Case TC-UC34-UNIT-08: Conduct Group Exercise
+
+**Test Case ID**: TC-UC34-UNIT-08  
+**Test Type**: Unit Test  
+**Priority**: High  
+**Requirement**: AC-UC34-08
+
+**Preconditions**:
+- Group session exists
+- GroupTherapySimulationModeUseCase instance is initialized
+
+**Test Steps**:
+1. Create session: `createGroupSession(sessionName = "Exercise Group", facilitatorId = "user123")` → store as `session`
+2. Invoke `conductGroupExercise(sessionId = session.id, exerciseType = "breathing")`
+3. Store the returned map as `exercise`
+
+**Expected Results**:
+- `exercise.containsKey("instructions")` (exercise has instructions)
+- `exercise.containsKey("duration")` (exercise has duration)
+- `exercise.containsKey("steps")` (exercise has steps)
+- `exercise["instructions"]` is an instance of `String` and `(exercise["instructions"] as String).isNotBlank()`
+- `exercise["duration"]` is an instance of `Int` and `(exercise["duration"] as Int) > 0`
+- `exercise["steps"]` is an instance of `List<*>` and `(exercise["steps"] as List<*>).isNotEmpty()`
+- `(exercise["instructions"] as String).contains("breathing", ignoreCase = true)` (instructions relate to exercise type)
+
+**Acceptance Criteria Validation**:
+- AC-UC34-08: Group exercises are conducted with complete instructions, duration, and steps
+
+---
+
+### Test Case TC-UC34-UNIT-09: Simulate Group Dynamics
+
+**Test Case ID**: TC-UC34-UNIT-09  
+**Test Type**: Unit Test  
+**Priority**: High  
+**Requirement**: AC-UC34-09
+
+**Preconditions**:
+- Group session with virtual participants exists
+- GroupTherapySimulationModeUseCase instance is initialized
+
+**Test Steps**:
+1. Create session: `createGroupSession(sessionName = "Dynamics Group", facilitatorId = "user123")` → store as `session`
+2. Create participants: `createVirtualParticipants(session.id, 4)` → store as `participants`
+3. Invoke `simulateGroupDynamics(sessionId = session.id, topic = "stress management")`
+4. Store the returned map as `dynamics`
+
+**Expected Results**:
+- `dynamics.containsKey("participation_level")` (dynamics include participation level)
+- `dynamics.containsKey("group_cohesion")` (dynamics include group cohesion)
+- `dynamics.containsKey("active_participants")` (dynamics include active participant count)
+- `dynamics.containsKey("engagement_score")` (dynamics include engagement score)
+- `dynamics["group_cohesion"]` is an instance of `Float` and `(dynamics["group_cohesion"] as Float) in 0f..1f` (cohesion is normalized 0-1)
+- `dynamics["participation_level"]` is an instance of `Float` and `(dynamics["participation_level"] as Float) in 0f..1f` (participation is normalized 0-1)
+- `dynamics["engagement_score"]` is an instance of `Float` and `(dynamics["engagement_score"] as Float) in 0f..1f` (engagement is normalized 0-1)
+- `dynamics["active_participants"]` is an instance of `Int` and `(dynamics["active_participants"] as Int) >= 1` (at least facilitator is active)
+
+**Acceptance Criteria Validation**:
+- AC-UC34-09: Group dynamics are simulated with realistic metrics
+
+---
+
+### Test Case TC-UC34-UNIT-10: Provide Peer Support
+
+**Test Case ID**: TC-UC34-UNIT-10  
+**Test Type**: Unit Test  
+**Priority**: High  
+**Requirement**: AC-UC34-10
+
+**Preconditions**:
+- Group session with virtual participants exists
+- GroupTherapySimulationModeUseCase instance is initialized
+
+**Test Steps**:
+1. Create session: `createGroupSession(sessionName = "Support Group", facilitatorId = "user123")` → store as `session`
+2. Create participants: `createVirtualParticipants(session.id, 3)` → store as `participants`
+3. Invoke `providePeerSupport(sessionId = session.id, userMessage = "I'm feeling anxious about my upcoming presentation")`
+4. Store the returned list as `supportResponses`
+
+**Expected Results**:
+- `supportResponses.isNotEmpty()` (support responses are provided)
+- `supportResponses.size >= 2` (multiple participants provide support)
+- At least one response contains one of: "support" (case-insensitive), "understand" (case-insensitive), "feel" (case-insensitive), "anxious" (case-insensitive), "help" (case-insensitive)
+- All items in `supportResponses` are non-empty strings
+- All responses are unique: `supportResponses.distinct().size == supportResponses.size`
+
+**Acceptance Criteria Validation**:
+- AC-UC34-10: Peer support responses are provided based on user input
+
+---
+
+### Test Case TC-UC34-UNIT-11: Retrieve Active Sessions
+
+**Test Case ID**: TC-UC34-UNIT-11  
+**Test Type**: Unit Test  
+**Priority**: Medium  
+**Requirement**: AC-UC34-11
+
+**Preconditions**:
+- User with ID "user123" exists
+- User with ID "user456" exists
+- GroupTherapySimulationModeUseCase instance is initialized
+
+**Test Steps**:
+1. Create session as facilitator: `createGroupSession(sessionName = "Session 1", facilitatorId = "user123")` → store ID as `session1Id`
+2. Create session as participant: `createGroupSession(sessionName = "Session 2", facilitatorId = "user456")` → store as `session2`
+3. Join session2: `joinGroupSession(session2.id, "user123")` → store result as `joinResult`
+4. Invoke `getActiveGroupSessions(userId = "user123")`
+5. Store the returned list as `activeSessions`
+
+**Expected Results**:
+- `activeSessions.isNotEmpty()` (active sessions are returned)
+- `activeSessions.size >= 2` (both sessions are returned)
+- `activeSessions.any { it.id == session1Id }` (session where user is facilitator is included)
+- `activeSessions.any { it.id == session2.id }` (session where user is participant is included)
+- `activeSessions.all { it.status == SessionStatus.ACTIVE }` (only active sessions are returned)
+- All sessions in `activeSessions` have `participants.contains("user123")` (user is in all returned sessions)
+
+**Acceptance Criteria Validation**:
+- AC-UC34-11: Active group sessions are retrieved for users (as facilitator or participant)
 
 ---
 
@@ -1167,6 +1525,17 @@ Enable users to have voice-based therapy sessions with the AI therapist, providi
 | UC25 | AC-UC25-07 | TC-UC25-UNIT-07 | Unit |  |
 | UC25 | AC-UC25-08 | TC-UC25-UNIT-08 | Unit |  |
 | UC25 | AC-UC25-09 | TC-UC25-UNIT-09 | Unit |  |
+| UC34 | AC-UC34-01 | TC-UC34-UNIT-01 | Unit |  |
+| UC34 | AC-UC34-02 | TC-UC34-UNIT-02 | Unit |  |
+| UC34 | AC-UC34-03 | TC-UC34-UNIT-03 | Unit |  |
+| UC34 | AC-UC34-04 | TC-UC34-UNIT-04 | Unit |  |
+| UC34 | AC-UC34-05 | TC-UC34-UNIT-05 | Unit |  |
+| UC34 | AC-UC34-06 | TC-UC34-UNIT-06 | Unit |  |
+| UC34 | AC-UC34-07 | TC-UC34-UNIT-07 | Unit |  |
+| UC34 | AC-UC34-08 | TC-UC34-UNIT-08 | Unit |  |
+| UC34 | AC-UC34-09 | TC-UC34-UNIT-09 | Unit |  |
+| UC34 | AC-UC34-10 | TC-UC34-UNIT-10 | Unit |  |
+| UC34 | AC-UC34-11 | TC-UC34-UNIT-11 | Unit |  |
 | UC37 | AC-UC37-01 | TC-UC37-UNIT-01 | Unit |  |
 | UC37 | AC-UC37-02 | TC-UC37-UNIT-02 | Unit |  |
 | UC37 | AC-UC37-03 | TC-UC37-UNIT-03 | Unit |  |
@@ -1191,9 +1560,9 @@ Enable users to have voice-based therapy sessions with the AI therapist, providi
 
 ## Summary
 
-This document provides formal test case specifications for 4 use cases (UC16, UC25, UC37, UC38) with:
+This document provides formal test case specifications for 5 use cases (UC16, UC25, UC34, UC37, UC38) with:
 
-- **37 detailed test cases** covering all acceptance criteria
+- **48 detailed test cases** covering all acceptance criteria
 - **Clear preconditions** for each test
 - **Step-by-step test procedures** with specific actions
 - **Measurable expected results** with exact assertions
@@ -1204,7 +1573,7 @@ All test cases are designed to be executable and verifiable, with specific expec
 
 ---
 
-**Document Version**: 1.0  
+**Document Version**: 1.1  
 **Last Updated**: December 2024  
 **Status**: Complete
 

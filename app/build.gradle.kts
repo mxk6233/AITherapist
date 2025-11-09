@@ -312,7 +312,7 @@ tasks.register("runAllTests") {
     dependsOn("test", "connectedAndroidTest")
     
     doLast {
-        println("✅ All test suites completed successfully!")
+        println(" All test suites completed successfully!")
         println("📊 Test reports available in:")
         println("   - Unit Tests: app/build/reports/tests/testDebugUnitTest/index.html")
         println("   - Coverage: app/build/reports/jacoco/jacocoTestReport/html/index.html")
@@ -326,7 +326,7 @@ tasks.register("runUnitTests") {
     dependsOn("test")
     
     doLast {
-        println("✅ Unit tests completed!")
+        println(" Unit tests completed!")
     }
 }
 
@@ -336,7 +336,7 @@ tasks.register("runIntegrationTests") {
     dependsOn("testDebugUnitTest")
     
     doLast {
-        println("✅ Integration tests completed!")
+        println(" Integration tests completed!")
     }
 }
 
@@ -346,7 +346,7 @@ tasks.register("runUATTests") {
     dependsOn("connectedAndroidTest")
     
     doLast {
-        println("✅ UAT tests completed!")
+        println(" UAT tests completed!")
     }
 }
 
@@ -368,7 +368,7 @@ tasks.register("validateTestCoverage") {
     dependsOn("jacocoTestCoverageVerification")
     
     doLast {
-        println("✅ Test coverage validation passed!")
+        println(" Test coverage validation passed!")
     }
 }
 
@@ -378,7 +378,7 @@ tasks.register("runUseCaseTests") {
     dependsOn("test")
     
     doLast {
-        println("✅ Use case tests completed!")
+        println(" Use case tests completed!")
         println("📋 Tested Use Cases:")
         println("   - UC1: Conduct AI Chat Session")
         println("   - UC2: Handle Crisis Intervention")

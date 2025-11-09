@@ -81,6 +81,9 @@ fun AppNavigation(navController: NavHostController) {
                 onNavigateToCrisisIntervention = {
                     navController.navigate(Screen.CrisisIntervention.route)
                 },
+                onNavigateToVoiceTherapy = {
+                    navController.navigate(Screen.VoiceTherapy.route)
+                },
                 onNavigateBack = {
                     navController.popBackStack()
                 }
@@ -210,6 +213,9 @@ fun AppNavigation(navController: NavHostController) {
                 onNavigateToUserSupport = {
                     navController.navigate(Screen.UserSupport.route)
                 },
+                onNavigateToGroupTherapy = {
+                    navController.navigate(Screen.GroupTherapy.route)
+                },
                 onNavigateBack = {
                     navController.popBackStack()
                 }
@@ -254,6 +260,24 @@ fun AppNavigation(navController: NavHostController) {
         // User Support (UC25)
         composable(Screen.UserSupport.route) {
             UserSupportScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        
+        // Group Therapy Simulation Mode (UC34)
+        composable(Screen.GroupTherapy.route) {
+            GroupTherapyScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        
+        // Voice Enabled Therapy Sessions (UC38)
+        composable(Screen.VoiceTherapy.route) {
+            VoiceTherapyScreen(
                 onNavigateBack = {
                     navController.popBackStack()
                 }

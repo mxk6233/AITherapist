@@ -6,10 +6,44 @@ import java.util.Date
 /**
  * UC37: Predictive Burnout Detection - Use Case
  * 
- * Use Case Goal: Detect early signs of burnout risk through analysis of user behavior patterns,
- * mood trends, and activity levels to enable proactive intervention and prevention.
+ * ## Overview
+ * Burnout prediction model with live feedback visualization that analyzes user behavior patterns,
+ * mood trends, activity levels, and stress indicators to detect early signs of burnout risk.
+ * The system provides proactive intervention and prevention through personalized recommendations
+ * and automated alerts.
  * 
- * Responsibilities:
+ * ## Use Case Goal
+ * Detect early signs of burnout risk through analysis of user behavior patterns, mood trends,
+ * and activity levels to enable proactive intervention and prevention.
+ * 
+ * ## Overall Function
+ * This module implements a comprehensive burnout detection system that:
+ * - Analyzes multi-factor data (mood, activity, stress, sleep) to assess burnout risk
+ * - Calculates risk scores (0-100) and determines risk levels (LOW, MODERATE, HIGH, CRITICAL)
+ * - Identifies specific risk factors with severity scores
+ * - Detects early warning signs (mood decline, activity decline, stress accumulation, sleep disruption)
+ * - Generates personalized prevention recommendations based on risk level and factors
+ * - Automatically triggers interventions when risk level is HIGH or CRITICAL
+ * - Predicts future burnout risk with trend analysis and confidence scores
+ * 
+ * ## Implemented Modules
+ * - **Risk Assessment Engine**: Multi-factor analysis combining mood, activity, stress, and sleep data
+ * - **Early Warning System**: Pattern detection for declining trends across multiple indicators
+ * - **Risk Scoring Algorithm**: Weighted calculation producing 0-100 risk scores
+ * - **Recommendation Generator**: Personalized prevention strategies based on identified risk factors
+ * - **Intervention Trigger**: Automated alerts and proactive support activation
+ * - **Prediction Model**: Future risk forecasting with trend analysis (INCREASING, DECREASING, STABLE)
+ * - **Confidence Calculator**: Data quality assessment for prediction reliability
+ * 
+ * ## Key Features
+ * - Real-time risk assessment from multiple data sources
+ * - Early warning detection before burnout occurs
+ * - Personalized intervention recommendations
+ * - Automated high-risk alerts
+ * - Future risk prediction with confidence scores
+ * - Trend analysis for proactive management
+ * 
+ * ## Responsibilities
  * - Analyze user activity patterns for burnout indicators
  * - Monitor mood trends and stress levels
  * - Detect early warning signs of burnout

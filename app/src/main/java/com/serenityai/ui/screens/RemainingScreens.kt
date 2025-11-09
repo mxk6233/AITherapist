@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.material.icons.Icons
@@ -127,15 +130,9 @@ fun SupportToolsScreen(
     onNavigateToJournalPrompts: () -> Unit,
     onNavigateToEducationalResources: () -> Unit,
     onNavigateToUserSupport: () -> Unit,
+    onNavigateToGroupTherapy: () -> Unit,
     onNavigateBack: () -> Unit
 ) {
-    val supportTools = listOf(
-        Pair("Coping Exercises", onNavigateToCopingExercises),
-        Pair("Journal Prompts", onNavigateToJournalPrompts),
-        Pair("Educational Resources", onNavigateToEducationalResources),
-        Pair("User Support", onNavigateToUserSupport)
-    )
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -156,33 +153,146 @@ fun SupportToolsScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+            // Debug: Verify screen is rendering
+            Text(
+                text = "Support Tools",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+            
+            // Coping Exercises
+            Card(
+                onClick = onNavigateToCopingExercises,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
-                items(supportTools) { (title, onClick) ->
-                    Card(
-                        onClick = onClick,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(20.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                Icons.Default.Build, // Placeholder icon
-                                contentDescription = null,
-                                modifier = Modifier.size(40.dp),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Text(
-                                text = title,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
+                Row(
+                    modifier = Modifier.padding(20.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.FitnessCenter,
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        text = "Coping Exercises",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+            
+            // Journal Prompts
+            Card(
+                onClick = onNavigateToJournalPrompts,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(20.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.Edit,
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        text = "Journal Prompts",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+            
+            // Educational Resources
+            Card(
+                onClick = onNavigateToEducationalResources,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(20.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.Book,
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        text = "Educational Resources",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+            
+            // User Support
+            Card(
+                onClick = onNavigateToUserSupport,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(20.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.Support,
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        text = "User Support",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+            
+            // Group Therapy Simulation Mode (UC34)
+            Card(
+                onClick = onNavigateToGroupTherapy,
+                modifier = Modifier.fillMaxWidth(),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(20.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.People,
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        text = "Group Therapy Simulation",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }
@@ -755,6 +865,311 @@ fun UserSupportScreen(onNavigateBack: () -> Unit) {
     }
 }
 
+// Group Therapy Screen (UC34)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun GroupTherapyScreen(onNavigateBack: () -> Unit) {
+    val useCase = remember { com.serenityai.usecases.GroupTherapySimulationModeUseCase() }
+    var sessionName by remember { mutableStateOf("") }
+    var topic by remember { mutableStateOf("") }
+    var maxParticipants by remember { mutableStateOf(8) }
+    var currentSession by remember { mutableStateOf<com.serenityai.usecases.GroupSession?>(null) }
+    var virtualParticipants by remember { mutableStateOf<List<com.serenityai.usecases.VirtualParticipant>>(emptyList()) }
+    
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Group Therapy Simulation") },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                )
+            )
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            if (currentSession == null) {
+                // Create Session Section
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(20.dp)
+                    ) {
+                        Text(
+                            text = "Create Group Session",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
+                        
+                        OutlinedTextField(
+                            value = sessionName,
+                            onValueChange = { sessionName = it },
+                            label = { Text("Session Name") },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true
+                        )
+                        
+                        Spacer(modifier = Modifier.height(12.dp))
+                        
+                        OutlinedTextField(
+                            value = topic,
+                            onValueChange = { topic = it },
+                            label = { Text("Topic (Optional)") },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true
+                        )
+                        
+                        Spacer(modifier = Modifier.height(12.dp))
+                        
+                        OutlinedTextField(
+                            value = maxParticipants.toString(),
+                            onValueChange = { 
+                                maxParticipants = it.toIntOrNull() ?: 8
+                            },
+                            label = { Text("Max Participants") },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        )
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        
+                        Button(
+                            onClick = {
+                                if (sessionName.isNotBlank()) {
+                                    val session = useCase.createGroupSession(
+                                        sessionName = sessionName,
+                                        facilitatorId = "user123", // In production, get from auth
+                                        maxParticipants = maxParticipants,
+                                        topic = topic.ifBlank { null }
+                                    )
+                                    currentSession = session
+                                    virtualParticipants = useCase.createVirtualParticipants(session.id, 5)
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = sessionName.isNotBlank()
+                        ) {
+                            Text("Create Session")
+                        }
+                    }
+                }
+            } else {
+                // Active Session View
+                val session = currentSession!!
+                
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(20.dp)
+                    ) {
+                        Text(
+                            text = session.name,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        
+                        if (session.topic != null) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Topic: ${session.topic}",
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Participants: ${session.participants.size}/${session.maxParticipants}",
+                            fontSize = 14.sp
+                        )
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        
+                        if (virtualParticipants.isNotEmpty()) {
+                            Text(
+                                text = "Virtual Participants:",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                            virtualParticipants.forEach { participant ->
+                                Text(
+                                    text = "• ${participant.name} (${participant.personality})",
+                                    fontSize = 14.sp,
+                                    modifier = Modifier.padding(start = 8.dp, bottom = 4.dp)
+                                )
+                            }
+                        }
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        
+                        Button(
+                            onClick = {
+                                currentSession = null
+                                virtualParticipants = emptyList()
+                                sessionName = ""
+                                topic = ""
+                                maxParticipants = 8
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("End Session")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Voice Therapy Screen (UC38)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun VoiceTherapyScreen(onNavigateBack: () -> Unit) {
+    val useCase = remember { com.serenityai.usecases.VoiceEnabledTherapyUseCase() }
+    var currentSession by remember { mutableStateOf<com.serenityai.usecases.VoiceSession?>(null) }
+    var isRecording by remember { mutableStateOf(false) }
+    var language by remember { mutableStateOf("en-US") }
+    
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Voice Therapy") },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                )
+            )
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            if (currentSession == null) {
+                // Start Session
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(20.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            Icons.Default.Mic,
+                            contentDescription = null,
+                            modifier = Modifier.size(64.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "Voice Therapy Session",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Have a voice conversation with your AI therapist",
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(24.dp))
+                        Button(
+                            onClick = {
+                                val session = useCase.startVoiceSession(
+                                    userId = "user123", // In production, get from auth
+                                    language = language
+                                )
+                                currentSession = session
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Start Voice Session")
+                        }
+                    }
+                }
+            } else {
+                // Active Session
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(20.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Voice Session Active",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(24.dp))
+                        
+                        Icon(
+                            if (isRecording) Icons.Default.Mic else Icons.Default.MicOff,
+                            contentDescription = null,
+                            modifier = Modifier.size(64.dp),
+                            tint = if (isRecording) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+                        )
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = if (isRecording) "Listening..." else "Tap to speak",
+                            fontSize = 16.sp
+                        )
+                        
+                        Spacer(modifier = Modifier.height(24.dp))
+                        
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Button(
+                                onClick = { isRecording = !isRecording }
+                            ) {
+                                Text(if (isRecording) "Stop Recording" else "Start Recording")
+                            }
+                            Button(
+                                onClick = {
+                                    currentSession = null
+                                    isRecording = false
+                                }
+                            ) {
+                                Text("End Session")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 // Wellness Activities Screens
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -763,58 +1178,77 @@ fun WellnessActivitiesScreen(
     onNavigateToDailyAffirmations: () -> Unit,
     onNavigateBack: () -> Unit
 ) {
-    val wellnessActivities = listOf(
-        Pair("Guided Breathing", onNavigateToGuidedBreathing),
-        Pair("Daily Affirmations", onNavigateToDailyAffirmations)
-    )
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = onNavigateBack) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-            }
-            Text(
-                text = "Wellness Activities",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(start = 8.dp)
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Wellness Activities") },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                )
             )
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
-            items(wellnessActivities) { (title, onClick) ->
-                Card(
-                    onClick = onClick,
-                    modifier = Modifier.fillMaxWidth()
+            // Guided Breathing
+            Card(
+                onClick = onNavigateToGuidedBreathing,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(20.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        modifier = Modifier.padding(20.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            Icons.Default.Favorite, // Placeholder icon
-                            contentDescription = null,
-                            modifier = Modifier.size(40.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Text(
-                            text = title,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
-                    }
+                    Icon(
+                        Icons.Default.Air,
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        text = "Guided Breathing",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+            
+            // Daily Affirmations
+            Card(
+                onClick = onNavigateToDailyAffirmations,
+                modifier = Modifier.fillMaxWidth(),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(20.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.Favorite,
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        text = "Daily Affirmations",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }

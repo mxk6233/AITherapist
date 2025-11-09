@@ -28,6 +28,7 @@ fun ChatFeaturesScreen(
     onNavigateToAIChat: () -> Unit,
     onNavigateToChatHistory: () -> Unit,
     onNavigateToCrisisIntervention: () -> Unit,
+    onNavigateToVoiceTherapy: () -> Unit,
     onNavigateBack: () -> Unit
 ) {
     val chatFeatures = listOf(
@@ -36,6 +37,12 @@ fun ChatFeaturesScreen(
             description = "Start a conversation with your AI therapist",
             icon = Icons.Default.Chat,
             onClick = onNavigateToAIChat
+        ),
+        ChatFeature(
+            title = "Voice Therapy",
+            description = "Have voice-based therapy sessions with speech recognition",
+            icon = Icons.Default.Mic,
+            onClick = onNavigateToVoiceTherapy
         ),
         ChatFeature(
             title = "Chat History",

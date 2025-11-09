@@ -12,6 +12,7 @@ sealed class Screen(val route: String) {
     object AIChatSession : Screen("ai_chat_session") // UC1
     object ChatHistory : Screen("chat_history") // UC6
     object CrisisIntervention : Screen("crisis_intervention") // UC2
+    object VoiceTherapy : Screen("voice_therapy") // UC38
     
     // Mood & Analytics
     object MoodAnalytics : Screen("mood_analytics")
@@ -27,6 +28,7 @@ sealed class Screen(val route: String) {
     object JournalPrompts : Screen("journal_prompts") // UC32
     object EducationalResources : Screen("educational_resources") // UC16
     object UserSupport : Screen("user_support") // UC25
+    object GroupTherapy : Screen("group_therapy") // UC34
     
     // Wellness Activities
     object WellnessActivities : Screen("wellness_activities")

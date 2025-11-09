@@ -9,10 +9,45 @@ import java.util.Date
 /**
  * UC16: Access Educational Resources - Use Case
  * 
- * Use Case Goal: Enable users to access comprehensive educational resources about mental health,
- * therapy techniques, and self-care strategies so they can learn and apply evidence-based practices.
+ * ## Overview
+ * Educational resource library with search and filtering capabilities that provides users with
+ * comprehensive access to mental health educational content. The system integrates with Firebase
+ * for live data retrieval while maintaining fallback to hardcoded resources for offline functionality.
  * 
- * Responsibilities:
+ * ## Use Case Goal
+ * Enable users to access comprehensive educational resources about mental health, therapy techniques,
+ * and self-care strategies so they can learn and apply evidence-based practices.
+ * 
+ * ## Overall Function
+ * This module implements a comprehensive educational resource management system that:
+ * - Provides categorized educational content (articles, videos, guides) from Firebase or fallback sources
+ * - Enables advanced search across titles, descriptions, and tags
+ * - Supports filtering by category and content format (TEXT, VIDEO, AUDIO)
+ * - Personalizes content recommendations based on user profile and preferences
+ * - Tracks learning progress (0-100%) for each resource
+ * - Marks resources as completed with timestamps when progress reaches 100%
+ * - Retrieves user's learning history and progress tracking
+ * - Provides dynamic category lists from available resources
+ * 
+ * ## Implemented Modules
+ * - **Resource Retrieval Engine**: Firebase integration with fallback to hardcoded data
+ * - **Search System**: Full-text search across resource metadata (title, description, tags)
+ * - **Filtering System**: Multi-criteria filtering by category and format
+ * - **Personalization Engine**: Relevance scoring and recommendation algorithm
+ * - **Progress Tracking**: Learning progress management with completion detection
+ * - **Category Management**: Dynamic category extraction and listing
+ * - **Data Synchronization**: Firebase Firestore integration for live data access
+ * 
+ * ## Key Features
+ * - Live data from Firebase Firestore with offline fallback
+ * - Advanced search and filtering capabilities
+ * - Personalized recommendations based on user needs
+ * - Learning progress tracking with completion detection
+ * - Multiple content formats (text, video, audio)
+ * - Comprehensive category organization
+ * - Learning history retrieval
+ * 
+ * ## Responsibilities
  * - Provide categorized educational content (articles, videos, guides)
  * - Personalize content recommendations based on user needs
  * - Track learning progress and completion

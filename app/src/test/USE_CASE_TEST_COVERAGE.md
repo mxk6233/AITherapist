@@ -7,38 +7,38 @@ This document tracks test coverage for all use cases across the three sprints.
 
 | Use Case | Implementation | Unit Tests | UAT Tests | Status |
 |----------|---------------|------------|-----------|--------|
-| **UC1: Conduct AI Chat Session** | ✅ | ✅ | ❌ | **COMPLETE** |
-| **UC2: Handle Crisis Intervention** | ✅ | ✅ | ❌ | **COMPLETE** |
-| **UC4: User Registration** | ✅ | ✅ | ❌ | **COMPLETE** |
-| **UC7: User Login** | ✅ | ✅ | ❌ | **COMPLETE** |
-| **UC15: Handle Network Connectivity Issues** | ✅ | ✅ | ❌ | **COMPLETE** |
-| **UC20: Handle Application Errors** | ✅ | ✅ | ❌ | **COMPLETE** |
-| **UC23: Implement Security Protocols** | ✅ | ✅ | ❌ | **COMPLETE** |
+| **UC1: Conduct AI Chat Session** |  |  | ❌ | **COMPLETE** |
+| **UC2: Handle Crisis Intervention** |  |  | ❌ | **COMPLETE** |
+| **UC4: User Registration** |  |  | ❌ | **COMPLETE** |
+| **UC7: User Login** |  |  | ❌ | **COMPLETE** |
+| **UC15: Handle Network Connectivity Issues** |  |  | ❌ | **COMPLETE** |
+| **UC20: Handle Application Errors** |  |  | ❌ | **COMPLETE** |
+| **UC23: Implement Security Protocols** |  |  | ❌ | **COMPLETE** |
 
 ## Sprint 2: Enhanced User Experience & Mood Tracking
 
 | Use Case | Implementation | Unit Tests | UAT Tests | Status |
 |----------|---------------|------------|-----------|--------|
-| **UC3: Log Daily Mood** | ✅ | ✅ | ❌ | **COMPLETE** |
-| **UC5: Personality Onboarding for UX** | ✅ | ✅ | ❌ | **COMPLETE** |
-| **UC13: Set Application Preferences** | ✅ | ✅ | ❌ | **COMPLETE** |
-| **UC14: Receive Daily Affirmations** | ✅ | ✅ | ❌ | **COMPLETE** |
-| **UC17: Implement Accessibility Features** | ✅ | ✅ | ❌ | **COMPLETE** |
-| **UC18: Manage Notifications** | ✅ | ✅ | ❌ | **COMPLETE** |
-| **UC24: Personalize User Experience** | ✅ | ✅ | ❌ | **COMPLETE** |
-| **UC27: Guided Breathing & Meditation** | ✅ | ✅ | ❌ | **COMPLETE** |
+| **UC3: Log Daily Mood** |  |  | ❌ | **COMPLETE** |
+| **UC5: Personality Onboarding for UX** |  |  | ❌ | **COMPLETE** |
+| **UC13: Set Application Preferences** |  |  | ❌ | **COMPLETE** |
+| **UC14: Receive Daily Affirmations** |  |  | ❌ | **COMPLETE** |
+| **UC17: Implement Accessibility Features** |  |  | ❌ | **COMPLETE** |
+| **UC18: Manage Notifications** |  |  | ❌ | **COMPLETE** |
+| **UC24: Personalize User Experience** |  |  | ❌ | **COMPLETE** |
+| **UC27: Guided Breathing & Meditation** |  |  | ❌ | **COMPLETE** |
 
 ## Sprint 3: Advanced Analytics & Support Features
 
 | Use Case | Implementation | Unit Tests | UAT Tests | Status |
 |----------|---------------|------------|-----------|--------|
-| **UC6: View Chat History** | ✅ | ✅ | ❌ | **COMPLETE** |
-| **UC8: Suggest Coping Exercises** | ✅ | ✅ | ❌ | **COMPLETE** |
-| **UC9: View Mood Analytics** | ✅ | ✅ | ❌ | **COMPLETE** |
-| **UC22: Monitor System Health** | ✅ | ✅ | ❌ | **COMPLETE** |
-| **UC26: AI-Powered Mood Forecasting** | ✅ | ✅ | ✅ | **COMPLETE** |
-| **UC32: AI-Generated Journaling Prompts** | ✅ | ✅ | ❌ | **COMPLETE** |
-| **UC35: Relapse Prevention Alerts** | ✅ | ✅ | ✅ | **COMPLETE** |
+| **UC6: View Chat History** |  |  | ❌ | **COMPLETE** |
+| **UC8: Suggest Coping Exercises** |  |  | ❌ | **COMPLETE** |
+| **UC9: View Mood Analytics** |  |  | ❌ | **COMPLETE** |
+| **UC22: Monitor System Health** |  |  | ❌ | **COMPLETE** |
+| **UC26: AI-Powered Mood Forecasting** |  |  |  | **COMPLETE** |
+| **UC32: AI-Generated Journaling Prompts** |  |  | ❌ | **COMPLETE** |
+| **UC35: Relapse Prevention Alerts** |  |  |  | **COMPLETE** |
 
 ## Test Statistics
 
@@ -80,8 +80,8 @@ usecases/
 
 ## Next Steps
 
-1. ✅ All implementations verified
-2. ✅ All unit tests created
+1.  All implementations verified
+2.  All unit tests created
 3. ⚠️ Consider adding UAT tests for remaining use cases
 4. ⚠️ Consider adding integration tests for critical use cases
 

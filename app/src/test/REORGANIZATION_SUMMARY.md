@@ -68,48 +68,48 @@ com.serenityai.tests.utils
 ## Files Moved
 
 ### Use Case Tests
-- ✅ ChatHistoryUseCaseTests.kt
-- ✅ CopingExercisesUseCaseTests.kt
-- ✅ MoodAnalyticsUseCaseTests.kt
-- ✅ MoodForecastingUseCaseTests.kt
-- ✅ JournalingPromptsUseCaseTests.kt
-- ✅ RelapsePreventionUseCaseTests.kt
-- ✅ AccessibilityUseCaseTests.kt
-- ✅ GuidedBreathingUseCaseTests.kt
-- ✅ PersonalizationUseCaseTests.kt
+-  ChatHistoryUseCaseTests.kt
+-  CopingExercisesUseCaseTests.kt
+-  MoodAnalyticsUseCaseTests.kt
+-  MoodForecastingUseCaseTests.kt
+-  JournalingPromptsUseCaseTests.kt
+-  RelapsePreventionUseCaseTests.kt
+-  AccessibilityUseCaseTests.kt
+-  GuidedBreathingUseCaseTests.kt
+-  PersonalizationUseCaseTests.kt
 
 ### UAT Tests
-- ✅ UseCaseUATTests.kt → MoodForecastingUATTests.kt
-- ✅ UserAcceptanceTests.kt → RelapsePreventionUATTests.kt
+-  UseCaseUATTests.kt → MoodForecastingUATTests.kt
+-  UserAcceptanceTests.kt → RelapsePreventionUATTests.kt
 
 ### Integration Tests
-- ✅ IntegrationTests.kt
+-  IntegrationTests.kt
 
 ### UI Tests
-- ✅ AIResponseGeneratorTest.kt
-- ✅ ChatFeatureTest.kt
-- ✅ ChatMessageTest.kt
-- ✅ DashboardItemTest.kt
-- ✅ FormatTimeTest.kt
-- ✅ MoodFeatureTest.kt
-- ✅ ColorTest.kt
-- ✅ ThemeTest.kt
-- ✅ TypeTest.kt
-- ✅ AppNavigationTest.kt
-- ✅ ScreenTest.kt
-- ✅ InteractiveMainActivityTest.kt
+-  AIResponseGeneratorTest.kt
+-  ChatFeatureTest.kt
+-  ChatMessageTest.kt
+-  DashboardItemTest.kt
+-  FormatTimeTest.kt
+-  MoodFeatureTest.kt
+-  ColorTest.kt
+-  ThemeTest.kt
+-  TypeTest.kt
+-  AppNavigationTest.kt
+-  ScreenTest.kt
+-  InteractiveMainActivityTest.kt
 
 ### Data Tests
-- ✅ MoodEntryTest.kt
-- ✅ SessionTest.kt
-- ✅ UserTest.kt
+-  MoodEntryTest.kt
+-  SessionTest.kt
+-  UserTest.kt
 
 ### Utils Tests
-- ✅ GreedyCopingStrategySelectorTest.kt
+-  GreedyCopingStrategySelectorTest.kt
 
 ### Other Tests
-- ✅ SimpleTest.kt
-- ✅ UseCaseTests.kt
+-  SimpleTest.kt
+-  UseCaseTests.kt
 
 ## Old Directories (Can be removed after verification)
 - `app/src/test/java/com/serenityai/test/usecases/`
