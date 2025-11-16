@@ -1,5 +1,6 @@
 package com.serenityai.tests.unit.data.models
 
+import com.serenityai.data.models.MoodEntry
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName

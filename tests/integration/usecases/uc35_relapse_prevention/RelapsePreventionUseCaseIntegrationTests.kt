@@ -23,10 +23,10 @@ class RelapsePreventionUseCaseIntegrationTests {
         fun `relapse risk detected through mood tracking data integration`() {
             // Given: Mood tracking data
             val moodData = listOf(
-                mapOf("date" to "2024-01-01", "mood" to 2),
-                mapOf("date" to "2024-01-02", "mood" to 2),
-                mapOf("date" to "2024-01-03", "mood" to 1),
-                mapOf("date" to "2024-01-04", "mood" to 2)
+                mapOf("date" to "date-1", "mood" to 2),
+                mapOf("date" to "date-2", "mood" to 2),
+                mapOf("date" to "date-3", "mood" to 1),
+                mapOf("date" to "date-4", "mood" to 2)
             )
             val moodServiceAvailable = true // Integration check with UC3
             

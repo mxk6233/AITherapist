@@ -37,8 +37,8 @@ class CopingExercisesUATTests {
         fun `user can track coping exercise progress`() {
             // Given: User completes exercises
             val completedExercises = listOf(
-                mapOf("exercise" to "Deep breathing", "date" to "2024-01-01", "duration" to 10),
-                mapOf("exercise" to "Meditation", "date" to "2024-01-02", "duration" to 15)
+                mapOf("exercise" to "Deep breathing", "date" to "date-1", "duration" to 10),
+                mapOf("exercise" to "Meditation", "date" to "date-2", "duration" to 15)
             )
             
             // When: User views progress

@@ -36,9 +36,9 @@ class MoodLoggingUATTests {
         fun `user can view mood history for pattern identification`() {
             // Given: User has logged multiple moods
             val moodHistory = listOf(
-                mapOf("date" to "2024-01-01", "mood" to "Happy", "notes" to "Great day"),
-                mapOf("date" to "2024-01-02", "mood" to "Neutral", "notes" to "Normal day"),
-                mapOf("date" to "2024-01-03", "mood" to "Stressed", "notes" to "Work deadline")
+                mapOf("date" to "date-1", "mood" to "Happy", "notes" to "Great day"),
+                mapOf("date" to "date-2", "mood" to "Neutral", "notes" to "Normal day"),
+                mapOf("date" to "date-3", "mood" to "Stressed", "notes" to "Work deadline")
             )
             
             // When: User views history

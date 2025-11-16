@@ -17,9 +17,9 @@ class ChatHistoryUATTests {
         fun `user can view chat history for review`() {
             // Given: User has chat history
             val chatHistory = listOf(
-                mapOf("date" to "2024-01-01", "summary" to "Anxiety discussion"),
-                mapOf("date" to "2024-01-02", "summary" to "Stress management"),
-                mapOf("date" to "2024-01-03", "summary" to "Sleep issues")
+                mapOf("date" to "date-1", "summary" to "Anxiety discussion"),
+                mapOf("date" to "date-2", "summary" to "Stress management"),
+                mapOf("date" to "date-3", "summary" to "Sleep issues")
             )
             
             // When: User views history

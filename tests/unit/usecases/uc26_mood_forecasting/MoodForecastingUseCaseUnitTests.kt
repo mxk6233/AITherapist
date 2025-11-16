@@ -326,6 +326,6 @@ class MoodForecastingUseCaseTests {
         val errors = actual.zip(predicted).map { (a, p) -> kotlin.math.abs(a - p) }
         val maxError = 4.0f // Maximum possible error
         val averageError = errors.average()
-        return 1.0f - (averageError / maxError)
+        return (1.0f - (averageError.toFloat() / maxError)).toFloat()
     }
 }

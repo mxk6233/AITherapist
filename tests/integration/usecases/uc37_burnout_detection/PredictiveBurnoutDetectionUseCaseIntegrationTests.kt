@@ -23,9 +23,9 @@ class PredictiveBurnoutDetectionUseCaseIntegrationTests {
         fun `burnout risk assessed through mood tracking integration`() {
             // Given: Mood tracking data
             val moodData = listOf(
-                mapOf("date" to "2024-01-01", "mood" to 2.0f),
-                mapOf("date" to "2024-01-02", "mood" to 2.5f),
-                mapOf("date" to "2024-01-03", "mood" to 2.0f)
+                mapOf("date" to "date-1", "mood" to 2.0f),
+                mapOf("date" to "date-2", "mood" to 2.5f),
+                mapOf("date" to "date-3", "mood" to 2.0f)
             )
             val moodServiceAvailable = true
             
@@ -73,9 +73,9 @@ class PredictiveBurnoutDetectionUseCaseIntegrationTests {
         fun `burnout risk assessed through activity monitoring integration`() {
             // Given: Activity monitoring data
             val activityData = listOf(
-                mapOf("date" to "2024-01-01", "level" to 0.8f),
-                mapOf("date" to "2024-01-02", "level" to 0.6f),
-                mapOf("date" to "2024-01-03", "level" to 0.4f)
+                mapOf("date" to "date-1", "level" to 0.8f),
+                mapOf("date" to "date-2", "level" to 0.6f),
+                mapOf("date" to "date-3", "level" to 0.4f)
             )
             val activityServiceAvailable = true
             

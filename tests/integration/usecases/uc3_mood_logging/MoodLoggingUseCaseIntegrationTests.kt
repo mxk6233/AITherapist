@@ -46,9 +46,9 @@ class MoodLoggingUseCaseIntegrationTests {
         fun `mood history retrieved through database integration`() {
             // Given: Stored mood entries in database
             val storedMoodEntries = listOf(
-                mapOf("id" to "1", "moodValue" to 4, "date" to "2024-01-01"),
-                mapOf("id" to "2", "moodValue" to 3, "date" to "2024-01-02"),
-                mapOf("id" to "3", "moodValue" to 5, "date" to "2024-01-03")
+                mapOf("id" to "1", "moodValue" to 4, "date" to "date-1"),
+                mapOf("id" to "2", "moodValue" to 3, "date" to "date-2"),
+                mapOf("id" to "3", "moodValue" to 5, "date" to "date-3")
             )
             val databaseConnected = true // Integration check
             
@@ -91,9 +91,9 @@ class MoodLoggingUseCaseIntegrationTests {
         fun `mood data integrated with forecasting system for predictions`() {
             // Given: Historical mood data
             val historicalMoodData = listOf(
-                mapOf("date" to "2024-01-01", "mood" to 3),
-                mapOf("date" to "2024-01-02", "mood" to 4),
-                mapOf("date" to "2024-01-03", "mood" to 3)
+                mapOf("date" to "date-1", "mood" to 3),
+                mapOf("date" to "date-2", "mood" to 4),
+                mapOf("date" to "date-3", "mood" to 3)
             )
             val forecastingServiceAvailable = true // Integration check with UC26
             

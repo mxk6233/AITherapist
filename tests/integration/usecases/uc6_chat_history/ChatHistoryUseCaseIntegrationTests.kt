@@ -118,16 +118,16 @@ class ChatHistoryUseCaseIntegrationTests {
         fun `date filtering integrated with chat history for time-based queries`() {
             // Given: Chat history with dates
             val chatHistory = listOf(
-                mapOf("date" to "2024-01-01", "message" to "Message 1"),
-                mapOf("date" to "2024-01-02", "message" to "Message 2"),
-                mapOf("date" to "2024-01-03", "message" to "Message 3")
+                mapOf("date" to "date-1", "message" to "Message 1"),
+                mapOf("date" to "date-2", "message" to "Message 2"),
+                mapOf("date" to "date-3", "message" to "Message 3")
             )
             val filterServiceAvailable = true // Integration check
             
             // When: System integrates date filtering
             val filterApplied = filterServiceAvailable && chatHistory.isNotEmpty()
             val filteredResults = filterApplied && chatHistory.filter { 
-                it["date"] == "2024-01-02" 
+                it["date"] == "date-2" 
             }
             val filterAccurate = filteredResults.isNotEmpty()
             
@@ -142,8 +142,8 @@ class ChatHistoryUseCaseIntegrationTests {
         fun `chat history export integrated with file system for data portability`() {
             // Given: Chat history to export
             val chatHistory = listOf(
-                mapOf("date" to "2024-01-01", "message" to "Message 1"),
-                mapOf("date" to "2024-01-02", "message" to "Message 2")
+                mapOf("date" to "date-1", "message" to "Message 1"),
+                mapOf("date" to "date-2", "message" to "Message 2")
             )
             val fileSystemAvailable = true // Integration check
             

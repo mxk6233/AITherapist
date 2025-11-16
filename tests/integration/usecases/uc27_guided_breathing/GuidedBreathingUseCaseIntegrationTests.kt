@@ -96,9 +96,9 @@ class GuidedBreathingUseCaseIntegrationTests {
         fun `session completion analyzed through analytics integration`() {
             // Given: Completed sessions
             val completedSessions = listOf(
-                mapOf("date" to "2024-01-01", "duration" to 300, "rating" to 5),
-                mapOf("date" to "2024-01-02", "duration" to 600, "rating" to 4),
-                mapOf("date" to "2024-01-03", "duration" to 300, "rating" to 5)
+                mapOf("date" to "date-1", "duration" to 300, "rating" to 5),
+                mapOf("date" to "date-2", "duration" to 600, "rating" to 4),
+                mapOf("date" to "date-3", "duration" to 300, "rating" to 5)
             )
             val analyticsServiceAvailable = true // Integration check
             

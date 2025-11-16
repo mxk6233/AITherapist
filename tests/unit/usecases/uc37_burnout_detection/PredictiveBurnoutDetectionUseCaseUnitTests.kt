@@ -48,9 +48,9 @@ class PredictiveBurnoutDetectionUseCaseUnitTests {
             // Purpose: Validate comprehensive risk assessment functionality
             
             val moodEntries = listOf(
-                MoodEntry("user123", 2.0f, Date(), "Low mood"),
-                MoodEntry("user123", 2.5f, Date(), "Still low"),
-                MoodEntry("user123", 3.0f, Date(), "Slightly better")
+                MoodEntry(userId="user123", mood=2, notes="Low mood"),
+                MoodEntry(userId="user123", mood=2, notes="Still low"),
+                MoodEntry(userId="user123", mood=3, notes="Slightly better")
             )
             
             val activityLevels = listOf(
@@ -94,9 +94,9 @@ class PredictiveBurnoutDetectionUseCaseUnitTests {
             
             // High risk scenario
             val highRiskMoods = listOf(
-                MoodEntry("user123", 2.0f, Date(), "Very low"),
-                MoodEntry("user123", 1.5f, Date(), "Critical"),
-                MoodEntry("user123", 2.5f, Date(), "Low")
+                MoodEntry(userId="user123", mood=2, notes="Very low"),
+                MoodEntry(userId="user123", mood=1, notes="Critical"),
+                MoodEntry(userId="user123", mood=2, notes="Low")
             )
             val highStress = listOf(
                 StressIndicator(Date(), 9.0f),
@@ -116,9 +116,9 @@ class PredictiveBurnoutDetectionUseCaseUnitTests {
             
             // Low risk scenario
             val lowRiskMoods = listOf(
-                MoodEntry("user123", 4.0f, Date(), "Good"),
-                MoodEntry("user123", 4.5f, Date(), "Great"),
-                MoodEntry("user123", 4.2f, Date(), "Good")
+                MoodEntry(userId="user123", mood=4, notes="Good"),
+                MoodEntry(userId="user123", mood=4, notes="Great"),
+                MoodEntry(userId="user123", mood=4, notes="Good")
             )
             
             val lowRiskAssessment = useCase.assessBurnoutRisk(
@@ -142,8 +142,8 @@ class PredictiveBurnoutDetectionUseCaseUnitTests {
             // Purpose: Validate factor identification
             
             val moodEntries = listOf(
-                MoodEntry("user123", 2.5f, Date(), "Declining"),
-                MoodEntry("user123", 2.0f, Date(), "Lower")
+                MoodEntry(userId="user123", mood=2, notes="Declining"),
+                MoodEntry(userId="user123", mood=2, notes="Lower")
             )
             val activityLevels = listOf(ActivityLevel(Date(), 0.2f))
             val stressIndicators = listOf(StressIndicator(Date(), 8.0f))
@@ -182,13 +182,13 @@ class PredictiveBurnoutDetectionUseCaseUnitTests {
             // Purpose: Validate early warning detection
             
             val decliningMoods = listOf(
-                MoodEntry("user123", 4.0f, Date(), "Good"),
-                MoodEntry("user123", 3.5f, Date(), "Declining"),
-                MoodEntry("user123", 3.0f, Date(), "Lower"),
-                MoodEntry("user123", 2.5f, Date(), "Low"),
-                MoodEntry("user123", 2.0f, Date(), "Very low"),
-                MoodEntry("user123", 1.5f, Date(), "Critical"),
-                MoodEntry("user123", 2.0f, Date(), "Still low")
+                MoodEntry(userId="user123", mood=4, notes="Good"),
+                MoodEntry(userId="user123", mood=3, notes="Declining"),
+                MoodEntry(userId="user123", mood=3, notes="Lower"),
+                MoodEntry(userId="user123", mood=2, notes="Low"),
+                MoodEntry(userId="user123", mood=2, notes="Very low"),
+                MoodEntry(userId="user123", mood=1, notes="Critical"),
+                MoodEntry(userId="user123", mood=2, notes="Still low")
             )
             
             val activityLevels = listOf(
@@ -223,9 +223,9 @@ class PredictiveBurnoutDetectionUseCaseUnitTests {
             // Purpose: Validate recommendation generation
             
             val highRiskMoods = listOf(
-                MoodEntry("user123", 2.0f, Date(), "Low"),
-                MoodEntry("user123", 2.5f, Date(), "Low"),
-                MoodEntry("user123", 2.0f, Date(), "Very low")
+                MoodEntry(userId="user123", mood=2, notes="Low"),
+                MoodEntry(userId="user123", mood=2, notes="Low"),
+                MoodEntry(userId="user123", mood=2, notes="Very low")
             )
             val highStress = listOf(StressIndicator(Date(), 9.0f))
             

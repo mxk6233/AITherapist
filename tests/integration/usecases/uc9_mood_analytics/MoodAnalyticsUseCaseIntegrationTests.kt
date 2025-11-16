@@ -23,10 +23,10 @@ class MoodAnalyticsUseCaseIntegrationTests {
         fun `analytics integrated with mood logging data for trend analysis`() {
             // Given: Mood logging data
             val moodData = listOf(
-                mapOf("date" to "2024-01-01", "mood" to 3),
-                mapOf("date" to "2024-01-02", "mood" to 4),
-                mapOf("date" to "2024-01-03", "mood" to 3),
-                mapOf("date" to "2024-01-04", "mood" to 5)
+                mapOf("date" to "date-1", "mood" to 3),
+                mapOf("date" to "date-2", "mood" to 4),
+                mapOf("date" to "date-3", "mood" to 3),
+                mapOf("date" to "date-4", "mood" to 5)
             )
             val moodServiceAvailable = true // Integration check with UC3
             
@@ -92,9 +92,9 @@ class MoodAnalyticsUseCaseIntegrationTests {
         fun `time-based analytics integrated with timeline for temporal representation`() {
             // Given: Time-series mood data
             val timeSeriesData = listOf(
-                mapOf("date" to "2024-01-01", "mood" to 3),
-                mapOf("date" to "2024-01-02", "mood" to 4),
-                mapOf("date" to "2024-01-03", "mood" to 3)
+                mapOf("date" to "date-1", "mood" to 3),
+                mapOf("date" to "date-2", "mood" to 4),
+                mapOf("date" to "date-3", "mood" to 3)
             )
             val visualizationServiceAvailable = true // Integration check
             

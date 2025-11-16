@@ -55,8 +55,8 @@ class GuidedBreathingUATTests {
         fun `user can track breathing and meditation practice`() {
             // Given: Practice sessions
             val practiceHistory = listOf(
-                mapOf("date" to "2024-01-01", "type" to "Breathing", "duration" to 10),
-                mapOf("date" to "2024-01-02", "type" to "Meditation", "duration" to 15)
+                mapOf("date" to "date-1", "type" to "Breathing", "duration" to 10),
+                mapOf("date" to "date-2", "type" to "Meditation", "duration" to 15)
             )
             
             // When: User views practice

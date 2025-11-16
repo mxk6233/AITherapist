@@ -1,6 +1,8 @@
 package com.serenityai.tests.unit.utils
 
 import com.serenityai.ui.screens.CopingExercise
+import com.serenityai.utils.GreedyCopingStrategySelector
+import com.serenityai.utils.UserConstraints
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested

@@ -1,5 +1,6 @@
 package com.serenityai.tests.ui.screens
 
+import com.serenityai.ui.screens.formatTime
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import java.text.SimpleDateFormat
@@ -24,8 +25,8 @@ class FormatTimeTest {
     fun `formatTime should handle different timestamps`() {
         val testTimestamps = listOf(
             0L, // Epoch
-            1640995200000L, // 2022-01-01 00:00:00
-            1672531200000L, // 2023-01-01 00:00:00
+            1000000000L, // timestamp-1
+            2000000000L, // timestamp-2
             System.currentTimeMillis() // Current time
         )
         

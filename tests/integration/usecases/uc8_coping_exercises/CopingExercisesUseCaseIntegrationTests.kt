@@ -45,8 +45,8 @@ class CopingExercisesUseCaseIntegrationTests {
         fun `exercise history tracked through profile integration`() {
             // Given: User exercise history
             val exerciseHistory = listOf(
-                mapOf("exerciseId" to "ex1", "completed" to true, "date" to "2024-01-01"),
-                mapOf("exerciseId" to "ex2", "completed" to true, "date" to "2024-01-02")
+                mapOf("exerciseId" to "ex1", "completed" to true, "date" to "date-1"),
+                mapOf("exerciseId" to "ex2", "completed" to true, "date" to "date-2")
             )
             val profileServiceAvailable = true // Integration check
             

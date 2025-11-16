@@ -94,8 +94,8 @@ class JournalingPromptsUseCaseIntegrationTests {
         fun `prompt usage tracked through profile integration`() {
             // Given: Prompt usage history
             val promptHistory = listOf(
-                mapOf("promptId" to "prompt-1", "used" to true, "date" to "2024-01-01"),
-                mapOf("promptId" to "prompt-2", "used" to true, "date" to "2024-01-02")
+                mapOf("promptId" to "prompt-1", "used" to true, "date" to "date-1"),
+                mapOf("promptId" to "prompt-2", "used" to true, "date" to "date-2")
             )
             val profileServiceAvailable = true // Integration check
             
