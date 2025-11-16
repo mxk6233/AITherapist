@@ -45,17 +45,17 @@ class HelpersTest {
         @Test
         @DisplayName("formatDate should format date correctly with default pattern")
         fun formatDate_shouldFormatDateCorrectlyWithDefaultPattern() {
-            val date = Date(1640995200000L) // 2022-01-01
+            val date = Date(1640995200000L) // date-1
             val result = Helpers.formatDate(date)
-            assertEquals("2022-01-01", result)
+            assertEquals("date-1", result)
         }
 
         @Test
         @DisplayName("formatDate should format date correctly with custom pattern")
         fun formatDate_shouldFormatDateCorrectlyWithCustomPattern() {
-            val date = Date(1640995200000L) // 2022-01-01
+            val date = Date(1640995200000L) // date-1
             val result = Helpers.formatDate(date, "dd/MM/yyyy")
-            assertEquals("01/01/2022", result)
+            assertEquals("date-formatted", result)
         }
 
         @Test
@@ -84,7 +84,7 @@ class HelpersTest {
         @Test
         @DisplayName("getStartOfDay should return start of day")
         fun getStartOfDay_shouldReturnStartOfDay() {
-            val date = Date(1640995200000L) // 2022-01-01 00:00:00
+            val date = Date(1640995200000L) // date-1
             val result = Helpers.getStartOfDay(date)
             
             val calendar = Calendar.getInstance()
@@ -99,7 +99,7 @@ class HelpersTest {
         @Test
         @DisplayName("getEndOfDay should return end of day")
         fun getEndOfDay_shouldReturnEndOfDay() {
-            val date = Date(1640995200000L) // 2022-01-01 00:00:00
+            val date = Date(1640995200000L) // date-1
             val result = Helpers.getEndOfDay(date)
             
             val calendar = Calendar.getInstance()
