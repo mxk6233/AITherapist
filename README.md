@@ -6,7 +6,7 @@
 
 ---
 
-## 🌟 Get the People-First Mental Health App
+## Get the People-First Mental Health App
 
 It's a new era in mental health support. Don't settle for generic wellness apps produced by profit-driven companies that monetize your emotional data. **Serenity AI** is the ethical choice for independent, privacy-respecting mental health technology that gives you personalized therapeutic support exactly when you need it.
 
@@ -16,7 +16,7 @@ It's a new era in mental health support. Don't settle for generic wellness apps 
 
 ---
 
-## 📋 Project Status
+## Project Status
 
 ```json
 {
@@ -57,7 +57,7 @@ It's a new era in mental health support. Don't settle for generic wellness apps 
 
 ---
 
-## 🎯 About Serenity AI
+## About Serenity AI
 
 **Serenity AI** is an Android application that provides AI-powered therapeutic support and mental health assistance through interactive conversations. Designed for individuals seeking confidential mental health support, this application offers a private, judgment-free environment where users can explore their concerns and receive professional guidance.
 
@@ -71,7 +71,7 @@ It's a new era in mental health support. Don't settle for generic wellness apps 
 
 ---
 
-## 🏗️ Technical Architecture
+## Technical Architecture
 
 ### Tech Stack
 
@@ -108,7 +108,7 @@ AITherapist/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -159,16 +159,16 @@ AITherapist/
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ### Test Coverage
 
 The project includes comprehensive automated testing with **101+ test files** covering:
 
-- ✅ **Unit Tests**: Individual component testing
-- ✅ **Integration Tests**: Cross-component workflow testing  
-- ✅ **User Acceptance Tests**: End-user scenario validation
-- ✅ **Use Case Tests**: All 31 use cases fully tested
+- **Unit Tests**: Individual component testing
+- **Integration Tests**: Cross-component workflow testing  
+- **User Acceptance Tests**: End-user scenario validation
+- **Use Case Tests**: All 31 use cases fully tested
 
 ### Running Tests
 
@@ -206,7 +206,7 @@ open app/build/reports/jacoco/jacocoTestReport/html/index.html
 
 ---
 
-## 📚 Documentation
+## Documentation
 
 ### Available Documentation
 
@@ -225,7 +225,7 @@ open app/build/reports/jacoco/jacocoTestReport/html/index.html
 
 ---
 
-## 🎯 Use Cases
+## Use Cases
 
 ### Implemented Use Cases (31 Total)
 
@@ -260,11 +260,11 @@ open app/build/reports/jacoco/jacocoTestReport/html/index.html
 - UC38: Voice Enabled Therapy Sessions
 - UC41: Greedy Algorithm for Strategy Selection
 
-**Status**: All use cases implemented, tested, and documented ✅
+**Status**: All use cases implemented, tested, and documented
 
 ---
 
-## 🔧 Development
+## Development
 
 ### Gradle Tasks
 
@@ -293,7 +293,7 @@ All dependencies are managed through:
 
 ---
 
-## 📊 Project Statistics
+## Project Statistics
 
 ```json
 {
@@ -323,7 +323,7 @@ All dependencies are managed through:
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 ### Development Workflow
 
@@ -339,7 +339,7 @@ All dependencies are managed through:
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **Firebase**: For authentication and data storage infrastructure
 - **OpenAI**: For AI-powered conversation capabilities
