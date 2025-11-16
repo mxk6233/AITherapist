@@ -71,46 +71,6 @@ It's a new era in mental health support. Don't settle for generic wellness apps 
 
 ---
 
-## ✨ Key Features
-
-### 🤖 AI-Powered Therapy
-- **Interactive Conversations**: Natural language AI therapist conversations
-- **Voice Integration**: Text-to-Speech and Speech-to-Text capabilities
-- **Contextual Understanding**: AI that remembers and adapts to your needs
-- **Crisis Detection**: Automatic detection and response to crisis situations
-
-### 📊 Mental Health Tracking
-- **Mood Logging**: Track emotional states with detailed analytics
-- **Mood Forecasting**: Predictive analytics for mood patterns
-- **Burnout Detection**: Early warning system for burnout risk
-- **Progress Visualization**: Charts and insights into your mental health journey
-
-### 🎓 Educational Resources
-- **Resource Library**: Comprehensive mental health education materials
-- **Personalized Recommendations**: AI-curated content based on your needs
-- **Learning Progress**: Track your educational journey
-- **Multiple Formats**: Articles, videos, and audio content
-
-### 🛠️ Support Tools
-- **Coping Exercises**: Guided therapeutic exercises and activities
-- **Group Therapy Simulation**: Virtual group therapy experiences
-- **Voice Therapy Sessions**: Voice-enabled therapy and journaling
-- **Relapse Prevention**: Early warning and intervention system
-
-### 👤 User Management
-- **Profile Management**: Comprehensive user profile and preferences
-- **Wellness Goals**: Set and track personal wellness objectives
-- **Achievement System**: Gamification with XP, streaks, and badges
-- **Social Support**: Connect with friends and support groups
-
-### 🔐 Privacy & Security
-- **Firebase Authentication**: Secure user authentication
-- **Encrypted Storage**: Data protection and privacy
-- **Privacy Controls**: Granular privacy settings
-- **No Data Monetization**: Your data is never sold or shared
-
----
-
 ## 🏗️ Technical Architecture
 
 ### Tech Stack
@@ -377,20 +337,6 @@ All dependencies are managed through:
 8. Push to the branch (`git push origin feature/amazing-feature`)
 9. Open a Pull Request
 
-### Code Standards
-
-- Follow Kotlin coding conventions
-- Write tests for new features
-- Update documentation as needed
-- Ensure code coverage remains above 80%
-- Use meaningful commit messages
-
----
-
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
 ---
 
 ## 🙏 Acknowledgments
@@ -403,41 +349,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-## 📞 Support
-
-For issues, questions, or contributions:
-- **Issues**: [GitHub Issues](https://github.com/yourusername/AITherapist/issues)
-- **Documentation**: See [Documentation](#-documentation) section above
-- **Testing Guide**: See `tests/JACOCO_COVERAGE_REPORT_GUIDE.md`
-
----
-
-## 🔄 Status Information
-
-```json
-{
-  "status": {
-    "code": "Active",
-    "message": "Project in active development\n\n---\n\n* method:     latest\n* statusCode: 200\n* time:       Current",
-    "requestInfo": {
-      "method": "status",
-      "params": {
-        "project": "AITherapist",
-        "repo": "serenity-ai",
-        "branch": "main"
-      },
-      "payload": {
-        "version": "1.0",
-        "buildStatus": "Stable",
-        "testStatus": "Passing",
-        "coverageStatus": "Comprehensive"
-      },
-      "time": "Current"
-    }
-  }
-}
-```
-
----
-
-**Serenity AI** - Empowering mental wellness through ethical, privacy-respecting technology.
