@@ -3,55 +3,7 @@ package com.serenityai.usecases
 import com.serenityai.data.models.*
 import java.util.Date
 
-/**
- * UC25: Facilitate User Support - Use Case
- * 
- * ## Overview
- * AI-powered user support system that provides comprehensive assistance through multiple channels
- * including in-app help, FAQ, support tickets, and contextual assistance. The system ensures
- * users can effectively use the application and receive help when needed.
- * 
- * ## Use Case Goal
- * Provide comprehensive user support through multiple channels including in-app help, FAQ,
- * support tickets, and direct assistance to ensure users can effectively use the application
- * and get help when needed.
- * 
- * ## Overall Function
- * This module implements a comprehensive user support system that:
- * - Manages support ticket lifecycle (creation, responses, status tracking)
- * - Provides searchable FAQ entries with keyword matching
- * - Offers contextual help based on current screen/feature context
- * - Accepts and tracks user feedback with ratings and categorization
- * - Validates all input to ensure data quality and prevent errors
- * - Retrieves user's complete support history (tickets and feedback)
- * - Provides support category management and organization
- * 
- * ## Implemented Modules
- * - **Ticket Management System**: Complete lifecycle management for support tickets
- * - **FAQ Engine**: Searchable knowledge base with keyword matching
- * - **Contextual Help System**: Screen/feature-specific help content delivery
- * - **Feedback Collection**: User feedback submission and tracking with ratings
- * - **Input Validation**: Comprehensive validation for tickets and feedback
- * - **History Tracking**: Support ticket and feedback history retrieval
- * - **Category Management**: Support category organization and listing
- * 
- * ## Key Features
- * - Support ticket creation with subject, description, category, and priority
- * - Ticket response system (from users and support team)
- * - Searchable FAQ with keyword matching
- * - Contextual help based on current screen/feature
- * - Feedback submission with type, message, and rating (1-5)
- * - Support history tracking and retrieval
- * - Input validation and error handling
- * 
- * ## Responsibilities
- * - Provide in-app help and documentation
- * - Manage support tickets and inquiries
- * - Offer FAQ and knowledge base access
- * - Facilitate direct user support interactions
- * - Track support request history
- * - Provide contextual help based on user activity
- */
+/** UC25: AI-powered user support system providing assistance through in-app help, FAQ, support tickets, and contextual assistance. */
 class UserSupportUseCase {
     
     /**

@@ -3,59 +3,7 @@ package com.serenityai.usecases
 import com.serenityai.data.models.*
 import java.util.Date
 
-/**
- * UC38: Voice Enabled Therapy Sessions - Use Case
- * 
- * ## Overview
- * Voice-enabled therapy and journaling module that enables users to have voice-based therapy
- * sessions with the AI therapist. This provides a more natural and accessible interaction method
- * through speech recognition (ASR) and text-to-speech (TTS) technologies, making therapy more
- * accessible for users who prefer speaking over typing.
- * 
- * ## Use Case Goal
- * Enable users to have voice-based therapy sessions with the AI therapist, providing a more
- * natural and accessible interaction method through speech recognition and text-to-speech technologies.
- * 
- * ## Overall Function
- * This module implements a comprehensive voice therapy system that:
- * - Starts voice therapy sessions with user ID and language configuration
- * - Processes voice input (audio) and converts to text using speech recognition
- * - Generates AI therapist responses and converts to voice using text-to-speech
- * - Processes text input and converts AI response to voice for accessibility
- * - Manages voice session lifecycle (start, pause, resume, end) with duration tracking
- * - Handles voice recognition errors gracefully with helpful suggestions and alternative methods
- * - Supports multiple languages with speech recognition and TTS capabilities
- * - Retrieves voice session history and active sessions for users
- * - Validates session operations and rejects invalid requests
- * 
- * ## Implemented Modules
- * - **Voice Session Manager**: Complete lifecycle management for voice therapy sessions
- * - **Speech Recognition Engine**: Voice-to-text transcription with confidence scoring
- * - **Text-to-Speech Engine**: AI response vocalization in multiple languages
- * - **AI Response Generator**: Contextual AI therapist responses based on user input
- * - **Error Handling System**: Graceful handling of recognition errors with suggestions
- * - **Language Support**: Multi-language support with capability detection
- * - **Session History**: Voice session history retrieval and management
- * - **Input Validation**: Session operation validation and error prevention
- * 
- * ## Key Features
- * - Voice session management (start, pause, resume, end)
- * - Speech-to-text transcription with confidence scores
- * - Text-to-speech synthesis for AI responses
- * - Multi-language support (en-US, es-ES, etc.)
- * - Error handling with retry options and alternative methods
- * - Session history tracking and retrieval
- * - Active session management
- * - Duration tracking for sessions
- * 
- * ## Responsibilities
- * - Process voice input and convert to text
- * - Generate AI therapist voice responses
- * - Manage voice session state and history
- * - Provide voice session controls (start, pause, stop)
- * - Handle voice recognition errors gracefully
- * - Support multiple languages and accents
- */
+/** UC38: Voice-enabled therapy and journaling module for voice-based therapy sessions with speech recognition and text-to-speech. */
 class VoiceEnabledTherapyUseCase {
     
     private val activeVoiceSessions = mutableMapOf<String, VoiceSession>()

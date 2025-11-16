@@ -3,56 +3,7 @@ package com.serenityai.usecases
 import com.serenityai.data.models.*
 import java.util.Date
 
-/**
- * UC34: Group Therapy Simulation Mode - Use Case
- * 
- * ## Overview
- * Reinstated group therapy simulation that provides users with simulated group therapy sessions
- * using AI-powered virtual participants. This creates a supportive group environment for practice
- * and learning, allowing users to experience group therapy dynamics in a safe, controlled setting.
- * 
- * ## Use Case Goal
- * Provide users with simulated group therapy sessions using AI-powered virtual participants
- * to create a supportive group environment for practice and learning.
- * 
- * ## Overall Function
- * This module implements a comprehensive group therapy simulation system that:
- * - Creates and manages group therapy sessions with configurable parameters
- * - Generates virtual participants with diverse personalities (supportive, analytical, empathetic, encouraging, practical)
- * - Facilitates group discussions with topic-based prompts and facilitator guidance
- * - Conducts group exercises (breathing, mindfulness, etc.) with instructions and steps
- * - Simulates realistic group dynamics with participation levels, cohesion, and engagement metrics
- * - Provides peer support responses based on user input and participant personalities
- * - Manages session participation (join, leave) with capacity limits
- * - Tracks active sessions for users (as facilitator or participant)
- * 
- * ## Implemented Modules
- * - **Session Management**: Creation, joining, leaving, and retrieval of group sessions
- * - **Virtual Participant Generator**: AI-powered participant creation with diverse personalities
- * - **Discussion Facilitator**: Topic-based discussion prompts and group conversation management
- * - **Exercise Conductor**: Group exercise management with instructions, duration, and steps
- * - **Group Dynamics Simulator**: Realistic group dynamics metrics (participation, cohesion, engagement)
- * - **Peer Support System**: Contextual peer support responses based on user messages
- * - **Participant Management**: Join/leave functionality with capacity control
- * 
- * ## Key Features
- * - Session creation with name, topic, and participant limits
- * - Virtual participants with diverse personalities and response styles
- * - Group discussions with facilitator prompts
- * - Group exercises (breathing, mindfulness) with complete instructions
- * - Group dynamics simulation with realistic metrics
- * - Peer support responses from virtual participants
- * - Session participation management (join/leave)
- * - Active session retrieval for users
- * 
- * ## Responsibilities
- * - Create and manage group therapy sessions
- * - Generate virtual participants with diverse personalities
- * - Facilitate group discussions and activities
- * - Simulate realistic group dynamics
- * - Provide peer support and validation
- * - Track session participation and progress
- */
+/** UC34: Group therapy simulation providing simulated group therapy sessions using AI-powered virtual participants. */
 class GroupTherapySimulationModeUseCase {
     
     private val activeSessions = mutableMapOf<String, GroupSession>()
