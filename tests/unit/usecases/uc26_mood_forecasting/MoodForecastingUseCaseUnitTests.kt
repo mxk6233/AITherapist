@@ -319,13 +319,13 @@ class MoodForecastingUseCaseTests {
     private fun calculateStability(data: List<Float>): Float {
         val variance = data.map { (it - data.average()) * (it - data.average()) }.average()
         val standardDeviation = kotlin.math.sqrt(variance)
-        return 1.0f / (1.0f + standardDeviation)
+        return (1.0f / (1.0f + standardDeviation.toFloat())).toFloat()
     }
     
     private fun calculateAccuracy(actual: List<Float>, predicted: List<Float>): Float {
         val errors = actual.zip(predicted).map { (a, p) -> kotlin.math.abs(a - p) }
         val maxError = 4.0f // Maximum possible error
         val averageError = errors.average()
-        return (1.0f - (averageError.toFloat() / maxError)).toFloat()
+        return (1.0f - (averageError.toFloat() / maxError.toFloat())).toFloat()
     }
 }

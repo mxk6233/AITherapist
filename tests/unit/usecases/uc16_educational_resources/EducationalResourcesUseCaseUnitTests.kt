@@ -1,6 +1,7 @@
 package com.serenityai.tests.unit.usecases.uc16_educational_resources
 
 import com.serenityai.usecases.*
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -46,8 +47,8 @@ class EducationalResourcesUseCaseUnitTests {
             // Purpose: Validate category-based filtering works correctly
             
             // When: User requests resources for a specific category
-            val anxietyResources = useCase.getEducationalResources(category = "Anxiety Management")
-            val mindfulnessResources = useCase.getEducationalResources(category = "Mindfulness")
+            val anxietyResources = runBlocking { useCase.getEducationalResources(category = "Anxiety Management") }
+            val mindfulnessResources = runBlocking { useCase.getEducationalResources(category = "Mindfulness") }
             
             // Then: Only resources in that category should be returned
             assertTrue(anxietyResources.isNotEmpty(), "UC16: System must return resources for requested category")
@@ -69,9 +70,9 @@ class EducationalResourcesUseCaseUnitTests {
             // Purpose: Validate format filtering functionality
             
             // When: User requests resources of specific format
-            val textResources = useCase.getEducationalResources(format = ContentFormat.TEXT)
-            val videoResources = useCase.getEducationalResources(format = ContentFormat.VIDEO)
-            val audioResources = useCase.getEducationalResources(format = ContentFormat.AUDIO)
+            val textResources = runBlocking { useCase.getEducationalResources(format = ContentFormat.TEXT) }
+            val videoResources = runBlocking { useCase.getEducationalResources(format = ContentFormat.VIDEO) }
+            val audioResources = runBlocking { useCase.getEducationalResources(format = ContentFormat.AUDIO) }
             
             // Then: Only resources of requested format should be returned
             assertTrue(textResources.isNotEmpty(), "UC16: Text resources must be available")
@@ -97,7 +98,7 @@ class EducationalResourcesUseCaseUnitTests {
             // Purpose: Validate category listing functionality
             
             // When: User requests available categories
-            val categories = useCase.getResourceCategories()
+            val categories = runBlocking { useCase.getResourceCategories() }
             
             // Then: Complete list of categories should be returned
             assertTrue(categories.isNotEmpty(), "UC16: System must provide at least one category")
@@ -125,8 +126,8 @@ class EducationalResourcesUseCaseUnitTests {
             // Purpose: Validate search functionality works across titles, descriptions, tags
             
             // When: User searches for a keyword
-            val anxietyResults = useCase.searchEducationalResources("anxiety")
-            val mindfulnessResults = useCase.searchEducationalResources("mindfulness")
+            val anxietyResults = runBlocking { useCase.searchEducationalResources("anxiety") }
+            val mindfulnessResults = runBlocking { useCase.searchEducationalResources("mindfulness") }
             
             // Then: Matching resources should be returned
             assertTrue(anxietyResults.isNotEmpty(), "UC16: Search must return results for valid queries")
@@ -138,10 +139,10 @@ class EducationalResourcesUseCaseUnitTests {
             
             // Validate search rejects empty queries
             assertThrows(IllegalArgumentException::class.java) {
-                useCase.searchEducationalResources("")
+                runBlocking { useCase.searchEducationalResources("") }
             }
             assertThrows(IllegalArgumentException::class.java) {
-                useCase.searchEducationalResources("   ")
+                runBlocking { useCase.searchEducationalResources("   ") }
             }
         }
         
@@ -157,7 +158,7 @@ class EducationalResourcesUseCaseUnitTests {
             // Purpose: Validate personalization algorithm works correctly
             
             // When: User requests recommended resources
-            val recommendations = useCase.getRecommendedResources(userId = "user123", limit = 5)
+            val recommendations = runBlocking { useCase.getRecommendedResources(userId = "user123", limit = 5) }
             
             // Then: Personalized recommendations should be returned
             assertTrue(recommendations.isNotEmpty(), "UC16: System must provide recommendations")
@@ -184,13 +185,13 @@ class EducationalResourcesUseCaseUnitTests {
             // When: User searches with empty string
             // Then: System should throw IllegalArgumentException
             assertThrows(IllegalArgumentException::class.java) {
-                useCase.searchEducationalResources("")
+                runBlocking { useCase.searchEducationalResources("") }
             }
             
             // When: User searches with whitespace only
             // Then: System should throw IllegalArgumentException
             assertThrows(IllegalArgumentException::class.java) {
-                useCase.searchEducationalResources("   ")
+                runBlocking { useCase.searchEducationalResources("   ") }
             }
         }
     }
@@ -211,11 +212,13 @@ class EducationalResourcesUseCaseUnitTests {
             // Purpose: Validate progress tracking functionality
             
             // When: User updates progress
-            val progress = useCase.trackLearningProgress(
-                resourceId = "res_001",
-                userId = "user123",
-                progress = 50
-            )
+            val progress = runBlocking { 
+                useCase.trackLearningProgress(
+                    resourceId = "res_001",
+                    userId = "user123",
+                    progress = 50
+                )
+            }
             
             // Then: Progress should be tracked correctly
             assertEquals("res_001", progress.resourceId, "UC16: Progress must be linked to correct resource")
@@ -225,10 +228,10 @@ class EducationalResourcesUseCaseUnitTests {
             
             // Validate progress bounds
             assertThrows(IllegalArgumentException::class.java) {
-                useCase.trackLearningProgress("res_001", "user123", -1)
+                runBlocking { useCase.trackLearningProgress("res_001", "user123", -1) }
             }
             assertThrows(IllegalArgumentException::class.java) {
-                useCase.trackLearningProgress("res_001", "user123", 101)
+                runBlocking { useCase.trackLearningProgress("res_001", "user123", 101) }
             }
         }
         
@@ -244,10 +247,12 @@ class EducationalResourcesUseCaseUnitTests {
             // Purpose: Validate completion tracking functionality
             
             // When: User marks resource as completed
-            val completedProgress = useCase.markResourceAsCompleted(
-                resourceId = "res_002",
-                userId = "user123"
-            )
+            val completedProgress = runBlocking { 
+                useCase.markResourceAsCompleted(
+                    resourceId = "res_002",
+                    userId = "user123"
+                )
+            }
             
             // Then: Resource should be marked as completed
             assertEquals("res_002", completedProgress.resourceId, "UC16: Completion must be linked to correct resource")
@@ -269,7 +274,7 @@ class EducationalResourcesUseCaseUnitTests {
             // Purpose: Validate history retrieval functionality
             
             // When: User requests learning history
-            val history = useCase.getLearningHistory(userId = "user123")
+            val history = runBlocking { useCase.getLearningHistory(userId = "user123") }
             
             // Then: Learning history should be returned
             assertNotNull(history, "UC16: Learning history must be retrievable")

@@ -262,9 +262,9 @@ class PredictiveBurnoutDetectionUseCaseUnitTests {
             // Purpose: Validate intervention triggering
             
             val criticalMoods = listOf(
-                MoodEntry("user123", 1.5f, Date(), "Critical"),
-                MoodEntry("user123", 2.0f, Date(), "Very low"),
-                MoodEntry("user123", 1.0f, Date(), "Critical")
+                MoodEntry(userId="user123", mood=1, date=Date(), notes="Critical"),
+                MoodEntry(userId="user123", mood=2, date=Date(), notes="Very low"),
+                MoodEntry(userId="user123", mood=1, date=Date(), notes="Critical")
             )
             val criticalStress = listOf(
                 StressIndicator(Date(), 9.5f),
@@ -301,9 +301,9 @@ class PredictiveBurnoutDetectionUseCaseUnitTests {
             // Purpose: Validate future risk prediction
             
             val moodEntries = listOf(
-                MoodEntry("user123", 2.5f, Date(), "Low"),
-                MoodEntry("user123", 2.0f, Date(), "Lower"),
-                MoodEntry("user123", 2.5f, Date(), "Low")
+                MoodEntry(userId="user123", mood=2, date=Date(), notes="Low"),
+                MoodEntry(userId="user123", mood=2, date=Date(), notes="Lower"),
+                MoodEntry(userId="user123", mood=2, date=Date(), notes="Low")
             )
             
             val currentAssessment = useCase.assessBurnoutRisk(moodEntries = moodEntries)
@@ -339,9 +339,9 @@ class PredictiveBurnoutDetectionUseCaseUnitTests {
             
             // Assessment with multiple factors
             val comprehensiveMoods = listOf(
-                MoodEntry("user123", 3.0f, Date(), "Mood 1"),
-                MoodEntry("user123", 3.5f, Date(), "Mood 2"),
-                MoodEntry("user123", 3.0f, Date(), "Mood 3")
+                MoodEntry(userId="user123", mood=3, date=Date(), notes="Mood 1"),
+                MoodEntry(userId="user123", mood=3, date=Date(), notes="Mood 2"),
+                MoodEntry(userId="user123", mood=3, date=Date(), notes="Mood 3")
             )
             val comprehensiveActivity = listOf(
                 ActivityLevel(Date(), 0.5f),
@@ -382,9 +382,9 @@ class PredictiveBurnoutDetectionUseCaseUnitTests {
             // Purpose: Validate trend identification
             
             val moodEntries = listOf(
-                MoodEntry("user123", 3.0f, Date(), "Mood"),
-                MoodEntry("user123", 3.5f, Date(), "Mood"),
-                MoodEntry("user123", 3.0f, Date(), "Mood")
+                MoodEntry(userId="user123", mood=3, date=Date(), notes="Mood"),
+                MoodEntry(userId="user123", mood=3, date=Date(), notes="Mood"),
+                MoodEntry(userId="user123", mood=3, date=Date(), notes="Mood")
             )
             
             val assessment = useCase.assessBurnoutRisk(moodEntries = moodEntries)
