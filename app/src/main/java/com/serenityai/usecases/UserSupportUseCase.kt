@@ -329,7 +329,11 @@ data class FeedbackSubmission(
     val feedbackType: FeedbackType,
     val message: String,
     val rating: Int?,
+    val category: String? = null,
+    val attachments: List<String> = emptyList(),
+    val adminNotes: String? = null,
     val submittedAt: Date,
+    val updatedAt: Date? = null,
     val status: FeedbackStatus
 )
 
