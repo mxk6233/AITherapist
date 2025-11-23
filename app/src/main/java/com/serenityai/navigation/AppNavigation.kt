@@ -260,6 +260,18 @@ fun AppNavigation(navController: NavHostController) {
         // User Support (UC25)
         composable(Screen.UserSupport.route) {
             UserSupportScreen(
+                onNavigateToApplicationFeedback = {
+                    navController.navigate(Screen.ApplicationFeedback.route)
+                },
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        
+        // Application Feedback (UC11)
+        composable(Screen.ApplicationFeedback.route) {
+            ApplicationFeedbackScreen(
                 onNavigateBack = {
                     navController.popBackStack()
                 }
@@ -337,6 +349,9 @@ fun AppNavigation(navController: NavHostController) {
                 },
                 onNavigateToSystemHealth = {
                     navController.navigate(Screen.SystemHealth.route)
+                },
+                onNavigateToApplicationFeedback = {
+                    navController.navigate(Screen.ApplicationFeedback.route)
                 },
                 onNavigateBack = {
                     navController.popBackStack()

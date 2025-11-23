@@ -89,10 +89,20 @@ fun ChatHistoryScreen(onNavigateBack: () -> Unit) {
     }
 }
 
-// Crisis Intervention Screen (UC2)
+// Crisis Intervention Screen (UC36)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CrisisInterventionScreen(onNavigateBack: () -> Unit) {
+    val useCase = remember { com.serenityai.usecases.AdaptiveCrisisDeescalationUseCase() }
+    val userId = "user123" // In production, get from auth
+    
+    var userInput by remember { mutableStateOf("") }
+    var currentSession by remember { mutableStateOf<com.serenityai.usecases.DeescalationSession?>(null) }
+    var currentStepIndex by remember { mutableStateOf(0) }
+    var stepResponse by remember { mutableStateOf("") }
+    var showSafetyMeasures by remember { mutableStateOf(false) }
+    var safetyMeasures by remember { mutableStateOf<com.serenityai.usecases.SafetyMeasures?>(null) }
+    
     Scaffold(
         topBar = {
             TopAppBar(
@@ -103,21 +113,378 @@ fun CrisisInterventionScreen(onNavigateBack: () -> Unit) {
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                    containerColor = MaterialTheme.colorScheme.errorContainer
                 )
             )
         }
     ) { paddingValues ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text("Crisis Intervention Content (UC2)", fontSize = 20.sp)
-            // Add crisis intervention UI here
+            if (currentSession == null) {
+                // Initial Crisis Assessment
+                item {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer
+                        ),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(20.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.Emergency,
+                                contentDescription = null,
+                                modifier = Modifier.size(48.dp),
+                                tint = MaterialTheme.colorScheme.error
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                text = "Crisis Support",
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onErrorContainer
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "If you're in immediate danger, please call 911 or your local emergency services.",
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.9f)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "National Suicide Prevention Lifeline: 988",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    }
+                }
+                
+                item {
+                    Text(
+                        text = "Tell us what's happening",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+                
+                item {
+                    OutlinedTextField(
+                        value = userInput,
+                        onValueChange = { userInput = it },
+                        label = { Text("Describe your situation") },
+                        placeholder = { Text("I'm feeling...") },
+                        modifier = Modifier.fillMaxWidth(),
+                        minLines = 4,
+                        maxLines = 8
+                    )
+                }
+                
+                item {
+                    Button(
+                        onClick = {
+                            if (userInput.isNotBlank()) {
+                                val session = useCase.createSession(userId, userInput)
+                                currentSession = session
+                                currentStepIndex = 0
+                                
+                                // Get safety measures
+                                val assessment = session.initialAssessment
+                                safetyMeasures = useCase.provideImmediateSafetyMeasures(assessment)
+                                showSafetyMeasures = assessment.level.ordinal >= com.serenityai.usecases.CrisisLevel.HIGH.ordinal
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = userInput.isNotBlank(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.error
+                        )
+                    ) {
+                        Text("Get Help", color = MaterialTheme.colorScheme.onError)
+                    }
+                }
+            } else {
+                // Active Session - Show Steps
+                val session = currentSession!!
+                val script = session.script
+                
+                // Safety Measures Banner
+                if (showSafetyMeasures && safetyMeasures != null) {
+                    item {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.errorContainer
+                            )
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(16.dp)
+                            ) {
+                                Text(
+                                    text = "Immediate Safety Actions",
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onErrorContainer
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                safetyMeasures!!.immediateActions.forEach { action ->
+                                    Text(
+                                        text = "• $action",
+                                        fontSize = 14.sp,
+                                        color = MaterialTheme.colorScheme.onErrorContainer,
+                                        modifier = Modifier.padding(vertical = 4.dp)
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "Resources:",
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = MaterialTheme.colorScheme.onErrorContainer
+                                )
+                                safetyMeasures!!.resources.forEach { resource ->
+                                    Text(
+                                        text = "• $resource",
+                                        fontSize = 12.sp,
+                                        color = MaterialTheme.colorScheme.onErrorContainer,
+                                        modifier = Modifier.padding(vertical = 2.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // Crisis Level Indicator
+                item {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = when (script.crisisLevel) {
+                                com.serenityai.usecases.CrisisLevel.CRITICAL -> MaterialTheme.colorScheme.errorContainer
+                                com.serenityai.usecases.CrisisLevel.HIGH -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.7f)
+                                com.serenityai.usecases.CrisisLevel.MEDIUM -> MaterialTheme.colorScheme.tertiaryContainer
+                                com.serenityai.usecases.CrisisLevel.LOW -> MaterialTheme.colorScheme.primaryContainer
+                                com.serenityai.usecases.CrisisLevel.NONE -> MaterialTheme.colorScheme.surfaceVariant
+                            }
+                        )
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                Icons.Default.Info,
+                                contentDescription = null,
+                                tint = when (script.crisisLevel) {
+                                    com.serenityai.usecases.CrisisLevel.CRITICAL -> MaterialTheme.colorScheme.error
+                                    com.serenityai.usecases.CrisisLevel.HIGH -> MaterialTheme.colorScheme.error
+                                    else -> MaterialTheme.colorScheme.primary
+                                }
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Column {
+                                Text(
+                                    text = "Crisis Level: ${script.crisisLevel.name}",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = "Estimated Duration: ${script.estimatedDuration} minutes",
+                                    fontSize = 12.sp
+                                )
+                            }
+                        }
+                    }
+                }
+                
+                // Progress Indicator
+                if (script.steps.isNotEmpty()) {
+                    item {
+                        val progress = ((currentStepIndex + 1).toFloat() / script.steps.size) * 100f
+                        Column {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = "Progress",
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                                Text(
+                                    text = "${currentStepIndex + 1} / ${script.steps.size}",
+                                    fontSize = 14.sp
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(8.dp))
+                            LinearProgressIndicator(
+                                progress = progress / 100f,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    }
+                }
+                
+                // Current Step
+                if (currentStepIndex < script.steps.size) {
+                    val currentStep = script.steps[currentStepIndex]
+                    
+                    item {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(20.dp)
+                            ) {
+                                Text(
+                                    text = "Step ${currentStep.order}",
+                                    fontSize = 12.sp,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = currentStep.prompt,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                
+                                OutlinedTextField(
+                                    value = stepResponse,
+                                    onValueChange = { stepResponse = it },
+                                    label = { Text("Your response") },
+                                    placeholder = { Text("Type your response...") },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    minLines = 3,
+                                    maxLines = 6
+                                )
+                                
+                                Spacer(modifier = Modifier.height(16.dp))
+                                
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    if (currentStepIndex > 0) {
+                                        OutlinedButton(
+                                            onClick = {
+                                                currentStepIndex--
+                                                stepResponse = ""
+                                            },
+                                            modifier = Modifier.weight(1f)
+                                        ) {
+                                            Text("Previous")
+                                        }
+                                    }
+                                    
+                                    Button(
+                                        onClick = {
+                                            try {
+                                                val result = useCase.executeDeescalationStep(
+                                                    script.id,
+                                                    currentStepIndex,
+                                                    stepResponse
+                                                )
+                                                
+                                                if (result.isCompleted) {
+                                                    // Session completed
+                                                    val finalAssessment = result.newAssessment 
+                                                        ?: session.initialAssessment
+                                                    val completedSession = useCase.completeSession(
+                                                        session.id,
+                                                        finalAssessment
+                                                    )
+                                                    currentSession = completedSession
+                                                } else {
+                                                    // Adapt script if needed (before clearing response)
+                                                    val responseToAdapt = stepResponse
+                                                    if (responseToAdapt.isNotBlank()) {
+                                                        val adaptedScript = useCase.adaptScript(
+                                                            script.id,
+                                                            responseToAdapt
+                                                        )
+                                                        if (adaptedScript != null) {
+                                                            currentSession = session.copy(script = adaptedScript)
+                                                        }
+                                                    }
+                                                    
+                                                    // Move to next step
+                                                    currentStepIndex++
+                                                    stepResponse = ""
+                                                }
+                                            } catch (e: Exception) {
+                                                // Handle error
+                                            }
+                                        },
+                                        modifier = Modifier.weight(1f),
+                                        enabled = stepResponse.isNotBlank() || currentStep.type == com.serenityai.usecases.StepType.GROUNDING
+                                    ) {
+                                        Text(if (currentStepIndex >= script.steps.size - 1) "Complete" else "Next")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    // Session Completed
+                    item {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer
+                            )
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(20.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(
+                                    Icons.Default.CheckCircle,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(64.dp),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Text(
+                                    text = "Session Completed",
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "You've completed the deescalation steps. Remember, help is always available.",
+                                    fontSize = 14.sp,
+                                    textAlign = TextAlign.Center
+                                )
+                                Spacer(modifier = Modifier.height(24.dp))
+                                Button(
+                                    onClick = {
+                                        currentSession = null
+                                        currentStepIndex = 0
+                                        stepResponse = ""
+                                        userInput = ""
+                                        showSafetyMeasures = false
+                                    },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text("Start New Session")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -835,7 +1202,10 @@ fun EducationalResourceCard(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserSupportScreen(onNavigateBack: () -> Unit) {
+fun UserSupportScreen(
+    onNavigateToApplicationFeedback: () -> Unit,
+    onNavigateBack: () -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -851,16 +1221,82 @@ fun UserSupportScreen(onNavigateBack: () -> Unit) {
             )
         }
     ) { paddingValues ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text("User Support Content (UC25)", fontSize = 20.sp)
-            // Add user support UI here
+            item {
+                Text(
+                    text = "Support & Feedback",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            
+            item {
+                Card(
+                    onClick = onNavigateToApplicationFeedback,
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(20.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Default.Feedback,
+                            contentDescription = null,
+                            modifier = Modifier.size(48.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Submit Feedback",
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "Share your thoughts, report bugs, or request features",
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                            )
+                        }
+                        Icon(
+                            Icons.Default.ArrowForward,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                        )
+                    }
+                }
+            }
+            
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(20.dp)
+                    ) {
+                        Text(
+                            text = "Need Help?",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            text = "If you need immediate assistance or have questions, please reach out through the feedback system or contact our support team.",
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -1265,15 +1701,17 @@ fun SettingsScreen(
     onNavigateToNotifications: () -> Unit,
     onNavigateToAppPreferences: () -> Unit,
     onNavigateToSystemHealth: () -> Unit,
+    onNavigateToApplicationFeedback: () -> Unit,
     onNavigateBack: () -> Unit
 ) {
     val settingsItems = listOf(
-        Pair("Security Protocols", onNavigateToSecurityProtocols),
-        Pair("Personalization", onNavigateToPersonalization),
-        Pair("Accessibility", onNavigateToAccessibility),
-        Pair("Notifications", onNavigateToNotifications),
-        Pair("App Preferences", onNavigateToAppPreferences),
-        Pair("System Health", onNavigateToSystemHealth)
+        Triple("Security Protocols", Icons.Default.Lock, onNavigateToSecurityProtocols),
+        Triple("Personalization", Icons.Default.Person, onNavigateToPersonalization),
+        Triple("Accessibility", Icons.Default.Accessibility, onNavigateToAccessibility),
+        Triple("Notifications", Icons.Default.Notifications, onNavigateToNotifications),
+        Triple("App Preferences", Icons.Default.Settings, onNavigateToAppPreferences),
+        Triple("System Health", Icons.Default.HealthAndSafety, onNavigateToSystemHealth),
+        Triple("Application Feedback", Icons.Default.Feedback, onNavigateToApplicationFeedback)
     )
 
     Scaffold(
@@ -1300,7 +1738,8 @@ fun SettingsScreen(
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(settingsItems) { (title, onClick) ->
+                items(settingsItems) { item ->
+                    val (title, icon, onClick) = item
                     Card(
                         onClick = onClick,
                         modifier = Modifier.fillMaxWidth()
@@ -1310,7 +1749,7 @@ fun SettingsScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                Icons.Default.Tune, // Placeholder icon
+                                icon,
                                 contentDescription = null,
                                 modifier = Modifier.size(40.dp),
                                 tint = MaterialTheme.colorScheme.primary
