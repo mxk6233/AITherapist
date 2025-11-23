@@ -5,55 +5,19 @@ This document describes the organized test structure for the AI Therapist applic
 ## Directory Structure
 
 ```
-app/src/test/java/com/serenityai/tests/
-├── usecases/                          # Use case-specific tests
-│   ├── uc6_chat_history/              # UC6: View Chat History
-│   │   ├── unit/                      # Unit tests
-│   │   ├── uat/                       # User Acceptance Tests
-│   │   └── integration/               # Integration tests
-│   ├── uc8_coping_exercises/         # UC8: Suggest Coping Exercises
-│   │   ├── unit/
-│   │   ├── uat/
-│   │   └── integration/
-│   ├── uc9_mood_analytics/           # UC9: View Mood Analytics
-│   │   ├── unit/
-│   │   ├── uat/
-│   │   └── integration/
-│   ├── uc13_preferences/              # UC13: Application Preferences
-│   │   ├── unit/
-│   │   └── uat/
-│   ├── uc17_accessibility/            # UC17: Accessibility Features
-│   │   ├── unit/
-│   │   └── uat/
-│   ├── uc18_notifications/            # UC18: Notification Management
-│   │   ├── unit/
-│   │   └── uat/
-│   ├── uc24_personalization/          # UC24: Personalize User Experience
-│   │   ├── unit/
-│   │   └── uat/
-│   ├── uc26_mood_forecasting/         # UC26: AI-Powered Mood Forecasting
-│   │   ├── unit/
-│   │   ├── uat/
-│   │   └── integration/
-│   ├── uc27_guided_breathing/         # UC27: Guided Breathing & Meditation
-│   │   ├── unit/
-│   │   └── uat/
-│   ├── uc32_journaling_prompts/       # UC32: AI-Generated Journaling Prompts
-│   │   ├── unit/
-│   │   ├── uat/
-│   │   └── integration/
-│   └── uc35_relapse_prevention/       # UC35: Relapse Prevention Alerts
-│       ├── unit/
-│       ├── uat/
-│       └── integration/
-├── integration/                       # Cross-feature integration tests
-├── ui/                                # UI component tests
-│   ├── screens/                       # Screen component tests
-│   ├── theme/                         # Theme and styling tests
-│   └── navigation/                   # Navigation tests
-├── data/                              # Data layer tests
-│   └── models/                        # Data model tests
-└── utils/                             # Utility function tests
+tests/
+├── unit/usecases/                     # Unit tests by use case
+│   ├── uc11_application_feedback/     # UC11: Submit Application Feedback
+│   ├── uc29_sentiment_adaptive_chat/  # UC29: AI Sentiment Adaptive Chat
+│   ├── uc36_crisis_deescalation/      # UC36: Adaptive Crisis Deescalation Scripts
+│   └── uc38_voice_therapy/            # UC38: Voice-Enabled Therapy Sessions
+├── integration/usecases/              # Integration tests by use case
+│   ├── uc11_application_feedback/
+│   ├── uc29_sentiment_adaptive_chat/
+│   ├── uc36_crisis_deescalation/
+│   └── uc38_voice_therapy/
+└── uat/usecases/                      # User Acceptance Tests by use case
+    └── uc38_voice_therapy/
 ```
 
 ## Test Organization Principles
@@ -75,51 +39,55 @@ app/src/test/java/com/serenityai/tests/
 
 ## Use Cases with Tests
 
-### UC6: View Chat History
-- **Unit Tests**: `ChatHistoryUseCaseUnitTests.kt`
-- Tests search, filtering, analytics, and data export functionality
+### UC11: Submit Application Feedback
+- **Unit Tests**: `ApplicationFeedbackUseCaseUnitTests.kt` (24 tests)
+- **Integration Tests**: `ApplicationFeedbackUseCaseIntegrationTests.kt` (7 tests)
+- **Total**: 31 tests
+- Tests feedback submission, retrieval, status management, analytics, search, and trends
 
-### UC8: Suggest Coping Exercises
-- **Unit Tests**: `CopingExercisesUseCaseUnitTests.kt`
-- Tests personalized recommendations, exercise library, and progress tracking
+### UC29: AI Sentiment Adaptive Chat
+- **Unit Tests**: `AISentimentAdaptiveChatUseCaseUnitTests.kt` (23 tests)
+- **Integration Tests**: `AISentimentAdaptiveChatUseCaseIntegrationTests.kt` (8 tests)
+- **Total**: 31 tests
+- Tests sentiment analysis, emotional intensity, adaptive responses, conversation context, pattern detection, crisis detection, and personalization
 
-### UC9: View Mood Analytics
-- **Unit Tests**: `MoodAnalyticsUseCaseUnitTests.kt`
-- Tests trend analysis, pattern recognition, and dashboard functionality
+### UC36: Adaptive Crisis Deescalation Scripts
+- **Unit Tests**: `AdaptiveCrisisDeescalationUseCaseUnitTests.kt` (18 tests)
+- **Integration Tests**: `AdaptiveCrisisDeescalationUseCaseIntegrationTests.kt` (5 tests)
+- **Total**: 23 tests
+- Tests crisis assessment, script generation, step execution, script adaptation, safety measures, progress monitoring, and session management
 
-### UC13: Application Preferences
-- **Unit Tests**: (To be added)
-- Tests preference management and configuration
+### UC38: Voice-Enabled Therapy Sessions
+- **Unit Tests**: `VoiceEnabledTherapyUseCaseUnitTests.kt` (10 tests)
+- **Integration Tests**: `VoiceEnabledTherapyUseCaseIntegrationTests.kt` (7 tests)
+- **UAT Tests**: `VoiceEnabledTherapyUATTests.kt` (11 tests)
+- **Total**: 28 tests
+- Tests session management, voice processing, text processing, session controls, history retrieval, error handling, and language support
 
-### UC17: Accessibility Features
-- **Unit Tests**: `AccessibilityUseCaseUnitTests.kt`
-- Tests screen reader support, keyboard navigation, and accessibility compliance
+## Test Statistics Summary
 
-### UC18: Notification Management
-- **Unit Tests**: (To be added)
-- Tests notification scheduling, content, and preferences
+| Use Case | Unit Tests | Integration Tests | UAT Tests | Total |
+|----------|-----------|-------------------|-----------|-------|
+| UC38: Voice Therapy | 10 | 7 | 11 | 28 |
+| UC29: Sentiment Adaptive Chat | 23 | 8 | 0 | 31 |
+| UC36: Crisis Deescalation | 18 | 5 | 0 | 23 |
+| UC11: Application Feedback | 24 | 7 | 0 | 31 |
+| **TOTAL** | **75** | **27** | **11** | **113** |
 
-### UC24: Personalize User Experience
-- **Unit Tests**: `PersonalizationUseCaseUnitTests.kt`
-- Tests theme customization, personalization features
+## Test Framework
 
-### UC26: AI-Powered Mood Forecasting
-- **Unit Tests**: `MoodForecastingUseCaseUnitTests.kt`
-- **UAT Tests**: `MoodForecastingUATTests.kt`
-- Tests forecast generation, pattern recognition, and intervention recommendations
+All tests use:
+- **JUnit 5 (Jupiter)** - Modern testing framework
+- **Nested test classes** - Organized test structure using `@Nested`
+- **DisplayName annotations** - Descriptive test names using `@DisplayName`
+- **Assertions** - Comprehensive validation using JUnit assertions
 
-### UC27: Guided Breathing & Meditation
-- **Unit Tests**: `GuidedBreathingUseCaseUnitTests.kt`
-- Tests breathing exercise management and meditation sessions
+## Test Structure Pattern
 
-### UC32: AI-Generated Journaling Prompts
-- **Unit Tests**: `JournalingPromptsUseCaseUnitTests.kt`
-- Tests prompt generation, personalization, and categorization
-
-### UC35: Relapse Prevention Alerts
-- **Unit Tests**: `RelapsePreventionUseCaseUnitTests.kt`
-- **UAT Tests**: `RelapsePreventionUATTests.kt`
-- Tests risk assessment, early warning system, and safety plans
+Each test follows the **Given-When-Then** pattern:
+- **Given**: Setup test data and conditions
+- **When**: Execute the action being tested
+- **Then**: Validate the results using assertions
 
 ## Running Tests
 
@@ -130,22 +98,22 @@ app/src/test/java/com/serenityai/tests/
 
 ### Run tests for a specific use case
 ```bash
-./gradlew test --tests "com.serenityai.tests.usecases.uc6_chat_history.*"
+./gradlew test --tests "com.serenityai.tests.unit.usecases.uc38_voice_therapy.*"
 ```
 
 ### Run only unit tests
 ```bash
-./gradlew test --tests "*.unit.*"
+./gradlew test --tests "*unit*"
 ```
 
 ### Run only UAT tests
 ```bash
-./gradlew test --tests "*.uat.*"
+./gradlew test --tests "*uat*"
 ```
 
 ### Run integration tests
 ```bash
-./gradlew test --tests "*.integration.*"
+./gradlew test --tests "*integration*"
 ```
 
 ## Test Naming Conventions
@@ -153,6 +121,18 @@ app/src/test/java/com/serenityai/tests/
 - **Unit Test Classes**: `{Feature}UseCaseUnitTests.kt`
 - **UAT Test Classes**: `{Feature}UATTests.kt`
 - **Integration Test Classes**: `{Feature}IntegrationTests.kt`
+
+## Test Case ID Format
+
+Test cases follow the format: `TC-UC{number}-{sequence}`
+- Example: `TC-UC38-01` (Use Case 38, Test Case 1)
+- Test IDs are sequential within each use case
+- Unit tests start at 01, Integration tests continue sequentially, UAT tests continue sequentially
+
+## Test Documentation
+
+Detailed test breakdown with all test cases, descriptions, and expected results is available in:
+- **TEST_BREAKDOWN_DOCUMENTATION.md** - Complete test breakdown in table format
 
 ## Benefits of This Structure
 
@@ -162,9 +142,16 @@ app/src/test/java/com/serenityai/tests/
 4. **Maintainability**: Clear separation of concerns
 5. **Test Execution**: Can run tests by category or use case
 
-## Migration Notes
+## Test Coverage Goals
 
-- All test files have been moved from the old structure
-- Package names have been updated to match new locations
-- Old test directories can be removed after verification
+- **Unit Test Coverage**: > 80% for all use cases
+- **Integration Test Coverage**: All major integrations tested
+- **UAT Coverage**: All user stories validated
+
+## Notes
+
+- All tests are designed to be independent and can run in any order
+- Tests use mock data and simulated services (not real external services)
+- Integration tests verify component interactions, not actual external API calls
+- UAT tests validate features from user perspective, ensuring they meet requirements
 
