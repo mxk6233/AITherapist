@@ -216,6 +216,12 @@ fun AppNavigation(navController: NavHostController) {
                 onNavigateToGroupTherapy = {
                     navController.navigate(Screen.GroupTherapy.route)
                 },
+                onNavigateToCommunitySupportCircles = {
+                    navController.navigate(Screen.CommunitySupportCircles.route)
+                },
+                onNavigateToReligiousSupport = {
+                    navController.navigate(Screen.ReligiousSupport.route)
+                },
                 onNavigateBack = {
                     navController.popBackStack()
                 }
@@ -281,6 +287,24 @@ fun AppNavigation(navController: NavHostController) {
         // Group Therapy Simulation Mode (UC34)
         composable(Screen.GroupTherapy.route) {
             GroupTherapyScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        
+        // Community Support Circles (UC39)
+        composable(Screen.CommunitySupportCircles.route) {
+            CommunitySupportCirclesScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        
+        // Religious Support by Person's Religion (UC40)
+        composable(Screen.ReligiousSupport.route) {
+            ReligiousSupportScreen(
                 onNavigateBack = {
                     navController.popBackStack()
                 }

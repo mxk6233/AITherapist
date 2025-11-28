@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides a comprehensive breakdown of all test files for four use cases (UC11, UC29, UC36, UC38), including:
+This document provides a comprehensive breakdown of all test files for seven use cases (UC11, UC29, UC34, UC36, UC38, UC39, UC40), including:
 - Detailed test case information
 - Requirement traceability matrix
 - Test results and status
@@ -61,6 +61,54 @@ This document provides a comprehensive breakdown of all test files for four use 
 | TC-UC38-26 | UAT | AC-UC38-13 | Conversation flows naturally | Conversation flows naturally with turn-taking, no interruptions, smooth transitions | PASS |
 | TC-UC38-27 | UAT | AC-UC38-13 | AI remembers conversation context | AI maintains conversation context, references previous messages, coherent responses | PASS |
 | TC-UC38-28 | UAT | AC-UC38-11 | Voice therapy is accessible | Feature is accessible and usable, multiple languages supported, works for users with different needs | PASS |
+
+---
+
+## Use Case 34: Group Therapy Simulation Mode
+
+**Requirement ID**: UC34-REQ (Internal)  
+**Priority**: Medium  
+**Use Case Goal**: Provide users with simulated group therapy sessions using AI-powered virtual participants to create a supportive group environment for practice and learning.
+
+### Unit Tests
+**File**: `tests/unit/usecases/uc34_group_therapy/GroupTherapySimulationModeUseCaseUnitTests.kt`
+
+| Test Case ID | Type | Requirement/AC | Description | Expected Result | Test Result |
+|--------------|------|----------------|-------------|-----------------|--------------|
+| TC-UC34-01 | Unit | UC34-REQ-1 | System creates group therapy sessions | Session created with unique ID, name preserved, facilitator set, max participants set, status ACTIVE, topic preserved, facilitator in participants list, creation timestamp set | PASS |
+| TC-UC34-02 | Unit | UC34-REQ-2 | System validates session creation input and rejects invalid data | Empty name throws IllegalArgumentException, invalid max participants throws IllegalArgumentException | PASS |
+| TC-UC34-03 | Unit | UC34-REQ-3 | System allows users to join group sessions | User can join session, already-joined users return true | PASS |
+| TC-UC34-04 | Unit | UC34-REQ-4 | System creates virtual participants with diverse personalities | Requested number of participants created, all have IDs, all have names, all have personalities, participants have diverse personalities | PASS |
+| TC-UC34-05 | Unit | UC34-REQ-5 | System facilitates group discussions | Discussion has prompts, includes topic, includes facilitator prompts | PASS |
+| TC-UC34-06 | Unit | UC34-REQ-6 | System conducts group exercises | Exercise has instructions, has duration, has steps, instructions not empty | PASS |
+| TC-UC34-07 | Unit | UC34-REQ-7 | System simulates realistic group dynamics | Dynamics include participation level, include group cohesion, include active participants, include engagement score, cohesion between 0 and 1 | PASS |
+| TC-UC34-08 | Unit | UC34-REQ-8 | System provides peer support responses | Support provides responses, responses are supportive | PASS |
+| TC-UC34-09 | Unit | UC34-REQ-9 | System retrieves active group sessions | Active sessions returned, user's created sessions included, user's joined sessions included, only active sessions returned | PASS |
+
+### Integration Tests
+**File**: `tests/integration/usecases/uc34_group_therapy/GroupTherapySimulationModeUseCaseIntegrationTests.kt`
+
+| Test Case ID | Type | Requirement/AC | Description | Expected Result | Test Result |
+|--------------|------|----------------|-------------|-----------------|--------------|
+| TC-UC34-10 | Integration | UC34-REQ-1 | Group sessions integrate with session management system | Session service connected, session created, session persisted | PASS |
+| TC-UC34-11 | Integration | UC34-REQ-4 | Virtual participants integrate with AI service | AI service connected, participants generated, personalities assigned | PASS |
+| TC-UC34-12 | Integration | UC34-REQ-5 | Participant responses integrate with AI service | AI service connected, responses generated, responses contextual | PASS |
+| TC-UC34-13 | Integration | UC34-REQ-6 | Group activities integrate with user profile | User profile loaded, activities personalized, recommendations generated | PASS |
+
+### User Acceptance Tests (UAT)
+**File**: `tests/uat/usecases/uc34_group_therapy/GroupTherapySimulationUATTests.kt`
+
+| Test Case ID | Type | Requirement/AC | Description | Expected Result | Test Result |
+|--------------|------|----------------|-------------|-----------------|--------------|
+| TC-UC34-14 | UAT | UC34-REQ-3 | User can join group therapy sessions | User joins session successfully, session available, session has topic | PASS |
+| TC-UC34-15 | UAT | UC34-REQ-5 | User can participate in group discussions | User participation recorded, message has required fields | PASS |
+| TC-UC34-16 | UAT | UC34-REQ-3 | User can see other participants | Participants displayed, session has facilitator | PASS |
+| TC-UC34-17 | UAT | UC34-REQ-4 | User can interact with virtual participants | Virtual participants active, participants have diverse personalities | PASS |
+| TC-UC34-18 | UAT | UC34-REQ-7 | Group dynamics feel realistic | Group dynamics realistic, interactions natural | PASS |
+| TC-UC34-19 | UAT | UC34-REQ-8 | User receives peer support | User receives peer responses, responses supportive | PASS |
+| TC-UC34-20 | UAT | UC34-REQ-8 | User can provide peer support | User can provide support, response helpful | PASS |
+| TC-UC34-21 | UAT | UC34-REQ-9 | User can view session history | Session history available, user sees attended sessions | PASS |
+| TC-UC34-22 | UAT | UC34-REQ-1 | User can see session topics | Session topics visible, available sessions shown | PASS |
 
 ---
 
@@ -272,6 +320,60 @@ This document provides a comprehensive breakdown of all test files for four use 
 | UC36-REQ-9 | Get active sessions | TC-UC36-17 | 100% |
 | UC36-REQ-10 | Complete session | TC-UC36-18, TC-UC36-23 | 100% |
 
+### Use Case 34: Group Therapy Simulation Mode
+
+| Requirement ID | Acceptance Criteria | Test Cases | Coverage |
+|----------------|---------------------|------------|----------|
+| UC34-REQ-1 | Create group therapy sessions | TC-UC34-01, TC-UC34-10, TC-UC34-22 | 100% |
+| UC34-REQ-2 | Validate session creation input | TC-UC34-02 | 100% |
+| UC34-REQ-3 | Allow users to join sessions | TC-UC34-03, TC-UC34-14, TC-UC34-16 | 100% |
+| UC34-REQ-4 | Create virtual participants | TC-UC34-04, TC-UC34-11, TC-UC34-17 | 100% |
+| UC34-REQ-5 | Facilitate group discussions | TC-UC34-05, TC-UC34-12, TC-UC34-15 | 100% |
+| UC34-REQ-6 | Conduct group exercises | TC-UC34-06, TC-UC34-13 | 100% |
+| UC34-REQ-7 | Simulate group dynamics | TC-UC34-07, TC-UC34-18 | 100% |
+| UC34-REQ-8 | Provide peer support | TC-UC34-08, TC-UC34-19, TC-UC34-20 | 100% |
+| UC34-REQ-9 | Retrieve active sessions | TC-UC34-09, TC-UC34-21 | 100% |
+
+### Use Case 39: Community Support Circles
+
+| Requirement ID | Acceptance Criteria | Test Cases | Coverage |
+|----------------|---------------------|------------|----------|
+| UC39-REQ-1 | Create support circles | TC-UC39-01, TC-UC39-14, TC-UC39-16, TC-UC39-17 | 100% |
+| UC39-REQ-2 | Validate circle creation input | TC-UC39-02 | 100% |
+| UC39-REQ-3 | Allow users to join circles | TC-UC39-03, TC-UC39-18 | 100% |
+| UC39-REQ-4 | Enforce private circle invitations | TC-UC39-04, TC-UC39-23, TC-UC39-24 | 100% |
+| UC39-REQ-5 | Allow users to leave circles | TC-UC39-05 | 100% |
+| UC39-REQ-6 | Prevent creator from leaving | TC-UC39-06 | 100% |
+| UC39-REQ-7 | Allow users to create posts | TC-UC39-07, TC-UC39-15, TC-UC39-20 | 100% |
+| UC39-REQ-8 | Validate post creation | TC-UC39-08 | 100% |
+| UC39-REQ-9 | Allow users to add comments | TC-UC39-09, TC-UC39-21 | 100% |
+| UC39-REQ-10 | Allow users to like posts | TC-UC39-10, TC-UC39-22 | 100% |
+| UC39-REQ-11 | Retrieve user's circles | TC-UC39-11 | 100% |
+| UC39-REQ-12 | Retrieve available public circles | TC-UC39-12, TC-UC39-19 | 100% |
+| UC39-REQ-13 | Filter circles by topic | TC-UC39-13 | 100% |
+
+### Use Case 40: Religious Support by Person's Religion
+
+| Requirement ID | Acceptance Criteria | Test Cases | Coverage |
+|----------------|---------------------|------------|----------|
+| UC40-REQ-1 | Set user religious preference | TC-UC40-01, TC-UC40-18, TC-UC40-21 | 100% |
+| UC40-REQ-2 | Retrieve user religious preference | TC-UC40-02 | 100% |
+| UC40-REQ-3 | Return null for unset preferences | TC-UC40-03 | 100% |
+| UC40-REQ-4 | Provide spiritual guidance | TC-UC40-04, TC-UC40-05, TC-UC40-20, TC-UC40-22 | 100% |
+| UC40-REQ-5 | Provide spiritual guidance for Islam | TC-UC40-05 | 100% |
+| UC40-REQ-6 | Validate guidance requests | TC-UC40-06 | 100% |
+| UC40-REQ-7 | Require religious preference for guidance | TC-UC40-07 | 100% |
+| UC40-REQ-8 | Provide religious resources | TC-UC40-08, TC-UC40-19, TC-UC40-23 | 100% |
+| UC40-REQ-9 | Filter resources by category | TC-UC40-09, TC-UC40-24 | 100% |
+| UC40-REQ-10 | Require religious preference for resources | TC-UC40-10 | 100% |
+| UC40-REQ-11 | Allow users to submit prayer requests | TC-UC40-11, TC-UC40-25 | 100% |
+| UC40-REQ-12 | Validate prayer request input | TC-UC40-12 | 100% |
+| UC40-REQ-13 | Retrieve user's prayer requests | TC-UC40-13, TC-UC40-26 | 100% |
+| UC40-REQ-14 | Provide daily reflections | TC-UC40-14, TC-UC40-27 | 100% |
+| UC40-REQ-15 | Provide religious quotes | TC-UC40-15, TC-UC40-28 | 100% |
+| UC40-REQ-16 | Filter quotes by topic | TC-UC40-16 | 100% |
+| UC40-REQ-17 | Retrieve spiritual guidance history | TC-UC40-17 | 100% |
+
 ### Use Case 11: Submit Application Feedback
 
 | Requirement ID | Acceptance Criteria | Test Cases | Coverage |
@@ -310,19 +412,22 @@ This document provides a comprehensive breakdown of all test files for four use 
 | Use Case | Unit Tests | Integration Tests | UAT Tests | Total | Pass Rate |
 |----------|-----------|-------------------|-----------|-------|-----------|
 | UC38: Voice Therapy | 10 | 7 | 11 | 28 | 100% |
+| UC34: Group Therapy Simulation | 9 | 4 | 9 | 22 | 100% |
 | UC29: Sentiment Adaptive Chat | 23 | 8 | 0 | 31 | 100% |
 | UC36: Crisis Deescalation | 18 | 5 | 0 | 23 | 100% |
 | UC11: Application Feedback | 24 | 7 | 0 | 31 | 100% |
-| **TOTAL** | **75** | **27** | **11** | **113** | **100%** |
+| UC39: Community Support Circles | 13 | 3 | 8 | 24 | 100% |
+| UC40: Religious Support | 17 | 3 | 8 | 28 | 100% |
+| **TOTAL** | **114** | **37** | **36** | **187** | **100%** |
 
 ### Test Results Summary
 
 | Test Type | Total Tests | Passed | Failed | Pass Rate |
 |-----------|-------------|--------|--------|-----------|
-| Unit Tests | 75 | 75 | 0 | 100% |
-| Integration Tests | 27 | 27 | 0 | 100% |
-| UAT Tests | 11 | 11 | 0 | 100% |
-| **TOTAL** | **113** | **113** | **0** | **100%** |
+| Unit Tests | 114 | 114 | 0 | 100% |
+| Integration Tests | 37 | 37 | 0 | 100% |
+| UAT Tests | 36 | 36 | 0 | 100% |
+| **TOTAL** | **187** | **187** | **0** | **100%** |
 
 ### Test Organization
 
@@ -368,6 +473,15 @@ Each test follows the **Given-When-Then** pattern:
 
 # UC11
 ./gradlew test --tests "*uc11*"
+
+# UC34
+./gradlew test --tests "*uc34*"
+
+# UC39
+./gradlew test --tests "*uc39*"
+
+# UC40
+./gradlew test --tests "*uc40*"
 ```
 
 ### Run Specific Test Type
@@ -400,3 +514,107 @@ Each test follows the **Given-When-Then** pattern:
 - UAT tests validate features from user perspective, ensuring they meet requirements
 - All test cases have been implemented and are passing
 - Test results are based on test implementation status (all tests implemented = PASS)
+
+---
+
+## Use Case 39: Community Support Circles
+
+**Requirement ID**: UC39-REQ (Internal)  
+**Priority**: Medium  
+**Use Case Goal**: Enable users to create and participate in community support circles for peer support and shared experiences.
+
+### Unit Tests
+**File**: `tests/unit/usecases/uc39_community_support/CommunitySupportCirclesUseCaseUnitTests.kt`
+
+| Test Case ID | Type | Requirement/AC | Description | Expected Result | Test Result |
+|--------------|------|----------------|-------------|-----------------|--------------|
+| TC-UC39-01 | Unit | UC39-REQ-1 | System creates support circles | Circle created with unique ID, name preserved, creator set, topic preserved, max members set, not private, creator counted as member | PASS |
+| TC-UC39-02 | Unit | UC39-REQ-2 | System validates circle creation input and rejects invalid data | Empty name throws IllegalArgumentException, empty description throws IllegalArgumentException, invalid max members throws IllegalArgumentException | PASS |
+| TC-UC39-03 | Unit | UC39-REQ-3 | System allows users to join support circles | User can join public circles, user is in members list | PASS |
+| TC-UC39-04 | Unit | UC39-REQ-4 | System enforces private circle invitations | Users cannot join private circles without invitation, invitation succeeds, user can join after invitation | PASS |
+| TC-UC39-05 | Unit | UC39-REQ-5 | System allows users to leave support circles | User can leave circle, user not in members list | PASS |
+| TC-UC39-06 | Unit | UC39-REQ-6 | System prevents creator from leaving circle | Creator cannot leave circle | PASS |
+| TC-UC39-07 | Unit | UC39-REQ-7 | System allows users to create posts in circles | Post has unique ID, linked to circle, author set, content preserved, not anonymous, initial like count 0 | PASS |
+| TC-UC39-08 | Unit | UC39-REQ-8 | System validates post creation and rejects invalid data | Empty content throws IllegalArgumentException | PASS |
+| TC-UC39-09 | Unit | UC39-REQ-9 | System allows users to add comments to posts | Comment has unique ID, linked to post, author set, content preserved | PASS |
+| TC-UC39-10 | Unit | UC39-REQ-10 | System allows users to like posts | Like succeeds, like count incremented | PASS |
+| TC-UC39-11 | Unit | UC39-REQ-11 | System retrieves user's support circles | User's circles returned, created circles included, joined circles included | PASS |
+| TC-UC39-12 | Unit | UC39-REQ-12 | System retrieves available public circles | Available circles returned, only public circles returned | PASS |
+| TC-UC39-13 | Unit | UC39-REQ-13 | System filters circles by topic | Filtered circles returned, only matching topic circles returned | PASS |
+
+### Integration Tests
+**File**: `tests/integration/usecases/uc39_community_support/CommunitySupportCirclesUseCaseIntegrationTests.kt`
+
+| Test Case ID | Type | Requirement/AC | Description | Expected Result | Test Result |
+|--------------|------|----------------|-------------|-----------------|--------------|
+| TC-UC39-14 | Integration | UC39-REQ-1 | Circles integrate with user profile system | User profile loaded, circles personalized | PASS |
+| TC-UC39-15 | Integration | UC39-REQ-7 | Posts integrate with notification system | Notification service connected, notifications sent | PASS |
+| TC-UC39-16 | Integration | UC39-REQ-1 | Circles integrate with social features | Social service connected, social features enabled | PASS |
+
+### User Acceptance Tests (UAT)
+**File**: `tests/uat/usecases/uc39_community_support/CommunitySupportCirclesUATTests.kt`
+
+| Test Case ID | Type | Requirement/AC | Description | Expected Result | Test Result |
+|--------------|------|----------------|-------------|-----------------|--------------|
+| TC-UC39-17 | UAT | UC39-REQ-1 | User can create support circles | User creates circle successfully, creator is member, circle name preserved | PASS |
+| TC-UC39-18 | UAT | UC39-REQ-3 | User can join support circles | User joins circle successfully, user in members list | PASS |
+| TC-UC39-19 | UAT | UC39-REQ-12 | User can see available circles | User sees available circles, only public circles shown | PASS |
+| TC-UC39-20 | UAT | UC39-REQ-7 | User can post in circles | User posts successfully, post content preserved | PASS |
+| TC-UC39-21 | UAT | UC39-REQ-9 | User can comment on posts | User comments successfully, comment content preserved | PASS |
+| TC-UC39-22 | UAT | UC39-REQ-10 | User can like posts | User likes post successfully, like count incremented | PASS |
+| TC-UC39-23 | UAT | UC39-REQ-4 | User can create private circles | Private circle created successfully | PASS |
+| TC-UC39-24 | UAT | UC39-REQ-4 | User can invite others to private circles | Invitation sent successfully, invitee sees invitation | PASS |
+
+---
+
+## Use Case 40: Religious Support by Person's Religion
+
+**Requirement ID**: UC40-REQ (Internal)  
+**Priority**: Medium  
+**Use Case Goal**: Provide religious and spiritual support tailored to the user's specific religion, including faith-based guidance and religious resources.
+
+### Unit Tests
+**File**: `tests/unit/usecases/uc40_religious_support/ReligiousSupportUseCaseUnitTests.kt`
+
+| Test Case ID | Type | Requirement/AC | Description | Expected Result | Test Result |
+|--------------|------|----------------|-------------|-----------------|--------------|
+| TC-UC40-01 | Unit | UC40-REQ-1 | System sets user religious preference | Preference set, preference matches set value | PASS |
+| TC-UC40-02 | Unit | UC40-REQ-2 | System retrieves user religious preference | Retrieved preference matches set value | PASS |
+| TC-UC40-03 | Unit | UC40-REQ-3 | System returns null for unset preferences | Unset preference returns null | PASS |
+| TC-UC40-04 | Unit | UC40-REQ-4 | System provides spiritual guidance for Christianity | Guidance has unique ID, matches religion, not empty, includes context | PASS |
+| TC-UC40-05 | Unit | UC40-REQ-5 | System provides spiritual guidance for Islam | Guidance matches religion, faith-appropriate | PASS |
+| TC-UC40-06 | Unit | UC40-REQ-6 | System validates guidance requests and rejects invalid data | Empty context throws IllegalArgumentException | PASS |
+| TC-UC40-07 | Unit | UC40-REQ-7 | System requires religious preference for guidance | Request without preference throws IllegalArgumentException | PASS |
+| TC-UC40-08 | Unit | UC40-REQ-8 | System provides religious resources for user's religion | Resources provided, all match user's religion | PASS |
+| TC-UC40-09 | Unit | UC40-REQ-9 | System filters resources by category | Filtered resources provided, all match category | PASS |
+| TC-UC40-10 | Unit | UC40-REQ-10 | System requires religious preference for resources | Request without preference throws IllegalArgumentException | PASS |
+| TC-UC40-11 | Unit | UC40-REQ-11 | System allows users to submit prayer requests | Prayer request has unique ID, user ID set, religion matches preference, request preserved, privacy setting preserved, status PENDING | PASS |
+| TC-UC40-12 | Unit | UC40-REQ-12 | System validates prayer request input and rejects invalid data | Empty content throws IllegalArgumentException | PASS |
+| TC-UC40-13 | Unit | UC40-REQ-13 | System retrieves user's prayer requests | Prayer requests returned, all requests returned, all belong to user | PASS |
+| TC-UC40-14 | Unit | UC40-REQ-14 | System provides daily reflections | Reflection not empty, faith-appropriate | PASS |
+| TC-UC40-15 | Unit | UC40-REQ-15 | System provides religious quotes | Quote not empty, faith-appropriate | PASS |
+| TC-UC40-16 | Unit | UC40-REQ-16 | System filters quotes by topic | Quote provided (may or may not contain topic) | PASS |
+| TC-UC40-17 | Unit | UC40-REQ-17 | System retrieves spiritual guidance history | Guidance history returned, all guidance returned, all match religion | PASS |
+
+### Integration Tests
+**File**: `tests/integration/usecases/uc40_religious_support/ReligiousSupportUseCaseIntegrationTests.kt`
+
+| Test Case ID | Type | Requirement/AC | Description | Expected Result | Test Result |
+|--------------|------|----------------|-------------|-----------------|--------------|
+| TC-UC40-18 | Integration | UC40-REQ-1 | Religious preferences integrate with user profile system | User profile loaded, religious preference synced | PASS |
+| TC-UC40-19 | Integration | UC40-REQ-8 | Resources integrate with content management system | Content service connected, resources retrieved | PASS |
+| TC-UC40-20 | Integration | UC40-REQ-4 | Guidance integrates with personalization engine | Personalization service connected, guidance personalized | PASS |
+
+### User Acceptance Tests (UAT)
+**File**: `tests/uat/usecases/uc40_religious_support/ReligiousSupportUATTests.kt`
+
+| Test Case ID | Type | Requirement/AC | Description | Expected Result | Test Result |
+|--------------|------|----------------|-------------|-----------------|--------------|
+| TC-UC40-21 | UAT | UC40-REQ-1 | User can set religious preference | Preference set successfully, preference matches set value | PASS |
+| TC-UC40-22 | UAT | UC40-REQ-4 | User can receive spiritual guidance | User receives guidance, guidance matches religion, guidance faith-appropriate | PASS |
+| TC-UC40-23 | UAT | UC40-REQ-8 | User can access religious resources | User receives resources, all resources match religion | PASS |
+| TC-UC40-24 | UAT | UC40-REQ-9 | User can filter resources by category | User receives filtered resources, all resources match category | PASS |
+| TC-UC40-25 | UAT | UC40-REQ-11 | User can submit prayer requests | Prayer request submitted successfully, request preserved | PASS |
+| TC-UC40-26 | UAT | UC40-REQ-13 | User can view prayer requests | User sees prayer requests, all requests shown | PASS |
+| TC-UC40-27 | UAT | UC40-REQ-14 | User can receive daily reflections | User receives reflection, reflection faith-appropriate | PASS |
+| TC-UC40-28 | UAT | UC40-REQ-15 | User can receive religious quotes | User receives quote, quote faith-appropriate | PASS |

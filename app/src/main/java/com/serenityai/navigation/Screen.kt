@@ -29,6 +29,8 @@ sealed class Screen(val route: String) {
     object EducationalResources : Screen("educational_resources") // UC16
     object UserSupport : Screen("user_support") // UC25
     object GroupTherapy : Screen("group_therapy") // UC34
+    object CommunitySupportCircles : Screen("community_support_circles") // UC39
+    object ReligiousSupport : Screen("religious_support") // UC40
     
     // Wellness Activities
     object WellnessActivities : Screen("wellness_activities")

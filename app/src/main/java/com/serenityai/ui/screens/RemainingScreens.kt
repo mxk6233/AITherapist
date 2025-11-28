@@ -498,6 +498,8 @@ fun SupportToolsScreen(
     onNavigateToEducationalResources: () -> Unit,
     onNavigateToUserSupport: () -> Unit,
     onNavigateToGroupTherapy: () -> Unit,
+    onNavigateToCommunitySupportCircles: () -> Unit,
+    onNavigateToReligiousSupport: () -> Unit,
     onNavigateBack: () -> Unit
 ) {
     Scaffold(
@@ -641,7 +643,9 @@ fun SupportToolsScreen(
             // Group Therapy Simulation Mode (UC34)
             Card(
                 onClick = onNavigateToGroupTherapy,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
                 Row(
@@ -657,6 +661,58 @@ fun SupportToolsScreen(
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
                         text = "Group Therapy Simulation",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+            
+            // Community Support Circles (UC39)
+            Card(
+                onClick = onNavigateToCommunitySupportCircles,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(20.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.Group,
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        text = "Community Support Circles",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+            
+            // Religious Support by Person's Religion (UC40)
+            Card(
+                onClick = onNavigateToReligiousSupport,
+                modifier = Modifier.fillMaxWidth(),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(20.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.Favorite,
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        text = "Religious Support",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
