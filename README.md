@@ -37,23 +37,27 @@ The following screenshots showcase key features of the AI Therapist application:
 ### Main Dashboard
 The main dashboard provides quick access to all features with a clean, modern interface. Users can navigate to Chat Features, Mood & Analytics, Support Tools, Wellness Activities, and Settings. The dashboard includes a welcome message, quick action cards, and a daily check-in prompt.
 
+![Main Dashboard](screenshots/main_dashboard.png)
+
 ### Mood & Analytics
 Comprehensive mood tracking interface showing today's mood selection and access to analytics, forecasting, burnout detection, and relapse prevention features. Users can quickly select their current mood using intuitive smiley face icons.
 
-### Mood Analytics Detail
-Visual representation of mood trends over time with insights and patterns to help users understand their emotional patterns. The analytics screen displays charts and trend information with positive feedback messages.
+![Mood & Analytics](screenshots/mood_analytics.png)
 
 ### Mood Forecasting
 AI-powered mood forecasting with customizable forecast periods (7, 14, 30, 90 days) and forecast summary showing average mood and expected range. Users can select different time periods to view predictions based on their historical mood data.
 
+![Mood Forecasting](screenshots/mood_forecasting.png)
+
 ### Burnout Risk Assessment
 Comprehensive burnout risk assessment with current risk level display, prevention tips, and recent pattern analysis. The screen shows risk level indicators, actionable prevention tips, and weekly burnout pattern charts.
 
-### Relapse Prevention
-Early warning system for relapse prevention with current risk indicators, impact levels, and AI-detected patterns with recommended actions. The interface displays risk factors with color-coded impact levels and provides proactive recommendations.
+![Burnout Risk Assessment](screenshots/burnout_assessment.png)
 
 ### Chat History
 View and manage past chat conversations with search functionality, mood-based filters, and chat analytics including total sessions. Users can search conversations, filter by mood, and view session statistics.
+
+![Chat History](screenshots/chat_history.png)
 
 ## Key Features
 
@@ -333,9 +337,113 @@ This is a project repository. For contributions:
 4. Ensure all tests pass
 5. Submit a pull request
 
-## License
+## Mental Health Disclaimer & Best Practices
 
-[Specify license if applicable]
+### Important Disclaimer
+
+**AI Therapist is a supportive tool designed to complement, not replace, professional mental health care.**
+
+- **Not a Replacement**: This application is not a substitute for professional medical advice, diagnosis, or treatment from qualified mental health professionals.
+- **Not for Emergencies**: In life-threatening situations or mental health emergencies, contact emergency services immediately (911 or your local emergency number).
+- **No Medical Diagnosis**: The application does not provide medical diagnoses or treatment recommendations.
+- **User Responsibility**: Users are responsible for seeking appropriate professional care when needed.
+
+### Crisis Resources
+
+**If you're experiencing a mental health emergency:**
+
+1. **Call 911** (or your local emergency number) immediately
+2. **National Suicide Prevention Lifeline**: 988 (US) - Available 24/7
+3. **Crisis Text Line**: Text HOME to 741741 (US) - Available 24/7
+4. **International Association for Suicide Prevention**: [Find your country's crisis line](https://www.iasp.info/resources/Crisis_Centres/)
+5. **Use the Crisis Intervention feature** in the app for immediate support
+
+### Best Practices for Using AI Therapist
+
+#### 1. Regular Use
+- **Consistency**: Use the app regularly to track patterns and build healthy habits
+- **Daily Check-ins**: Log your mood daily to identify trends and triggers
+- **Set Reminders**: Enable notifications to maintain consistent engagement
+
+#### 2. Privacy & Security
+- **Secure Account**: Use a strong, unique password for your account
+- **Private Information**: Be mindful of the information you share in chat sessions
+- **Data Control**: Regularly review and manage your data through settings
+- **Logout**: Log out when using shared devices
+
+#### 3. Realistic Expectations
+- **Progress Takes Time**: Mental wellness is a journey, not a destination
+- **Set Realistic Goals**: Start with small, achievable wellness goals
+- **Be Patient**: Results may take time to become apparent
+- **Track Progress**: Use analytics to see long-term trends, not just daily fluctuations
+
+#### 4. Professional Support
+- **Seek Professional Help**: Consult licensed mental health professionals for:
+  - Severe or persistent symptoms
+  - Thoughts of self-harm or suicide
+  - Substance abuse issues
+  - Relationship problems affecting mental health
+  - Any mental health concern requiring professional intervention
+- **Complement, Don't Replace**: Use the app alongside professional therapy, not as a replacement
+- **Share Insights**: Consider sharing app insights with your therapist to enhance treatment
+
+#### 5. Self-Care Integration
+- **Use Multiple Tools**: Combine app features (mood tracking, exercises, journaling) for comprehensive support
+- **Practice Regularly**: Engage with coping exercises and wellness activities consistently
+- **Community Support**: Participate in support circles and group therapy simulations
+- **Religious/Spiritual**: Utilize religious support features if they align with your beliefs
+
+#### 6. Safety Guidelines
+- **Monitor Warning Signs**: Pay attention to relapse prevention alerts and burnout detection warnings
+- **Take Breaks**: Don't overuse the app; take breaks when needed
+- **Respect Limits**: Recognize when you need professional help beyond the app
+- **Emergency Preparedness**: Know when to seek immediate professional help
+
+#### 7. Data & Privacy
+- **Understand Data Collection**: Review what data is collected and how it's used
+- **Export Data**: Regularly export your data for personal records
+- **Privacy Settings**: Configure privacy settings according to your comfort level
+- **Data Retention**: Understand data retention policies
+
+### When to Seek Professional Help
+
+**Contact a mental health professional immediately if you experience:**
+
+- Thoughts of suicide or self-harm
+- Severe depression or anxiety that interferes with daily life
+- Substance abuse or addiction
+- Psychotic symptoms (hallucinations, delusions)
+- Severe mood swings or emotional instability
+- Inability to function in daily activities
+- Thoughts of harming others
+
+**Consider professional help for:**
+
+- Persistent mental health symptoms lasting more than 2 weeks
+- Relationship problems affecting mental health
+- Grief or loss that significantly impacts daily life
+- Trauma or PTSD symptoms
+- Eating disorders
+- Sleep disorders affecting mental health
+
+### Additional Resources
+
+- **Mental Health America**: [www.mhanational.org](https://www.mhanational.org)
+- **National Alliance on Mental Illness (NAMI)**: [www.nami.org](https://www.nami.org)
+- **Substance Abuse and Mental Health Services Administration (SAMHSA)**: [www.samhsa.gov](https://www.samhsa.gov)
+- **Crisis Text Line**: [www.crisistextline.org](https://www.crisistextline.org)
+- **988 Suicide & Crisis Lifeline**: [988lifeline.org](https://988lifeline.org)
+
+### Reporting Safety Concerns
+
+If you encounter content or features that raise safety concerns:
+
+1. **Use the Crisis Intervention feature** in the app
+2. **Report through User Support** in the app settings
+3. **Contact support**: support@aitherapist.com
+4. **For emergencies**: Always call 911 or your local emergency number
+
+---
 
 ## Support
 
