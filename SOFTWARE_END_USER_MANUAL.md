@@ -41,11 +41,11 @@
 
 ### Key Features
 
-✅ **24/7 Availability**: Access support anytime, anywhere  
-✅ **Privacy-Focused**: Your data is encrypted and secure  
-✅ **Personalized Experience**: Content tailored to your needs  
-✅ **Multiple Support Channels**: Chat, voice, community, and resources  
-✅ **Progress Tracking**: Monitor your mental wellness journey  
+**24/7 Availability**: Access support anytime, anywhere  
+**Privacy-Focused**: Your data is encrypted and secure  
+**Personalized Experience**: Content tailored to your needs  
+**Multiple Support Channels**: Chat, voice, community, and resources  
+**Progress Tracking**: Monitor your mental wellness journey  
 
 ---
 
