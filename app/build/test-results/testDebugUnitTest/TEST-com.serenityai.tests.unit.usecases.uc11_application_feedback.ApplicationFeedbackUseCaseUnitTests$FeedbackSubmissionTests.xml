@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 1: Feedback Submission - Validates Core UC11 Functionality" tests="8" skipped="0" failures="0" errors="0" timestamp="2025-12-07T08:20:33" hostname="Mohammads-MacBook-Pro.local" time="0.004">
+  <properties/>
+  <testcase name="UC11-REQ-8: System MUST validate rating range" classname="com.serenityai.tests.unit.usecases.uc11_application_feedback.ApplicationFeedbackUseCaseUnitTests$FeedbackSubmissionTests" time="0.001"/>
+  <testcase name="UC11-REQ-3: System MUST allow users to submit feature requests" classname="com.serenityai.tests.unit.usecases.uc11_application_feedback.ApplicationFeedbackUseCaseUnitTests$FeedbackSubmissionTests" time="0.0"/>
+  <testcase name="UC11-REQ-6: System MUST allow users to submit ratings" classname="com.serenityai.tests.unit.usecases.uc11_application_feedback.ApplicationFeedbackUseCaseUnitTests$FeedbackSubmissionTests" time="0.0"/>
+  <testcase name="UC11-REQ-1: System MUST allow users to submit feedback" classname="com.serenityai.tests.unit.usecases.uc11_application_feedback.ApplicationFeedbackUseCaseUnitTests$FeedbackSubmissionTests" time="0.0"/>
+  <testcase name="UC11-REQ-4: System MUST allow users to submit complaints" classname="com.serenityai.tests.unit.usecases.uc11_application_feedback.ApplicationFeedbackUseCaseUnitTests$FeedbackSubmissionTests" time="0.0"/>
+  <testcase name="UC11-REQ-5: System MUST allow users to submit compliments" classname="com.serenityai.tests.unit.usecases.uc11_application_feedback.ApplicationFeedbackUseCaseUnitTests$FeedbackSubmissionTests" time="0.001"/>
+  <testcase name="UC11-REQ-7: System MUST validate feedback input" classname="com.serenityai.tests.unit.usecases.uc11_application_feedback.ApplicationFeedbackUseCaseUnitTests$FeedbackSubmissionTests" time="0.0"/>
+  <testcase name="UC11-REQ-2: System MUST allow users to submit bug reports" classname="com.serenityai.tests.unit.usecases.uc11_application_feedback.ApplicationFeedbackUseCaseUnitTests$FeedbackSubmissionTests" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

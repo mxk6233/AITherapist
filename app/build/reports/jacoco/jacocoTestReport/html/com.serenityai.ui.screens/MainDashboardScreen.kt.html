@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MainDashboardScreen.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.screens</a> &gt; <span class="el_source">MainDashboardScreen.kt</span></div><h1>MainDashboardScreen.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.screens
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.material3.ExperimentalMaterial3Api
+
+@OptIn(ExperimentalMaterial3Api::class)
+<span class="nc" id="L20">data class DashboardItem(</span>
+<span class="nc" id="L21">    val title: String,</span>
+<span class="nc" id="L22">    val description: String,</span>
+<span class="nc" id="L23">    val icon: androidx.compose.ui.graphics.vector.ImageVector,</span>
+<span class="nc" id="L24">    val onClick: () -&gt; Unit</span>
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainDashboardScreen(
+    onNavigateToChat: () -&gt; Unit,
+    onNavigateToMood: () -&gt; Unit,
+    onNavigateToSupport: () -&gt; Unit,
+    onNavigateToWellness: () -&gt; Unit,
+    onNavigateToSettings: () -&gt; Unit
+<span class="nc bnc" id="L35" title="All 26 branches missed.">) {</span>
+<span class="nc" id="L36">    val dashboardItems = listOf(</span>
+<span class="nc" id="L37">        DashboardItem(</span>
+<span class="nc" id="L38">            title = &quot;Chat Features&quot;,</span>
+<span class="nc" id="L39">            description = &quot;AI Chat, History &amp; Crisis Support&quot;,</span>
+<span class="nc" id="L40">            icon = Icons.Default.Chat,</span>
+<span class="nc" id="L41">            onClick = onNavigateToChat</span>
+        ),
+<span class="nc" id="L43">        DashboardItem(</span>
+<span class="nc" id="L44">            title = &quot;Mood &amp; Analytics&quot;,</span>
+<span class="nc" id="L45">            description = &quot;Track mood, view analytics &amp; forecasts&quot;,</span>
+<span class="nc" id="L46">            icon = Icons.Default.Analytics,</span>
+<span class="nc" id="L47">            onClick = onNavigateToMood</span>
+        ),
+<span class="nc" id="L49">        DashboardItem(</span>
+<span class="nc" id="L50">            title = &quot;Support Tools&quot;,</span>
+<span class="nc" id="L51">            description = &quot;Coping exercises &amp; resources&quot;,</span>
+<span class="nc" id="L52">            icon = Icons.Default.Support,</span>
+<span class="nc" id="L53">            onClick = onNavigateToSupport</span>
+        ),
+<span class="nc" id="L55">        DashboardItem(</span>
+<span class="nc" id="L56">            title = &quot;Wellness Activities&quot;,</span>
+<span class="nc" id="L57">            description = &quot;Breathing exercises &amp; affirmations&quot;,</span>
+<span class="nc" id="L58">            icon = Icons.Default.Favorite,</span>
+<span class="nc" id="L59">            onClick = onNavigateToWellness</span>
+        ),
+<span class="nc" id="L61">        DashboardItem(</span>
+<span class="nc" id="L62">            title = &quot;Settings&quot;,</span>
+<span class="nc" id="L63">            description = &quot;Personalization &amp; preferences&quot;,</span>
+<span class="nc" id="L64">            icon = Icons.Default.Settings,</span>
+<span class="nc" id="L65">            onClick = onNavigateToSettings</span>
+        )
+    )
+    
+<span class="nc" id="L69">    Column(</span>
+<span class="nc" id="L70">        modifier = Modifier</span>
+<span class="nc" id="L71">            .fillMaxSize()</span>
+<span class="nc" id="L72">            .padding(16.dp)</span>
+    ) {
+        // Welcome Header
+<span class="nc" id="L75">        Card(</span>
+<span class="nc" id="L76">            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L77">            colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L78">                containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+            )
+<span class="nc" id="L80">        ) {</span>
+<span class="nc bnc" id="L81" title="All 6 branches missed.">            Column(</span>
+<span class="nc" id="L82">                modifier = Modifier.padding(24.dp),</span>
+<span class="nc" id="L83">                horizontalAlignment = Alignment.CenterHorizontally</span>
+            ) {
+<span class="nc" id="L85">                Text(</span>
+<span class="nc" id="L86">                    text = &quot;Welcome Back!&quot;,</span>
+<span class="nc" id="L87">                    fontSize = 24.sp,</span>
+<span class="nc" id="L88">                    fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L89">                    color = MaterialTheme.colorScheme.onPrimaryContainer</span>
+                )
+<span class="nc" id="L91">                Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L92">                Text(</span>
+<span class="nc" id="L93">                    text = &quot;How are you feeling today?&quot;,</span>
+<span class="nc" id="L94">                    fontSize = 16.sp,</span>
+<span class="nc" id="L95">                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),</span>
+<span class="nc" id="L96">                    textAlign = TextAlign.Center</span>
+                )
+<span class="nc" id="L98">            }</span>
+<span class="nc" id="L99">        }</span>
+        
+<span class="nc" id="L101">        Spacer(modifier = Modifier.height(24.dp))</span>
+        
+        // Quick Actions
+<span class="nc" id="L104">        Text(</span>
+<span class="nc" id="L105">            text = &quot;Quick Actions&quot;,</span>
+<span class="nc" id="L106">            fontSize = 20.sp,</span>
+<span class="nc" id="L107">            fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L108">            modifier = Modifier.padding(bottom = 16.dp)</span>
+        )
+        
+<span class="nc" id="L111">        LazyVerticalGrid(</span>
+<span class="nc" id="L112">            columns = GridCells.Fixed(2),</span>
+<span class="nc" id="L113">            horizontalArrangement = Arrangement.spacedBy(16.dp),</span>
+<span class="nc" id="L114">            verticalArrangement = Arrangement.spacedBy(16.dp),</span>
+<span class="nc" id="L115">            modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L116">        ) {</span>
+<span class="nc" id="L117">            items(dashboardItems) { item -&gt;</span>
+                DashboardItemCard(item = item)
+            }
+<span class="nc" id="L120">        }</span>
+        
+<span class="nc" id="L122">        Spacer(modifier = Modifier.height(24.dp))</span>
+        
+        // Daily Check-in Prompt
+<span class="nc" id="L125">        Card(</span>
+<span class="nc" id="L126">            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L127">            colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L128">                containerColor = MaterialTheme.colorScheme.secondaryContainer</span>
+            )
+<span class="nc" id="L130">        ) {</span>
+<span class="nc bnc" id="L131" title="All 6 branches missed.">            Column(</span>
+<span class="nc" id="L132">                modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L133">                horizontalAlignment = Alignment.CenterHorizontally</span>
+            ) {
+<span class="nc" id="L135">                Icon(</span>
+<span class="nc" id="L136">                    Icons.Default.Favorite,</span>
+<span class="nc" id="L137">                    contentDescription = null,</span>
+<span class="nc" id="L138">                    modifier = Modifier.size(32.dp),</span>
+<span class="nc" id="L139">                    tint = MaterialTheme.colorScheme.onSecondaryContainer</span>
+                )
+<span class="nc" id="L141">                Spacer(modifier = Modifier.height(12.dp))</span>
+<span class="nc" id="L142">                Text(</span>
+<span class="nc" id="L143">                    text = &quot;Daily Check-in&quot;,</span>
+<span class="nc" id="L144">                    fontSize = 18.sp,</span>
+<span class="nc" id="L145">                    fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L146">                    color = MaterialTheme.colorScheme.onSecondaryContainer</span>
+                )
+<span class="nc" id="L148">                Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L149">                Text(</span>
+<span class="nc" id="L150">                    text = &quot;Take a moment to log your mood and reflect on your day&quot;,</span>
+<span class="nc" id="L151">                    fontSize = 14.sp,</span>
+<span class="nc" id="L152">                    color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f),</span>
+<span class="nc" id="L153">                    textAlign = TextAlign.Center</span>
+                )
+<span class="nc" id="L155">                Spacer(modifier = Modifier.height(16.dp))</span>
+<span class="nc" id="L156">                Button(</span>
+<span class="nc" id="L157">                    onClick = onNavigateToMood,</span>
+<span class="nc" id="L158">                    modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L159">                ) {</span>
+<span class="nc bnc" id="L160" title="All 8 branches missed.">                    Text(&quot;Log My Mood&quot;)</span>
+<span class="nc" id="L161">                }</span>
+<span class="nc" id="L162">            }</span>
+<span class="nc" id="L163">        }</span>
+<span class="nc" id="L164">    }</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L169" title="All 10 branches missed.">fun DashboardItemCard(item: DashboardItem) {</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L171">        onClick = item.onClick,</span>
+<span class="nc" id="L172">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L173">        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L174">    ) {</span>
+<span class="nc bnc" id="L175" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L176">            modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L177">            horizontalAlignment = Alignment.CenterHorizontally</span>
+        ) {
+<span class="nc" id="L179">            Icon(</span>
+<span class="nc" id="L180">                item.icon,</span>
+<span class="nc" id="L181">                contentDescription = null,</span>
+<span class="nc" id="L182">                modifier = Modifier.size(40.dp),</span>
+<span class="nc" id="L183">                tint = MaterialTheme.colorScheme.primary</span>
+            )
+<span class="nc" id="L185">            Spacer(modifier = Modifier.height(12.dp))</span>
+<span class="nc" id="L186">            Text(</span>
+<span class="nc" id="L187">                text = item.title,</span>
+<span class="nc" id="L188">                fontSize = 16.sp,</span>
+<span class="nc" id="L189">                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L190">                textAlign = TextAlign.Center</span>
+            )
+<span class="nc" id="L192">            Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L193">            Text(</span>
+<span class="nc" id="L194">                text = item.description,</span>
+<span class="nc" id="L195">                fontSize = 12.sp,</span>
+<span class="nc" id="L196">                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),</span>
+<span class="nc" id="L197">                textAlign = TextAlign.Center</span>
+            )
+<span class="nc" id="L199">        }</span>
+<span class="nc" id="L200">    }</span>
+<span class="nc bnc" id="L201" title="All 2 branches missed.">}</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

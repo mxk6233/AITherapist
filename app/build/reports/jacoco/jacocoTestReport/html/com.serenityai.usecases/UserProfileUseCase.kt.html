@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserProfileUseCase.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.usecases</a> &gt; <span class="el_source">UserProfileUseCase.kt</span></div><h1>UserProfileUseCase.kt</h1><pre class="source lang-java linenums">package com.serenityai.usecases
+
+import com.serenityai.data.models.*
+import java.util.Date
+
+/** UC10: User profile management system for creating, updating, and managing personal information, wellness goals, preferences, and achievements. */
+<span class="nc" id="L7">class UserProfileUseCase {</span>
+    
+<span class="nc" id="L9">    private val profiles = mutableMapOf&lt;String, UserProfile&gt;()</span>
+    
+    /** Creates a new user profile. */
+<span class="nc" id="L12">    fun createProfile(</span>
+        userId: String,
+        name: String,
+        email: String,
+<span class="nc" id="L16">        dateOfBirth: Date? = null</span>
+    ): UserProfile {
+<span class="nc bnc" id="L18" title="All 4 branches missed.">        require(userId.isNotBlank()) { &quot;User ID cannot be empty&quot; }</span>
+<span class="nc bnc" id="L19" title="All 4 branches missed.">        require(name.isNotBlank()) { &quot;Name cannot be empty&quot; }</span>
+<span class="nc bnc" id="L20" title="All 8 branches missed.">        require(email.isNotBlank() &amp;&amp; email.contains(&quot;@&quot;)) { &quot;Valid email is required&quot; }</span>
+        
+<span class="nc" id="L22">        val profile = UserProfile(</span>
+<span class="nc" id="L23">            id = &quot;profile_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L24">            userId = userId,</span>
+<span class="nc" id="L25">            name = name,</span>
+<span class="nc" id="L26">            email = email,</span>
+<span class="nc" id="L27">            dateOfBirth = dateOfBirth,</span>
+<span class="nc" id="L28">            createdAt = Date(),</span>
+<span class="nc" id="L29">            updatedAt = Date()</span>
+        )
+        
+<span class="nc" id="L32">        profiles[userId] = profile</span>
+<span class="nc" id="L33">        return profile</span>
+    }
+    
+    /** Updates user profile information. */
+<span class="nc" id="L37">    fun updateProfile(</span>
+        userId: String,
+<span class="nc" id="L39">        name: String? = null,</span>
+<span class="nc" id="L40">        email: String? = null,</span>
+<span class="nc" id="L41">        dateOfBirth: Date? = null</span>
+    ): UserProfile? {
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        val profile = profiles[userId] ?: return null</span>
+        
+<span class="nc" id="L45">        val updatedProfile = profile.copy(</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">            name = name ?: profile.name,</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">            email = email ?: profile.email,</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">            dateOfBirth = dateOfBirth ?: profile.dateOfBirth,</span>
+<span class="nc" id="L49">            updatedAt = Date()</span>
+        )
+        
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        if (email != null) {</span>
+<span class="nc bnc" id="L53" title="All 8 branches missed.">            require(email.isNotBlank() &amp;&amp; email.contains(&quot;@&quot;)) { &quot;Valid email is required&quot; }</span>
+        }
+        
+<span class="nc" id="L56">        profiles[userId] = updatedProfile</span>
+<span class="nc" id="L57">        return updatedProfile</span>
+    }
+    
+    /** Gets user profile by user ID. */
+    fun getProfile(userId: String): UserProfile? {
+<span class="nc" id="L62">        return profiles[userId]</span>
+    }
+    
+    /** Creates a new wellness goal. */
+<span class="nc" id="L66">    fun createWellnessGoal(</span>
+        userId: String,
+        title: String,
+        description: String,
+<span class="nc" id="L70">        category: GoalCategory = GoalCategory.MENTAL_HEALTH,</span>
+<span class="nc" id="L71">        targetDate: Date? = null</span>
+    ): WellnessGoal {
+<span class="nc bnc" id="L73" title="All 4 branches missed.">        require(title.isNotBlank()) { &quot;Goal title cannot be empty&quot; }</span>
+<span class="nc bnc" id="L74" title="All 4 branches missed.">        require(description.isNotBlank()) { &quot;Goal description cannot be empty&quot; }</span>
+        
+<span class="nc" id="L76">        val goal = WellnessGoal(</span>
+<span class="nc" id="L77">            id = &quot;goal_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L78">            title = title,</span>
+<span class="nc" id="L79">            description = description,</span>
+<span class="nc" id="L80">            category = category,</span>
+<span class="nc" id="L81">            targetDate = targetDate,</span>
+<span class="nc" id="L82">            createdAt = Date()</span>
+        )
+        
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        val profile = profiles[userId] ?: throw IllegalArgumentException(&quot;Profile not found&quot;)</span>
+<span class="nc" id="L86">        val updatedGoals = profile.goals + goal</span>
+<span class="nc" id="L87">        profiles[userId] = profile.copy(goals = updatedGoals)</span>
+        
+<span class="nc" id="L89">        return goal</span>
+    }
+    
+    /** Updates wellness goal progress. */
+    fun updateGoalProgress(
+        userId: String,
+        goalId: String,
+        progress: Int
+    ): WellnessGoal? {
+<span class="nc bnc" id="L98" title="All 6 branches missed.">        require(progress in 0..100) { &quot;Progress must be between 0 and 100&quot; }</span>
+        
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        val profile = profiles[userId] ?: return null</span>
+<span class="nc" id="L101">        val goalIndex = profile.goals.indexOfFirst { it.id == goalId }</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">        if (goalIndex == -1) return null</span>
+        
+<span class="nc" id="L104">        val goal = profile.goals[goalIndex]</span>
+<span class="nc" id="L105">        val updatedGoal = goal.copy(</span>
+<span class="nc" id="L106">            progress = progress,</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">            isCompleted = progress &gt;= 100</span>
+        )
+        
+<span class="nc" id="L110">        val updatedGoals = profile.goals.toMutableList()</span>
+<span class="nc" id="L111">        updatedGoals[goalIndex] = updatedGoal</span>
+<span class="nc" id="L112">        profiles[userId] = profile.copy(goals = updatedGoals)</span>
+        
+<span class="nc" id="L114">        return updatedGoal</span>
+    }
+    
+    /** Updates user preferences. */
+<span class="nc" id="L118">    fun updatePreferences(</span>
+        userId: String,
+<span class="nc" id="L120">        theme: String? = null,</span>
+<span class="nc" id="L121">        notifications: Boolean? = null,</span>
+<span class="nc" id="L122">        language: String? = null,</span>
+<span class="nc" id="L123">        privacyLevel: PrivacyLevel? = null</span>
+    ): UserProfile? {
+<span class="nc bnc" id="L125" title="All 2 branches missed.">        val profile = profiles[userId] ?: return null</span>
+        
+<span class="nc" id="L127">        val updatedPreferences = profile.preferences.copy(</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">            theme = theme ?: profile.preferences.theme,</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">            notifications = notifications ?: profile.preferences.notifications,</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">            language = language ?: profile.preferences.language,</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">            privacyLevel = privacyLevel ?: profile.preferences.privacyLevel</span>
+        )
+        
+<span class="nc" id="L134">        val updatedProfile = profile.copy(</span>
+<span class="nc" id="L135">            preferences = updatedPreferences,</span>
+<span class="nc" id="L136">            updatedAt = Date()</span>
+        )
+        
+<span class="nc" id="L139">        profiles[userId] = updatedProfile</span>
+<span class="nc" id="L140">        return updatedProfile</span>
+    }
+    
+    /** Adds XP to user profile. */
+    fun addXP(userId: String, xpAmount: Int): UserProfile? {
+<span class="nc bnc" id="L145" title="All 4 branches missed.">        require(xpAmount &gt; 0) { &quot;XP amount must be positive&quot; }</span>
+        
+<span class="nc bnc" id="L147" title="All 2 branches missed.">        val profile = profiles[userId] ?: return null</span>
+<span class="nc" id="L148">        val newTotalXP = profile.totalXP + xpAmount</span>
+<span class="nc" id="L149">        val newLevel = calculateLevel(newTotalXP)</span>
+        
+<span class="nc" id="L151">        val updatedProfile = profile.copy(</span>
+<span class="nc" id="L152">            totalXP = newTotalXP,</span>
+<span class="nc" id="L153">            level = newLevel,</span>
+<span class="nc" id="L154">            updatedAt = Date()</span>
+        )
+        
+<span class="nc" id="L157">        profiles[userId] = updatedProfile</span>
+<span class="nc" id="L158">        return updatedProfile</span>
+    }
+    
+    /** Updates user streak. */
+    fun updateStreak(userId: String, increment: Boolean): UserProfile? {
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        val profile = profiles[userId] ?: return null</span>
+        
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        val newCurrentStreak = if (increment) {</span>
+<span class="nc" id="L166">            profile.currentStreak + 1</span>
+        } else {
+<span class="nc" id="L168">            0</span>
+        }
+        
+<span class="nc" id="L171">        val newLongestStreak = maxOf(profile.longestStreak, newCurrentStreak)</span>
+        
+<span class="nc" id="L173">        val updatedProfile = profile.copy(</span>
+<span class="nc" id="L174">            currentStreak = newCurrentStreak,</span>
+<span class="nc" id="L175">            longestStreak = newLongestStreak,</span>
+<span class="nc" id="L176">            updatedAt = Date()</span>
+        )
+        
+<span class="nc" id="L179">        profiles[userId] = updatedProfile</span>
+<span class="nc" id="L180">        return updatedProfile</span>
+    }
+    
+    /** Gets user's wellness goals. */
+<span class="nc" id="L184">    fun getWellnessGoals(</span>
+        userId: String,
+<span class="nc" id="L186">        completed: Boolean? = null</span>
+    ): List&lt;WellnessGoal&gt; {
+<span class="nc bnc" id="L188" title="All 2 branches missed.">        val profile = profiles[userId] ?: return emptyList()</span>
+        
+<span class="nc bnc" id="L190" title="All 2 branches missed.">        return if (completed != null) {</span>
+<span class="nc" id="L191">            profile.goals.filter { it.isCompleted == completed }</span>
+        } else {
+<span class="nc" id="L193">            profile.goals</span>
+        }
+    }
+    
+    /** Calculates user level based on total XP. */
+    private fun calculateLevel(totalXP: Int): Int {
+<span class="nc" id="L199">        return (totalXP / 1000) + 1</span>
+    }
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

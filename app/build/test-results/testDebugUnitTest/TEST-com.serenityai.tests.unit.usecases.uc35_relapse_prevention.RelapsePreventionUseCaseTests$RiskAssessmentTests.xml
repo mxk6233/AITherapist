@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 1: Risk Assessment and Monitoring" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-07T08:20:33" hostname="Mohammads-MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="should identify critical risk thresholds and alerts()" classname="com.serenityai.tests.unit.usecases.uc35_relapse_prevention.RelapsePreventionUseCaseTests$RiskAssessmentTests" time="0.0"/>
+  <testcase name="should track risk factor changes over time()" classname="com.serenityai.tests.unit.usecases.uc35_relapse_prevention.RelapsePreventionUseCaseTests$RiskAssessmentTests" time="0.0"/>
+  <testcase name="should assess risk factors and calculate overall risk level()" classname="com.serenityai.tests.unit.usecases.uc35_relapse_prevention.RelapsePreventionUseCaseTests$RiskAssessmentTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

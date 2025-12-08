@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 1: Chat Message Management" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:07" hostname="Mohammads-MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="UC1-REQ-1: System MUST create and manage chat messages correctly" classname="com.serenityai.tests.unit.usecases.uc1_ai_chat_session.AIChatSessionUseCaseUnitTests$ChatMessageManagementTests" time="0.0"/>
+  <testcase name="UC1-REQ-2: System MUST maintain conversation history during session" classname="com.serenityai.tests.unit.usecases.uc1_ai_chat_session.AIChatSessionUseCaseUnitTests$ChatMessageManagementTests" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

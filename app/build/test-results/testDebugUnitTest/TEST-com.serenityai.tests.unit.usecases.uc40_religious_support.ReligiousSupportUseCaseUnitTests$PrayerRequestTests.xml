@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 4: Prayer Requests - Validates Prayer Request Functionality" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-07T08:20:33" hostname="Mohammads-MacBook-Pro.local" time="0.002">
+  <properties/>
+  <testcase name="UC40-REQ-11: System MUST allow users to submit prayer requests" classname="com.serenityai.tests.unit.usecases.uc40_religious_support.ReligiousSupportUseCaseUnitTests$PrayerRequestTests" time="0.001"/>
+  <testcase name="UC40-REQ-13: System MUST retrieve user's prayer requests" classname="com.serenityai.tests.unit.usecases.uc40_religious_support.ReligiousSupportUseCaseUnitTests$PrayerRequestTests" time="0.0"/>
+  <testcase name="UC40-REQ-12: System MUST validate prayer request input" classname="com.serenityai.tests.unit.usecases.uc40_religious_support.ReligiousSupportUseCaseUnitTests$PrayerRequestTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

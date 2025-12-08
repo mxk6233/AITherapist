@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 3: Progress Reports - Validates Tertiary UC28 Functionality" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:07" hostname="Mohammads-MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="UC28-REQ-6: System MUST generate patient progress report" classname="com.serenityai.tests.unit.usecases.uc28_therapist_portal.TherapistPortalIntegrationUseCaseUnitTests$ProgressReportsTests" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

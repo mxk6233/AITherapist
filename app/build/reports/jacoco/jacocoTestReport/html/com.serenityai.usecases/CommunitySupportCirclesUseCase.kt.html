@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommunitySupportCirclesUseCase.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.usecases</a> &gt; <span class="el_source">CommunitySupportCirclesUseCase.kt</span></div><h1>CommunitySupportCirclesUseCase.kt</h1><pre class="source lang-java linenums">package com.serenityai.usecases
+
+import com.serenityai.data.models.*
+import java.util.Date
+
+/** UC39: Community support circles enabling users to create and participate in peer support circles for shared experiences and mutual support. */
+<span class="nc" id="L7">class CommunitySupportCirclesUseCase {</span>
+    
+<span class="nc" id="L9">    private val supportCircles = mutableMapOf&lt;String, SupportCircle&gt;()</span>
+<span class="nc" id="L10">    private val circleMemberships = mutableMapOf&lt;String, MutableSet&lt;String&gt;&gt;() // userId -&gt; circleIds</span>
+<span class="nc" id="L11">    private val circleMembers = mutableMapOf&lt;String, MutableSet&lt;String&gt;&gt;() // circleId -&gt; userIds</span>
+<span class="nc" id="L12">    private val circlePosts = mutableMapOf&lt;String, MutableList&lt;CirclePost&gt;&gt;() // circleId -&gt; posts</span>
+<span class="nc" id="L13">    private val circleComments = mutableMapOf&lt;String, MutableList&lt;CircleComment&gt;&gt;() // postId -&gt; comments</span>
+<span class="nc" id="L14">    private val circleInvitations = mutableMapOf&lt;String, MutableSet&lt;String&gt;&gt;() // userId -&gt; pending circleIds</span>
+    private var circleIdCounter = 0L
+    
+    /**
+     * Creates a new support circle
+     * 
+     * @param creatorId User ID of the circle creator
+     * @param name Circle name
+     * @param description Circle description
+     * @param topic Optional topic/focus area
+     * @param isPrivate Whether the circle is private (invite-only)
+     * @param maxMembers Maximum number of members (default: 50)
+     * @return SupportCircle object
+     */
+<span class="nc" id="L28">    fun createSupportCircle(</span>
+        creatorId: String,
+        name: String,
+        description: String,
+<span class="nc" id="L32">        topic: String? = null,</span>
+<span class="nc" id="L33">        isPrivate: Boolean = false,</span>
+<span class="nc" id="L34">        maxMembers: Int = 50</span>
+    ): SupportCircle {
+<span class="nc bnc" id="L36" title="All 4 branches missed.">        require(name.isNotBlank()) { &quot;Circle name cannot be empty&quot; }</span>
+<span class="nc bnc" id="L37" title="All 4 branches missed.">        require(description.isNotBlank()) { &quot;Circle description cannot be empty&quot; }</span>
+<span class="nc bnc" id="L38" title="All 4 branches missed.">        require(maxMembers &gt; 0) { &quot;Max members must be greater than 0&quot; }</span>
+        
+<span class="nc" id="L40">        val circle = SupportCircle(</span>
+<span class="nc" id="L41">            id = &quot;circle_${System.currentTimeMillis()}_${++circleIdCounter}&quot;,</span>
+<span class="nc" id="L42">            name = name,</span>
+<span class="nc" id="L43">            description = description,</span>
+<span class="nc" id="L44">            creatorId = creatorId,</span>
+<span class="nc" id="L45">            topic = topic,</span>
+<span class="nc" id="L46">            isPrivate = isPrivate,</span>
+<span class="nc" id="L47">            maxMembers = maxMembers,</span>
+<span class="nc" id="L48">            memberCount = 1,</span>
+<span class="nc" id="L49">            status = CircleStatus.ACTIVE,</span>
+<span class="nc" id="L50">            createdAt = Date(),</span>
+<span class="nc" id="L51">            updatedAt = Date()</span>
+        )
+        
+<span class="nc" id="L54">        supportCircles[circle.id] = circle</span>
+        
+        // Add creator as member
+<span class="nc" id="L57">        val members = mutableSetOf(creatorId)</span>
+<span class="nc" id="L58">        circleMembers[circle.id] = members</span>
+        
+        // Add circle to creator's memberships
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        val userCircles = circleMemberships[creatorId] ?: mutableSetOf()</span>
+<span class="nc" id="L62">        userCircles.add(circle.id)</span>
+<span class="nc" id="L63">        circleMemberships[creatorId] = userCircles</span>
+        
+<span class="nc" id="L65">        return circle</span>
+    }
+    
+    /**
+     * Joins a user to a support circle
+     * 
+     * @param circleId Circle ID
+     * @param userId User ID joining the circle
+     * @return Boolean indicating success
+     */
+    fun joinSupportCircle(circleId: String, userId: String): Boolean {
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        val circle = supportCircles[circleId] ?: return false</span>
+        
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        if (circle.status != CircleStatus.ACTIVE) {</span>
+<span class="nc" id="L79">            return false</span>
+        }
+        
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        if (circle.isPrivate) {</span>
+            // Check if user has invitation
+<span class="nc bnc" id="L84" title="All 2 branches missed.">            val invitations = circleInvitations[userId] ?: return false</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">            if (!invitations.contains(circleId)) {</span>
+<span class="nc" id="L86">                return false</span>
+            }
+<span class="nc" id="L88">            invitations.remove(circleId)</span>
+        }
+        
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        val members = circleMembers[circleId] ?: mutableSetOf()</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        if (members.size &gt;= circle.maxMembers) {</span>
+<span class="nc" id="L93">            return false // Circle is full</span>
+        }
+        
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (members.contains(userId)) {</span>
+<span class="nc" id="L97">            return true // Already a member</span>
+        }
+        
+<span class="nc" id="L100">        members.add(userId)</span>
+<span class="nc" id="L101">        circleMembers[circleId] = members</span>
+        
+        // Update circle member count
+<span class="nc" id="L104">        val updatedCircle = circle.copy(</span>
+<span class="nc" id="L105">            memberCount = members.size,</span>
+<span class="nc" id="L106">            updatedAt = Date()</span>
+        )
+<span class="nc" id="L108">        supportCircles[circleId] = updatedCircle</span>
+        
+        // Add circle to user's memberships
+<span class="nc bnc" id="L111" title="All 2 branches missed.">        val userCircles = circleMemberships[userId] ?: mutableSetOf()</span>
+<span class="nc" id="L112">        userCircles.add(circleId)</span>
+<span class="nc" id="L113">        circleMemberships[userId] = userCircles</span>
+        
+<span class="nc" id="L115">        return true</span>
+    }
+    
+    /**
+     * Leaves a support circle
+     * 
+     * @param circleId Circle ID
+     * @param userId User ID leaving the circle
+     * @return Boolean indicating success
+     */
+    fun leaveSupportCircle(circleId: String, userId: String): Boolean {
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        val circle = supportCircles[circleId] ?: return false</span>
+        
+<span class="nc bnc" id="L128" title="All 2 branches missed.">        if (userId == circle.creatorId) {</span>
+<span class="nc" id="L129">            return false // Creator cannot leave</span>
+        }
+        
+<span class="nc bnc" id="L132" title="All 2 branches missed.">        val members = circleMembers[circleId] ?: return false</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        if (!members.contains(userId)) {</span>
+<span class="nc" id="L134">            return false</span>
+        }
+        
+<span class="nc" id="L137">        members.remove(userId)</span>
+<span class="nc" id="L138">        circleMembers[circleId] = members</span>
+        
+        // Update circle member count
+<span class="nc" id="L141">        val updatedCircle = circle.copy(</span>
+<span class="nc" id="L142">            memberCount = members.size,</span>
+<span class="nc" id="L143">            updatedAt = Date()</span>
+        )
+<span class="nc" id="L145">        supportCircles[circleId] = updatedCircle</span>
+        
+        // Remove circle from user's memberships
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        circleMemberships[userId]?.remove(circleId)</span>
+        
+<span class="nc" id="L150">        return true</span>
+    }
+    
+    /**
+     * Invites a user to a private circle
+     * 
+     * @param circleId Circle ID
+     * @param inviterId User ID sending the invitation
+     * @param inviteeId User ID being invited
+     * @return Boolean indicating success
+     */
+    fun inviteToCircle(circleId: String, inviterId: String, inviteeId: String): Boolean {
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        val circle = supportCircles[circleId] ?: return false</span>
+        
+<span class="nc bnc" id="L164" title="All 2 branches missed.">        if (!circle.isPrivate) {</span>
+<span class="nc" id="L165">            return false // Only private circles require invitations</span>
+        }
+        
+<span class="nc bnc" id="L168" title="All 2 branches missed.">        val members = circleMembers[circleId] ?: return false</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">        if (!members.contains(inviterId)) {</span>
+<span class="nc" id="L170">            return false // Inviter must be a member</span>
+        }
+        
+<span class="nc bnc" id="L173" title="All 2 branches missed.">        if (members.contains(inviteeId)) {</span>
+<span class="nc" id="L174">            return false // Already a member</span>
+        }
+        
+<span class="nc bnc" id="L177" title="All 2 branches missed.">        val invitations = circleInvitations[inviteeId] ?: mutableSetOf()</span>
+<span class="nc" id="L178">        invitations.add(circleId)</span>
+<span class="nc" id="L179">        circleInvitations[inviteeId] = invitations</span>
+        
+<span class="nc" id="L181">        return true</span>
+    }
+    
+    /**
+     * Creates a post in a support circle
+     * 
+     * @param circleId Circle ID
+     * @param userId User ID creating the post
+     * @param content Post content
+     * @param isAnonymous Whether the post is anonymous
+     * @return CirclePost object
+     */
+<span class="nc" id="L193">    fun createPost(</span>
+        circleId: String,
+        userId: String,
+        content: String,
+<span class="nc" id="L197">        isAnonymous: Boolean = false</span>
+    ): CirclePost {
+<span class="nc bnc" id="L199" title="All 4 branches missed.">        require(content.isNotBlank()) { &quot;Post content cannot be empty&quot; }</span>
+        
+<span class="nc bnc" id="L201" title="All 2 branches missed.">        val circle = supportCircles[circleId] ?: throw IllegalArgumentException(&quot;Circle not found&quot;)</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">        val members = circleMembers[circleId] ?: throw IllegalArgumentException(&quot;Circle has no members&quot;)</span>
+        
+<span class="nc bnc" id="L204" title="All 2 branches missed.">        if (!members.contains(userId)) {</span>
+<span class="nc" id="L205">            throw IllegalArgumentException(&quot;User is not a member of this circle&quot;)</span>
+        }
+        
+<span class="nc" id="L208">        val post = CirclePost(</span>
+<span class="nc" id="L209">            id = &quot;post_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L210">            circleId = circleId,</span>
+<span class="nc" id="L211">            authorId = userId,</span>
+<span class="nc" id="L212">            content = content,</span>
+<span class="nc" id="L213">            isAnonymous = isAnonymous,</span>
+<span class="nc" id="L214">            likeCount = 0,</span>
+<span class="nc" id="L215">            commentCount = 0,</span>
+<span class="nc" id="L216">            createdAt = Date()</span>
+        )
+        
+<span class="nc bnc" id="L219" title="All 2 branches missed.">        val posts = circlePosts[circleId] ?: mutableListOf()</span>
+<span class="nc" id="L220">        posts.add(post)</span>
+<span class="nc" id="L221">        circlePosts[circleId] = posts</span>
+        
+<span class="nc" id="L223">        return post</span>
+    }
+    
+    /**
+     * Adds a comment to a post
+     * 
+     * @param postId Post ID
+     * @param userId User ID adding the comment
+     * @param content Comment content
+     * @return CircleComment object
+     */
+    fun addComment(postId: String, userId: String, content: String): CircleComment {
+<span class="nc bnc" id="L235" title="All 4 branches missed.">        require(content.isNotBlank()) { &quot;Comment content cannot be empty&quot; }</span>
+        
+        // Find the post
+<span class="nc bnc" id="L238" title="All 6 branches missed.">        val post = circlePosts.values.flatten().find { it.id == postId }</span>
+<span class="nc" id="L239">            ?: throw IllegalArgumentException(&quot;Post not found&quot;)</span>
+        
+<span class="nc bnc" id="L241" title="All 2 branches missed.">        val circle = supportCircles[post.circleId] ?: throw IllegalArgumentException(&quot;Circle not found&quot;)</span>
+<span class="nc bnc" id="L242" title="All 2 branches missed.">        val members = circleMembers[post.circleId] ?: throw IllegalArgumentException(&quot;Circle has no members&quot;)</span>
+        
+<span class="nc bnc" id="L244" title="All 2 branches missed.">        if (!members.contains(userId)) {</span>
+<span class="nc" id="L245">            throw IllegalArgumentException(&quot;User is not a member of this circle&quot;)</span>
+        }
+        
+<span class="nc" id="L248">        val comment = CircleComment(</span>
+<span class="nc" id="L249">            id = &quot;comment_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L250">            postId = postId,</span>
+<span class="nc" id="L251">            authorId = userId,</span>
+<span class="nc" id="L252">            content = content,</span>
+<span class="nc" id="L253">            createdAt = Date()</span>
+        )
+        
+<span class="nc bnc" id="L256" title="All 2 branches missed.">        val comments = circleComments[postId] ?: mutableListOf()</span>
+<span class="nc" id="L257">        comments.add(comment)</span>
+<span class="nc" id="L258">        circleComments[postId] = comments</span>
+        
+        // Update post comment count
+<span class="nc bnc" id="L261" title="All 2 branches missed.">        val posts = circlePosts[post.circleId] ?: mutableListOf()</span>
+<span class="nc" id="L262">        val postIndex = posts.indexOfFirst { it.id == postId }</span>
+<span class="nc bnc" id="L263" title="All 2 branches missed.">        if (postIndex &gt;= 0) {</span>
+<span class="nc" id="L264">            val updatedPost = posts[postIndex].copy(commentCount = comments.size)</span>
+<span class="nc" id="L265">            posts[postIndex] = updatedPost</span>
+<span class="nc" id="L266">            circlePosts[post.circleId] = posts</span>
+        }
+        
+<span class="nc" id="L269">        return comment</span>
+    }
+    
+    /**
+     * Likes a post
+     * 
+     * @param postId Post ID
+     * @param userId User ID liking the post
+     * @return Boolean indicating success
+     */
+    fun likePost(postId: String, userId: String): Boolean {
+<span class="nc bnc" id="L280" title="All 6 branches missed.">        val post = circlePosts.values.flatten().find { it.id == postId } ?: return false</span>
+        
+<span class="nc bnc" id="L282" title="All 2 branches missed.">        val circle = supportCircles[post.circleId] ?: return false</span>
+<span class="nc bnc" id="L283" title="All 2 branches missed.">        val members = circleMembers[post.circleId] ?: return false</span>
+        
+<span class="nc bnc" id="L285" title="All 2 branches missed.">        if (!members.contains(userId)) {</span>
+<span class="nc" id="L286">            return false</span>
+        }
+        
+<span class="nc bnc" id="L289" title="All 2 branches missed.">        val posts = circlePosts[post.circleId] ?: return false</span>
+<span class="nc" id="L290">        val postIndex = posts.indexOfFirst { it.id == postId }</span>
+<span class="nc bnc" id="L291" title="All 2 branches missed.">        if (postIndex &gt;= 0) {</span>
+<span class="nc" id="L292">            val updatedPost = posts[postIndex].copy(likeCount = posts[postIndex].likeCount + 1)</span>
+<span class="nc" id="L293">            posts[postIndex] = updatedPost</span>
+<span class="nc" id="L294">            circlePosts[post.circleId] = posts</span>
+<span class="nc" id="L295">            return true</span>
+        }
+        
+<span class="nc" id="L298">        return false</span>
+    }
+    
+    /**
+     * Gets user's support circles
+     * 
+     * @param userId User ID
+     * @return List of SupportCircle objects
+     */
+    fun getUserSupportCircles(userId: String): List&lt;SupportCircle&gt; {
+<span class="nc bnc" id="L308" title="All 2 branches missed.">        val circleIds = circleMemberships[userId] ?: return emptyList()</span>
+<span class="nc" id="L309">        return circleIds.mapNotNull { supportCircles[it] }</span>
+    }
+    
+    /**
+     * Gets available public circles
+     * 
+     * @param topic Optional topic filter
+     * @return List of SupportCircle objects
+     */
+<span class="nc" id="L318">    fun getAvailableCircles(topic: String? = null): List&lt;SupportCircle&gt; {</span>
+<span class="nc" id="L319">        val publicCircles = supportCircles.values.filter { </span>
+<span class="nc bnc" id="L320" title="All 4 branches missed.">            !it.isPrivate &amp;&amp; it.status == CircleStatus.ACTIVE </span>
+        }
+        
+<span class="nc bnc" id="L323" title="All 2 branches missed.">        return if (topic != null) {</span>
+<span class="nc bnc" id="L324" title="All 4 branches missed.">            publicCircles.filter { it.topic?.equals(topic, ignoreCase = true) == true }</span>
+        } else {
+<span class="nc" id="L326">            publicCircles</span>
+        }
+    }
+    
+    /**
+     * Gets circle members
+     * 
+     * @param circleId Circle ID
+     * @return List of user IDs
+     */
+    fun getCircleMembers(circleId: String): List&lt;String&gt; {
+<span class="nc bnc" id="L337" title="All 4 branches missed.">        return circleMembers[circleId]?.toList() ?: emptyList()</span>
+    }
+    
+    /**
+     * Gets posts for a circle
+     * 
+     * @param circleId Circle ID
+     * @return List of CirclePost objects
+     */
+    fun getCirclePosts(circleId: String): List&lt;CirclePost&gt; {
+<span class="nc bnc" id="L347" title="All 4 branches missed.">        return circlePosts[circleId]?.sortedByDescending { it.createdAt } ?: emptyList()</span>
+    }
+    
+    /**
+     * Gets comments for a post
+     * 
+     * @param postId Post ID
+     * @return List of CircleComment objects
+     */
+    fun getPostComments(postId: String): List&lt;CircleComment&gt; {
+<span class="nc bnc" id="L357" title="All 4 branches missed.">        return circleComments[postId]?.sortedBy { it.createdAt } ?: emptyList()</span>
+    }
+    
+    /**
+     * Gets pending invitations for a user
+     * 
+     * @param userId User ID
+     * @return List of SupportCircle objects
+     */
+    fun getPendingInvitations(userId: String): List&lt;SupportCircle&gt; {
+<span class="nc bnc" id="L367" title="All 2 branches missed.">        val circleIds = circleInvitations[userId] ?: return emptyList()</span>
+<span class="nc" id="L368">        return circleIds.mapNotNull { supportCircles[it] }</span>
+    }
+}
+
+/**
+ * Data class for support circles
+ */
+<span class="nc" id="L375">data class SupportCircle(</span>
+<span class="nc" id="L376">    val id: String,</span>
+<span class="nc" id="L377">    val name: String,</span>
+<span class="nc" id="L378">    val description: String,</span>
+<span class="nc" id="L379">    val creatorId: String,</span>
+<span class="nc" id="L380">    val topic: String? = null,</span>
+<span class="nc" id="L381">    val isPrivate: Boolean = false,</span>
+<span class="nc" id="L382">    val maxMembers: Int = 50,</span>
+<span class="nc" id="L383">    val memberCount: Int = 0,</span>
+<span class="nc" id="L384">    val status: CircleStatus = CircleStatus.ACTIVE,</span>
+<span class="nc" id="L385">    val createdAt: Date,</span>
+<span class="nc" id="L386">    val updatedAt: Date</span>
+<span class="nc" id="L387">)</span>
+
+enum class CircleStatus {
+<span class="nc" id="L390">    ACTIVE,</span>
+<span class="nc" id="L391">    ARCHIVED,</span>
+<span class="nc" id="L392">    CLOSED</span>
+<span class="nc" id="L393">}</span>
+
+/**
+ * Data class for circle posts
+ */
+<span class="nc" id="L398">data class CirclePost(</span>
+<span class="nc" id="L399">    val id: String,</span>
+<span class="nc" id="L400">    val circleId: String,</span>
+<span class="nc" id="L401">    val authorId: String,</span>
+<span class="nc" id="L402">    val content: String,</span>
+<span class="nc" id="L403">    val isAnonymous: Boolean = false,</span>
+<span class="nc" id="L404">    val likeCount: Int = 0,</span>
+<span class="nc" id="L405">    val commentCount: Int = 0,</span>
+<span class="nc" id="L406">    val createdAt: Date</span>
+<span class="nc" id="L407">)</span>
+
+/**
+ * Data class for circle comments
+ */
+<span class="nc" id="L412">data class CircleComment(</span>
+<span class="nc" id="L413">    val id: String,</span>
+<span class="nc" id="L414">    val postId: String,</span>
+<span class="nc" id="L415">    val authorId: String,</span>
+<span class="nc" id="L416">    val content: String,</span>
+<span class="nc" id="L417">    val createdAt: Date</span>
+)
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

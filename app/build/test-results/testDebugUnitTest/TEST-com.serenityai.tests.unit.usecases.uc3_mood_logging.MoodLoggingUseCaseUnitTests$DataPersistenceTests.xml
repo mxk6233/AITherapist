@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 3: Data Validation and Persistence" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-12-07T08:20:33" hostname="Mohammads-MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="UC3-REQ-4: System MUST store mood entries with timestamps" classname="com.serenityai.tests.unit.usecases.uc3_mood_logging.MoodLoggingUseCaseUnitTests$DataPersistenceTests" time="0.0"/>
+  <testcase name="UC3-REQ-3: System MUST validate mood entry data before saving" classname="com.serenityai.tests.unit.usecases.uc3_mood_logging.MoodLoggingUseCaseUnitTests$DataPersistenceTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

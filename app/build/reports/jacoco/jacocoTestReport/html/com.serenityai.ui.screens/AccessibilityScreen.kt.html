@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccessibilityScreen.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.screens</a> &gt; <span class="el_source">AccessibilityScreen.kt</span></div><h1>AccessibilityScreen.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.screens
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+// Data classes for accessibility settings
+<span class="nc" id="L20">data class AccessibilitySettings(</span>
+<span class="nc" id="L21">    val fontSize: FontSize,</span>
+<span class="nc" id="L22">    val highContrast: Boolean,</span>
+<span class="nc" id="L23">    val screenReader: Boolean,</span>
+<span class="nc" id="L24">    val voiceOver: Boolean,</span>
+<span class="nc" id="L25">    val reducedMotion: Boolean,</span>
+<span class="nc" id="L26">    val colorBlindSupport: ColorBlindSupport,</span>
+<span class="nc" id="L27">    val keyboardNavigation: Boolean,</span>
+<span class="nc" id="L28">    val hapticFeedback: Boolean,</span>
+<span class="nc" id="L29">    val audioDescriptions: Boolean,</span>
+<span class="nc" id="L30">    val subtitles: Boolean</span>
+)
+
+<span class="nc" id="L33">enum class FontSize(val multiplier: Float, val description: String) {</span>
+<span class="nc" id="L34">    SMALL(0.8f, &quot;Small&quot;),</span>
+<span class="nc" id="L35">    NORMAL(1.0f, &quot;Normal&quot;),</span>
+<span class="nc" id="L36">    LARGE(1.2f, &quot;Large&quot;),</span>
+<span class="nc" id="L37">    EXTRA_LARGE(1.4f, &quot;Extra Large&quot;)</span>
+<span class="nc" id="L38">}</span>
+
+<span class="nc" id="L40">enum class ColorBlindSupport(val description: String) {</span>
+<span class="nc" id="L41">    NONE(&quot;None&quot;),</span>
+<span class="nc" id="L42">    PROTANOPIA(&quot;Protanopia (Red-blind)&quot;),</span>
+<span class="nc" id="L43">    DEUTERANOPIA(&quot;Deuteranopia (Green-blind)&quot;),</span>
+<span class="nc" id="L44">    TRITANOPIA(&quot;Tritanopia (Blue-blind)&quot;)</span>
+<span class="nc" id="L45">}</span>
+
+// Wrapper function for backward compatibility
+@Composable
+<span class="nc bnc" id="L49" title="All 10 branches missed.">fun AccessibilityScreen(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">    AccessibilityScreenDetailed(onNavigateBack = onNavigateBack)</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L55" title="All 10 branches missed.">fun AccessibilityScreenDetailed(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc" id="L56">    var fontSize by remember { mutableStateOf(FontSize.NORMAL) }</span>
+<span class="nc" id="L57">    var highContrast by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L58">    var screenReader by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L59">    var voiceOver by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L60">    var reducedMotion by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L61">    var colorBlindSupport by remember { mutableStateOf(ColorBlindSupport.NONE) }</span>
+<span class="nc" id="L62">    var keyboardNavigation by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L63">    var hapticFeedback by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L64">    var audioDescriptions by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L65">    var subtitles by remember { mutableStateOf(false) }</span>
+    
+<span class="nc" id="L67">    var showPreview by remember { mutableStateOf(false) }</span>
+
+<span class="nc" id="L69">    Scaffold(</span>
+<span class="nc" id="L70">        topBar = {</span>
+<span class="nc bnc" id="L71" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L72" title="All 8 branches missed.">                title = { Text(&quot;Accessibility Features&quot;) },</span>
+<span class="nc" id="L73">                navigationIcon = {</span>
+<span class="nc bnc" id="L74" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L75" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L76">                    }</span>
+<span class="nc" id="L77">                },</span>
+<span class="nc" id="L78">                colors = TopAppBarDefaults.topAppBarColors(</span>
+<span class="nc" id="L79">                    containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+                )
+<span class="nc" id="L81">            )</span>
+<span class="nc" id="L82">        }</span>
+<span class="nc" id="L83">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L84" title="All 8 branches missed.">        LazyColumn(</span>
+<span class="nc" id="L85">            modifier = Modifier</span>
+<span class="nc" id="L86">                .fillMaxSize()</span>
+<span class="nc" id="L87">                .padding(paddingValues)</span>
+<span class="nc" id="L88">                .padding(16.dp),</span>
+<span class="nc" id="L89">            verticalArrangement = Arrangement.spacedBy(16.dp)</span>
+<span class="nc" id="L90">        ) {</span>
+<span class="nc" id="L91">            item {</span>
+<span class="nc bnc" id="L92" title="All 8 branches missed.">                Text(</span>
+<span class="nc" id="L93">                    text = &quot;Make the app more accessible for everyone&quot;,</span>
+<span class="nc" id="L94">                    fontSize = 18.sp,</span>
+<span class="nc" id="L95">                    fontWeight = FontWeight.Medium,</span>
+<span class="nc" id="L96">                    color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+<span class="nc" id="L97">                )</span>
+<span class="nc" id="L98">            }</span>
+            
+            // Visual Accessibility
+<span class="nc" id="L101">            item {</span>
+<span class="nc bnc" id="L102" title="All 8 branches missed.">                AccessibilitySection(</span>
+<span class="nc" id="L103">                    title = &quot;Visual Accessibility&quot;,</span>
+<span class="nc" id="L104">                    icon = Icons.Default.Visibility</span>
+<span class="nc" id="L105">                ) {</span>
+                    // Font Size
+<span class="nc bnc" id="L107" title="All 6 branches missed.">                    AccessibilitySetting(</span>
+<span class="nc" id="L108">                        title = &quot;Font Size&quot;,</span>
+<span class="nc" id="L109">                        description = &quot;Adjust text size for better readability&quot;</span>
+<span class="nc" id="L110">                    ) {</span>
+<span class="nc bnc" id="L111" title="All 8 branches missed.">                        FontSizeSelector(</span>
+<span class="nc" id="L112">                            selectedSize = fontSize,</span>
+<span class="nc" id="L113">                            onSizeSelected = { fontSize = it }</span>
+<span class="nc" id="L114">                        )</span>
+<span class="nc" id="L115">                    }</span>
+                    
+                    // High Contrast
+<span class="nc" id="L118">                    AccessibilityToggle(</span>
+<span class="nc" id="L119">                        title = &quot;High Contrast Mode&quot;,</span>
+<span class="nc" id="L120">                        description = &quot;Increase contrast for better visibility&quot;,</span>
+<span class="nc" id="L121">                        checked = highContrast,</span>
+<span class="nc" id="L122">                        onCheckedChange = { highContrast = it }</span>
+                    )
+                    
+                    // Color Blind Support
+<span class="nc bnc" id="L126" title="All 2 branches missed.">                    AccessibilitySetting(</span>
+<span class="nc" id="L127">                        title = &quot;Color Blind Support&quot;,</span>
+<span class="nc" id="L128">                        description = &quot;Adjust colors for color vision differences&quot;</span>
+<span class="nc" id="L129">                    ) {</span>
+<span class="nc bnc" id="L130" title="All 8 branches missed.">                        ColorBlindSelector(</span>
+<span class="nc" id="L131">                            selectedSupport = colorBlindSupport,</span>
+<span class="nc" id="L132">                            onSupportSelected = { colorBlindSupport = it }</span>
+<span class="nc" id="L133">                        )</span>
+<span class="nc" id="L134">                    }</span>
+<span class="nc" id="L135">                }</span>
+<span class="nc" id="L136">            }</span>
+            
+            // Motor Accessibility
+<span class="nc" id="L139">            item {</span>
+<span class="nc bnc" id="L140" title="All 8 branches missed.">                AccessibilitySection(</span>
+<span class="nc" id="L141">                    title = &quot;Motor Accessibility&quot;,</span>
+<span class="nc" id="L142">                    icon = Icons.Default.TouchApp</span>
+<span class="nc" id="L143">                ) {</span>
+                    // Haptic Feedback
+<span class="nc bnc" id="L145" title="All 6 branches missed.">                    AccessibilityToggle(</span>
+<span class="nc" id="L146">                        title = &quot;Haptic Feedback&quot;,</span>
+<span class="nc" id="L147">                        description = &quot;Vibrate on touch for tactile feedback&quot;,</span>
+<span class="nc" id="L148">                        checked = hapticFeedback,</span>
+<span class="nc" id="L149">                        onCheckedChange = { hapticFeedback = it }</span>
+                    )
+                    
+                    // Reduced Motion
+<span class="nc" id="L153">                    AccessibilityToggle(</span>
+<span class="nc" id="L154">                        title = &quot;Reduce Motion&quot;,</span>
+<span class="nc" id="L155">                        description = &quot;Minimize animations and transitions&quot;,</span>
+<span class="nc" id="L156">                        checked = reducedMotion,</span>
+<span class="nc" id="L157">                        onCheckedChange = { reducedMotion = it }</span>
+                    )
+                    
+                    // Keyboard Navigation
+<span class="nc bnc" id="L161" title="All 2 branches missed.">                    AccessibilityToggle(</span>
+<span class="nc" id="L162">                        title = &quot;Keyboard Navigation&quot;,</span>
+<span class="nc" id="L163">                        description = &quot;Enable keyboard shortcuts and navigation&quot;,</span>
+<span class="nc" id="L164">                        checked = keyboardNavigation,</span>
+<span class="nc" id="L165">                        onCheckedChange = { keyboardNavigation = it }</span>
+<span class="nc" id="L166">                    )</span>
+<span class="nc" id="L167">                }</span>
+<span class="nc" id="L168">            }</span>
+            
+            // Audio Accessibility
+<span class="nc" id="L171">            item {</span>
+<span class="nc bnc" id="L172" title="All 8 branches missed.">                AccessibilitySection(</span>
+<span class="nc" id="L173">                    title = &quot;Audio Accessibility&quot;,</span>
+<span class="nc" id="L174">                    icon = Icons.Default.VolumeUp</span>
+<span class="nc" id="L175">                ) {</span>
+                    // Screen Reader
+<span class="nc bnc" id="L177" title="All 6 branches missed.">                    AccessibilityToggle(</span>
+<span class="nc" id="L178">                        title = &quot;Screen Reader Support&quot;,</span>
+<span class="nc" id="L179">                        description = &quot;Optimize for screen reading software&quot;,</span>
+<span class="nc" id="L180">                        checked = screenReader,</span>
+<span class="nc" id="L181">                        onCheckedChange = { screenReader = it }</span>
+                    )
+                    
+                    // Voice Over
+<span class="nc" id="L185">                    AccessibilityToggle(</span>
+<span class="nc" id="L186">                        title = &quot;Voice Over&quot;,</span>
+<span class="nc" id="L187">                        description = &quot;Enable voice descriptions for UI elements&quot;,</span>
+<span class="nc" id="L188">                        checked = voiceOver,</span>
+<span class="nc" id="L189">                        onCheckedChange = { voiceOver = it }</span>
+                    )
+                    
+                    // Audio Descriptions
+<span class="nc" id="L193">                    AccessibilityToggle(</span>
+<span class="nc" id="L194">                        title = &quot;Audio Descriptions&quot;,</span>
+<span class="nc" id="L195">                        description = &quot;Provide audio descriptions for visual content&quot;,</span>
+<span class="nc" id="L196">                        checked = audioDescriptions,</span>
+<span class="nc" id="L197">                        onCheckedChange = { audioDescriptions = it }</span>
+                    )
+                    
+                    // Subtitles
+<span class="nc bnc" id="L201" title="All 2 branches missed.">                    AccessibilityToggle(</span>
+<span class="nc" id="L202">                        title = &quot;Subtitles&quot;,</span>
+<span class="nc" id="L203">                        description = &quot;Show text captions for audio content&quot;,</span>
+<span class="nc" id="L204">                        checked = subtitles,</span>
+<span class="nc" id="L205">                        onCheckedChange = { subtitles = it }</span>
+<span class="nc" id="L206">                    )</span>
+<span class="nc" id="L207">                }</span>
+<span class="nc" id="L208">            }</span>
+            
+            // Preview Section
+<span class="nc" id="L211">            item {</span>
+<span class="nc bnc" id="L212" title="All 8 branches missed.">                Card(</span>
+<span class="nc" id="L213">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L214">                    colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L215">                        containerColor = MaterialTheme.colorScheme.secondaryContainer</span>
+                    )
+<span class="nc" id="L217">                ) {</span>
+<span class="nc bnc" id="L218" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L219">                        modifier = Modifier.padding(16.dp)</span>
+                    ) {
+<span class="nc" id="L221">                        Text(</span>
+<span class="nc" id="L222">                            text = &quot;Preview Changes&quot;,</span>
+<span class="nc" id="L223">                            fontSize = 18.sp,</span>
+<span class="nc" id="L224">                            fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L225">                            modifier = Modifier.padding(bottom = 8.dp)</span>
+                        )
+                        
+<span class="nc" id="L228">                        Text(</span>
+<span class="nc" id="L229">                            text = &quot;See how your accessibility settings affect the app&quot;,</span>
+<span class="nc" id="L230">                            fontSize = 14.sp,</span>
+<span class="nc" id="L231">                            color = MaterialTheme.colorScheme.onSurfaceVariant,</span>
+<span class="nc" id="L232">                            modifier = Modifier.padding(bottom = 16.dp)</span>
+                        )
+                        
+<span class="nc" id="L235">                        Button(</span>
+<span class="nc" id="L236">                            onClick = { showPreview = true },</span>
+<span class="nc" id="L237">                            modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L238">                        ) {</span>
+<span class="nc bnc" id="L239" title="All 6 branches missed.">                            Icon(Icons.Default.Preview, contentDescription = null)</span>
+<span class="nc" id="L240">                            Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc bnc" id="L241" title="All 2 branches missed.">                            Text(&quot;Preview Settings&quot;)</span>
+<span class="nc" id="L242">                        }</span>
+<span class="nc" id="L243">                    }</span>
+<span class="nc" id="L244">                }</span>
+<span class="nc" id="L245">            }</span>
+            
+            // Accessibility Tips
+<span class="nc" id="L248">            item {</span>
+<span class="nc bnc" id="L249" title="All 8 branches missed.">                AccessibilityTipsCard()</span>
+<span class="nc" id="L250">            }</span>
+<span class="nc" id="L251">        }</span>
+<span class="nc" id="L252">    }</span>
+    
+<span class="nc bnc" id="L254" title="All 2 branches missed.">    if (showPreview) {</span>
+<span class="nc bnc" id="L255" title="All 2 branches missed.">        AccessibilityPreviewDialog(</span>
+<span class="nc" id="L256">            fontSize = fontSize,</span>
+<span class="nc" id="L257">            highContrast = highContrast,</span>
+<span class="nc" id="L258">            colorBlindSupport = colorBlindSupport,</span>
+<span class="nc" id="L259">            onDismiss = { showPreview = false }</span>
+        )
+    }
+<span class="nc bnc" id="L262" title="All 2 branches missed.">}</span>
+
+@Composable
+fun AccessibilitySection(
+    title: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    content: @Composable () -&gt; Unit
+<span class="nc bnc" id="L269" title="All 18 branches missed.">) {</span>
+<span class="nc bnc" id="L270" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L271">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L272">        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)</span>
+<span class="nc" id="L273">    ) {</span>
+<span class="nc bnc" id="L274" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L275">            modifier = Modifier.padding(16.dp)</span>
+        ) {
+<span class="nc" id="L277">            Row(</span>
+<span class="nc" id="L278">                verticalAlignment = Alignment.CenterVertically,</span>
+<span class="nc" id="L279">                modifier = Modifier.padding(bottom = 16.dp)</span>
+            ) {
+<span class="nc" id="L281">                Icon(</span>
+<span class="nc" id="L282">                    icon,</span>
+<span class="nc" id="L283">                    contentDescription = null,</span>
+<span class="nc" id="L284">                    tint = MaterialTheme.colorScheme.primary,</span>
+<span class="nc" id="L285">                    modifier = Modifier.size(24.dp)</span>
+                )
+<span class="nc" id="L287">                Spacer(modifier = Modifier.width(12.dp))</span>
+<span class="nc" id="L288">                Text(</span>
+<span class="nc" id="L289">                    text = title,</span>
+<span class="nc" id="L290">                    fontSize = 18.sp,</span>
+<span class="nc" id="L291">                    fontWeight = FontWeight.Bold</span>
+                )
+<span class="nc" id="L293">            }</span>
+<span class="nc" id="L294">            content()</span>
+<span class="nc" id="L295">        }</span>
+<span class="nc" id="L296">    }</span>
+<span class="nc bnc" id="L297" title="All 2 branches missed.">}</span>
+
+@Composable
+fun AccessibilitySetting(
+    title: String,
+    description: String,
+    content: @Composable () -&gt; Unit
+<span class="nc bnc" id="L304" title="All 18 branches missed.">) {</span>
+<span class="nc" id="L305">    Column(</span>
+<span class="nc" id="L306">        modifier = Modifier.padding(vertical = 8.dp)</span>
+    ) {
+<span class="nc" id="L308">        Text(</span>
+<span class="nc" id="L309">            text = title,</span>
+<span class="nc" id="L310">            fontSize = 16.sp,</span>
+<span class="nc" id="L311">            fontWeight = FontWeight.Medium</span>
+        )
+<span class="nc" id="L313">        Text(</span>
+<span class="nc" id="L314">            text = description,</span>
+<span class="nc" id="L315">            fontSize = 14.sp,</span>
+<span class="nc" id="L316">            color = MaterialTheme.colorScheme.onSurfaceVariant,</span>
+<span class="nc" id="L317">            modifier = Modifier.padding(bottom = 8.dp)</span>
+        )
+<span class="nc" id="L319">        content()</span>
+<span class="nc" id="L320">    }</span>
+<span class="nc bnc" id="L321" title="All 2 branches missed.">}</span>
+
+@Composable
+fun AccessibilityToggle(
+    title: String,
+    description: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -&gt; Unit
+<span class="nc bnc" id="L329" title="All 22 branches missed.">) {</span>
+<span class="nc" id="L330">    Row(</span>
+<span class="nc" id="L331">        modifier = Modifier</span>
+<span class="nc" id="L332">            .fillMaxWidth()</span>
+<span class="nc" id="L333">            .padding(vertical = 8.dp),</span>
+<span class="nc" id="L334">        verticalAlignment = Alignment.CenterVertically</span>
+    ) {
+<span class="nc" id="L336">        Column(modifier = Modifier.weight(1f)) {</span>
+<span class="nc" id="L337">            Text(</span>
+<span class="nc" id="L338">                text = title,</span>
+<span class="nc" id="L339">                fontSize = 16.sp,</span>
+<span class="nc" id="L340">                fontWeight = FontWeight.Medium</span>
+            )
+<span class="nc" id="L342">            Text(</span>
+<span class="nc" id="L343">                text = description,</span>
+<span class="nc" id="L344">                fontSize = 14.sp,</span>
+<span class="nc" id="L345">                color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+            )
+<span class="nc" id="L347">        }</span>
+<span class="nc" id="L348">        Switch(</span>
+<span class="nc" id="L349">            checked = checked,</span>
+<span class="nc" id="L350">            onCheckedChange = onCheckedChange</span>
+        )
+<span class="nc" id="L352">    }</span>
+<span class="nc bnc" id="L353" title="All 2 branches missed.">}</span>
+
+@Composable
+fun FontSizeSelector(
+    selectedSize: FontSize,
+    onSizeSelected: (FontSize) -&gt; Unit
+<span class="nc bnc" id="L359" title="All 14 branches missed.">) {</span>
+<span class="nc" id="L360">    Row(</span>
+<span class="nc" id="L361">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L362">        horizontalArrangement = Arrangement.SpaceEvenly</span>
+    ) {
+<span class="nc" id="L364">        FontSize.values().forEach { size -&gt;</span>
+<span class="nc" id="L365">            Column(</span>
+<span class="nc" id="L366">                horizontalAlignment = Alignment.CenterHorizontally,</span>
+<span class="nc bnc" id="L367" title="All 2 branches missed.">                modifier = Modifier.selectable(</span>
+<span class="nc bnc" id="L368" title="All 2 branches missed.">                    selected = selectedSize == size,</span>
+<span class="nc" id="L369">                    onClick = { onSizeSelected(size) }</span>
+                )
+            ) {
+<span class="nc" id="L372">                Text(</span>
+<span class="nc" id="L373">                    text = &quot;Aa&quot;,</span>
+<span class="nc" id="L374">                    fontSize = (16 * size.multiplier).sp,</span>
+<span class="nc" id="L375">                    fontWeight = FontWeight.Bold,</span>
+<span class="nc bnc" id="L376" title="All 2 branches missed.">                    color = if (selectedSize == size) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface</span>
+                )
+<span class="nc" id="L378">                Text(</span>
+<span class="nc" id="L379">                    text = size.description,</span>
+<span class="nc" id="L380">                    fontSize = 12.sp,</span>
+<span class="nc bnc" id="L381" title="All 2 branches missed.">                    color = if (selectedSize == size) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant</span>
+                )
+<span class="nc" id="L383">            }</span>
+<span class="nc" id="L384">        }</span>
+<span class="nc" id="L385">    }</span>
+<span class="nc bnc" id="L386" title="All 2 branches missed.">}</span>
+
+@Composable
+fun ColorBlindSelector(
+    selectedSupport: ColorBlindSupport,
+    onSupportSelected: (ColorBlindSupport) -&gt; Unit
+<span class="nc bnc" id="L392" title="All 14 branches missed.">) {</span>
+<span class="nc" id="L393">    Column {</span>
+<span class="nc" id="L394">        ColorBlindSupport.values().forEach { support -&gt;</span>
+<span class="nc" id="L395">            Row(</span>
+<span class="nc" id="L396">                modifier = Modifier</span>
+<span class="nc" id="L397">                    .fillMaxWidth()</span>
+<span class="nc bnc" id="L398" title="All 2 branches missed.">                    .selectable(</span>
+<span class="nc bnc" id="L399" title="All 2 branches missed.">                        selected = selectedSupport == support,</span>
+<span class="nc" id="L400">                        onClick = { onSupportSelected(support) }</span>
+                    )
+<span class="nc" id="L402">                    .padding(vertical = 4.dp),</span>
+<span class="nc" id="L403">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L405">                RadioButton(</span>
+<span class="nc bnc" id="L406" title="All 4 branches missed.">                    selected = selectedSupport == support,</span>
+<span class="nc" id="L407">                    onClick = { onSupportSelected(support) }</span>
+                )
+<span class="nc" id="L409">                Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L410">                Text(</span>
+<span class="nc" id="L411">                    text = support.description,</span>
+<span class="nc" id="L412">                    fontSize = 14.sp</span>
+                )
+<span class="nc" id="L414">            }</span>
+<span class="nc" id="L415">        }</span>
+<span class="nc" id="L416">    }</span>
+<span class="nc bnc" id="L417" title="All 2 branches missed.">}</span>
+
+@Composable
+fun AccessibilityPreviewDialog(
+    fontSize: FontSize,
+    highContrast: Boolean,
+    colorBlindSupport: ColorBlindSupport,
+    onDismiss: () -&gt; Unit
+<span class="nc bnc" id="L425" title="All 22 branches missed.">) {</span>
+<span class="nc bnc" id="L426" title="All 2 branches missed.">    AlertDialog(</span>
+<span class="nc" id="L427">        onDismissRequest = onDismiss,</span>
+<span class="nc bnc" id="L428" title="All 8 branches missed.">        title = { Text(&quot;Accessibility Preview&quot;) },</span>
+<span class="nc" id="L429">        text = {</span>
+<span class="nc bnc" id="L430" title="All 6 branches missed.">            Column {</span>
+<span class="nc" id="L431">                Text(</span>
+<span class="nc" id="L432">                    text = &quot;This is how text will appear with your settings:&quot;,</span>
+<span class="nc" id="L433">                    fontSize = 14.sp,</span>
+<span class="nc" id="L434">                    modifier = Modifier.padding(bottom = 16.dp)</span>
+                )
+                
+<span class="nc" id="L437">                Card(</span>
+<span class="nc" id="L438">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L439">                    colors = CardDefaults.cardColors(</span>
+<span class="nc bnc" id="L440" title="All 2 branches missed.">                        containerColor = if (highContrast) </span>
+<span class="nc" id="L441">                            MaterialTheme.colorScheme.surfaceVariant </span>
+<span class="nc" id="L442">                        else MaterialTheme.colorScheme.surface</span>
+                    )
+<span class="nc" id="L444">                ) {</span>
+<span class="nc bnc" id="L445" title="All 8 branches missed.">                    Text(</span>
+<span class="nc" id="L446">                        text = &quot;Sample text with ${fontSize.description} font size&quot;,</span>
+<span class="nc" id="L447">                        fontSize = (16 * fontSize.multiplier).sp,</span>
+<span class="nc" id="L448">                        modifier = Modifier.padding(16.dp),</span>
+<span class="nc bnc" id="L449" title="All 2 branches missed.">                        color = if (highContrast) </span>
+<span class="nc" id="L450">                            MaterialTheme.colorScheme.onSurfaceVariant </span>
+<span class="nc" id="L451">                        else MaterialTheme.colorScheme.onSurface</span>
+<span class="nc" id="L452">                    )</span>
+<span class="nc" id="L453">                }</span>
+                
+<span class="nc bnc" id="L455" title="All 2 branches missed.">                if (colorBlindSupport != ColorBlindSupport.NONE) {</span>
+<span class="nc" id="L456">                    Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L457">                    Text(</span>
+<span class="nc" id="L458">                        text = &quot;Color blind support: ${colorBlindSupport.description}&quot;,</span>
+<span class="nc" id="L459">                        fontSize = 12.sp,</span>
+<span class="nc" id="L460">                        color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                    )
+                }
+<span class="nc" id="L463">            }</span>
+<span class="nc" id="L464">        },</span>
+<span class="nc" id="L465">        confirmButton = {</span>
+<span class="nc bnc" id="L466" title="All 8 branches missed.">            TextButton(onClick = onDismiss) {</span>
+<span class="nc bnc" id="L467" title="All 8 branches missed.">                Text(&quot;OK&quot;)</span>
+<span class="nc" id="L468">            }</span>
+<span class="nc" id="L469">        }</span>
+    )
+<span class="nc bnc" id="L471" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L474" title="All 6 branches missed.">fun AccessibilityTipsCard() {</span>
+<span class="nc bnc" id="L475" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L476">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L477">        colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L478">            containerColor = MaterialTheme.colorScheme.tertiaryContainer</span>
+        )
+<span class="nc" id="L480">    ) {</span>
+<span class="nc bnc" id="L481" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L482">            modifier = Modifier.padding(16.dp)</span>
+        ) {
+<span class="nc" id="L484">            Row(</span>
+<span class="nc" id="L485">                verticalAlignment = Alignment.CenterVertically,</span>
+<span class="nc" id="L486">                modifier = Modifier.padding(bottom = 12.dp)</span>
+            ) {
+<span class="nc" id="L488">                Icon(</span>
+<span class="nc" id="L489">                    Icons.Default.Lightbulb,</span>
+<span class="nc" id="L490">                    contentDescription = null,</span>
+<span class="nc" id="L491">                    tint = MaterialTheme.colorScheme.onTertiaryContainer,</span>
+<span class="nc" id="L492">                    modifier = Modifier.size(20.dp)</span>
+                )
+<span class="nc" id="L494">                Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L495">                Text(</span>
+<span class="nc" id="L496">                    text = &quot;Accessibility Tips&quot;,</span>
+<span class="nc" id="L497">                    fontSize = 16.sp,</span>
+<span class="nc" id="L498">                    fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L499">                    color = MaterialTheme.colorScheme.onTertiaryContainer</span>
+                )
+<span class="nc" id="L501">            }</span>
+            
+<span class="nc" id="L503">            val tips = listOf(</span>
+<span class="nc" id="L504">                &quot;Use high contrast mode in bright environments&quot;,</span>
+<span class="nc" id="L505">                &quot;Enable screen reader for hands-free navigation&quot;,</span>
+<span class="nc" id="L506">                &quot;Increase font size if you have vision difficulties&quot;,</span>
+<span class="nc" id="L507">                &quot;Use keyboard navigation for faster interaction&quot;,</span>
+<span class="nc" id="L508">                &quot;Enable haptic feedback for better touch confirmation&quot;</span>
+            )
+            
+<span class="nc" id="L511">            tips.forEach { tip -&gt;</span>
+<span class="nc" id="L512">                Row(</span>
+<span class="nc" id="L513">                    modifier = Modifier.padding(vertical = 2.dp)</span>
+                ) {
+<span class="nc" id="L515">                    Text(</span>
+<span class="nc" id="L516">                        text = &quot;• &quot;,</span>
+<span class="nc" id="L517">                        fontSize = 14.sp,</span>
+<span class="nc" id="L518">                        color = MaterialTheme.colorScheme.onTertiaryContainer</span>
+                    )
+<span class="nc" id="L520">                    Text(</span>
+<span class="nc" id="L521">                        text = tip,</span>
+<span class="nc" id="L522">                        fontSize = 14.sp,</span>
+<span class="nc" id="L523">                        color = MaterialTheme.colorScheme.onTertiaryContainer</span>
+                    )
+<span class="nc" id="L525">                }</span>
+<span class="nc" id="L526">            }</span>
+<span class="nc" id="L527">        }</span>
+<span class="nc" id="L528">    }</span>
+<span class="nc bnc" id="L529" title="All 2 branches missed.">}</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

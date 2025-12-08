@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 2: Message Validation and Error Handling" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:08" hostname="Mohammads-MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="UC1-REQ-4: System MUST handle error cases gracefully" classname="com.serenityai.tests.usecases.uc1_ai_chat_session.unit.AIChatSessionUseCaseUnitTests$MessageValidationTests" time="0.0"/>
+  <testcase name="UC1-REQ-3: System MUST validate user input before processing" classname="com.serenityai.tests.usecases.uc1_ai_chat_session.unit.AIChatSessionUseCaseUnitTests$MessageValidationTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

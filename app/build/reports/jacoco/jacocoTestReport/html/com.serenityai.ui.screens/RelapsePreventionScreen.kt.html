@@ -1,0 +1,780 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RelapsePreventionScreen.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.screens</a> &gt; <span class="el_source">RelapsePreventionScreen.kt</span></div><h1>RelapsePreventionScreen.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.screens
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import java.text.SimpleDateFormat
+import java.util.*
+import com.serenityai.usecases.RelapsePreventionUseCase
+import com.serenityai.data.models.*
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RelapsePreventionScreen(
+    onNavigateBack: () -&gt; Unit,
+    onEmergencyContact: () -&gt; Unit
+<span class="nc bnc" id="L30" title="All 14 branches missed.">) {</span>
+<span class="nc" id="L31">    val useCase = remember { RelapsePreventionUseCase() }</span>
+<span class="nc" id="L32">    var showRiskAssessment by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L33">    var showSafetyPlan by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L34">    var isMonitoringEnabled by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L35">    var riskAssessment by remember { mutableStateOf&lt;RiskAssessment?&gt;(null) }</span>
+<span class="nc" id="L36">    var isLoading by remember { mutableStateOf(false) }</span>
+    
+    // Sample historical data - in production would come from repository
+<span class="nc" id="L39">    val sampleMoodEntries = remember {</span>
+<span class="nc" id="L40">        generateSampleMoodEntries()</span>
+    }
+    
+    // Generate safety plan - in production would come from repository
+<span class="nc" id="L44">    val safetyPlan = remember {</span>
+<span class="nc" id="L45">        com.serenityai.data.models.SafetyPlan(</span>
+<span class="nc" id="L46">            userId = &quot;user-123&quot;,</span>
+<span class="nc" id="L47">            emergencyContacts = listOf(</span>
+<span class="nc" id="L48">                com.serenityai.data.models.EmergencyContact(</span>
+<span class="nc" id="L49">                    name = &quot;Dr. Sarah Johnson&quot;,</span>
+<span class="nc" id="L50">                    role = &quot;Therapist&quot;,</span>
+<span class="nc" id="L51">                    phone = &quot;+1-555-0123&quot;</span>
+                ),
+<span class="nc" id="L53">                com.serenityai.data.models.EmergencyContact(</span>
+<span class="nc" id="L54">                    name = &quot;Mike Chen&quot;,</span>
+<span class="nc" id="L55">                    role = &quot;Support Person&quot;,</span>
+<span class="nc" id="L56">                    phone = &quot;+1-555-0456&quot;</span>
+                ),
+<span class="nc" id="L58">                com.serenityai.data.models.EmergencyContact(</span>
+<span class="nc" id="L59">                    name = &quot;Crisis Hotline&quot;,</span>
+<span class="nc" id="L60">                    role = &quot;24/7 Support&quot;,</span>
+<span class="nc" id="L61">                    phone = &quot;988&quot;,</span>
+<span class="nc" id="L62">                    availability = ContactAvailability.TWENTY_FOUR_SEVEN</span>
+                )
+            ),
+<span class="nc" id="L65">            copingStrategies = listOf(</span>
+<span class="nc" id="L66">                &quot;Deep breathing exercises&quot;,</span>
+<span class="nc" id="L67">                &quot;Call support person&quot;,</span>
+<span class="nc" id="L68">                &quot;Go for a walk&quot;,</span>
+<span class="nc" id="L69">                &quot;Listen to calming music&quot;,</span>
+<span class="nc" id="L70">                &quot;Practice mindfulness meditation&quot;</span>
+            ),
+<span class="nc" id="L72">            warningSigns = listOf(</span>
+<span class="nc" id="L73">                &quot;Feeling overwhelmed&quot;,</span>
+<span class="nc" id="L74">                &quot;Sleep problems&quot;,</span>
+<span class="nc" id="L75">                &quot;Loss of appetite&quot;,</span>
+<span class="nc" id="L76">                &quot;Withdrawing from others&quot;,</span>
+<span class="nc" id="L77">                &quot;Negative thoughts&quot;</span>
+            )
+<span class="nc" id="L79">        )</span>
+    }
+    
+    // Perform risk assessment when screen loads
+<span class="nc bnc" id="L83" title="All 2 branches missed.">    LaunchedEffect(Unit) {</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        if (isMonitoringEnabled) {</span>
+<span class="nc" id="L85">            isLoading = true</span>
+<span class="nc" id="L86">            riskAssessment = useCase.assessRiskLevel(</span>
+<span class="nc" id="L87">                moodEntries = sampleMoodEntries,</span>
+<span class="nc" id="L88">                sleepData = generateSampleSleepData(),</span>
+<span class="nc" id="L89">                stressLevels = generateSampleStressData()</span>
+            )
+<span class="nc" id="L91">            isLoading = false</span>
+        }
+<span class="nc" id="L93">    }</span>
+    
+    // Refresh assessment periodically
+<span class="nc" id="L96">    LaunchedEffect(isMonitoringEnabled) {</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        if (isMonitoringEnabled) {</span>
+<span class="nc" id="L98">            while (true) {</span>
+<span class="nc" id="L99">                kotlinx.coroutines.delay(300000) // Every 5 minutes</span>
+<span class="nc" id="L100">                riskAssessment = useCase.assessRiskLevel(</span>
+<span class="nc" id="L101">                    moodEntries = sampleMoodEntries,</span>
+<span class="nc" id="L102">                    sleepData = generateSampleSleepData(),</span>
+<span class="nc" id="L103">                    stressLevels = generateSampleStressData()</span>
+                )
+            }
+        }
+<span class="nc" id="L107">    }</span>
+    
+    // Convert data models to UI models for backward compatibility
+<span class="nc bnc" id="L110" title="All 4 branches missed.">    val riskFactors = riskAssessment?.riskIndicators?.map {</span>
+<span class="nc" id="L111">        RiskIndicator(it.name, it.riskLevel, it.description)</span>
+<span class="nc" id="L112">    } ?: emptyList()</span>
+    
+<span class="nc bnc" id="L114" title="All 4 branches missed.">    val earlyWarnings = riskAssessment?.earlyWarnings?.map {</span>
+<span class="nc" id="L115">        EarlyWarning(</span>
+<span class="nc" id="L116">            it.title,</span>
+<span class="nc" id="L117">            it.description,</span>
+<span class="nc" id="L118">            it.severity.name,</span>
+<span class="nc" id="L119">            it.recommendedAction</span>
+<span class="nc" id="L120">        )</span>
+<span class="nc" id="L121">    } ?: emptyList()</span>
+    
+    // Convert SafetyPlan to UI model (UI data class)
+<span class="nc" id="L124">    val uiSafetyPlan = com.serenityai.ui.screens.SafetyPlan(</span>
+<span class="nc" id="L125">        emergencyContacts = safetyPlan.emergencyContacts.map {</span>
+<span class="nc" id="L126">            com.serenityai.ui.screens.EmergencyContact(it.name, it.role, it.phone)</span>
+        },
+<span class="nc" id="L128">        copingStrategies = safetyPlan.copingStrategies,</span>
+<span class="nc" id="L129">        warningSigns = safetyPlan.warningSigns</span>
+    )
+    
+<span class="nc" id="L132">    Scaffold(</span>
+<span class="nc" id="L133">        topBar = {</span>
+<span class="nc bnc" id="L134" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L135" title="All 8 branches missed.">                title = { Text(&quot;Relapse Prevention&quot;) },</span>
+<span class="nc" id="L136">                navigationIcon = {</span>
+<span class="nc bnc" id="L137" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L138" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L139">                    }</span>
+<span class="nc" id="L140">                },</span>
+<span class="nc" id="L141">                actions = {</span>
+<span class="nc bnc" id="L142" title="All 8 branches missed.">                    IconButton(onClick = onEmergencyContact) {</span>
+<span class="nc bnc" id="L143" title="All 8 branches missed.">                        Icon(Icons.Default.Emergency, contentDescription = &quot;Emergency&quot;)</span>
+<span class="nc" id="L144">                    }</span>
+<span class="nc" id="L145">                }</span>
+<span class="nc" id="L146">            )</span>
+<span class="nc" id="L147">        }</span>
+<span class="nc" id="L148">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L149" title="All 8 branches missed.">        LazyColumn(</span>
+<span class="nc" id="L150">            modifier = Modifier</span>
+<span class="nc" id="L151">                .fillMaxSize()</span>
+<span class="nc" id="L152">                .padding(paddingValues)</span>
+<span class="nc" id="L153">                .padding(16.dp),</span>
+<span class="nc" id="L154">            verticalArrangement = Arrangement.spacedBy(16.dp)</span>
+<span class="nc" id="L155">        ) {</span>
+            // Risk Assessment Status
+<span class="nc" id="L157">            item {</span>
+<span class="nc bnc" id="L158" title="All 8 branches missed.">                Card(</span>
+<span class="nc" id="L159">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L160">                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L161">                ) {</span>
+<span class="nc bnc" id="L162" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L163">                        modifier = Modifier.padding(16.dp)</span>
+                    ) {
+<span class="nc" id="L165">                        Row(</span>
+<span class="nc" id="L166">                            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L167">                            horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L168">                            verticalAlignment = Alignment.CenterVertically</span>
+                        ) {
+<span class="nc" id="L170">                            Row(</span>
+<span class="nc" id="L171">                                verticalAlignment = Alignment.CenterVertically</span>
+                            ) {
+<span class="nc" id="L173">                                Icon(</span>
+<span class="nc" id="L174">                                    Icons.Default.Security,</span>
+<span class="nc" id="L175">                                    contentDescription = null,</span>
+<span class="nc" id="L176">                                    tint = Color(0xFF4CAF50)</span>
+                                )
+<span class="nc" id="L178">                                Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L179">                                Text(</span>
+<span class="nc" id="L180">                                    text = &quot;Risk Assessment&quot;,</span>
+<span class="nc" id="L181">                                    style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L182">                                    fontWeight = FontWeight.Bold</span>
+                                )
+<span class="nc" id="L184">                            }</span>
+                            
+<span class="nc" id="L186">                            Switch(</span>
+<span class="nc" id="L187">                                checked = isMonitoringEnabled,</span>
+<span class="nc" id="L188">                                onCheckedChange = { isMonitoringEnabled = it }</span>
+                            )
+<span class="nc" id="L190">                        }</span>
+                        
+<span class="nc" id="L192">                        Spacer(modifier = Modifier.height(8.dp))</span>
+                        
+<span class="nc" id="L194">                        Text(</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">                            text = if (isMonitoringEnabled) {</span>
+<span class="nc bnc" id="L196" title="All 6 branches missed.">                                val riskLevelText = riskAssessment?.overallRiskLevel?.name ?: &quot;ASSESSING&quot;</span>
+<span class="nc" id="L197">                                &quot;AI monitoring active - Risk level: $riskLevelText&quot;</span>
+                            } else {
+<span class="nc" id="L199">                                &quot;Monitoring disabled - Manual assessment required&quot;</span>
+                            },
+<span class="nc" id="L201">                            style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L202">                            color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                        )
+                        
+<span class="nc bnc" id="L205" title="All 2 branches missed.">                        if (isMonitoringEnabled) {</span>
+<span class="nc" id="L206">                            Spacer(modifier = Modifier.height(8.dp))</span>
+                            
+<span class="nc" id="L208">                            Row(</span>
+<span class="nc" id="L209">                                verticalAlignment = Alignment.CenterVertically</span>
+                            ) {
+<span class="nc bnc" id="L211" title="All 2 branches missed.">                                if (isLoading) {</span>
+<span class="nc" id="L212">                                    CircularProgressIndicator(</span>
+<span class="nc" id="L213">                                        modifier = Modifier.size(16.dp),</span>
+<span class="nc" id="L214">                                        strokeWidth = 2.dp</span>
+                                    )
+<span class="nc" id="L216">                                } else {</span>
+<span class="nc" id="L217">                                    Icon(</span>
+<span class="nc" id="L218">                                        Icons.Default.CheckCircle,</span>
+<span class="nc" id="L219">                                        contentDescription = null,</span>
+<span class="nc" id="L220">                                        tint = Color(0xFF4CAF50),</span>
+<span class="nc" id="L221">                                        modifier = Modifier.size(16.dp)</span>
+                                    )
+                                }
+<span class="nc" id="L224">                                Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L225">                                Text(</span>
+<span class="nc bnc" id="L226" title="All 4 branches missed.">                                    text = riskAssessment?.let {</span>
+<span class="nc" id="L227">                                        &quot;Last assessment: ${SimpleDateFormat(&quot;MMM dd, HH:mm&quot;, Locale.getDefault()).format(it.assessedAt)}&quot;</span>
+<span class="nc" id="L228">                                    } ?: &quot;Assessing...&quot;,</span>
+<span class="nc" id="L229">                                    style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L230">                                    color = MaterialTheme.colorScheme.primary</span>
+                                )
+<span class="nc" id="L232">                            }</span>
+                        }
+<span class="nc" id="L234">                    }</span>
+<span class="nc" id="L235">                }</span>
+<span class="nc" id="L236">            }</span>
+            
+            // Risk Factors Dashboard
+<span class="nc" id="L239">            item {</span>
+<span class="nc bnc" id="L240" title="All 8 branches missed.">                Card(</span>
+<span class="nc" id="L241">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L242">                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L243">                ) {</span>
+<span class="nc bnc" id="L244" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L245">                        modifier = Modifier.padding(16.dp)</span>
+                    ) {
+<span class="nc" id="L247">                        Text(</span>
+<span class="nc" id="L248">                            text = &quot;Risk Factors Dashboard&quot;,</span>
+<span class="nc" id="L249">                            style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L250">                            fontWeight = FontWeight.Bold</span>
+                        )
+                        
+<span class="nc" id="L253">                        Spacer(modifier = Modifier.height(8.dp))</span>
+                        
+<span class="nc" id="L255">                        Text(</span>
+<span class="nc" id="L256">                            text = &quot;Current risk indicators and their impact levels&quot;,</span>
+<span class="nc" id="L257">                            style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L258">                            color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                        )
+                        
+<span class="nc" id="L261">                        Spacer(modifier = Modifier.height(12.dp))</span>
+                        
+<span class="nc" id="L263">                        riskFactors.forEach { factor -&gt;</span>
+<span class="nc" id="L264">                            RiskFactorCard(factor = factor)</span>
+<span class="nc" id="L265">                            Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L266">                        }</span>
+<span class="nc" id="L267">                    }</span>
+<span class="nc" id="L268">                }</span>
+<span class="nc" id="L269">            }</span>
+            
+            // Early Warning System
+<span class="nc" id="L272">            item {</span>
+<span class="nc bnc" id="L273" title="All 8 branches missed.">                Card(</span>
+<span class="nc" id="L274">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L275">                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L276">                ) {</span>
+<span class="nc bnc" id="L277" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L278">                        modifier = Modifier.padding(16.dp)</span>
+                    ) {
+<span class="nc" id="L280">                        Row(</span>
+<span class="nc" id="L281">                            verticalAlignment = Alignment.CenterVertically</span>
+                        ) {
+<span class="nc" id="L283">                            Icon(</span>
+<span class="nc" id="L284">                                Icons.Default.Warning,</span>
+<span class="nc" id="L285">                                contentDescription = null,</span>
+<span class="nc" id="L286">                                tint = Color(0xFFFF9800)</span>
+                            )
+<span class="nc" id="L288">                            Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L289">                            Text(</span>
+<span class="nc" id="L290">                                text = &quot;Early Warning System&quot;,</span>
+<span class="nc" id="L291">                                style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L292">                                fontWeight = FontWeight.Bold</span>
+                            )
+<span class="nc" id="L294">                        }</span>
+                        
+<span class="nc" id="L296">                        Spacer(modifier = Modifier.height(8.dp))</span>
+                        
+<span class="nc" id="L298">                        Text(</span>
+<span class="nc" id="L299">                            text = &quot;AI-detected patterns that may indicate increased risk&quot;,</span>
+<span class="nc" id="L300">                            style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L301">                            color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                        )
+                        
+<span class="nc" id="L304">                        Spacer(modifier = Modifier.height(12.dp))</span>
+                        
+<span class="nc" id="L306">                        earlyWarnings.forEach { warning -&gt;</span>
+<span class="nc" id="L307">                            EarlyWarningCard(warning = warning)</span>
+<span class="nc" id="L308">                            Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L309">                        }</span>
+<span class="nc" id="L310">                    }</span>
+<span class="nc" id="L311">                }</span>
+<span class="nc" id="L312">            }</span>
+            
+            // Safety Plan
+<span class="nc" id="L315">            item {</span>
+<span class="nc bnc" id="L316" title="All 8 branches missed.">                Card(</span>
+<span class="nc" id="L317">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L318">                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L319">                ) {</span>
+<span class="nc bnc" id="L320" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L321">                        modifier = Modifier.padding(16.dp)</span>
+                    ) {
+<span class="nc" id="L323">                        Row(</span>
+<span class="nc" id="L324">                            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L325">                            horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L326">                            verticalAlignment = Alignment.CenterVertically</span>
+                        ) {
+<span class="nc" id="L328">                            Row(</span>
+<span class="nc" id="L329">                                verticalAlignment = Alignment.CenterVertically</span>
+                            ) {
+<span class="nc" id="L331">                                Icon(</span>
+<span class="nc" id="L332">                                    Icons.Default.Shield,</span>
+<span class="nc" id="L333">                                    contentDescription = null,</span>
+<span class="nc" id="L334">                                    tint = MaterialTheme.colorScheme.primary</span>
+                                )
+<span class="nc" id="L336">                                Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L337">                                Text(</span>
+<span class="nc" id="L338">                                    text = &quot;Safety Plan&quot;,</span>
+<span class="nc" id="L339">                                    style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L340">                                    fontWeight = FontWeight.Bold</span>
+                                )
+<span class="nc" id="L342">                            }</span>
+                            
+<span class="nc" id="L344">                            TextButton(onClick = { showSafetyPlan = true }) {</span>
+<span class="nc bnc" id="L345" title="All 8 branches missed.">                                Text(&quot;View Full Plan&quot;)</span>
+<span class="nc" id="L346">                            }</span>
+<span class="nc" id="L347">                        }</span>
+                        
+<span class="nc" id="L349">                        Spacer(modifier = Modifier.height(12.dp))</span>
+                        
+                        // Emergency Contacts Preview
+<span class="nc" id="L352">                        Text(</span>
+<span class="nc" id="L353">                            text = &quot;Emergency Contacts:&quot;,</span>
+<span class="nc" id="L354">                            style = MaterialTheme.typography.titleSmall,</span>
+<span class="nc" id="L355">                            fontWeight = FontWeight.Medium</span>
+                        )
+                        
+<span class="nc" id="L358">                        Spacer(modifier = Modifier.height(4.dp))</span>
+                        
+<span class="nc" id="L360">                        uiSafetyPlan.emergencyContacts.take(2).forEach { contact -&gt;</span>
+<span class="nc" id="L361">                            ContactPreview(contact = contact)</span>
+<span class="nc" id="L362">                        }</span>
+                        
+<span class="nc" id="L364">                        Spacer(modifier = Modifier.height(8.dp))</span>
+                        
+                        // Quick Coping Strategies
+<span class="nc" id="L367">                        Text(</span>
+<span class="nc" id="L368">                            text = &quot;Quick Coping Strategies:&quot;,</span>
+<span class="nc" id="L369">                            style = MaterialTheme.typography.titleSmall,</span>
+<span class="nc" id="L370">                            fontWeight = FontWeight.Medium</span>
+                        )
+                        
+<span class="nc" id="L373">                        Spacer(modifier = Modifier.height(4.dp))</span>
+                        
+<span class="nc" id="L375">                        uiSafetyPlan.copingStrategies.take(3).forEach { strategy -&gt;</span>
+<span class="nc" id="L376">                            Text(</span>
+<span class="nc" id="L377">                                text = &quot;• $strategy&quot;,</span>
+<span class="nc" id="L378">                                style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L379">                                color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                            )
+<span class="nc" id="L381">                        }</span>
+<span class="nc" id="L382">                    }</span>
+<span class="nc" id="L383">                }</span>
+<span class="nc" id="L384">            }</span>
+            
+            // Prevention Strategies
+<span class="nc" id="L387">            item {</span>
+<span class="nc bnc" id="L388" title="All 8 branches missed.">                Card(</span>
+<span class="nc" id="L389">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L390">                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L391">                ) {</span>
+<span class="nc bnc" id="L392" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L393">                        modifier = Modifier.padding(16.dp)</span>
+                    ) {
+<span class="nc" id="L395">                        Row(</span>
+<span class="nc" id="L396">                            verticalAlignment = Alignment.CenterVertically</span>
+                        ) {
+<span class="nc" id="L398">                            Icon(</span>
+<span class="nc" id="L399">                                Icons.Default.Recommend,</span>
+<span class="nc" id="L400">                                contentDescription = null,</span>
+<span class="nc" id="L401">                                tint = MaterialTheme.colorScheme.primary</span>
+                            )
+<span class="nc" id="L403">                            Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L404">                            Text(</span>
+<span class="nc" id="L405">                                text = &quot;Prevention Strategies&quot;,</span>
+<span class="nc" id="L406">                                style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L407">                                fontWeight = FontWeight.Bold</span>
+                            )
+<span class="nc" id="L409">                        }</span>
+                        
+<span class="nc" id="L411">                        Spacer(modifier = Modifier.height(12.dp))</span>
+                        
+<span class="nc" id="L413">                        PreventionStrategyCard(</span>
+<span class="nc" id="L414">                            title = &quot;Daily Check-ins&quot;,</span>
+<span class="nc" id="L415">                            description = &quot;Complete daily mood and risk assessments&quot;,</span>
+<span class="nc" id="L416">                            priority = &quot;High&quot;,</span>
+<span class="nc" id="L417">                            isCompleted = true</span>
+                        )
+                        
+<span class="nc" id="L420">                        Spacer(modifier = Modifier.height(8.dp))</span>
+                        
+<span class="nc" id="L422">                        PreventionStrategyCard(</span>
+<span class="nc" id="L423">                            title = &quot;Medication Reminders&quot;,</span>
+<span class="nc" id="L424">                            description = &quot;Set up automated medication reminders&quot;,</span>
+<span class="nc" id="L425">                            priority = &quot;High&quot;,</span>
+<span class="nc" id="L426">                            isCompleted = true</span>
+                        )
+                        
+<span class="nc" id="L429">                        Spacer(modifier = Modifier.height(8.dp))</span>
+                        
+<span class="nc" id="L431">                        PreventionStrategyCard(</span>
+<span class="nc" id="L432">                            title = &quot;Support Group Meetings&quot;,</span>
+<span class="nc" id="L433">                            description = &quot;Attend weekly support group sessions&quot;,</span>
+<span class="nc" id="L434">                            priority = &quot;Medium&quot;,</span>
+<span class="nc" id="L435">                            isCompleted = false</span>
+                        )
+                        
+<span class="nc" id="L438">                        Spacer(modifier = Modifier.height(8.dp))</span>
+                        
+<span class="nc" id="L440">                        PreventionStrategyCard(</span>
+<span class="nc" id="L441">                            title = &quot;Therapy Sessions&quot;,</span>
+<span class="nc" id="L442">                            description = &quot;Regular therapy appointments&quot;,</span>
+<span class="nc" id="L443">                            priority = &quot;High&quot;,</span>
+<span class="nc" id="L444">                            isCompleted = true</span>
+                        )
+<span class="nc" id="L446">                    }</span>
+<span class="nc" id="L447">                }</span>
+<span class="nc" id="L448">            }</span>
+            
+            // Emergency Actions
+<span class="nc" id="L451">            item {</span>
+<span class="nc bnc" id="L452" title="All 8 branches missed.">                Button(</span>
+<span class="nc" id="L453">                    onClick = onEmergencyContact,</span>
+<span class="nc" id="L454">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L455">                    colors = ButtonDefaults.buttonColors(</span>
+<span class="nc" id="L456">                        containerColor = Color(0xFFF44336)</span>
+                    )
+<span class="nc" id="L458">                ) {</span>
+<span class="nc bnc" id="L459" title="All 6 branches missed.">                    Icon(Icons.Default.Emergency, contentDescription = null)</span>
+<span class="nc" id="L460">                    Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc bnc" id="L461" title="All 2 branches missed.">                    Text(&quot;Emergency Contact&quot;)</span>
+<span class="nc" id="L462">                }</span>
+<span class="nc" id="L463">            }</span>
+<span class="nc" id="L464">        }</span>
+<span class="nc" id="L465">    }</span>
+    
+    // Safety Plan Dialog
+<span class="nc bnc" id="L468" title="All 2 branches missed.">    if (showSafetyPlan) {</span>
+<span class="nc bnc" id="L469" title="All 2 branches missed.">        AlertDialog(</span>
+<span class="nc" id="L470">            onDismissRequest = { showSafetyPlan = false },</span>
+<span class="nc bnc" id="L471" title="All 8 branches missed.">            title = { Text(&quot;Complete Safety Plan&quot;) },</span>
+<span class="nc" id="L472">            text = {</span>
+<span class="nc bnc" id="L473" title="All 6 branches missed.">                Column {</span>
+<span class="nc" id="L474">                    Text(&quot;Emergency Contacts:&quot;)</span>
+<span class="nc" id="L475">                    uiSafetyPlan.emergencyContacts.forEach { contact -&gt;</span>
+<span class="nc" id="L476">                        Text(&quot;• ${contact.name} (${contact.role}): ${contact.phone}&quot;)</span>
+<span class="nc" id="L477">                    }</span>
+                    
+<span class="nc" id="L479">                    Spacer(modifier = Modifier.height(8.dp))</span>
+                    
+<span class="nc" id="L481">                    Text(&quot;Warning Signs:&quot;)</span>
+<span class="nc" id="L482">                    uiSafetyPlan.warningSigns.forEach { sign -&gt;</span>
+<span class="nc" id="L483">                        Text(&quot;• $sign&quot;)</span>
+<span class="nc" id="L484">                    }</span>
+                    
+<span class="nc" id="L486">                    Spacer(modifier = Modifier.height(8.dp))</span>
+                    
+<span class="nc" id="L488">                    Text(&quot;Coping Strategies:&quot;)</span>
+<span class="nc" id="L489">                    uiSafetyPlan.copingStrategies.forEach { strategy -&gt;</span>
+<span class="nc" id="L490">                        Text(&quot;• $strategy&quot;)</span>
+<span class="nc" id="L491">                    }</span>
+<span class="nc" id="L492">                }</span>
+<span class="nc" id="L493">            },</span>
+<span class="nc" id="L494">            confirmButton = {</span>
+<span class="nc bnc" id="L495" title="All 8 branches missed.">                TextButton(onClick = { showSafetyPlan = false }) {</span>
+<span class="nc bnc" id="L496" title="All 8 branches missed.">                    Text(&quot;Close&quot;)</span>
+<span class="nc" id="L497">                }</span>
+<span class="nc" id="L498">            }</span>
+        )
+    }
+<span class="nc bnc" id="L501" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L504" title="All 10 branches missed.">fun RiskFactorCard(factor: RiskIndicator) {</span>
+<span class="nc bnc" id="L505" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L506">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L507">        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)</span>
+<span class="nc" id="L508">    ) {</span>
+<span class="nc bnc" id="L509" title="All 6 branches missed.">        Row(</span>
+<span class="nc" id="L510">            modifier = Modifier.padding(12.dp),</span>
+<span class="nc" id="L511">            verticalAlignment = Alignment.CenterVertically</span>
+        ) {
+<span class="nc" id="L513">            val riskColor = when {</span>
+<span class="nc bnc" id="L514" title="All 2 branches missed.">                factor.riskLevel &gt;= 80 -&gt; Color(0xFFF44336)</span>
+<span class="nc bnc" id="L515" title="All 2 branches missed.">                factor.riskLevel &gt;= 60 -&gt; Color(0xFFFF9800)</span>
+<span class="nc bnc" id="L516" title="All 2 branches missed.">                factor.riskLevel &gt;= 40 -&gt; Color(0xFFFFC107)</span>
+<span class="nc" id="L517">                else -&gt; Color(0xFF4CAF50)</span>
+            }
+            
+<span class="nc" id="L520">            Box(</span>
+<span class="nc" id="L521">                modifier = Modifier</span>
+<span class="nc" id="L522">                    .size(8.dp)</span>
+<span class="nc" id="L523">                    .background(riskColor, RoundedCornerShape(4.dp))</span>
+            )
+            
+<span class="nc" id="L526">            Spacer(modifier = Modifier.width(12.dp))</span>
+            
+<span class="nc" id="L528">            Column(</span>
+<span class="nc" id="L529">                modifier = Modifier.weight(1f)</span>
+            ) {
+<span class="nc" id="L531">                Text(</span>
+<span class="nc" id="L532">                    text = factor.name,</span>
+<span class="nc" id="L533">                    style = MaterialTheme.typography.titleSmall,</span>
+<span class="nc" id="L534">                    fontWeight = FontWeight.Medium</span>
+                )
+                
+<span class="nc" id="L537">                Text(</span>
+<span class="nc" id="L538">                    text = factor.description,</span>
+<span class="nc" id="L539">                    style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L540">                    color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                )
+<span class="nc" id="L542">            }</span>
+            
+<span class="nc" id="L544">            Text(</span>
+<span class="nc" id="L545">                text = &quot;${factor.riskLevel}%&quot;,</span>
+<span class="nc" id="L546">                style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L547">                color = riskColor,</span>
+<span class="nc" id="L548">                fontWeight = FontWeight.Medium</span>
+            )
+<span class="nc" id="L550">        }</span>
+<span class="nc" id="L551">    }</span>
+<span class="nc bnc" id="L552" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L555" title="All 10 branches missed.">fun EarlyWarningCard(warning: EarlyWarning) {</span>
+<span class="nc bnc" id="L556" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L557">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L558">        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)</span>
+<span class="nc" id="L559">    ) {</span>
+<span class="nc bnc" id="L560" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L561">            modifier = Modifier.padding(12.dp)</span>
+        ) {
+<span class="nc" id="L563">            Row(</span>
+<span class="nc" id="L564">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L565">                horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L566">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L568">                Text(</span>
+<span class="nc" id="L569">                    text = warning.title,</span>
+<span class="nc" id="L570">                    style = MaterialTheme.typography.titleSmall,</span>
+<span class="nc" id="L571">                    fontWeight = FontWeight.Bold</span>
+                )
+                
+<span class="nc bnc" id="L574" title="All 4 branches missed.">                val severityColor = when (warning.severity.lowercase()) {</span>
+<span class="nc" id="L575">                    &quot;high&quot; -&gt; Color(0xFFF44336)</span>
+<span class="nc" id="L576">                    &quot;medium&quot; -&gt; Color(0xFFFF9800)</span>
+<span class="nc" id="L577">                    &quot;low&quot; -&gt; Color(0xFF4CAF50)</span>
+<span class="nc" id="L578">                    else -&gt; MaterialTheme.colorScheme.primary</span>
+                }
+                
+<span class="nc" id="L581">                Text(</span>
+<span class="nc" id="L582">                    text = warning.severity,</span>
+<span class="nc" id="L583">                    style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L584">                    color = severityColor,</span>
+<span class="nc" id="L585">                    fontWeight = FontWeight.Medium</span>
+                )
+<span class="nc" id="L587">            }</span>
+            
+<span class="nc" id="L589">            Spacer(modifier = Modifier.height(4.dp))</span>
+            
+<span class="nc" id="L591">            Text(</span>
+<span class="nc" id="L592">                text = warning.description,</span>
+<span class="nc" id="L593">                style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L594">                color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+            )
+            
+<span class="nc" id="L597">            Spacer(modifier = Modifier.height(8.dp))</span>
+            
+<span class="nc" id="L599">            Text(</span>
+<span class="nc" id="L600">                text = &quot;💡 Recommended Action: ${warning.recommendedAction}&quot;,</span>
+<span class="nc" id="L601">                style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L602">                color = MaterialTheme.colorScheme.primary,</span>
+<span class="nc" id="L603">                fontWeight = FontWeight.Medium</span>
+            )
+<span class="nc" id="L605">        }</span>
+<span class="nc" id="L606">    }</span>
+<span class="nc bnc" id="L607" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L610" title="All 10 branches missed.">fun ContactPreview(contact: EmergencyContact) {</span>
+<span class="nc" id="L611">    Row(</span>
+<span class="nc" id="L612">        verticalAlignment = Alignment.CenterVertically</span>
+    ) {
+<span class="nc" id="L614">        Icon(</span>
+<span class="nc" id="L615">            Icons.Default.Person,</span>
+<span class="nc" id="L616">            contentDescription = null,</span>
+<span class="nc" id="L617">            modifier = Modifier.size(16.dp),</span>
+<span class="nc" id="L618">            tint = MaterialTheme.colorScheme.primary</span>
+        )
+        
+<span class="nc" id="L621">        Spacer(modifier = Modifier.width(8.dp))</span>
+        
+<span class="nc" id="L623">        Text(</span>
+<span class="nc" id="L624">            text = &quot;${contact.name} (${contact.role})&quot;,</span>
+<span class="nc" id="L625">            style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L626">            color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+        )
+<span class="nc" id="L628">    }</span>
+<span class="nc bnc" id="L629" title="All 2 branches missed.">}</span>
+
+@Composable
+fun PreventionStrategyCard(
+    title: String,
+    description: String,
+    priority: String,
+    isCompleted: Boolean
+<span class="nc bnc" id="L637" title="All 22 branches missed.">) {</span>
+<span class="nc bnc" id="L638" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L639">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L640">        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)</span>
+<span class="nc" id="L641">    ) {</span>
+<span class="nc bnc" id="L642" title="All 6 branches missed.">        Row(</span>
+<span class="nc" id="L643">            modifier = Modifier.padding(12.dp),</span>
+<span class="nc" id="L644">            verticalAlignment = Alignment.CenterVertically</span>
+        ) {
+<span class="nc bnc" id="L646" title="All 2 branches missed.">            if (isCompleted) {</span>
+<span class="nc" id="L647">                Icon(</span>
+<span class="nc" id="L648">                    Icons.Default.CheckCircle,</span>
+<span class="nc" id="L649">                    contentDescription = &quot;Completed&quot;,</span>
+<span class="nc" id="L650">                    tint = Color(0xFF4CAF50),</span>
+<span class="nc" id="L651">                    modifier = Modifier.size(20.dp)</span>
+                )
+<span class="nc" id="L653">            } else {</span>
+<span class="nc" id="L654">                Icon(</span>
+<span class="nc" id="L655">                    Icons.Default.RadioButtonUnchecked,</span>
+<span class="nc" id="L656">                    contentDescription = &quot;Not completed&quot;,</span>
+<span class="nc" id="L657">                    tint = MaterialTheme.colorScheme.onSurfaceVariant,</span>
+<span class="nc" id="L658">                    modifier = Modifier.size(20.dp)</span>
+                )
+            }
+            
+<span class="nc" id="L662">            Spacer(modifier = Modifier.width(12.dp))</span>
+            
+<span class="nc" id="L664">            Column(</span>
+<span class="nc" id="L665">                modifier = Modifier.weight(1f)</span>
+            ) {
+<span class="nc" id="L667">                Text(</span>
+<span class="nc" id="L668">                    text = title,</span>
+<span class="nc" id="L669">                    style = MaterialTheme.typography.titleSmall,</span>
+<span class="nc" id="L670">                    fontWeight = FontWeight.Medium</span>
+                )
+                
+<span class="nc" id="L673">                Text(</span>
+<span class="nc" id="L674">                    text = description,</span>
+<span class="nc" id="L675">                    style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L676">                    color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                )
+<span class="nc" id="L678">            }</span>
+            
+<span class="nc bnc" id="L680" title="All 4 branches missed.">            val priorityColor = when (priority.lowercase()) {</span>
+<span class="nc" id="L681">                &quot;high&quot; -&gt; Color(0xFFF44336)</span>
+<span class="nc" id="L682">                &quot;medium&quot; -&gt; Color(0xFFFF9800)</span>
+<span class="nc" id="L683">                &quot;low&quot; -&gt; Color(0xFF4CAF50)</span>
+<span class="nc" id="L684">                else -&gt; MaterialTheme.colorScheme.primary</span>
+            }
+            
+<span class="nc" id="L687">            Text(</span>
+<span class="nc" id="L688">                text = priority,</span>
+<span class="nc" id="L689">                style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L690">                color = priorityColor,</span>
+<span class="nc" id="L691">                fontWeight = FontWeight.Medium</span>
+            )
+<span class="nc" id="L693">        }</span>
+<span class="nc" id="L694">    }</span>
+<span class="nc bnc" id="L695" title="All 2 branches missed.">}</span>
+
+// Data classes moved to com.serenityai.data.models.RelapsePrevention
+// Keeping these for backward compatibility with existing code
+<span class="nc" id="L699">data class RiskIndicator(</span>
+<span class="nc" id="L700">    val name: String,</span>
+<span class="nc" id="L701">    val riskLevel: Int,</span>
+<span class="nc" id="L702">    val description: String</span>
+)
+
+<span class="nc" id="L705">data class EarlyWarning(</span>
+<span class="nc" id="L706">    val title: String,</span>
+<span class="nc" id="L707">    val description: String,</span>
+<span class="nc" id="L708">    val severity: String,</span>
+<span class="nc" id="L709">    val recommendedAction: String</span>
+)
+
+<span class="nc" id="L712">data class SafetyPlan(</span>
+<span class="nc" id="L713">    val emergencyContacts: List&lt;EmergencyContact&gt;,</span>
+<span class="nc" id="L714">    val copingStrategies: List&lt;String&gt;,</span>
+<span class="nc" id="L715">    val warningSigns: List&lt;String&gt;</span>
+)
+
+<span class="nc" id="L718">data class EmergencyContact(</span>
+<span class="nc" id="L719">    val name: String,</span>
+<span class="nc" id="L720">    val role: String,</span>
+<span class="nc" id="L721">    val phone: String</span>
+)
+
+// Helper functions to generate sample data
+private fun generateSampleMoodEntries(): List&lt;com.serenityai.data.models.MoodEntry&gt; {
+<span class="nc" id="L726">    val entries = mutableListOf&lt;com.serenityai.data.models.MoodEntry&gt;()</span>
+<span class="nc" id="L727">    val calendar = Calendar.getInstance()</span>
+    
+    // Generate 14 days of mood data with some decline pattern
+<span class="nc bnc" id="L730" title="All 2 branches missed.">    repeat(14) { dayOffset -&gt;</span>
+<span class="nc" id="L731">        calendar.time = Date(System.currentTimeMillis() - (14 - dayOffset) * 86400000L)</span>
+        
+        // Simulate mood decline pattern
+<span class="nc" id="L734">        val baseMood = 4.0</span>
+<span class="nc" id="L735">        val moodAdjustment = when {</span>
+<span class="nc bnc" id="L736" title="All 2 branches missed.">            dayOffset &gt;= 10 -&gt; -1.5 // Recent decline</span>
+<span class="nc bnc" id="L737" title="All 2 branches missed.">            dayOffset &gt;= 7 -&gt; -0.5  // Moderate decline</span>
+<span class="nc" id="L738">            else -&gt; 0.0</span>
+        }
+<span class="nc" id="L740">        val mood = (baseMood + moodAdjustment + Math.random() * 0.5 - 0.25).coerceIn(1.0, 5.0).toInt()</span>
+        
+<span class="nc" id="L742">        entries.add(</span>
+<span class="nc" id="L743">            com.serenityai.data.models.MoodEntry(</span>
+<span class="nc" id="L744">                id = &quot;entry-$dayOffset&quot;,</span>
+<span class="nc" id="L745">                userId = &quot;user-123&quot;,</span>
+<span class="nc" id="L746">                date = calendar.time,</span>
+<span class="nc" id="L747">                mood = mood,</span>
+<span class="nc" id="L748">                energy = 5,</span>
+<span class="nc bnc" id="L749" title="All 2 branches missed.">                stress = if (dayOffset &gt;= 10) 7 else 5,</span>
+<span class="nc bnc" id="L750" title="All 2 branches missed.">                anxiety = if (dayOffset &gt;= 10) 6 else 5,</span>
+<span class="nc bnc" id="L751" title="All 2 branches missed.">                sleep = if (dayOffset &gt;= 10) 4 else 6</span>
+            )
+        )
+<span class="nc" id="L754">    }</span>
+    
+<span class="nc" id="L756">    return entries</span>
+}
+
+private fun generateSampleSleepData(): List&lt;com.serenityai.usecases.SleepData&gt; {
+<span class="nc" id="L760">    val calendar = Calendar.getInstance()</span>
+<span class="nc" id="L761">    return (0..6).map { dayOffset -&gt;</span>
+<span class="nc" id="L762">        calendar.time = Date(System.currentTimeMillis() - (7 - dayOffset) * 86400000L)</span>
+<span class="nc" id="L763">        com.serenityai.usecases.SleepData(</span>
+<span class="nc" id="L764">            date = calendar.time,</span>
+<span class="nc bnc" id="L765" title="All 2 branches missed.">            hours = if (dayOffset &gt;= 4) 5.5 + Math.random() * 1.0 else 7.0 + Math.random() * 1.0</span>
+<span class="nc" id="L766">        )</span>
+    }
+}
+
+private fun generateSampleStressData(): List&lt;com.serenityai.usecases.StressData&gt; {
+<span class="nc" id="L771">    val calendar = Calendar.getInstance()</span>
+<span class="nc" id="L772">    return (0..6).map { dayOffset -&gt;</span>
+<span class="nc" id="L773">        calendar.time = Date(System.currentTimeMillis() - (7 - dayOffset) * 86400000L)</span>
+<span class="nc" id="L774">        com.serenityai.usecases.StressData(</span>
+<span class="nc" id="L775">            date = calendar.time,</span>
+<span class="nc bnc" id="L776" title="All 2 branches missed.">            level = if (dayOffset &gt;= 4) (6 + Math.random() * 2).toInt() else (4 + Math.random() * 2).toInt()</span>
+<span class="nc" id="L777">        )</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

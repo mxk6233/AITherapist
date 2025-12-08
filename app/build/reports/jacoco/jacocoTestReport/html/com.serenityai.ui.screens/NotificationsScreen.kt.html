@@ -1,0 +1,770 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NotificationsScreen.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.screens</a> &gt; <span class="el_source">NotificationsScreen.kt</span></div><h1>NotificationsScreen.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.screens
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import java.text.SimpleDateFormat
+import java.util.*
+
+// Data classes for notifications
+<span class="nc" id="L23">data class NotificationItem(</span>
+<span class="nc" id="L24">    val id: String,</span>
+<span class="nc" id="L25">    val title: String,</span>
+<span class="nc" id="L26">    val message: String,</span>
+<span class="nc" id="L27">    val timestamp: Long,</span>
+<span class="nc" id="L28">    val type: NotificationType,</span>
+<span class="nc" id="L29">    val isRead: Boolean = false,</span>
+<span class="nc" id="L30">    val priority: NotificationPriority = NotificationPriority.NORMAL,</span>
+<span class="nc" id="L31">    val actionRequired: Boolean = false</span>
+<span class="nc" id="L32">)</span>
+
+<span class="nc" id="L34">enum class NotificationType(</span>
+<span class="nc" id="L35">    val displayName: String,</span>
+<span class="nc" id="L36">    val icon: androidx.compose.ui.graphics.vector.ImageVector,</span>
+<span class="nc" id="L37">    val color: Color</span>
+) {
+<span class="nc" id="L39">    MOOD_REMINDER(&quot;Mood Reminder&quot;, Icons.Default.SentimentSatisfiedAlt, Color(0xFF4CAF50)),</span>
+<span class="nc" id="L40">    SESSION_REMINDER(&quot;Session Reminder&quot;, Icons.Default.Schedule, Color(0xFF2196F3)),</span>
+<span class="nc" id="L41">    CRISIS_ALERT(&quot;Crisis Alert&quot;, Icons.Default.Emergency, Color(0xFFF44336)),</span>
+<span class="nc" id="L42">    ACHIEVEMENT(&quot;Achievement&quot;, Icons.Default.EmojiEvents, Color(0xFFFF9800)),</span>
+<span class="nc" id="L43">    SYSTEM_UPDATE(&quot;System Update&quot;, Icons.Default.SystemUpdate, Color(0xFF9C27B0)),</span>
+<span class="nc" id="L44">    THERAPIST_MESSAGE(&quot;Therapist Message&quot;, Icons.Default.Message, Color(0xFF00BCD4)),</span>
+<span class="nc" id="L45">    BACKUP_COMPLETE(&quot;Backup Complete&quot;, Icons.Default.Backup, Color(0xFF8BC34A)),</span>
+<span class="nc" id="L46">    SECURITY_ALERT(&quot;Security Alert&quot;, Icons.Default.Security, Color(0xFFE91E63))</span>
+<span class="nc" id="L47">}</span>
+
+<span class="nc" id="L49">enum class NotificationPriority(val displayName: String) {</span>
+<span class="nc" id="L50">    LOW(&quot;Low&quot;),</span>
+<span class="nc" id="L51">    NORMAL(&quot;Normal&quot;),</span>
+<span class="nc" id="L52">    HIGH(&quot;High&quot;),</span>
+<span class="nc" id="L53">    URGENT(&quot;Urgent&quot;)</span>
+<span class="nc" id="L54">}</span>
+
+// NotificationSettings is already defined in AppPreferencesScreen.kt
+// Using the existing definition to avoid conflicts
+
+// Wrapper function for backward compatibility
+@Composable
+<span class="nc bnc" id="L61" title="All 10 branches missed.">fun NotificationsScreen(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">    NotificationsScreenDetailed(onNavigateBack = onNavigateBack)</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L67" title="All 10 branches missed.">fun NotificationsScreenDetailed(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc" id="L68">    var currentTab by remember { mutableStateOf(&quot;All&quot;) }</span>
+<span class="nc" id="L69">    var showSettings by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L70">    var notifications by remember { mutableStateOf(generateSampleNotifications()) }</span>
+    
+<span class="nc" id="L72">    val tabs = listOf(&quot;All&quot;, &quot;Unread&quot;, &quot;Important&quot;, &quot;Settings&quot;)</span>
+
+<span class="nc" id="L74">    Scaffold(</span>
+<span class="nc" id="L75">        topBar = {</span>
+<span class="nc bnc" id="L76" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L77" title="All 8 branches missed.">                title = { Text(&quot;Notifications&quot;) },</span>
+<span class="nc" id="L78">                navigationIcon = {</span>
+<span class="nc bnc" id="L79" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L80" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L81">                    }</span>
+<span class="nc" id="L82">                },</span>
+<span class="nc" id="L83">                actions = {</span>
+<span class="nc bnc" id="L84" title="All 6 branches missed.">                    IconButton(onClick = { </span>
+<span class="nc" id="L85">                        notifications = notifications.map { it.copy(isRead = true) }</span>
+<span class="nc" id="L86">                    }) {</span>
+<span class="nc bnc" id="L87" title="All 8 branches missed.">                        Icon(Icons.Default.DoneAll, contentDescription = &quot;Mark all as read&quot;)</span>
+<span class="nc" id="L88">                    }</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">                    IconButton(onClick = { showSettings = true }) {</span>
+<span class="nc bnc" id="L90" title="All 8 branches missed.">                        Icon(Icons.Default.Settings, contentDescription = &quot;Settings&quot;)</span>
+<span class="nc" id="L91">                    }</span>
+<span class="nc" id="L92">                },</span>
+<span class="nc" id="L93">                colors = TopAppBarDefaults.topAppBarColors(</span>
+<span class="nc" id="L94">                    containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+                )
+<span class="nc" id="L96">            )</span>
+<span class="nc" id="L97">        }</span>
+<span class="nc" id="L98">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L99" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L100">            modifier = Modifier</span>
+<span class="nc" id="L101">                .fillMaxSize()</span>
+<span class="nc" id="L102">                .padding(paddingValues)</span>
+        ) {
+            // Tab selector
+<span class="nc" id="L105">            TabRow(</span>
+<span class="nc" id="L106">                selectedTabIndex = tabs.indexOf(currentTab),</span>
+<span class="nc" id="L107">                modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L108">            ) {</span>
+<span class="nc bnc" id="L109" title="All 6 branches missed.">                tabs.forEachIndexed { index, tab -&gt;</span>
+<span class="nc" id="L110">                    Tab(</span>
+<span class="nc" id="L111">                        selected = currentTab == tab,</span>
+<span class="nc" id="L112">                        onClick = { currentTab = tab },</span>
+<span class="nc bnc" id="L113" title="All 8 branches missed.">                        text = { Text(tab) }</span>
+                    )
+<span class="nc" id="L115">                }</span>
+<span class="nc" id="L116">            }</span>
+            
+            // Content based on selected tab
+<span class="nc bnc" id="L119" title="All 5 branches missed.">            when (currentTab) {</span>
+<span class="nc" id="L120">                &quot;All&quot; -&gt; NotificationList(</span>
+<span class="nc" id="L121">                    notifications = notifications,</span>
+<span class="nc" id="L122">                    onNotificationClick = { notification -&gt;</span>
+<span class="nc" id="L123">                        notifications = notifications.map { </span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">                            if (it.id == notification.id) it.copy(isRead = true) else it </span>
+                        }
+<span class="nc" id="L126">                    },</span>
+<span class="nc" id="L127">                    onNotificationDelete = { notification -&gt;</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">                        notifications = notifications.filter { it.id != notification.id }</span>
+<span class="nc" id="L129">                    }</span>
+                )
+<span class="nc" id="L131">                &quot;Unread&quot; -&gt; NotificationList(</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">                    notifications = notifications.filter { !it.isRead },</span>
+<span class="nc" id="L133">                    onNotificationClick = { notification -&gt;</span>
+<span class="nc" id="L134">                        notifications = notifications.map { </span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">                            if (it.id == notification.id) it.copy(isRead = true) else it </span>
+                        }
+<span class="nc" id="L137">                    },</span>
+<span class="nc" id="L138">                    onNotificationDelete = { notification -&gt;</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">                        notifications = notifications.filter { it.id != notification.id }</span>
+<span class="nc" id="L140">                    }</span>
+                )
+<span class="nc" id="L142">                &quot;Important&quot; -&gt; NotificationList(</span>
+<span class="nc" id="L143">                    notifications = notifications.filter { </span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">                        it.priority == NotificationPriority.HIGH || </span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">                        it.priority == NotificationPriority.URGENT ||</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">                        it.actionRequired </span>
+                    },
+<span class="nc" id="L148">                    onNotificationClick = { notification -&gt;</span>
+<span class="nc" id="L149">                        notifications = notifications.map { </span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">                            if (it.id == notification.id) it.copy(isRead = true) else it </span>
+                        }
+<span class="nc" id="L152">                    },</span>
+<span class="nc" id="L153">                    onNotificationDelete = { notification -&gt;</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">                        notifications = notifications.filter { it.id != notification.id }</span>
+<span class="nc" id="L155">                    }</span>
+                )
+<span class="nc" id="L157">                &quot;Settings&quot; -&gt; NotificationSettingsContent()</span>
+<span class="nc" id="L158">            }</span>
+<span class="nc" id="L159">        }</span>
+<span class="nc" id="L160">    }</span>
+    
+<span class="nc bnc" id="L162" title="All 2 branches missed.">    if (showSettings) {</span>
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        NotificationSettingsDialog(</span>
+<span class="nc" id="L164">            onDismiss = { showSettings = false }</span>
+        )
+    }
+<span class="nc bnc" id="L167" title="All 2 branches missed.">}</span>
+
+@Composable
+fun NotificationList(
+    notifications: List&lt;NotificationItem&gt;,
+    onNotificationClick: (NotificationItem) -&gt; Unit,
+    onNotificationDelete: (NotificationItem) -&gt; Unit
+<span class="nc bnc" id="L174" title="All 18 branches missed.">) {</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">    if (notifications.isEmpty()) {</span>
+<span class="nc" id="L176">        EmptyNotificationsState()</span>
+<span class="nc bnc" id="L177" title="All 2 branches missed.">    } else {</span>
+<span class="nc" id="L178">        LazyColumn(</span>
+<span class="nc" id="L179">            modifier = Modifier.fillMaxSize(),</span>
+<span class="nc bnc" id="L180" title="All 4 branches missed.">            verticalArrangement = Arrangement.spacedBy(8.dp),</span>
+<span class="nc" id="L181">            contentPadding = PaddingValues(16.dp)</span>
+<span class="nc" id="L182">        ) {</span>
+<span class="nc" id="L183">            items(notifications) { notification -&gt;</span>
+                NotificationCard(
+                    notification = notification,
+<span class="nc" id="L186">                    onClick = { onNotificationClick(notification) },</span>
+<span class="nc" id="L187">                    onDelete = { onNotificationDelete(notification) }</span>
+                )
+            }
+<span class="nc" id="L190">        }</span>
+    }
+<span class="nc bnc" id="L192" title="All 2 branches missed.">}</span>
+
+@Composable
+fun NotificationCard(
+    notification: NotificationItem,
+    onClick: () -&gt; Unit,
+    onDelete: () -&gt; Unit
+<span class="nc bnc" id="L199" title="All 18 branches missed.">) {</span>
+<span class="nc bnc" id="L200" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L201">        onClick = onClick,</span>
+<span class="nc" id="L202">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L203">        colors = CardDefaults.cardColors(</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">            containerColor = if (notification.isRead) </span>
+<span class="nc" id="L205">                MaterialTheme.colorScheme.surface </span>
+<span class="nc" id="L206">            else notification.type.color.copy(alpha = 0.1f)</span>
+        ),
+<span class="nc" id="L208">        elevation = CardDefaults.cardElevation(</span>
+<span class="nc bnc" id="L209" title="All 2 branches missed.">            defaultElevation = if (notification.isRead) 1.dp else 4.dp</span>
+        )
+<span class="nc" id="L211">    ) {</span>
+<span class="nc bnc" id="L212" title="All 6 branches missed.">        Row(</span>
+<span class="nc" id="L213">            modifier = Modifier.padding(16.dp),</span>
+<span class="nc" id="L214">            verticalAlignment = Alignment.Top</span>
+        ) {
+            // Notification icon
+<span class="nc" id="L217">            Box(</span>
+<span class="nc" id="L218">                modifier = Modifier</span>
+<span class="nc" id="L219">                    .size(40.dp)</span>
+<span class="nc" id="L220">                    .background(</span>
+<span class="nc" id="L221">                        notification.type.color.copy(alpha = 0.2f),</span>
+<span class="nc" id="L222">                        shape = androidx.compose.foundation.shape.CircleShape</span>
+                    ),
+<span class="nc" id="L224">                contentAlignment = Alignment.Center</span>
+            ) {
+<span class="nc" id="L226">                Icon(</span>
+<span class="nc" id="L227">                    notification.type.icon,</span>
+<span class="nc" id="L228">                    contentDescription = null,</span>
+<span class="nc" id="L229">                    tint = notification.type.color,</span>
+<span class="nc" id="L230">                    modifier = Modifier.size(20.dp)</span>
+                )
+<span class="nc" id="L232">            }</span>
+            
+<span class="nc" id="L234">            Spacer(modifier = Modifier.width(12.dp))</span>
+            
+            // Notification content
+<span class="nc" id="L237">            Column(modifier = Modifier.weight(1f)) {</span>
+<span class="nc" id="L238">                Row(</span>
+<span class="nc" id="L239">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L240">                    horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L241">                    verticalAlignment = Alignment.Top</span>
+                ) {
+<span class="nc" id="L243">                    Text(</span>
+<span class="nc" id="L244">                        text = notification.title,</span>
+<span class="nc" id="L245">                        fontSize = 16.sp,</span>
+<span class="nc bnc" id="L246" title="All 2 branches missed.">                        fontWeight = if (notification.isRead) FontWeight.Normal else FontWeight.Bold</span>
+                    )
+                    
+<span class="nc" id="L249">                    Text(</span>
+<span class="nc" id="L250">                        text = formatTime(notification.timestamp),</span>
+<span class="nc" id="L251">                        fontSize = 12.sp,</span>
+<span class="nc" id="L252">                        color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                    )
+<span class="nc" id="L254">                }</span>
+                
+<span class="nc" id="L256">                Text(</span>
+<span class="nc" id="L257">                    text = notification.message,</span>
+<span class="nc" id="L258">                    fontSize = 14.sp,</span>
+<span class="nc" id="L259">                    color = MaterialTheme.colorScheme.onSurfaceVariant,</span>
+<span class="nc" id="L260">                    modifier = Modifier.padding(vertical = 4.dp)</span>
+                )
+                
+                // Priority and action indicators
+<span class="nc" id="L264">                Row(</span>
+<span class="nc" id="L265">                    verticalAlignment = Alignment.CenterVertically</span>
+                ) {
+<span class="nc bnc" id="L267" title="All 2 branches missed.">                    if (notification.priority == NotificationPriority.HIGH || </span>
+<span class="nc bnc" id="L268" title="All 2 branches missed.">                        notification.priority == NotificationPriority.URGENT) {</span>
+<span class="nc" id="L269">                        Icon(</span>
+<span class="nc" id="L270">                            Icons.Default.PriorityHigh,</span>
+<span class="nc" id="L271">                            contentDescription = &quot;High priority&quot;,</span>
+<span class="nc" id="L272">                            tint = Color(0xFFF44336),</span>
+<span class="nc" id="L273">                            modifier = Modifier.size(16.dp)</span>
+                        )
+<span class="nc" id="L275">                        Spacer(modifier = Modifier.width(4.dp))</span>
+                    }
+                    
+<span class="nc bnc" id="L278" title="All 2 branches missed.">                    if (notification.actionRequired) {</span>
+<span class="nc" id="L279">                        Text(</span>
+<span class="nc" id="L280">                            text = &quot;Action Required&quot;,</span>
+<span class="nc" id="L281">                            fontSize = 12.sp,</span>
+<span class="nc" id="L282">                            color = Color(0xFFF44336),</span>
+<span class="nc" id="L283">                            fontWeight = FontWeight.Medium</span>
+                        )
+                    }
+<span class="nc" id="L286">                }</span>
+<span class="nc" id="L287">            }</span>
+            
+            // Delete button
+<span class="nc" id="L290">            IconButton(onClick = onDelete) {</span>
+<span class="nc bnc" id="L291" title="All 8 branches missed.">                Icon(</span>
+<span class="nc" id="L292">                    Icons.Default.Delete,</span>
+<span class="nc" id="L293">                    contentDescription = &quot;Delete notification&quot;,</span>
+<span class="nc" id="L294">                    tint = MaterialTheme.colorScheme.onSurfaceVariant</span>
+<span class="nc" id="L295">                )</span>
+<span class="nc" id="L296">            }</span>
+<span class="nc" id="L297">        }</span>
+<span class="nc" id="L298">    }</span>
+<span class="nc bnc" id="L299" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L302" title="All 6 branches missed.">fun EmptyNotificationsState() {</span>
+<span class="nc" id="L303">    Column(</span>
+<span class="nc" id="L304">        modifier = Modifier</span>
+<span class="nc" id="L305">            .fillMaxSize()</span>
+<span class="nc" id="L306">            .padding(32.dp),</span>
+<span class="nc" id="L307">        horizontalAlignment = Alignment.CenterHorizontally,</span>
+<span class="nc" id="L308">        verticalArrangement = Arrangement.Center</span>
+    ) {
+<span class="nc" id="L310">        Icon(</span>
+<span class="nc" id="L311">            Icons.Default.NotificationsOff,</span>
+<span class="nc" id="L312">            contentDescription = null,</span>
+<span class="nc" id="L313">            modifier = Modifier.size(64.dp),</span>
+<span class="nc" id="L314">            tint = MaterialTheme.colorScheme.onSurfaceVariant</span>
+        )
+        
+<span class="nc" id="L317">        Spacer(modifier = Modifier.height(16.dp))</span>
+        
+<span class="nc" id="L319">        Text(</span>
+<span class="nc" id="L320">            text = &quot;No Notifications&quot;,</span>
+<span class="nc" id="L321">            fontSize = 20.sp,</span>
+<span class="nc" id="L322">            fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L323">            color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+        )
+        
+<span class="nc" id="L326">        Text(</span>
+<span class="nc" id="L327">            text = &quot;You're all caught up! New notifications will appear here.&quot;,</span>
+<span class="nc" id="L328">            fontSize = 14.sp,</span>
+<span class="nc" id="L329">            color = MaterialTheme.colorScheme.onSurfaceVariant,</span>
+<span class="nc" id="L330">            textAlign = TextAlign.Center</span>
+        )
+<span class="nc" id="L332">    }</span>
+<span class="nc bnc" id="L333" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L336" title="All 6 branches missed.">fun NotificationSettingsContent() {</span>
+<span class="nc bnc" id="L337" title="All 2 branches missed.">    LazyColumn(</span>
+<span class="nc" id="L338">        modifier = Modifier.fillMaxSize(),</span>
+<span class="nc" id="L339">        contentPadding = PaddingValues(16.dp),</span>
+<span class="nc" id="L340">        verticalArrangement = Arrangement.spacedBy(16.dp)</span>
+<span class="nc" id="L341">    ) {</span>
+<span class="nc" id="L342">        item {</span>
+<span class="nc bnc" id="L343" title="All 8 branches missed.">            Text(</span>
+<span class="nc" id="L344">                text = &quot;Notification Settings&quot;,</span>
+<span class="nc" id="L345">                fontSize = 20.sp,</span>
+<span class="nc" id="L346">                fontWeight = FontWeight.Bold</span>
+<span class="nc" id="L347">            )</span>
+<span class="nc" id="L348">        }</span>
+        
+<span class="nc" id="L350">        item {</span>
+<span class="nc bnc" id="L351" title="All 8 branches missed.">            NotificationTypeSettings()</span>
+<span class="nc" id="L352">        }</span>
+        
+<span class="nc" id="L354">        item {</span>
+<span class="nc bnc" id="L355" title="All 8 branches missed.">            QuietHoursSettings()</span>
+<span class="nc" id="L356">        }</span>
+        
+<span class="nc" id="L358">        item {</span>
+<span class="nc bnc" id="L359" title="All 8 branches missed.">            NotificationBehaviorSettings()</span>
+<span class="nc" id="L360">        }</span>
+<span class="nc" id="L361">    }</span>
+<span class="nc bnc" id="L362" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L365" title="All 6 branches missed.">fun NotificationTypeSettings() {</span>
+<span class="nc" id="L366">    var moodReminders by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L367">    var sessionReminders by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L368">    var crisisAlerts by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L369">    var achievements by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L370">    var systemUpdates by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L371">    var therapistMessages by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L372">    var backupNotifications by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L373">    var securityAlerts by remember { mutableStateOf(true) }</span>
+    
+<span class="nc bnc" id="L375" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L376">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L377">        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)</span>
+<span class="nc" id="L378">    ) {</span>
+<span class="nc bnc" id="L379" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L380">            modifier = Modifier.padding(16.dp)</span>
+        ) {
+<span class="nc" id="L382">            Text(</span>
+<span class="nc" id="L383">                text = &quot;Notification Types&quot;,</span>
+<span class="nc" id="L384">                fontSize = 18.sp,</span>
+<span class="nc" id="L385">                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L386">                modifier = Modifier.padding(bottom = 16.dp)</span>
+            )
+            
+<span class="nc" id="L389">            NotificationTypeToggle(</span>
+<span class="nc" id="L390">                title = &quot;Mood Reminders&quot;,</span>
+<span class="nc" id="L391">                description = &quot;Daily reminders to log your mood&quot;,</span>
+<span class="nc" id="L392">                checked = moodReminders,</span>
+<span class="nc" id="L393">                onCheckedChange = { moodReminders = it },</span>
+<span class="nc" id="L394">                type = NotificationType.MOOD_REMINDER</span>
+            )
+            
+<span class="nc" id="L397">            NotificationTypeToggle(</span>
+<span class="nc" id="L398">                title = &quot;Session Reminders&quot;,</span>
+<span class="nc" id="L399">                description = &quot;Reminders for therapy sessions&quot;,</span>
+<span class="nc" id="L400">                checked = sessionReminders,</span>
+<span class="nc" id="L401">                onCheckedChange = { sessionReminders = it },</span>
+<span class="nc" id="L402">                type = NotificationType.SESSION_REMINDER</span>
+            )
+            
+<span class="nc" id="L405">            NotificationTypeToggle(</span>
+<span class="nc" id="L406">                title = &quot;Crisis Alerts&quot;,</span>
+<span class="nc" id="L407">                description = &quot;Emergency notifications for crisis situations&quot;,</span>
+<span class="nc" id="L408">                checked = crisisAlerts,</span>
+<span class="nc" id="L409">                onCheckedChange = { crisisAlerts = it },</span>
+<span class="nc" id="L410">                type = NotificationType.CRISIS_ALERT</span>
+            )
+            
+<span class="nc" id="L413">            NotificationTypeToggle(</span>
+<span class="nc" id="L414">                title = &quot;Achievements&quot;,</span>
+<span class="nc" id="L415">                description = &quot;Celebrate your progress and milestones&quot;,</span>
+<span class="nc" id="L416">                checked = achievements,</span>
+<span class="nc" id="L417">                onCheckedChange = { achievements = it },</span>
+<span class="nc" id="L418">                type = NotificationType.ACHIEVEMENT</span>
+            )
+            
+<span class="nc" id="L421">            NotificationTypeToggle(</span>
+<span class="nc" id="L422">                title = &quot;System Updates&quot;,</span>
+<span class="nc" id="L423">                description = &quot;App updates and maintenance notifications&quot;,</span>
+<span class="nc" id="L424">                checked = systemUpdates,</span>
+<span class="nc" id="L425">                onCheckedChange = { systemUpdates = it },</span>
+<span class="nc" id="L426">                type = NotificationType.SYSTEM_UPDATE</span>
+            )
+            
+<span class="nc" id="L429">            NotificationTypeToggle(</span>
+<span class="nc" id="L430">                title = &quot;Therapist Messages&quot;,</span>
+<span class="nc" id="L431">                description = &quot;Messages from your therapist&quot;,</span>
+<span class="nc" id="L432">                checked = therapistMessages,</span>
+<span class="nc" id="L433">                onCheckedChange = { therapistMessages = it },</span>
+<span class="nc" id="L434">                type = NotificationType.THERAPIST_MESSAGE</span>
+            )
+            
+<span class="nc" id="L437">            NotificationTypeToggle(</span>
+<span class="nc" id="L438">                title = &quot;Backup Notifications&quot;,</span>
+<span class="nc" id="L439">                description = &quot;Backup completion and status updates&quot;,</span>
+<span class="nc" id="L440">                checked = backupNotifications,</span>
+<span class="nc" id="L441">                onCheckedChange = { backupNotifications = it },</span>
+<span class="nc" id="L442">                type = NotificationType.BACKUP_COMPLETE</span>
+            )
+            
+<span class="nc" id="L445">            NotificationTypeToggle(</span>
+<span class="nc" id="L446">                title = &quot;Security Alerts&quot;,</span>
+<span class="nc" id="L447">                description = &quot;Important security notifications&quot;,</span>
+<span class="nc" id="L448">                checked = securityAlerts,</span>
+<span class="nc" id="L449">                onCheckedChange = { securityAlerts = it },</span>
+<span class="nc" id="L450">                type = NotificationType.SECURITY_ALERT</span>
+            )
+<span class="nc" id="L452">        }</span>
+<span class="nc" id="L453">    }</span>
+<span class="nc bnc" id="L454" title="All 2 branches missed.">}</span>
+
+@Composable
+fun NotificationTypeToggle(
+    title: String,
+    description: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -&gt; Unit,
+    type: NotificationType
+<span class="nc bnc" id="L463" title="All 26 branches missed.">) {</span>
+<span class="nc" id="L464">    Row(</span>
+<span class="nc" id="L465">        modifier = Modifier</span>
+<span class="nc" id="L466">            .fillMaxWidth()</span>
+<span class="nc" id="L467">            .padding(vertical = 8.dp),</span>
+<span class="nc" id="L468">        verticalAlignment = Alignment.CenterVertically</span>
+    ) {
+<span class="nc" id="L470">        Icon(</span>
+<span class="nc" id="L471">            type.icon,</span>
+<span class="nc" id="L472">            contentDescription = null,</span>
+<span class="nc" id="L473">            tint = type.color,</span>
+<span class="nc" id="L474">            modifier = Modifier.size(20.dp)</span>
+        )
+        
+<span class="nc" id="L477">        Spacer(modifier = Modifier.width(12.dp))</span>
+        
+<span class="nc" id="L479">        Column(modifier = Modifier.weight(1f)) {</span>
+<span class="nc" id="L480">            Text(</span>
+<span class="nc" id="L481">                text = title,</span>
+<span class="nc" id="L482">                fontSize = 14.sp,</span>
+<span class="nc" id="L483">                fontWeight = FontWeight.Medium</span>
+            )
+<span class="nc" id="L485">            Text(</span>
+<span class="nc" id="L486">                text = description,</span>
+<span class="nc" id="L487">                fontSize = 12.sp,</span>
+<span class="nc" id="L488">                color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+            )
+<span class="nc" id="L490">        }</span>
+        
+<span class="nc" id="L492">        Switch(</span>
+<span class="nc" id="L493">            checked = checked,</span>
+<span class="nc" id="L494">            onCheckedChange = onCheckedChange</span>
+        )
+<span class="nc" id="L496">    }</span>
+<span class="nc bnc" id="L497" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L500" title="All 6 branches missed.">fun QuietHoursSettings() {</span>
+<span class="nc" id="L501">    var quietHoursEnabled by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L502">    var startTime by remember { mutableStateOf(&quot;22:00&quot;) }</span>
+<span class="nc" id="L503">    var endTime by remember { mutableStateOf(&quot;08:00&quot;) }</span>
+    
+<span class="nc bnc" id="L505" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L506">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L507">        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)</span>
+<span class="nc" id="L508">    ) {</span>
+<span class="nc bnc" id="L509" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L510">            modifier = Modifier.padding(16.dp)</span>
+        ) {
+<span class="nc" id="L512">            Text(</span>
+<span class="nc" id="L513">                text = &quot;Quiet Hours&quot;,</span>
+<span class="nc" id="L514">                fontSize = 18.sp,</span>
+<span class="nc" id="L515">                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L516">                modifier = Modifier.padding(bottom = 16.dp)</span>
+            )
+            
+<span class="nc" id="L519">            Row(</span>
+<span class="nc" id="L520">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L521">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L523">                Column(modifier = Modifier.weight(1f)) {</span>
+<span class="nc" id="L524">                    Text(</span>
+<span class="nc" id="L525">                        text = &quot;Enable Quiet Hours&quot;,</span>
+<span class="nc" id="L526">                        fontSize = 14.sp,</span>
+<span class="nc" id="L527">                        fontWeight = FontWeight.Medium</span>
+                    )
+<span class="nc" id="L529">                    Text(</span>
+<span class="nc" id="L530">                        text = &quot;Pause notifications during specified hours&quot;,</span>
+<span class="nc" id="L531">                        fontSize = 12.sp,</span>
+<span class="nc" id="L532">                        color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                    )
+<span class="nc" id="L534">                }</span>
+<span class="nc" id="L535">                Switch(</span>
+<span class="nc" id="L536">                    checked = quietHoursEnabled,</span>
+<span class="nc" id="L537">                    onCheckedChange = { quietHoursEnabled = it }</span>
+                )
+<span class="nc" id="L539">            }</span>
+            
+<span class="nc bnc" id="L541" title="All 2 branches missed.">            if (quietHoursEnabled) {</span>
+<span class="nc" id="L542">                Spacer(modifier = Modifier.height(16.dp))</span>
+                
+<span class="nc" id="L544">                Row(</span>
+<span class="nc" id="L545">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L546">                    horizontalArrangement = Arrangement.SpaceEvenly</span>
+                ) {
+<span class="nc" id="L548">                    Column(horizontalAlignment = Alignment.CenterHorizontally) {</span>
+<span class="nc" id="L549">                        Text(</span>
+<span class="nc" id="L550">                            text = &quot;Start Time&quot;,</span>
+<span class="nc" id="L551">                            fontSize = 12.sp,</span>
+<span class="nc" id="L552">                            color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                        )
+<span class="nc" id="L554">                        OutlinedTextField(</span>
+<span class="nc" id="L555">                            value = startTime,</span>
+<span class="nc" id="L556">                            onValueChange = { startTime = it },</span>
+<span class="nc" id="L557">                            modifier = Modifier.width(100.dp)</span>
+                        )
+<span class="nc" id="L559">                    }</span>
+                    
+<span class="nc" id="L561">                    Column(horizontalAlignment = Alignment.CenterHorizontally) {</span>
+<span class="nc" id="L562">                        Text(</span>
+<span class="nc" id="L563">                            text = &quot;End Time&quot;,</span>
+<span class="nc" id="L564">                            fontSize = 12.sp,</span>
+<span class="nc" id="L565">                            color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                        )
+<span class="nc" id="L567">                        OutlinedTextField(</span>
+<span class="nc" id="L568">                            value = endTime,</span>
+<span class="nc" id="L569">                            onValueChange = { endTime = it },</span>
+<span class="nc" id="L570">                            modifier = Modifier.width(100.dp)</span>
+                        )
+<span class="nc" id="L572">                    }</span>
+<span class="nc" id="L573">                }</span>
+            }
+<span class="nc" id="L575">        }</span>
+<span class="nc" id="L576">    }</span>
+<span class="nc bnc" id="L577" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L580" title="All 6 branches missed.">fun NotificationBehaviorSettings() {</span>
+<span class="nc" id="L581">    var vibrationEnabled by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L582">    var soundEnabled by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L583">    var ledEnabled by remember { mutableStateOf(false) }</span>
+    
+<span class="nc bnc" id="L585" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L586">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L587">        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)</span>
+<span class="nc" id="L588">    ) {</span>
+<span class="nc bnc" id="L589" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L590">            modifier = Modifier.padding(16.dp)</span>
+        ) {
+<span class="nc" id="L592">            Text(</span>
+<span class="nc" id="L593">                text = &quot;Notification Behavior&quot;,</span>
+<span class="nc" id="L594">                fontSize = 18.sp,</span>
+<span class="nc" id="L595">                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L596">                modifier = Modifier.padding(bottom = 16.dp)</span>
+            )
+            
+<span class="nc" id="L599">            Row(</span>
+<span class="nc" id="L600">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L601">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L603">                Column(modifier = Modifier.weight(1f)) {</span>
+<span class="nc" id="L604">                    Text(</span>
+<span class="nc" id="L605">                        text = &quot;Vibration&quot;,</span>
+<span class="nc" id="L606">                        fontSize = 14.sp,</span>
+<span class="nc" id="L607">                        fontWeight = FontWeight.Medium</span>
+                    )
+<span class="nc" id="L609">                    Text(</span>
+<span class="nc" id="L610">                        text = &quot;Vibrate when notifications arrive&quot;,</span>
+<span class="nc" id="L611">                        fontSize = 12.sp,</span>
+<span class="nc" id="L612">                        color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                    )
+<span class="nc" id="L614">                }</span>
+<span class="nc" id="L615">                Switch(</span>
+<span class="nc" id="L616">                    checked = vibrationEnabled,</span>
+<span class="nc" id="L617">                    onCheckedChange = { vibrationEnabled = it }</span>
+                )
+<span class="nc" id="L619">            }</span>
+            
+<span class="nc" id="L621">            Row(</span>
+<span class="nc" id="L622">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L623">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L625">                Column(modifier = Modifier.weight(1f)) {</span>
+<span class="nc" id="L626">                    Text(</span>
+<span class="nc" id="L627">                        text = &quot;Sound&quot;,</span>
+<span class="nc" id="L628">                        fontSize = 14.sp,</span>
+<span class="nc" id="L629">                        fontWeight = FontWeight.Medium</span>
+                    )
+<span class="nc" id="L631">                    Text(</span>
+<span class="nc" id="L632">                        text = &quot;Play sound for notifications&quot;,</span>
+<span class="nc" id="L633">                        fontSize = 12.sp,</span>
+<span class="nc" id="L634">                        color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                    )
+<span class="nc" id="L636">                }</span>
+<span class="nc" id="L637">                Switch(</span>
+<span class="nc" id="L638">                    checked = soundEnabled,</span>
+<span class="nc" id="L639">                    onCheckedChange = { soundEnabled = it }</span>
+                )
+<span class="nc" id="L641">            }</span>
+            
+<span class="nc" id="L643">            Row(</span>
+<span class="nc" id="L644">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L645">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L647">                Column(modifier = Modifier.weight(1f)) {</span>
+<span class="nc" id="L648">                    Text(</span>
+<span class="nc" id="L649">                        text = &quot;LED Light&quot;,</span>
+<span class="nc" id="L650">                        fontSize = 14.sp,</span>
+<span class="nc" id="L651">                        fontWeight = FontWeight.Medium</span>
+                    )
+<span class="nc" id="L653">                    Text(</span>
+<span class="nc" id="L654">                        text = &quot;Flash LED for notifications&quot;,</span>
+<span class="nc" id="L655">                        fontSize = 12.sp,</span>
+<span class="nc" id="L656">                        color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                    )
+<span class="nc" id="L658">                }</span>
+<span class="nc" id="L659">                Switch(</span>
+<span class="nc" id="L660">                    checked = ledEnabled,</span>
+<span class="nc" id="L661">                    onCheckedChange = { ledEnabled = it }</span>
+                )
+<span class="nc" id="L663">            }</span>
+<span class="nc" id="L664">        }</span>
+<span class="nc" id="L665">    }</span>
+<span class="nc bnc" id="L666" title="All 2 branches missed.">}</span>
+
+@Composable
+fun NotificationSettingsDialog(
+    onDismiss: () -&gt; Unit
+<span class="nc bnc" id="L671" title="All 10 branches missed.">) {</span>
+<span class="nc bnc" id="L672" title="All 2 branches missed.">    AlertDialog(</span>
+<span class="nc" id="L673">        onDismissRequest = onDismiss,</span>
+<span class="nc bnc" id="L674" title="All 8 branches missed.">        title = { Text(&quot;Quick Settings&quot;) },</span>
+<span class="nc" id="L675">        text = {</span>
+<span class="nc bnc" id="L676" title="All 6 branches missed.">            Column {</span>
+<span class="nc" id="L677">                Text(</span>
+<span class="nc" id="L678">                    text = &quot;Quick notification settings&quot;,</span>
+<span class="nc" id="L679">                    fontSize = 14.sp,</span>
+<span class="nc" id="L680">                    modifier = Modifier.padding(bottom = 16.dp)</span>
+                )
+                
+<span class="nc" id="L683">                Button(</span>
+<span class="nc" id="L684">                    onClick = { /* Enable all notifications */ },</span>
+<span class="nc" id="L685">                    modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L686">                ) {</span>
+<span class="nc bnc" id="L687" title="All 8 branches missed.">                    Text(&quot;Enable All Notifications&quot;)</span>
+<span class="nc" id="L688">                }</span>
+                
+<span class="nc" id="L690">                Spacer(modifier = Modifier.height(8.dp))</span>
+                
+<span class="nc" id="L692">                OutlinedButton(</span>
+<span class="nc" id="L693">                    onClick = { /* Disable all notifications */ },</span>
+<span class="nc" id="L694">                    modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L695">                ) {</span>
+<span class="nc bnc" id="L696" title="All 8 branches missed.">                    Text(&quot;Disable All Notifications&quot;)</span>
+<span class="nc" id="L697">                }</span>
+                
+<span class="nc" id="L699">                Spacer(modifier = Modifier.height(8.dp))</span>
+                
+<span class="nc" id="L701">                OutlinedButton(</span>
+<span class="nc" id="L702">                    onClick = { /* Clear all notifications */ },</span>
+<span class="nc" id="L703">                    modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L704">                ) {</span>
+<span class="nc bnc" id="L705" title="All 8 branches missed.">                    Text(&quot;Clear All Notifications&quot;)</span>
+<span class="nc" id="L706">                }</span>
+<span class="nc" id="L707">            }</span>
+<span class="nc" id="L708">        },</span>
+<span class="nc" id="L709">        confirmButton = {</span>
+<span class="nc bnc" id="L710" title="All 8 branches missed.">            TextButton(onClick = onDismiss) {</span>
+<span class="nc bnc" id="L711" title="All 8 branches missed.">                Text(&quot;Close&quot;)</span>
+<span class="nc" id="L712">            }</span>
+<span class="nc" id="L713">        }</span>
+    )
+<span class="nc bnc" id="L715" title="All 2 branches missed.">}</span>
+
+// formatTime function is already defined in AIChatSessionScreen.kt
+// Using the existing definition to avoid conflicts
+
+fun generateSampleNotifications(): List&lt;NotificationItem&gt; {
+<span class="nc" id="L721">    return listOf(</span>
+<span class="nc" id="L722">        NotificationItem(</span>
+<span class="nc" id="L723">            id = &quot;1&quot;,</span>
+<span class="nc" id="L724">            title = &quot;Daily Mood Check-in&quot;,</span>
+<span class="nc" id="L725">            message = &quot;How are you feeling today? Take a moment to log your mood.&quot;,</span>
+<span class="nc" id="L726">            timestamp = System.currentTimeMillis() - 300000, // 5 minutes ago</span>
+<span class="nc" id="L727">            type = NotificationType.MOOD_REMINDER,</span>
+<span class="nc" id="L728">            isRead = false,</span>
+<span class="nc" id="L729">            priority = NotificationPriority.NORMAL</span>
+        ),
+<span class="nc" id="L731">        NotificationItem(</span>
+<span class="nc" id="L732">            id = &quot;2&quot;,</span>
+<span class="nc" id="L733">            title = &quot;Therapy Session Tomorrow&quot;,</span>
+<span class="nc" id="L734">            message = &quot;You have a therapy session scheduled for tomorrow at 2:00 PM.&quot;,</span>
+<span class="nc" id="L735">            timestamp = System.currentTimeMillis() - 3600000, // 1 hour ago</span>
+<span class="nc" id="L736">            type = NotificationType.SESSION_REMINDER,</span>
+<span class="nc" id="L737">            isRead = true,</span>
+<span class="nc" id="L738">            priority = NotificationPriority.HIGH</span>
+        ),
+<span class="nc" id="L740">        NotificationItem(</span>
+<span class="nc" id="L741">            id = &quot;3&quot;,</span>
+<span class="nc" id="L742">            title = &quot;Achievement Unlocked!&quot;,</span>
+<span class="nc" id="L743">            message = &quot;Congratulations! You've logged your mood for 7 consecutive days.&quot;,</span>
+<span class="nc" id="L744">            timestamp = System.currentTimeMillis() - 7200000, // 2 hours ago</span>
+<span class="nc" id="L745">            type = NotificationType.ACHIEVEMENT,</span>
+<span class="nc" id="L746">            isRead = true,</span>
+<span class="nc" id="L747">            priority = NotificationPriority.NORMAL</span>
+        ),
+<span class="nc" id="L749">        NotificationItem(</span>
+<span class="nc" id="L750">            id = &quot;4&quot;,</span>
+<span class="nc" id="L751">            title = &quot;Security Alert&quot;,</span>
+<span class="nc" id="L752">            message = &quot;New login detected from an unknown device. Please verify this was you.&quot;,</span>
+<span class="nc" id="L753">            timestamp = System.currentTimeMillis() - 86400000, // 1 day ago</span>
+<span class="nc" id="L754">            type = NotificationType.SECURITY_ALERT,</span>
+<span class="nc" id="L755">            isRead = false,</span>
+<span class="nc" id="L756">            priority = NotificationPriority.URGENT,</span>
+<span class="nc" id="L757">            actionRequired = true</span>
+        ),
+<span class="nc" id="L759">        NotificationItem(</span>
+<span class="nc" id="L760">            id = &quot;5&quot;,</span>
+<span class="nc" id="L761">            title = &quot;Message from Dr. Smith&quot;,</span>
+<span class="nc" id="L762">            message = &quot;I've reviewed your progress this week. Great job on the breathing exercises!&quot;,</span>
+<span class="nc" id="L763">            timestamp = System.currentTimeMillis() - 172800000, // 2 days ago</span>
+<span class="nc" id="L764">            type = NotificationType.THERAPIST_MESSAGE,</span>
+<span class="nc" id="L765">            isRead = true,</span>
+<span class="nc" id="L766">            priority = NotificationPriority.HIGH</span>
+        )
+    )
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

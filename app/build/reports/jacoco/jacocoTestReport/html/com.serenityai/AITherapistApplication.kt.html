@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AITherapistApplication.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai</a> &gt; <span class="el_source">AITherapistApplication.kt</span></div><h1>AITherapistApplication.kt</h1><pre class="source lang-java linenums">package com.serenityai
+
+import android.app.Application
+import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.firestore.PersistentCacheSettings
+
+/**
+ * Application class for AI Therapist app.
+ * Initializes Firebase and configures Firestore settings.
+ */
+<span class="nc" id="L13">class AITherapistApplication : Application() {</span>
+    
+    override fun onCreate() {
+<span class="nc" id="L16">        super.onCreate()</span>
+        
+        // Initialize Firebase
+<span class="nc" id="L19">        initializeFirebase()</span>
+<span class="nc" id="L20">    }</span>
+    
+    /**
+     * Initializes Firebase and configures Firestore settings for production use.
+     * Uses the new LocalCacheSettings API instead of deprecated methods.
+     */
+    private fun initializeFirebase() {
+        // Initialize Firebase (this reads google-services.json automatically)
+<span class="nc" id="L28">        FirebaseApp.initializeApp(this)</span>
+        
+        // Configure Firestore settings for production with offline persistence
+<span class="nc" id="L31">        val firestore = FirebaseFirestore.getInstance()</span>
+        
+        // Use new PersistentCacheSettings API (replaces deprecated setPersistenceEnabled/setCacheSizeBytes)
+        // Set cache size to 100MB (100 * 1024 * 1024 bytes) - adjust as needed
+        // For unlimited-like behavior, use a large value like 400MB
+<span class="nc" id="L36">        val cacheSettings = PersistentCacheSettings.newBuilder()</span>
+<span class="nc" id="L37">            .setSizeBytes(400 * 1024 * 1024L) // 400MB cache size</span>
+<span class="nc" id="L38">            .build()</span>
+        
+<span class="nc" id="L40">        val settings = FirebaseFirestoreSettings.Builder()</span>
+<span class="nc" id="L41">            .setLocalCacheSettings(cacheSettings)</span>
+<span class="nc" id="L42">            .build()</span>
+        
+<span class="nc" id="L44">        firestore.firestoreSettings = settings</span>
+<span class="nc" id="L45">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

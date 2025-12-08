@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="UAT: UC26 - AI-Powered Mood Forecasting" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:08" hostname="Mohammads-MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="As a user, I want the AI to predict mood trends with high confidence" classname="com.serenityai.uat.UseCaseUATTests$MoodForecastingUAT" time="0.0"/>
+  <testcase name="As a user, I want to receive mood forecasts so I can plan ahead" classname="com.serenityai.uat.UseCaseUATTests$MoodForecastingUAT" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

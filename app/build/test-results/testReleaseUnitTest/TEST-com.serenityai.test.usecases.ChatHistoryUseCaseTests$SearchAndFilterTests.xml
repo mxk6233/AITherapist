@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 1: Search and Filter Functionality" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:07" hostname="Mohammads-MacBook-Pro.local" time="0.004">
+  <properties/>
+  <testcase name="should filter chat sessions by mood level()" classname="com.serenityai.test.usecases.ChatHistoryUseCaseTests$SearchAndFilterTests" time="0.001"/>
+  <testcase name="should search chat sessions by title and message content()" classname="com.serenityai.test.usecases.ChatHistoryUseCaseTests$SearchAndFilterTests" time="0.003"/>
+  <testcase name="should handle empty search results gracefully()" classname="com.serenityai.test.usecases.ChatHistoryUseCaseTests$SearchAndFilterTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

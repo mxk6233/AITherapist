@@ -1,0 +1,2526 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RemainingScreens.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.screens</a> &gt; <span class="el_source">RemainingScreens.kt</span></div><h1>RemainingScreens.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.screens
+
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.material3.ExperimentalMaterial3Api
+
+// Chat History Screen (UC6)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L37" title="All 10 branches missed.">fun ChatHistoryScreen(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc" id="L38">    val chatSessions = listOf(</span>
+<span class="nc" id="L39">        &quot;Yesterday - Evening Session&quot;,</span>
+<span class="nc" id="L40">        &quot;Monday - Morning Check-in&quot;,</span>
+<span class="nc" id="L41">        &quot;Sunday - Crisis Support&quot;,</span>
+<span class="nc" id="L42">        &quot;Saturday - Weekly Review&quot;</span>
+    )
+
+<span class="nc bnc" id="L45" title="All 2 branches missed.">    Scaffold(</span>
+<span class="nc" id="L46">        topBar = {</span>
+<span class="nc bnc" id="L47" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L48" title="All 8 branches missed.">                title = { Text(&quot;Chat History&quot;) },</span>
+<span class="nc" id="L49">                navigationIcon = {</span>
+<span class="nc bnc" id="L50" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L51" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L52">                    }</span>
+<span class="nc" id="L53">                },</span>
+<span class="nc" id="L54">                colors = TopAppBarDefaults.topAppBarColors(</span>
+<span class="nc" id="L55">                    containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+                )
+<span class="nc" id="L57">            )</span>
+<span class="nc" id="L58">        }</span>
+<span class="nc" id="L59">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L60" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L61">            modifier = Modifier</span>
+<span class="nc" id="L62">                .fillMaxSize()</span>
+<span class="nc" id="L63">                .padding(paddingValues)</span>
+<span class="nc" id="L64">                .padding(16.dp)</span>
+        ) {
+<span class="nc" id="L66">            Text(</span>
+<span class="nc" id="L67">                text = &quot;Your Past Conversations&quot;,</span>
+<span class="nc" id="L68">                fontSize = 20.sp,</span>
+<span class="nc" id="L69">                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L70">                modifier = Modifier.padding(bottom = 16.dp)</span>
+            )
+<span class="nc" id="L72">            LazyColumn(</span>
+<span class="nc" id="L73">                verticalArrangement = Arrangement.spacedBy(8.dp)</span>
+<span class="nc" id="L74">            ) {</span>
+<span class="nc" id="L75">                items(chatSessions) { session -&gt;</span>
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+                    ) {
+<span class="nc bnc" id="L80" title="All 8 branches missed.">                        Text(</span>
+<span class="nc" id="L81">                            text = session,</span>
+<span class="nc" id="L82">                            modifier = Modifier.padding(12.dp),</span>
+<span class="nc" id="L83">                            fontSize = 16.sp</span>
+<span class="nc" id="L84">                        )</span>
+<span class="nc" id="L85">                    }</span>
+                }
+<span class="nc" id="L87">            }</span>
+<span class="nc" id="L88">        }</span>
+<span class="nc" id="L89">    }</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">}</span>
+
+// Crisis Intervention Screen (UC36)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L95" title="All 10 branches missed.">fun CrisisInterventionScreen(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc" id="L96">    val useCase = remember { com.serenityai.usecases.AdaptiveCrisisDeescalationUseCase() }</span>
+<span class="nc" id="L97">    val userId = &quot;user123&quot; // In production, get from auth</span>
+    
+<span class="nc" id="L99">    var userInput by remember { mutableStateOf(&quot;&quot;) }</span>
+<span class="nc" id="L100">    var currentSession by remember { mutableStateOf&lt;com.serenityai.usecases.DeescalationSession?&gt;(null) }</span>
+<span class="nc" id="L101">    var currentStepIndex by remember { mutableStateOf(0) }</span>
+<span class="nc" id="L102">    var stepResponse by remember { mutableStateOf(&quot;&quot;) }</span>
+<span class="nc" id="L103">    var showSafetyMeasures by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L104">    var safetyMeasures by remember { mutableStateOf&lt;com.serenityai.usecases.SafetyMeasures?&gt;(null) }</span>
+    
+<span class="nc bnc" id="L106" title="All 2 branches missed.">    Scaffold(</span>
+<span class="nc" id="L107">        topBar = {</span>
+<span class="nc bnc" id="L108" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L109" title="All 8 branches missed.">                title = { Text(&quot;Crisis Intervention&quot;) },</span>
+<span class="nc" id="L110">                navigationIcon = {</span>
+<span class="nc bnc" id="L111" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L112" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L113">                    }</span>
+<span class="nc" id="L114">                },</span>
+<span class="nc" id="L115">                colors = TopAppBarDefaults.topAppBarColors(</span>
+<span class="nc" id="L116">                    containerColor = MaterialTheme.colorScheme.errorContainer</span>
+                )
+<span class="nc" id="L118">            )</span>
+<span class="nc" id="L119">        }</span>
+<span class="nc" id="L120">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L121" title="All 8 branches missed.">        LazyColumn(</span>
+<span class="nc" id="L122">            modifier = Modifier</span>
+<span class="nc" id="L123">                .fillMaxSize()</span>
+<span class="nc" id="L124">                .padding(paddingValues)</span>
+<span class="nc" id="L125">                .padding(16.dp),</span>
+<span class="nc" id="L126">            verticalArrangement = Arrangement.spacedBy(16.dp)</span>
+<span class="nc" id="L127">        ) {</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">            if (currentSession == null) {</span>
+                // Initial Crisis Assessment
+<span class="nc" id="L130">                item {</span>
+<span class="nc bnc" id="L131" title="All 8 branches missed.">                    Card(</span>
+<span class="nc" id="L132">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L133">                        colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L134">                            containerColor = MaterialTheme.colorScheme.errorContainer</span>
+                        ),
+<span class="nc" id="L136">                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L137">                    ) {</span>
+<span class="nc bnc" id="L138" title="All 6 branches missed.">                        Column(</span>
+<span class="nc" id="L139">                            modifier = Modifier.padding(20.dp)</span>
+                        ) {
+<span class="nc" id="L141">                            Icon(</span>
+<span class="nc" id="L142">                                Icons.Default.Emergency,</span>
+<span class="nc" id="L143">                                contentDescription = null,</span>
+<span class="nc" id="L144">                                modifier = Modifier.size(48.dp),</span>
+<span class="nc" id="L145">                                tint = MaterialTheme.colorScheme.error</span>
+                            )
+<span class="nc" id="L147">                            Spacer(modifier = Modifier.height(16.dp))</span>
+<span class="nc" id="L148">                            Text(</span>
+<span class="nc" id="L149">                                text = &quot;Crisis Support&quot;,</span>
+<span class="nc" id="L150">                                fontSize = 24.sp,</span>
+<span class="nc" id="L151">                                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L152">                                color = MaterialTheme.colorScheme.onErrorContainer</span>
+                            )
+<span class="nc" id="L154">                            Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L155">                            Text(</span>
+<span class="nc" id="L156">                                text = &quot;If you're in immediate danger, please call 911 or your local emergency services.&quot;,</span>
+<span class="nc" id="L157">                                fontSize = 14.sp,</span>
+<span class="nc" id="L158">                                color = MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.9f)</span>
+                            )
+<span class="nc" id="L160">                            Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L161">                            Text(</span>
+<span class="nc" id="L162">                                text = &quot;National Suicide Prevention Lifeline: 988&quot;,</span>
+<span class="nc" id="L163">                                fontSize = 16.sp,</span>
+<span class="nc" id="L164">                                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L165">                                color = MaterialTheme.colorScheme.error</span>
+                            )
+<span class="nc" id="L167">                        }</span>
+<span class="nc" id="L168">                    }</span>
+<span class="nc" id="L169">                }</span>
+                
+<span class="nc" id="L171">                item {</span>
+<span class="nc bnc" id="L172" title="All 8 branches missed.">                    Text(</span>
+<span class="nc" id="L173">                        text = &quot;Tell us what's happening&quot;,</span>
+<span class="nc" id="L174">                        fontSize = 18.sp,</span>
+<span class="nc" id="L175">                        fontWeight = FontWeight.Medium</span>
+<span class="nc" id="L176">                    )</span>
+<span class="nc" id="L177">                }</span>
+                
+<span class="nc" id="L179">                item {</span>
+<span class="nc bnc" id="L180" title="All 8 branches missed.">                    OutlinedTextField(</span>
+<span class="nc" id="L181">                        value = userInput,</span>
+<span class="nc" id="L182">                        onValueChange = { userInput = it },</span>
+<span class="nc bnc" id="L183" title="All 8 branches missed.">                        label = { Text(&quot;Describe your situation&quot;) },</span>
+<span class="nc bnc" id="L184" title="All 8 branches missed.">                        placeholder = { Text(&quot;I'm feeling...&quot;) },</span>
+<span class="nc" id="L185">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L186">                        minLines = 4,</span>
+<span class="nc" id="L187">                        maxLines = 8</span>
+<span class="nc" id="L188">                    )</span>
+<span class="nc" id="L189">                }</span>
+                
+<span class="nc" id="L191">                item {</span>
+<span class="nc bnc" id="L192" title="All 8 branches missed.">                    Button(</span>
+<span class="nc" id="L193">                        onClick = {</span>
+<span class="nc bnc" id="L194" title="All 4 branches missed.">                            if (userInput.isNotBlank()) {</span>
+<span class="nc" id="L195">                                val session = useCase.createSession(userId, userInput)</span>
+<span class="nc" id="L196">                                currentSession = session</span>
+<span class="nc" id="L197">                                currentStepIndex = 0</span>
+                                
+                                // Get safety measures
+<span class="nc" id="L200">                                val assessment = session.initialAssessment</span>
+<span class="nc" id="L201">                                safetyMeasures = useCase.provideImmediateSafetyMeasures(assessment)</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">                                showSafetyMeasures = assessment.level.ordinal &gt;= com.serenityai.usecases.CrisisLevel.HIGH.ordinal</span>
+                            }
+<span class="nc" id="L204">                        },</span>
+<span class="nc" id="L205">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc bnc" id="L206" title="All 2 branches missed.">                        enabled = userInput.isNotBlank(),</span>
+<span class="nc" id="L207">                        colors = ButtonDefaults.buttonColors(</span>
+<span class="nc" id="L208">                            containerColor = MaterialTheme.colorScheme.error</span>
+                        )
+<span class="nc" id="L210">                    ) {</span>
+<span class="nc bnc" id="L211" title="All 8 branches missed.">                        Text(&quot;Get Help&quot;, color = MaterialTheme.colorScheme.onError)</span>
+<span class="nc" id="L212">                    }</span>
+<span class="nc" id="L213">                }</span>
+            } else {
+                // Active Session - Show Steps
+<span class="nc" id="L216">                val session = currentSession!!</span>
+<span class="nc" id="L217">                val script = session.script</span>
+                
+                // Safety Measures Banner
+<span class="nc bnc" id="L220" title="All 4 branches missed.">                if (showSafetyMeasures &amp;&amp; safetyMeasures != null) {</span>
+<span class="nc" id="L221">                    item {</span>
+<span class="nc bnc" id="L222" title="All 8 branches missed.">                        Card(</span>
+<span class="nc" id="L223">                            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L224">                            colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L225">                                containerColor = MaterialTheme.colorScheme.errorContainer</span>
+                            )
+<span class="nc" id="L227">                        ) {</span>
+<span class="nc bnc" id="L228" title="All 6 branches missed.">                            Column(</span>
+<span class="nc" id="L229">                                modifier = Modifier.padding(16.dp)</span>
+                            ) {
+<span class="nc" id="L231">                                Text(</span>
+<span class="nc" id="L232">                                    text = &quot;Immediate Safety Actions&quot;,</span>
+<span class="nc" id="L233">                                    fontSize = 18.sp,</span>
+<span class="nc" id="L234">                                    fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L235">                                    color = MaterialTheme.colorScheme.onErrorContainer</span>
+                                )
+<span class="nc" id="L237">                                Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L238">                                safetyMeasures!!.immediateActions.forEach { action -&gt;</span>
+<span class="nc" id="L239">                                    Text(</span>
+<span class="nc" id="L240">                                        text = &quot;• $action&quot;,</span>
+<span class="nc" id="L241">                                        fontSize = 14.sp,</span>
+<span class="nc" id="L242">                                        color = MaterialTheme.colorScheme.onErrorContainer,</span>
+<span class="nc" id="L243">                                        modifier = Modifier.padding(vertical = 4.dp)</span>
+                                    )
+<span class="nc" id="L245">                                }</span>
+<span class="nc" id="L246">                                Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L247">                                Text(</span>
+<span class="nc" id="L248">                                    text = &quot;Resources:&quot;,</span>
+<span class="nc" id="L249">                                    fontSize = 14.sp,</span>
+<span class="nc" id="L250">                                    fontWeight = FontWeight.Medium,</span>
+<span class="nc" id="L251">                                    color = MaterialTheme.colorScheme.onErrorContainer</span>
+                                )
+<span class="nc" id="L253">                                safetyMeasures!!.resources.forEach { resource -&gt;</span>
+<span class="nc" id="L254">                                    Text(</span>
+<span class="nc" id="L255">                                        text = &quot;• $resource&quot;,</span>
+<span class="nc" id="L256">                                        fontSize = 12.sp,</span>
+<span class="nc" id="L257">                                        color = MaterialTheme.colorScheme.onErrorContainer,</span>
+<span class="nc" id="L258">                                        modifier = Modifier.padding(vertical = 2.dp)</span>
+                                    )
+<span class="nc" id="L260">                                }</span>
+<span class="nc" id="L261">                            }</span>
+<span class="nc" id="L262">                        }</span>
+<span class="nc" id="L263">                    }</span>
+                }
+                
+                // Crisis Level Indicator
+<span class="nc" id="L267">                item {</span>
+<span class="nc bnc" id="L268" title="All 8 branches missed.">                    Card(</span>
+<span class="nc" id="L269">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L270">                        colors = CardDefaults.cardColors(</span>
+<span class="nc bnc" id="L271" title="All 6 branches missed.">                            containerColor = when (script.crisisLevel) {</span>
+<span class="nc" id="L272">                                com.serenityai.usecases.CrisisLevel.CRITICAL -&gt; MaterialTheme.colorScheme.errorContainer</span>
+<span class="nc" id="L273">                                com.serenityai.usecases.CrisisLevel.HIGH -&gt; MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.7f)</span>
+<span class="nc" id="L274">                                com.serenityai.usecases.CrisisLevel.MEDIUM -&gt; MaterialTheme.colorScheme.tertiaryContainer</span>
+<span class="nc" id="L275">                                com.serenityai.usecases.CrisisLevel.LOW -&gt; MaterialTheme.colorScheme.primaryContainer</span>
+<span class="nc" id="L276">                                com.serenityai.usecases.CrisisLevel.NONE -&gt; MaterialTheme.colorScheme.surfaceVariant</span>
+                            }
+                        )
+<span class="nc" id="L279">                    ) {</span>
+<span class="nc bnc" id="L280" title="All 6 branches missed.">                        Row(</span>
+<span class="nc" id="L281">                            modifier = Modifier.padding(16.dp),</span>
+<span class="nc" id="L282">                            verticalAlignment = Alignment.CenterVertically</span>
+                        ) {
+<span class="nc" id="L284">                            Icon(</span>
+<span class="nc" id="L285">                                Icons.Default.Info,</span>
+<span class="nc" id="L286">                                contentDescription = null,</span>
+<span class="nc bnc" id="L287" title="All 3 branches missed.">                                tint = when (script.crisisLevel) {</span>
+<span class="nc" id="L288">                                    com.serenityai.usecases.CrisisLevel.CRITICAL -&gt; MaterialTheme.colorScheme.error</span>
+<span class="nc" id="L289">                                    com.serenityai.usecases.CrisisLevel.HIGH -&gt; MaterialTheme.colorScheme.error</span>
+<span class="nc" id="L290">                                    else -&gt; MaterialTheme.colorScheme.primary</span>
+                                }
+                            )
+<span class="nc" id="L293">                            Spacer(modifier = Modifier.width(12.dp))</span>
+<span class="nc" id="L294">                            Column {</span>
+<span class="nc" id="L295">                                Text(</span>
+<span class="nc" id="L296">                                    text = &quot;Crisis Level: ${script.crisisLevel.name}&quot;,</span>
+<span class="nc" id="L297">                                    fontSize = 16.sp,</span>
+<span class="nc" id="L298">                                    fontWeight = FontWeight.Bold</span>
+                                )
+<span class="nc" id="L300">                                Text(</span>
+<span class="nc" id="L301">                                    text = &quot;Estimated Duration: ${script.estimatedDuration} minutes&quot;,</span>
+<span class="nc" id="L302">                                    fontSize = 12.sp</span>
+                                )
+<span class="nc" id="L304">                            }</span>
+<span class="nc" id="L305">                        }</span>
+<span class="nc" id="L306">                    }</span>
+<span class="nc" id="L307">                }</span>
+                
+                // Progress Indicator
+<span class="nc bnc" id="L310" title="All 4 branches missed.">                if (script.steps.isNotEmpty()) {</span>
+<span class="nc" id="L311">                    item {</span>
+<span class="nc bnc" id="L312" title="All 6 branches missed.">                        val progress = ((currentStepIndex + 1).toFloat() / script.steps.size) * 100f</span>
+<span class="nc" id="L313">                        Column {</span>
+<span class="nc" id="L314">                            Row(</span>
+<span class="nc" id="L315">                                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L316">                                horizontalArrangement = Arrangement.SpaceBetween</span>
+                            ) {
+<span class="nc" id="L318">                                Text(</span>
+<span class="nc" id="L319">                                    text = &quot;Progress&quot;,</span>
+<span class="nc" id="L320">                                    fontSize = 14.sp,</span>
+<span class="nc" id="L321">                                    fontWeight = FontWeight.Medium</span>
+                                )
+<span class="nc" id="L323">                                Text(</span>
+<span class="nc" id="L324">                                    text = &quot;${currentStepIndex + 1} / ${script.steps.size}&quot;,</span>
+<span class="nc" id="L325">                                    fontSize = 14.sp</span>
+                                )
+<span class="nc" id="L327">                            }</span>
+<span class="nc" id="L328">                            Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L329">                            LinearProgressIndicator(</span>
+<span class="nc" id="L330">                                progress = progress / 100f,</span>
+<span class="nc" id="L331">                                modifier = Modifier.fillMaxWidth()</span>
+                            )
+<span class="nc" id="L333">                        }</span>
+<span class="nc" id="L334">                    }</span>
+                }
+                
+                // Current Step
+<span class="nc bnc" id="L338" title="All 2 branches missed.">                if (currentStepIndex &lt; script.steps.size) {</span>
+<span class="nc" id="L339">                    val currentStep = script.steps[currentStepIndex]</span>
+                    
+<span class="nc" id="L341">                    item {</span>
+<span class="nc bnc" id="L342" title="All 8 branches missed.">                        Card(</span>
+<span class="nc" id="L343">                            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L344">                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L345">                        ) {</span>
+<span class="nc bnc" id="L346" title="All 6 branches missed.">                            Column(</span>
+<span class="nc" id="L347">                                modifier = Modifier.padding(20.dp)</span>
+                            ) {
+<span class="nc" id="L349">                                Text(</span>
+<span class="nc" id="L350">                                    text = &quot;Step ${currentStep.order}&quot;,</span>
+<span class="nc" id="L351">                                    fontSize = 12.sp,</span>
+<span class="nc" id="L352">                                    color = MaterialTheme.colorScheme.primary,</span>
+<span class="nc" id="L353">                                    fontWeight = FontWeight.Bold</span>
+                                )
+<span class="nc" id="L355">                                Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L356">                                Text(</span>
+<span class="nc" id="L357">                                    text = currentStep.prompt,</span>
+<span class="nc" id="L358">                                    fontSize = 16.sp,</span>
+<span class="nc" id="L359">                                    fontWeight = FontWeight.Medium</span>
+                                )
+<span class="nc" id="L361">                                Spacer(modifier = Modifier.height(16.dp))</span>
+                                
+<span class="nc" id="L363">                                OutlinedTextField(</span>
+<span class="nc" id="L364">                                    value = stepResponse,</span>
+<span class="nc" id="L365">                                    onValueChange = { stepResponse = it },</span>
+<span class="nc bnc" id="L366" title="All 8 branches missed.">                                    label = { Text(&quot;Your response&quot;) },</span>
+<span class="nc bnc" id="L367" title="All 8 branches missed.">                                    placeholder = { Text(&quot;Type your response...&quot;) },</span>
+<span class="nc" id="L368">                                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L369">                                    minLines = 3,</span>
+<span class="nc" id="L370">                                    maxLines = 6</span>
+                                )
+                                
+<span class="nc" id="L373">                                Spacer(modifier = Modifier.height(16.dp))</span>
+                                
+<span class="nc" id="L375">                                Row(</span>
+<span class="nc" id="L376">                                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L377">                                    horizontalArrangement = Arrangement.spacedBy(8.dp)</span>
+                                ) {
+<span class="nc bnc" id="L379" title="All 2 branches missed.">                                    if (currentStepIndex &gt; 0) {</span>
+<span class="nc" id="L380">                                        OutlinedButton(</span>
+<span class="nc" id="L381">                                            onClick = {</span>
+<span class="nc" id="L382">                                                currentStepIndex--</span>
+<span class="nc" id="L383">                                                stepResponse = &quot;&quot;</span>
+<span class="nc" id="L384">                                            },</span>
+<span class="nc" id="L385">                                            modifier = Modifier.weight(1f)</span>
+<span class="nc" id="L386">                                        ) {</span>
+<span class="nc bnc" id="L387" title="All 8 branches missed.">                                            Text(&quot;Previous&quot;)</span>
+<span class="nc" id="L388">                                        }</span>
+                                    }
+                                    
+<span class="nc" id="L391">                                    Button(</span>
+<span class="nc" id="L392">                                        onClick = {</span>
+<span class="nc" id="L393">                                            try {</span>
+<span class="nc" id="L394">                                                val result = useCase.executeDeescalationStep(</span>
+<span class="nc" id="L395">                                                    script.id,</span>
+<span class="nc" id="L396">                                                    currentStepIndex,</span>
+<span class="nc" id="L397">                                                    stepResponse</span>
+                                                )
+                                                
+<span class="nc bnc" id="L400" title="All 2 branches missed.">                                                if (result.isCompleted) {</span>
+                                                    // Session completed
+<span class="nc bnc" id="L402" title="All 2 branches missed.">                                                    val finalAssessment = result.newAssessment </span>
+<span class="nc" id="L403">                                                        ?: session.initialAssessment</span>
+<span class="nc" id="L404">                                                    val completedSession = useCase.completeSession(</span>
+<span class="nc" id="L405">                                                        session.id,</span>
+<span class="nc" id="L406">                                                        finalAssessment</span>
+                                                    )
+<span class="nc" id="L408">                                                    currentSession = completedSession</span>
+                                                } else {
+                                                    // Adapt script if needed (before clearing response)
+<span class="nc" id="L411">                                                    val responseToAdapt = stepResponse</span>
+<span class="nc bnc" id="L412" title="All 4 branches missed.">                                                    if (responseToAdapt.isNotBlank()) {</span>
+<span class="nc" id="L413">                                                        val adaptedScript = useCase.adaptScript(</span>
+<span class="nc" id="L414">                                                            script.id,</span>
+<span class="nc" id="L415">                                                            responseToAdapt</span>
+                                                        )
+<span class="nc bnc" id="L417" title="All 2 branches missed.">                                                        if (adaptedScript != null) {</span>
+<span class="nc" id="L418">                                                            currentSession = session.copy(script = adaptedScript)</span>
+                                                        }
+                                                    }
+                                                    
+                                                    // Move to next step
+<span class="nc" id="L423">                                                    currentStepIndex++</span>
+<span class="nc" id="L424">                                                    stepResponse = &quot;&quot;</span>
+                                                }
+<span class="nc" id="L426">                                            } catch (e: Exception) {</span>
+                                                // Handle error
+                                            }
+<span class="nc" id="L429">                                        },</span>
+<span class="nc" id="L430">                                        modifier = Modifier.weight(1f),</span>
+<span class="nc bnc" id="L431" title="All 6 branches missed.">                                        enabled = stepResponse.isNotBlank() || currentStep.type == com.serenityai.usecases.StepType.GROUNDING</span>
+<span class="nc" id="L432">                                    ) {</span>
+<span class="nc bnc" id="L433" title="All 10 branches missed.">                                        Text(if (currentStepIndex &gt;= script.steps.size - 1) &quot;Complete&quot; else &quot;Next&quot;)</span>
+<span class="nc" id="L434">                                    }</span>
+<span class="nc" id="L435">                                }</span>
+<span class="nc" id="L436">                            }</span>
+<span class="nc" id="L437">                        }</span>
+<span class="nc" id="L438">                    }</span>
+                } else {
+                    // Session Completed
+<span class="nc" id="L441">                    item {</span>
+<span class="nc bnc" id="L442" title="All 8 branches missed.">                        Card(</span>
+<span class="nc" id="L443">                            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L444">                            colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L445">                                containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+                            )
+<span class="nc" id="L447">                        ) {</span>
+<span class="nc bnc" id="L448" title="All 6 branches missed.">                            Column(</span>
+<span class="nc" id="L449">                                modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L450">                                horizontalAlignment = Alignment.CenterHorizontally</span>
+                            ) {
+<span class="nc" id="L452">                                Icon(</span>
+<span class="nc" id="L453">                                    Icons.Default.CheckCircle,</span>
+<span class="nc" id="L454">                                    contentDescription = null,</span>
+<span class="nc" id="L455">                                    modifier = Modifier.size(64.dp),</span>
+<span class="nc" id="L456">                                    tint = MaterialTheme.colorScheme.primary</span>
+                                )
+<span class="nc" id="L458">                                Spacer(modifier = Modifier.height(16.dp))</span>
+<span class="nc" id="L459">                                Text(</span>
+<span class="nc" id="L460">                                    text = &quot;Session Completed&quot;,</span>
+<span class="nc" id="L461">                                    fontSize = 20.sp,</span>
+<span class="nc" id="L462">                                    fontWeight = FontWeight.Bold</span>
+                                )
+<span class="nc" id="L464">                                Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L465">                                Text(</span>
+<span class="nc" id="L466">                                    text = &quot;You've completed the deescalation steps. Remember, help is always available.&quot;,</span>
+<span class="nc" id="L467">                                    fontSize = 14.sp,</span>
+<span class="nc" id="L468">                                    textAlign = TextAlign.Center</span>
+                                )
+<span class="nc" id="L470">                                Spacer(modifier = Modifier.height(24.dp))</span>
+<span class="nc" id="L471">                                Button(</span>
+<span class="nc" id="L472">                                    onClick = {</span>
+<span class="nc" id="L473">                                        currentSession = null</span>
+<span class="nc" id="L474">                                        currentStepIndex = 0</span>
+<span class="nc" id="L475">                                        stepResponse = &quot;&quot;</span>
+<span class="nc" id="L476">                                        userInput = &quot;&quot;</span>
+<span class="nc" id="L477">                                        showSafetyMeasures = false</span>
+<span class="nc" id="L478">                                    },</span>
+<span class="nc" id="L479">                                    modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L480">                                ) {</span>
+<span class="nc bnc" id="L481" title="All 8 branches missed.">                                    Text(&quot;Start New Session&quot;)</span>
+<span class="nc" id="L482">                                }</span>
+<span class="nc" id="L483">                            }</span>
+<span class="nc" id="L484">                        }</span>
+<span class="nc" id="L485">                    }</span>
+                }
+            }
+<span class="nc" id="L488">        }</span>
+<span class="nc" id="L489">    }</span>
+<span class="nc bnc" id="L490" title="All 2 branches missed.">}</span>
+
+// Support Tools Screens
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SupportToolsScreen(
+    onNavigateToCopingExercises: () -&gt; Unit,
+    onNavigateToJournalPrompts: () -&gt; Unit,
+    onNavigateToEducationalResources: () -&gt; Unit,
+    onNavigateToUserSupport: () -&gt; Unit,
+    onNavigateToGroupTherapy: () -&gt; Unit,
+    onNavigateToCommunitySupportCircles: () -&gt; Unit,
+    onNavigateToReligiousSupport: () -&gt; Unit,
+    onNavigateBack: () -&gt; Unit
+<span class="nc bnc" id="L504" title="All 38 branches missed.">) {</span>
+<span class="nc bnc" id="L505" title="All 2 branches missed.">    Scaffold(</span>
+<span class="nc" id="L506">        topBar = {</span>
+<span class="nc bnc" id="L507" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L508" title="All 8 branches missed.">                title = { Text(&quot;Support Tools&quot;) },</span>
+<span class="nc" id="L509">                navigationIcon = {</span>
+<span class="nc bnc" id="L510" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L511" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L512">                    }</span>
+<span class="nc" id="L513">                },</span>
+<span class="nc" id="L514">                colors = TopAppBarDefaults.topAppBarColors(</span>
+<span class="nc" id="L515">                    containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+                )
+<span class="nc" id="L517">            )</span>
+<span class="nc" id="L518">        }</span>
+<span class="nc" id="L519">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L520" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L521">            modifier = Modifier</span>
+<span class="nc" id="L522">                .fillMaxSize()</span>
+<span class="nc" id="L523">                .padding(paddingValues)</span>
+<span class="nc" id="L524">                .padding(16.dp)</span>
+<span class="nc" id="L525">                .verticalScroll(rememberScrollState())</span>
+        ) {
+            // Debug: Verify screen is rendering
+<span class="nc" id="L528">            Text(</span>
+<span class="nc" id="L529">                text = &quot;Support Tools&quot;,</span>
+<span class="nc" id="L530">                fontSize = 24.sp,</span>
+<span class="nc" id="L531">                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L532">                modifier = Modifier.padding(bottom = 16.dp)</span>
+            )
+            
+            // Coping Exercises
+<span class="nc" id="L536">            Card(</span>
+<span class="nc" id="L537">                onClick = onNavigateToCopingExercises,</span>
+<span class="nc" id="L538">                modifier = Modifier</span>
+<span class="nc" id="L539">                    .fillMaxWidth()</span>
+<span class="nc" id="L540">                    .padding(bottom = 12.dp),</span>
+<span class="nc" id="L541">                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L542">            ) {</span>
+<span class="nc bnc" id="L543" title="All 6 branches missed.">                Row(</span>
+<span class="nc" id="L544">                    modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L545">                    verticalAlignment = Alignment.CenterVertically</span>
+                ) {
+<span class="nc" id="L547">                    Icon(</span>
+<span class="nc" id="L548">                        Icons.Default.FitnessCenter,</span>
+<span class="nc" id="L549">                        contentDescription = null,</span>
+<span class="nc" id="L550">                        modifier = Modifier.size(40.dp),</span>
+<span class="nc" id="L551">                        tint = MaterialTheme.colorScheme.primary</span>
+                    )
+<span class="nc" id="L553">                    Spacer(modifier = Modifier.width(16.dp))</span>
+<span class="nc" id="L554">                    Text(</span>
+<span class="nc" id="L555">                        text = &quot;Coping Exercises&quot;,</span>
+<span class="nc" id="L556">                        fontSize = 18.sp,</span>
+<span class="nc" id="L557">                        fontWeight = FontWeight.Bold</span>
+                    )
+<span class="nc" id="L559">                }</span>
+<span class="nc" id="L560">            }</span>
+            
+            // Journal Prompts
+<span class="nc" id="L563">            Card(</span>
+<span class="nc" id="L564">                onClick = onNavigateToJournalPrompts,</span>
+<span class="nc" id="L565">                modifier = Modifier</span>
+<span class="nc" id="L566">                    .fillMaxWidth()</span>
+<span class="nc" id="L567">                    .padding(bottom = 12.dp),</span>
+<span class="nc" id="L568">                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L569">            ) {</span>
+<span class="nc bnc" id="L570" title="All 6 branches missed.">                Row(</span>
+<span class="nc" id="L571">                    modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L572">                    verticalAlignment = Alignment.CenterVertically</span>
+                ) {
+<span class="nc" id="L574">                    Icon(</span>
+<span class="nc" id="L575">                        Icons.Default.Edit,</span>
+<span class="nc" id="L576">                        contentDescription = null,</span>
+<span class="nc" id="L577">                        modifier = Modifier.size(40.dp),</span>
+<span class="nc" id="L578">                        tint = MaterialTheme.colorScheme.primary</span>
+                    )
+<span class="nc" id="L580">                    Spacer(modifier = Modifier.width(16.dp))</span>
+<span class="nc" id="L581">                    Text(</span>
+<span class="nc" id="L582">                        text = &quot;Journal Prompts&quot;,</span>
+<span class="nc" id="L583">                        fontSize = 18.sp,</span>
+<span class="nc" id="L584">                        fontWeight = FontWeight.Bold</span>
+                    )
+<span class="nc" id="L586">                }</span>
+<span class="nc" id="L587">            }</span>
+            
+            // Educational Resources
+<span class="nc" id="L590">            Card(</span>
+<span class="nc" id="L591">                onClick = onNavigateToEducationalResources,</span>
+<span class="nc" id="L592">                modifier = Modifier</span>
+<span class="nc" id="L593">                    .fillMaxWidth()</span>
+<span class="nc" id="L594">                    .padding(bottom = 12.dp),</span>
+<span class="nc" id="L595">                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L596">            ) {</span>
+<span class="nc bnc" id="L597" title="All 6 branches missed.">                Row(</span>
+<span class="nc" id="L598">                    modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L599">                    verticalAlignment = Alignment.CenterVertically</span>
+                ) {
+<span class="nc" id="L601">                    Icon(</span>
+<span class="nc" id="L602">                        Icons.Default.Book,</span>
+<span class="nc" id="L603">                        contentDescription = null,</span>
+<span class="nc" id="L604">                        modifier = Modifier.size(40.dp),</span>
+<span class="nc" id="L605">                        tint = MaterialTheme.colorScheme.primary</span>
+                    )
+<span class="nc" id="L607">                    Spacer(modifier = Modifier.width(16.dp))</span>
+<span class="nc" id="L608">                    Text(</span>
+<span class="nc" id="L609">                        text = &quot;Educational Resources&quot;,</span>
+<span class="nc" id="L610">                        fontSize = 18.sp,</span>
+<span class="nc" id="L611">                        fontWeight = FontWeight.Bold</span>
+                    )
+<span class="nc" id="L613">                }</span>
+<span class="nc" id="L614">            }</span>
+            
+            // User Support
+<span class="nc" id="L617">            Card(</span>
+<span class="nc" id="L618">                onClick = onNavigateToUserSupport,</span>
+<span class="nc" id="L619">                modifier = Modifier</span>
+<span class="nc" id="L620">                    .fillMaxWidth()</span>
+<span class="nc" id="L621">                    .padding(bottom = 12.dp),</span>
+<span class="nc" id="L622">                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L623">            ) {</span>
+<span class="nc bnc" id="L624" title="All 6 branches missed.">                Row(</span>
+<span class="nc" id="L625">                    modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L626">                    verticalAlignment = Alignment.CenterVertically</span>
+                ) {
+<span class="nc" id="L628">                    Icon(</span>
+<span class="nc" id="L629">                        Icons.Default.Support,</span>
+<span class="nc" id="L630">                        contentDescription = null,</span>
+<span class="nc" id="L631">                        modifier = Modifier.size(40.dp),</span>
+<span class="nc" id="L632">                        tint = MaterialTheme.colorScheme.primary</span>
+                    )
+<span class="nc" id="L634">                    Spacer(modifier = Modifier.width(16.dp))</span>
+<span class="nc" id="L635">                    Text(</span>
+<span class="nc" id="L636">                        text = &quot;User Support&quot;,</span>
+<span class="nc" id="L637">                        fontSize = 18.sp,</span>
+<span class="nc" id="L638">                        fontWeight = FontWeight.Bold</span>
+                    )
+<span class="nc" id="L640">                }</span>
+<span class="nc" id="L641">            }</span>
+            
+            // Group Therapy Simulation Mode (UC34)
+<span class="nc" id="L644">            Card(</span>
+<span class="nc" id="L645">                onClick = onNavigateToGroupTherapy,</span>
+<span class="nc" id="L646">                modifier = Modifier</span>
+<span class="nc" id="L647">                    .fillMaxWidth()</span>
+<span class="nc" id="L648">                    .padding(bottom = 12.dp),</span>
+<span class="nc" id="L649">                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L650">            ) {</span>
+<span class="nc bnc" id="L651" title="All 6 branches missed.">                Row(</span>
+<span class="nc" id="L652">                    modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L653">                    verticalAlignment = Alignment.CenterVertically</span>
+                ) {
+<span class="nc" id="L655">                    Icon(</span>
+<span class="nc" id="L656">                        Icons.Default.People,</span>
+<span class="nc" id="L657">                        contentDescription = null,</span>
+<span class="nc" id="L658">                        modifier = Modifier.size(40.dp),</span>
+<span class="nc" id="L659">                        tint = MaterialTheme.colorScheme.primary</span>
+                    )
+<span class="nc" id="L661">                    Spacer(modifier = Modifier.width(16.dp))</span>
+<span class="nc" id="L662">                    Text(</span>
+<span class="nc" id="L663">                        text = &quot;Group Therapy Simulation&quot;,</span>
+<span class="nc" id="L664">                        fontSize = 18.sp,</span>
+<span class="nc" id="L665">                        fontWeight = FontWeight.Bold</span>
+                    )
+<span class="nc" id="L667">                }</span>
+<span class="nc" id="L668">            }</span>
+            
+            // Community Support Circles (UC39)
+<span class="nc" id="L671">            Card(</span>
+<span class="nc" id="L672">                onClick = onNavigateToCommunitySupportCircles,</span>
+<span class="nc" id="L673">                modifier = Modifier</span>
+<span class="nc" id="L674">                    .fillMaxWidth()</span>
+<span class="nc" id="L675">                    .padding(bottom = 12.dp),</span>
+<span class="nc" id="L676">                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L677">            ) {</span>
+<span class="nc bnc" id="L678" title="All 6 branches missed.">                Row(</span>
+<span class="nc" id="L679">                    modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L680">                    verticalAlignment = Alignment.CenterVertically</span>
+                ) {
+<span class="nc" id="L682">                    Icon(</span>
+<span class="nc" id="L683">                        Icons.Default.Group,</span>
+<span class="nc" id="L684">                        contentDescription = null,</span>
+<span class="nc" id="L685">                        modifier = Modifier.size(40.dp),</span>
+<span class="nc" id="L686">                        tint = MaterialTheme.colorScheme.primary</span>
+                    )
+<span class="nc" id="L688">                    Spacer(modifier = Modifier.width(16.dp))</span>
+<span class="nc" id="L689">                    Text(</span>
+<span class="nc" id="L690">                        text = &quot;Community Support Circles&quot;,</span>
+<span class="nc" id="L691">                        fontSize = 18.sp,</span>
+<span class="nc" id="L692">                        fontWeight = FontWeight.Bold</span>
+                    )
+<span class="nc" id="L694">                }</span>
+<span class="nc" id="L695">            }</span>
+            
+            // Religious Support by Person's Religion (UC40)
+<span class="nc" id="L698">            Card(</span>
+<span class="nc" id="L699">                onClick = onNavigateToReligiousSupport,</span>
+<span class="nc" id="L700">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L701">                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L702">            ) {</span>
+<span class="nc bnc" id="L703" title="All 6 branches missed.">                Row(</span>
+<span class="nc" id="L704">                    modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L705">                    verticalAlignment = Alignment.CenterVertically</span>
+                ) {
+<span class="nc" id="L707">                    Icon(</span>
+<span class="nc" id="L708">                        Icons.Default.Favorite,</span>
+<span class="nc" id="L709">                        contentDescription = null,</span>
+<span class="nc" id="L710">                        modifier = Modifier.size(40.dp),</span>
+<span class="nc" id="L711">                        tint = MaterialTheme.colorScheme.primary</span>
+                    )
+<span class="nc" id="L713">                    Spacer(modifier = Modifier.width(16.dp))</span>
+<span class="nc" id="L714">                    Text(</span>
+<span class="nc" id="L715">                        text = &quot;Religious Support&quot;,</span>
+<span class="nc" id="L716">                        fontSize = 18.sp,</span>
+<span class="nc" id="L717">                        fontWeight = FontWeight.Bold</span>
+                    )
+<span class="nc" id="L719">                }</span>
+<span class="nc" id="L720">            }</span>
+<span class="nc" id="L721">        }</span>
+<span class="nc" id="L722">    }</span>
+<span class="nc bnc" id="L723" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L727" title="All 10 branches missed.">fun CopingExercisesScreen(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc bnc" id="L728" title="All 2 branches missed.">    Scaffold(</span>
+<span class="nc" id="L729">        topBar = {</span>
+<span class="nc bnc" id="L730" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L731" title="All 8 branches missed.">                title = { Text(&quot;Coping Exercises&quot;) },</span>
+<span class="nc" id="L732">                navigationIcon = {</span>
+<span class="nc bnc" id="L733" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L734" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L735">                    }</span>
+<span class="nc" id="L736">                },</span>
+<span class="nc" id="L737">                colors = TopAppBarDefaults.topAppBarColors(</span>
+<span class="nc" id="L738">                    containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+                )
+<span class="nc" id="L740">            )</span>
+<span class="nc" id="L741">        }</span>
+<span class="nc" id="L742">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L743" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L744">            modifier = Modifier</span>
+<span class="nc" id="L745">                .fillMaxSize()</span>
+<span class="nc" id="L746">                .padding(paddingValues)</span>
+<span class="nc" id="L747">                .padding(16.dp),</span>
+<span class="nc" id="L748">            horizontalAlignment = Alignment.CenterHorizontally,</span>
+<span class="nc" id="L749">            verticalArrangement = Arrangement.Center</span>
+        ) {
+<span class="nc" id="L751">            Text(&quot;Coping Exercises Content (UC8)&quot;, fontSize = 20.sp)</span>
+            // Add coping exercises UI here
+<span class="nc" id="L753">        }</span>
+<span class="nc" id="L754">    }</span>
+<span class="nc bnc" id="L755" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L759" title="All 10 branches missed.">fun JournalPromptsScreen(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc bnc" id="L760" title="All 2 branches missed.">    Scaffold(</span>
+<span class="nc" id="L761">        topBar = {</span>
+<span class="nc bnc" id="L762" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L763" title="All 8 branches missed.">                title = { Text(&quot;Journal Prompts&quot;) },</span>
+<span class="nc" id="L764">                navigationIcon = {</span>
+<span class="nc bnc" id="L765" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L766" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L767">                    }</span>
+<span class="nc" id="L768">                },</span>
+<span class="nc" id="L769">                colors = TopAppBarDefaults.topAppBarColors(</span>
+<span class="nc" id="L770">                    containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+                )
+<span class="nc" id="L772">            )</span>
+<span class="nc" id="L773">        }</span>
+<span class="nc" id="L774">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L775" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L776">            modifier = Modifier</span>
+<span class="nc" id="L777">                .fillMaxSize()</span>
+<span class="nc" id="L778">                .padding(paddingValues)</span>
+<span class="nc" id="L779">                .padding(16.dp),</span>
+<span class="nc" id="L780">            horizontalAlignment = Alignment.CenterHorizontally,</span>
+<span class="nc" id="L781">            verticalArrangement = Arrangement.Center</span>
+        ) {
+<span class="nc" id="L783">            Text(&quot;Journal Prompts Content (UC32)&quot;, fontSize = 20.sp)</span>
+            // Add journal prompts UI here
+<span class="nc" id="L785">        }</span>
+<span class="nc" id="L786">    }</span>
+<span class="nc bnc" id="L787" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L791" title="All 10 branches missed.">fun EducationalResourcesScreen(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc" id="L792">    val context = LocalContext.current</span>
+<span class="nc" id="L793">    val useCase = remember { com.serenityai.usecases.EducationalResourcesUseCase() }</span>
+<span class="nc" id="L794">    var resources by remember { mutableStateOf&lt;List&lt;com.serenityai.usecases.EducationalResource&gt;&gt;(emptyList()) }</span>
+<span class="nc" id="L795">    var categories by remember { mutableStateOf&lt;List&lt;String&gt;&gt;(emptyList()) }</span>
+<span class="nc" id="L796">    var selectedCategory by remember { mutableStateOf&lt;String?&gt;(null) }</span>
+<span class="nc" id="L797">    var searchQuery by remember { mutableStateOf(&quot;&quot;) }</span>
+<span class="nc" id="L798">    var isLoading by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L799">    var selectedFormat by remember { mutableStateOf&lt;com.serenityai.usecases.ContentFormat&gt;(com.serenityai.usecases.ContentFormat.ALL) }</span>
+<span class="nc" id="L800">    var dataSource by remember { mutableStateOf&lt;String&gt;(&quot;Loading...&quot;) } // Track data source</span>
+    
+    // Function to open URL in browser
+    fun openResourceUrl(url: String) {
+<span class="nc" id="L804">        try {</span>
+<span class="nc" id="L805">            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))</span>
+<span class="nc" id="L806">            context.startActivity(intent)</span>
+<span class="nc" id="L807">        } catch (e: Exception) {</span>
+            // If URL is invalid or no browser available, show error
+<span class="nc" id="L809">            android.widget.Toast.makeText(</span>
+<span class="nc" id="L810">                context,</span>
+<span class="nc" id="L811">                &quot;Unable to open resource: ${e.message}&quot;,</span>
+<span class="nc" id="L812">                android.widget.Toast.LENGTH_SHORT</span>
+<span class="nc" id="L813">            ).show()</span>
+        }
+<span class="nc" id="L815">    }</span>
+    
+    // Load resources and categories when screen loads
+<span class="nc" id="L818">    LaunchedEffect(Unit) {</span>
+<span class="nc" id="L819">        isLoading = true</span>
+<span class="nc" id="L820">        try {</span>
+<span class="nc" id="L821">            val loadedResources = useCase.getEducationalResources(</span>
+<span class="nc" id="L822">                category = selectedCategory,</span>
+<span class="nc" id="L823">                format = selectedFormat</span>
+            )
+<span class="nc" id="L825">            resources = loadedResources</span>
+<span class="nc" id="L826">            categories = useCase.getResourceCategories()</span>
+            
+            // Check if data came from Firebase (check Logcat for details)
+            // For now, assume Firebase if we have more than 5 resources (Firebase might have more)
+<span class="nc bnc" id="L830" title="All 2 branches missed.">            dataSource = if (loadedResources.size &gt; 5) &quot;Firebase&quot; else &quot;Fallback Data&quot;</span>
+<span class="nc" id="L831">        } catch (e: Exception) {</span>
+<span class="nc" id="L832">            android.util.Log.e(&quot;EducationalResources&quot;, &quot;Error loading resources: ${e.message}&quot;, e)</span>
+<span class="nc" id="L833">            dataSource = &quot;Error - Using Fallback&quot;</span>
+            // Error handling - try to get fallback data
+<span class="nc" id="L835">            try {</span>
+<span class="nc" id="L836">                resources = useCase.getEducationalResources(</span>
+<span class="nc" id="L837">                    category = null,</span>
+<span class="nc" id="L838">                    format = com.serenityai.usecases.ContentFormat.ALL</span>
+                )
+<span class="nc" id="L840">                categories = useCase.getResourceCategories()</span>
+<span class="nc" id="L841">            } catch (e2: Exception) {</span>
+                // If even fallback fails, show empty state
+<span class="nc" id="L843">                resources = emptyList()</span>
+<span class="nc" id="L844">                categories = emptyList()</span>
+            }
+        }
+<span class="nc" id="L847">        isLoading = false</span>
+<span class="nc" id="L848">    }</span>
+    
+    // Reload when filters change
+<span class="nc" id="L851">    LaunchedEffect(selectedCategory, selectedFormat) {</span>
+<span class="nc" id="L852">        isLoading = true</span>
+<span class="nc" id="L853">        try {</span>
+<span class="nc" id="L854">            resources = useCase.getEducationalResources(</span>
+<span class="nc" id="L855">                category = selectedCategory,</span>
+<span class="nc" id="L856">                format = selectedFormat</span>
+            )
+<span class="nc" id="L858">        } catch (e: Exception) {</span>
+            // Error handling
+        }
+<span class="nc" id="L861">        isLoading = false</span>
+<span class="nc" id="L862">    }</span>
+    
+    // Search functionality
+<span class="nc" id="L865">    LaunchedEffect(searchQuery) {</span>
+<span class="nc bnc" id="L866" title="All 4 branches missed.">        if (searchQuery.isNotBlank()) {</span>
+<span class="nc" id="L867">            isLoading = true</span>
+<span class="nc" id="L868">            try {</span>
+<span class="nc" id="L869">                resources = useCase.searchEducationalResources(searchQuery)</span>
+<span class="nc" id="L870">            } catch (e: Exception) {</span>
+                // Error handling
+            }
+<span class="nc" id="L873">            isLoading = false</span>
+<span class="nc bnc" id="L874" title="All 4 branches missed.">        } else if (searchQuery.isEmpty()) {</span>
+            // Reload all resources when search is cleared
+<span class="nc" id="L876">            isLoading = true</span>
+<span class="nc" id="L877">            try {</span>
+<span class="nc" id="L878">                resources = useCase.getEducationalResources(</span>
+<span class="nc" id="L879">                    category = selectedCategory,</span>
+<span class="nc" id="L880">                    format = selectedFormat</span>
+                )
+<span class="nc" id="L882">            } catch (e: Exception) {</span>
+                // Error handling
+            }
+<span class="nc" id="L885">            isLoading = false</span>
+        }
+<span class="nc" id="L887">    }</span>
+    
+<span class="nc bnc" id="L889" title="All 2 branches missed.">    Scaffold(</span>
+<span class="nc" id="L890">        topBar = {</span>
+<span class="nc bnc" id="L891" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L892" title="All 8 branches missed.">                title = { Text(&quot;Educational Resources&quot;) },</span>
+<span class="nc" id="L893">                navigationIcon = {</span>
+<span class="nc bnc" id="L894" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L895" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L896">                    }</span>
+<span class="nc" id="L897">                },</span>
+<span class="nc" id="L898">                colors = TopAppBarDefaults.topAppBarColors(</span>
+<span class="nc" id="L899">                    containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+                ),
+<span class="nc" id="L901">                actions = {</span>
+                    // Show data source indicator (for debugging)
+<span class="nc bnc" id="L903" title="All 8 branches missed.">                    Text(</span>
+<span class="nc" id="L904">                        text = dataSource,</span>
+<span class="nc" id="L905">                        style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L906">                        color = MaterialTheme.colorScheme.onPrimaryContainer,</span>
+<span class="nc" id="L907">                        modifier = Modifier.padding(end = 16.dp)</span>
+<span class="nc" id="L908">                    )</span>
+<span class="nc" id="L909">                }</span>
+<span class="nc" id="L910">            )</span>
+<span class="nc" id="L911">        }</span>
+<span class="nc" id="L912">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L913" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L914">            modifier = Modifier</span>
+<span class="nc" id="L915">                .fillMaxSize()</span>
+<span class="nc" id="L916">                .padding(paddingValues)</span>
+        ) {
+            // Search Bar
+<span class="nc" id="L919">            OutlinedTextField(</span>
+<span class="nc" id="L920">                value = searchQuery,</span>
+<span class="nc" id="L921">                onValueChange = { searchQuery = it },</span>
+<span class="nc" id="L922">                modifier = Modifier</span>
+<span class="nc" id="L923">                    .fillMaxWidth()</span>
+<span class="nc" id="L924">                    .padding(16.dp),</span>
+<span class="nc bnc" id="L925" title="All 8 branches missed.">                placeholder = { Text(&quot;Search resources...&quot;) },</span>
+<span class="nc" id="L926">                leadingIcon = {</span>
+<span class="nc bnc" id="L927" title="All 8 branches missed.">                    Icon(Icons.Default.Search, contentDescription = &quot;Search&quot;)</span>
+<span class="nc" id="L928">                },</span>
+<span class="nc" id="L929">                trailingIcon = {</span>
+<span class="nc bnc" id="L930" title="All 10 branches missed.">                    if (searchQuery.isNotBlank()) {</span>
+<span class="nc bnc" id="L931" title="All 2 branches missed.">                        IconButton(onClick = { searchQuery = &quot;&quot; }) {</span>
+<span class="nc bnc" id="L932" title="All 8 branches missed.">                            Icon(Icons.Default.Clear, contentDescription = &quot;Clear&quot;)</span>
+<span class="nc" id="L933">                        }</span>
+<span class="nc" id="L934">                    }</span>
+<span class="nc" id="L935">                },</span>
+<span class="nc" id="L936">                singleLine = true</span>
+            )
+            
+            // Format Filter
+<span class="nc" id="L940">            LazyRow(</span>
+<span class="nc" id="L941">                modifier = Modifier.padding(horizontal = 16.dp),</span>
+<span class="nc" id="L942">                horizontalArrangement = Arrangement.spacedBy(8.dp)</span>
+<span class="nc" id="L943">            ) {</span>
+<span class="nc" id="L944">                item {</span>
+<span class="nc bnc" id="L945" title="All 8 branches missed.">                    FilterChip(</span>
+<span class="nc bnc" id="L946" title="All 2 branches missed.">                        selected = selectedFormat == com.serenityai.usecases.ContentFormat.ALL,</span>
+<span class="nc" id="L947">                        onClick = { selectedFormat = com.serenityai.usecases.ContentFormat.ALL },</span>
+<span class="nc bnc" id="L948" title="All 8 branches missed.">                        label = { Text(&quot;All&quot;) }</span>
+<span class="nc" id="L949">                    )</span>
+<span class="nc" id="L950">                }</span>
+<span class="nc" id="L951">                item {</span>
+<span class="nc bnc" id="L952" title="All 8 branches missed.">                    FilterChip(</span>
+<span class="nc bnc" id="L953" title="All 2 branches missed.">                        selected = selectedFormat == com.serenityai.usecases.ContentFormat.TEXT,</span>
+<span class="nc" id="L954">                        onClick = { selectedFormat = com.serenityai.usecases.ContentFormat.TEXT },</span>
+<span class="nc bnc" id="L955" title="All 8 branches missed.">                        label = { Text(&quot;Text&quot;) }</span>
+<span class="nc" id="L956">                    )</span>
+<span class="nc" id="L957">                }</span>
+<span class="nc" id="L958">                item {</span>
+<span class="nc bnc" id="L959" title="All 8 branches missed.">                    FilterChip(</span>
+<span class="nc bnc" id="L960" title="All 2 branches missed.">                        selected = selectedFormat == com.serenityai.usecases.ContentFormat.VIDEO,</span>
+<span class="nc" id="L961">                        onClick = { selectedFormat = com.serenityai.usecases.ContentFormat.VIDEO },</span>
+<span class="nc bnc" id="L962" title="All 8 branches missed.">                        label = { Text(&quot;Video&quot;) }</span>
+<span class="nc" id="L963">                    )</span>
+<span class="nc" id="L964">                }</span>
+<span class="nc" id="L965">                item {</span>
+<span class="nc bnc" id="L966" title="All 8 branches missed.">                    FilterChip(</span>
+<span class="nc bnc" id="L967" title="All 2 branches missed.">                        selected = selectedFormat == com.serenityai.usecases.ContentFormat.AUDIO,</span>
+<span class="nc" id="L968">                        onClick = { selectedFormat = com.serenityai.usecases.ContentFormat.AUDIO },</span>
+<span class="nc bnc" id="L969" title="All 8 branches missed.">                        label = { Text(&quot;Audio&quot;) }</span>
+<span class="nc" id="L970">                    )</span>
+<span class="nc" id="L971">                }</span>
+<span class="nc" id="L972">            }</span>
+            
+            // Category Filter
+<span class="nc bnc" id="L975" title="All 4 branches missed.">            if (categories.isNotEmpty()) {</span>
+<span class="nc" id="L976">                LazyRow(</span>
+<span class="nc" id="L977">                    modifier = Modifier</span>
+<span class="nc" id="L978">                        .padding(horizontal = 16.dp)</span>
+<span class="nc" id="L979">                        .padding(top = 8.dp),</span>
+<span class="nc" id="L980">                    horizontalArrangement = Arrangement.spacedBy(8.dp)</span>
+<span class="nc" id="L981">                ) {</span>
+<span class="nc" id="L982">                    item {</span>
+<span class="nc bnc" id="L983" title="All 8 branches missed.">                        FilterChip(</span>
+<span class="nc bnc" id="L984" title="All 2 branches missed.">                            selected = selectedCategory == null,</span>
+<span class="nc" id="L985">                            onClick = { selectedCategory = null },</span>
+<span class="nc bnc" id="L986" title="All 8 branches missed.">                            label = { Text(&quot;All Categories&quot;) }</span>
+<span class="nc" id="L987">                        )</span>
+<span class="nc" id="L988">                    }</span>
+<span class="nc" id="L989">                    items(categories) { category -&gt;</span>
+                        FilterChip(
+                            selected = selectedCategory == category,
+                            onClick = { 
+<span class="nc bnc" id="L993" title="All 2 branches missed.">                                selectedCategory = if (selectedCategory == category) null else category</span>
+<span class="nc" id="L994">                            },</span>
+<span class="nc bnc" id="L995" title="All 8 branches missed.">                            label = { Text(category) }</span>
+                        )
+                    }
+<span class="nc" id="L998">                }</span>
+            }
+            
+<span class="nc" id="L1001">            Spacer(modifier = Modifier.height(8.dp))</span>
+            
+            // Resources List
+<span class="nc bnc" id="L1004" title="All 2 branches missed.">            if (isLoading) {</span>
+<span class="nc" id="L1005">                Box(</span>
+<span class="nc" id="L1006">                    modifier = Modifier</span>
+<span class="nc" id="L1007">                        .fillMaxSize()</span>
+<span class="nc" id="L1008">                        .weight(1f),</span>
+<span class="nc" id="L1009">                    contentAlignment = Alignment.Center</span>
+                ) {
+<span class="nc" id="L1011">                    CircularProgressIndicator()</span>
+<span class="nc" id="L1012">                }</span>
+<span class="nc bnc" id="L1013" title="All 2 branches missed.">            } else if (resources.isEmpty()) {</span>
+<span class="nc" id="L1014">                Box(</span>
+<span class="nc" id="L1015">                    modifier = Modifier</span>
+<span class="nc" id="L1016">                        .fillMaxSize()</span>
+<span class="nc" id="L1017">                        .weight(1f),</span>
+<span class="nc" id="L1018">                    contentAlignment = Alignment.Center</span>
+                ) {
+<span class="nc" id="L1020">                    Column(</span>
+<span class="nc" id="L1021">                        horizontalAlignment = Alignment.CenterHorizontally</span>
+                    ) {
+<span class="nc" id="L1023">                        Icon(</span>
+<span class="nc" id="L1024">                            Icons.Default.Book,</span>
+<span class="nc" id="L1025">                            contentDescription = null,</span>
+<span class="nc" id="L1026">                            modifier = Modifier.size(64.dp),</span>
+<span class="nc" id="L1027">                            tint = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                        )
+<span class="nc" id="L1029">                        Spacer(modifier = Modifier.height(16.dp))</span>
+<span class="nc" id="L1030">                        Text(</span>
+<span class="nc" id="L1031">                            &quot;No resources found&quot;,</span>
+<span class="nc" id="L1032">                            style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L1033">                            color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                        )
+<span class="nc bnc" id="L1035" title="All 4 branches missed.">                        if (searchQuery.isNotBlank()) {</span>
+<span class="nc" id="L1036">                            Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L1037">                            Text(</span>
+<span class="nc" id="L1038">                                &quot;Try a different search term&quot;,</span>
+<span class="nc" id="L1039">                                style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L1040">                                color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                            )
+                        }
+<span class="nc" id="L1043">                    }</span>
+<span class="nc" id="L1044">                }</span>
+<span class="nc" id="L1045">            } else {</span>
+<span class="nc" id="L1046">                LazyColumn(</span>
+<span class="nc" id="L1047">                    modifier = Modifier</span>
+<span class="nc" id="L1048">                        .fillMaxSize()</span>
+<span class="nc" id="L1049">                        .weight(1f),</span>
+<span class="nc" id="L1050">                    contentPadding = PaddingValues(16.dp),</span>
+<span class="nc" id="L1051">                    verticalArrangement = Arrangement.spacedBy(12.dp)</span>
+<span class="nc" id="L1052">                ) {</span>
+<span class="nc" id="L1053">                    item {</span>
+<span class="nc bnc" id="L1054" title="All 8 branches missed.">                        Text(</span>
+<span class="nc bnc" id="L1055" title="All 2 branches missed.">                            &quot;Found ${resources.size} resource${if (resources.size != 1) &quot;s&quot; else &quot;&quot;}&quot;,</span>
+<span class="nc" id="L1056">                            style = MaterialTheme.typography.titleSmall,</span>
+<span class="nc" id="L1057">                            fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L1058">                            modifier = Modifier.padding(bottom = 8.dp)</span>
+<span class="nc" id="L1059">                        )</span>
+<span class="nc" id="L1060">                    }</span>
+<span class="nc" id="L1061">                    items(resources) { resource -&gt;</span>
+                        EducationalResourceCard(
+                            resource = resource,
+<span class="nc" id="L1064">                            onClick = { openResourceUrl(resource.url) }</span>
+                        )
+                    }
+<span class="nc" id="L1067">                }</span>
+            }
+<span class="nc" id="L1069">        }</span>
+<span class="nc" id="L1070">    }</span>
+<span class="nc bnc" id="L1071" title="All 2 branches missed.">}</span>
+
+@Composable
+fun EducationalResourceCard(
+    resource: com.serenityai.usecases.EducationalResource,
+    onClick: () -&gt; Unit
+<span class="nc bnc" id="L1077" title="All 14 branches missed.">) {</span>
+<span class="nc bnc" id="L1078" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L1079">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L1080">        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),</span>
+<span class="nc" id="L1081">        onClick = onClick</span>
+<span class="nc" id="L1082">    ) {</span>
+<span class="nc bnc" id="L1083" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L1084">            modifier = Modifier.padding(16.dp)</span>
+        ) {
+<span class="nc" id="L1086">            Row(</span>
+<span class="nc" id="L1087">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L1088">                horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L1089">                verticalAlignment = Alignment.Top</span>
+            ) {
+<span class="nc" id="L1091">                Column(modifier = Modifier.weight(1f)) {</span>
+<span class="nc" id="L1092">                    Text(</span>
+<span class="nc" id="L1093">                        text = resource.title,</span>
+<span class="nc" id="L1094">                        style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L1095">                        fontWeight = FontWeight.Bold</span>
+                    )
+<span class="nc" id="L1097">                    Spacer(modifier = Modifier.height(4.dp))</span>
+<span class="nc" id="L1098">                    Text(</span>
+<span class="nc" id="L1099">                        text = resource.category,</span>
+<span class="nc" id="L1100">                        style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L1101">                        color = MaterialTheme.colorScheme.primary</span>
+                    )
+<span class="nc" id="L1103">                }</span>
+                // Format icon
+<span class="nc" id="L1105">                Icon(</span>
+<span class="nc bnc" id="L1106" title="All 4 branches missed.">                    when (resource.format) {</span>
+<span class="nc" id="L1107">                        com.serenityai.usecases.ContentFormat.TEXT -&gt; Icons.Default.Article</span>
+<span class="nc" id="L1108">                        com.serenityai.usecases.ContentFormat.VIDEO -&gt; Icons.Default.PlayCircle</span>
+<span class="nc" id="L1109">                        com.serenityai.usecases.ContentFormat.AUDIO -&gt; Icons.Default.Headphones</span>
+<span class="nc" id="L1110">                        else -&gt; Icons.Default.Book</span>
+                    },
+<span class="nc" id="L1112">                    contentDescription = resource.format.name,</span>
+<span class="nc" id="L1113">                    modifier = Modifier.size(24.dp),</span>
+<span class="nc" id="L1114">                    tint = MaterialTheme.colorScheme.primary</span>
+                )
+<span class="nc" id="L1116">            }</span>
+            
+<span class="nc" id="L1118">            Spacer(modifier = Modifier.height(8.dp))</span>
+            
+<span class="nc" id="L1120">            Text(</span>
+<span class="nc" id="L1121">                text = resource.description,</span>
+<span class="nc" id="L1122">                style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L1123">                color = MaterialTheme.colorScheme.onSurfaceVariant,</span>
+<span class="nc" id="L1124">                maxLines = 3</span>
+            )
+            
+<span class="nc" id="L1127">            Spacer(modifier = Modifier.height(12.dp))</span>
+            
+<span class="nc" id="L1129">            Row(</span>
+<span class="nc" id="L1130">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L1131">                horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L1132">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L1134">                Row(</span>
+<span class="nc" id="L1135">                    verticalAlignment = Alignment.CenterVertically</span>
+                ) {
+<span class="nc" id="L1137">                    Icon(</span>
+<span class="nc" id="L1138">                        Icons.Default.Timer,</span>
+<span class="nc" id="L1139">                        contentDescription = null,</span>
+<span class="nc" id="L1140">                        modifier = Modifier.size(16.dp),</span>
+<span class="nc" id="L1141">                        tint = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                    )
+<span class="nc" id="L1143">                    Spacer(modifier = Modifier.width(4.dp))</span>
+<span class="nc" id="L1144">                    Text(</span>
+<span class="nc" id="L1145">                        text = &quot;${resource.duration} min&quot;,</span>
+<span class="nc" id="L1146">                        style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L1147">                        color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                    )
+<span class="nc" id="L1149">                    Spacer(modifier = Modifier.width(12.dp))</span>
+                    // Difficulty badge
+<span class="nc" id="L1151">                    Box(</span>
+<span class="nc" id="L1152">                        modifier = Modifier</span>
+<span class="nc" id="L1153">                            .clip(RoundedCornerShape(4.dp))</span>
+<span class="nc" id="L1154">                            .background(</span>
+<span class="nc bnc" id="L1155" title="All 3 branches missed.">                                when (resource.difficulty) {</span>
+<span class="nc" id="L1156">                                    com.serenityai.usecases.DifficultyLevel.BEGINNER -&gt; Color(0xFF4CAF50).copy(alpha = 0.1f)</span>
+<span class="nc" id="L1157">                                    com.serenityai.usecases.DifficultyLevel.INTERMEDIATE -&gt; Color(0xFFFF9800).copy(alpha = 0.1f)</span>
+<span class="nc" id="L1158">                                    com.serenityai.usecases.DifficultyLevel.ADVANCED -&gt; Color(0xFFF44336).copy(alpha = 0.1f)</span>
+                                }
+                            )
+<span class="nc" id="L1161">                            .padding(horizontal = 8.dp, vertical = 4.dp)</span>
+                    ) {
+<span class="nc" id="L1163">                        Text(</span>
+<span class="nc" id="L1164">                            text = resource.difficulty.name,</span>
+<span class="nc" id="L1165">                            style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc bnc" id="L1166" title="All 3 branches missed.">                            color = when (resource.difficulty) {</span>
+<span class="nc" id="L1167">                                com.serenityai.usecases.DifficultyLevel.BEGINNER -&gt; Color(0xFF4CAF50)</span>
+<span class="nc" id="L1168">                                com.serenityai.usecases.DifficultyLevel.INTERMEDIATE -&gt; Color(0xFFFF9800)</span>
+<span class="nc" id="L1169">                                com.serenityai.usecases.DifficultyLevel.ADVANCED -&gt; Color(0xFFF44336)</span>
+                            },
+<span class="nc" id="L1171">                            fontSize = 10.sp</span>
+                        )
+<span class="nc" id="L1173">                    }</span>
+<span class="nc" id="L1174">                }</span>
+                
+                // Relevance score
+<span class="nc bnc" id="L1177" title="All 2 branches missed.">                if (resource.relevanceScore &gt; 0) {</span>
+<span class="nc" id="L1178">                    Row(</span>
+<span class="nc" id="L1179">                        verticalAlignment = Alignment.CenterVertically</span>
+                    ) {
+<span class="nc" id="L1181">                        Icon(</span>
+<span class="nc" id="L1182">                            Icons.Default.Star,</span>
+<span class="nc" id="L1183">                            contentDescription = null,</span>
+<span class="nc" id="L1184">                            modifier = Modifier.size(16.dp),</span>
+<span class="nc" id="L1185">                            tint = Color(0xFFFFD700)</span>
+                        )
+<span class="nc" id="L1187">                        Spacer(modifier = Modifier.width(4.dp))</span>
+<span class="nc" id="L1188">                        Text(</span>
+<span class="nc" id="L1189">                            text = &quot;${resource.relevanceScore.toInt()}%&quot;,</span>
+<span class="nc" id="L1190">                            style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L1191">                            color = Color(0xFFFFD700),</span>
+<span class="nc" id="L1192">                            fontWeight = FontWeight.Medium</span>
+                        )
+<span class="nc" id="L1194">                    }</span>
+                }
+<span class="nc" id="L1196">            }</span>
+            
+            // Tags
+<span class="nc bnc" id="L1199" title="All 4 branches missed.">            if (resource.tags.isNotEmpty()) {</span>
+<span class="nc" id="L1200">                Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L1201">                LazyRow(</span>
+<span class="nc" id="L1202">                    horizontalArrangement = Arrangement.spacedBy(4.dp)</span>
+<span class="nc" id="L1203">                ) {</span>
+<span class="nc" id="L1204">                    items(resource.tags.take(5)) { tag -&gt;</span>
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(4.dp))
+                                .background(MaterialTheme.colorScheme.secondaryContainer)
+                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                        ) {
+                            Text(
+                                text = tag,
+                                style = MaterialTheme.typography.bodySmall,
+                                fontSize = 10.sp,
+                                color = MaterialTheme.colorScheme.onSecondaryContainer
+                            )
+                        }
+                    }
+<span class="nc" id="L1219">                }</span>
+            }
+            
+            // Open button indicator (card is already clickable)
+<span class="nc" id="L1223">            Spacer(modifier = Modifier.height(12.dp))</span>
+<span class="nc" id="L1224">            Row(</span>
+<span class="nc" id="L1225">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L1226">                horizontalArrangement = Arrangement.End,</span>
+<span class="nc" id="L1227">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L1229">                Row(</span>
+<span class="nc" id="L1230">                    verticalAlignment = Alignment.CenterVertically,</span>
+<span class="nc" id="L1231">                    horizontalArrangement = Arrangement.spacedBy(4.dp)</span>
+                ) {
+<span class="nc" id="L1233">                    Icon(</span>
+<span class="nc bnc" id="L1234" title="All 3 branches missed.">                        when (resource.format) {</span>
+<span class="nc" id="L1235">                            com.serenityai.usecases.ContentFormat.VIDEO -&gt; Icons.Default.PlayArrow</span>
+<span class="nc" id="L1236">                            com.serenityai.usecases.ContentFormat.AUDIO -&gt; Icons.Default.PlayArrow</span>
+<span class="nc" id="L1237">                            else -&gt; Icons.Default.OpenInNew</span>
+                        },
+<span class="nc" id="L1239">                        contentDescription = &quot;Open&quot;,</span>
+<span class="nc" id="L1240">                        modifier = Modifier.size(18.dp),</span>
+<span class="nc" id="L1241">                        tint = MaterialTheme.colorScheme.primary</span>
+                    )
+<span class="nc" id="L1243">                    Text(</span>
+<span class="nc bnc" id="L1244" title="All 3 branches missed.">                        text = when (resource.format) {</span>
+<span class="nc" id="L1245">                            com.serenityai.usecases.ContentFormat.VIDEO -&gt; &quot;Watch&quot;</span>
+<span class="nc" id="L1246">                            com.serenityai.usecases.ContentFormat.AUDIO -&gt; &quot;Listen&quot;</span>
+<span class="nc" id="L1247">                            else -&gt; &quot;Read&quot;</span>
+                        },
+<span class="nc" id="L1249">                        style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L1250">                        color = MaterialTheme.colorScheme.primary,</span>
+<span class="nc" id="L1251">                        fontWeight = FontWeight.Medium</span>
+                    )
+<span class="nc" id="L1253">                }</span>
+<span class="nc" id="L1254">            }</span>
+<span class="nc" id="L1255">        }</span>
+<span class="nc" id="L1256">    }</span>
+<span class="nc bnc" id="L1257" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun UserSupportScreen(
+    onNavigateToApplicationFeedback: () -&gt; Unit,
+    onNavigateBack: () -&gt; Unit
+<span class="nc bnc" id="L1264" title="All 14 branches missed.">) {</span>
+<span class="nc bnc" id="L1265" title="All 2 branches missed.">    Scaffold(</span>
+<span class="nc" id="L1266">        topBar = {</span>
+<span class="nc bnc" id="L1267" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L1268" title="All 8 branches missed.">                title = { Text(&quot;User Support&quot;) },</span>
+<span class="nc" id="L1269">                navigationIcon = {</span>
+<span class="nc bnc" id="L1270" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L1271" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L1272">                    }</span>
+<span class="nc" id="L1273">                },</span>
+<span class="nc" id="L1274">                colors = TopAppBarDefaults.topAppBarColors(</span>
+<span class="nc" id="L1275">                    containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+                )
+<span class="nc" id="L1277">            )</span>
+<span class="nc" id="L1278">        }</span>
+<span class="nc" id="L1279">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L1280" title="All 8 branches missed.">        LazyColumn(</span>
+<span class="nc" id="L1281">            modifier = Modifier</span>
+<span class="nc" id="L1282">                .fillMaxSize()</span>
+<span class="nc" id="L1283">                .padding(paddingValues)</span>
+<span class="nc" id="L1284">                .padding(16.dp),</span>
+<span class="nc" id="L1285">            verticalArrangement = Arrangement.spacedBy(16.dp)</span>
+<span class="nc" id="L1286">        ) {</span>
+<span class="nc" id="L1287">            item {</span>
+<span class="nc bnc" id="L1288" title="All 8 branches missed.">                Text(</span>
+<span class="nc" id="L1289">                    text = &quot;Support &amp; Feedback&quot;,</span>
+<span class="nc" id="L1290">                    fontSize = 24.sp,</span>
+<span class="nc" id="L1291">                    fontWeight = FontWeight.Bold</span>
+<span class="nc" id="L1292">                )</span>
+<span class="nc" id="L1293">            }</span>
+            
+<span class="nc" id="L1295">            item {</span>
+<span class="nc bnc" id="L1296" title="All 8 branches missed.">                Card(</span>
+<span class="nc" id="L1297">                    onClick = onNavigateToApplicationFeedback,</span>
+<span class="nc" id="L1298">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L1299">                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L1300">                ) {</span>
+<span class="nc bnc" id="L1301" title="All 6 branches missed.">                    Row(</span>
+<span class="nc" id="L1302">                        modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L1303">                        verticalAlignment = Alignment.CenterVertically</span>
+                    ) {
+<span class="nc" id="L1305">                        Icon(</span>
+<span class="nc" id="L1306">                            Icons.Default.Feedback,</span>
+<span class="nc" id="L1307">                            contentDescription = null,</span>
+<span class="nc" id="L1308">                            modifier = Modifier.size(48.dp),</span>
+<span class="nc" id="L1309">                            tint = MaterialTheme.colorScheme.primary</span>
+                        )
+<span class="nc" id="L1311">                        Spacer(modifier = Modifier.width(16.dp))</span>
+<span class="nc" id="L1312">                        Column(modifier = Modifier.weight(1f)) {</span>
+<span class="nc" id="L1313">                            Text(</span>
+<span class="nc" id="L1314">                                text = &quot;Submit Feedback&quot;,</span>
+<span class="nc" id="L1315">                                fontSize = 18.sp,</span>
+<span class="nc" id="L1316">                                fontWeight = FontWeight.Bold</span>
+                            )
+<span class="nc" id="L1318">                            Spacer(modifier = Modifier.height(4.dp))</span>
+<span class="nc" id="L1319">                            Text(</span>
+<span class="nc" id="L1320">                                text = &quot;Share your thoughts, report bugs, or request features&quot;,</span>
+<span class="nc" id="L1321">                                fontSize = 14.sp,</span>
+<span class="nc" id="L1322">                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)</span>
+                            )
+<span class="nc" id="L1324">                        }</span>
+<span class="nc" id="L1325">                        Icon(</span>
+<span class="nc" id="L1326">                            Icons.Default.ArrowForward,</span>
+<span class="nc" id="L1327">                            contentDescription = null,</span>
+<span class="nc" id="L1328">                            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)</span>
+                        )
+<span class="nc" id="L1330">                    }</span>
+<span class="nc" id="L1331">                }</span>
+<span class="nc" id="L1332">            }</span>
+            
+<span class="nc" id="L1334">            item {</span>
+<span class="nc bnc" id="L1335" title="All 8 branches missed.">                Card(</span>
+<span class="nc" id="L1336">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L1337">                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)</span>
+<span class="nc" id="L1338">                ) {</span>
+<span class="nc bnc" id="L1339" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L1340">                        modifier = Modifier.padding(20.dp)</span>
+                    ) {
+<span class="nc" id="L1342">                        Text(</span>
+<span class="nc" id="L1343">                            text = &quot;Need Help?&quot;,</span>
+<span class="nc" id="L1344">                            fontSize = 18.sp,</span>
+<span class="nc" id="L1345">                            fontWeight = FontWeight.Bold</span>
+                        )
+<span class="nc" id="L1347">                        Spacer(modifier = Modifier.height(12.dp))</span>
+<span class="nc" id="L1348">                        Text(</span>
+<span class="nc" id="L1349">                            text = &quot;If you need immediate assistance or have questions, please reach out through the feedback system or contact our support team.&quot;,</span>
+<span class="nc" id="L1350">                            fontSize = 14.sp,</span>
+<span class="nc" id="L1351">                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)</span>
+                        )
+<span class="nc" id="L1353">                    }</span>
+<span class="nc" id="L1354">                }</span>
+<span class="nc" id="L1355">            }</span>
+<span class="nc" id="L1356">        }</span>
+<span class="nc" id="L1357">    }</span>
+<span class="nc bnc" id="L1358" title="All 2 branches missed.">}</span>
+
+// Group Therapy Screen (UC34)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L1363" title="All 10 branches missed.">fun GroupTherapyScreen(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc" id="L1364">    val useCase = remember { com.serenityai.usecases.GroupTherapySimulationModeUseCase() }</span>
+<span class="nc" id="L1365">    var sessionName by remember { mutableStateOf(&quot;&quot;) }</span>
+<span class="nc" id="L1366">    var topic by remember { mutableStateOf(&quot;&quot;) }</span>
+<span class="nc" id="L1367">    var maxParticipants by remember { mutableStateOf(8) }</span>
+<span class="nc" id="L1368">    var currentSession by remember { mutableStateOf&lt;com.serenityai.usecases.GroupSession?&gt;(null) }</span>
+<span class="nc" id="L1369">    var virtualParticipants by remember { mutableStateOf&lt;List&lt;com.serenityai.usecases.VirtualParticipant&gt;&gt;(emptyList()) }</span>
+    
+<span class="nc bnc" id="L1371" title="All 2 branches missed.">    Scaffold(</span>
+<span class="nc" id="L1372">        topBar = {</span>
+<span class="nc bnc" id="L1373" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L1374" title="All 8 branches missed.">                title = { Text(&quot;Group Therapy Simulation&quot;) },</span>
+<span class="nc" id="L1375">                navigationIcon = {</span>
+<span class="nc bnc" id="L1376" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L1377" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L1378">                    }</span>
+<span class="nc" id="L1379">                },</span>
+<span class="nc" id="L1380">                colors = TopAppBarDefaults.topAppBarColors(</span>
+<span class="nc" id="L1381">                    containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+                )
+<span class="nc" id="L1383">            )</span>
+<span class="nc" id="L1384">        }</span>
+<span class="nc" id="L1385">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L1386" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L1387">            modifier = Modifier</span>
+<span class="nc" id="L1388">                .fillMaxSize()</span>
+<span class="nc" id="L1389">                .padding(paddingValues)</span>
+<span class="nc" id="L1390">                .padding(16.dp)</span>
+<span class="nc" id="L1391">                .verticalScroll(rememberScrollState())</span>
+        ) {
+<span class="nc bnc" id="L1393" title="All 2 branches missed.">            if (currentSession == null) {</span>
+                // Create Session Section
+<span class="nc" id="L1395">                Card(</span>
+<span class="nc" id="L1396">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L1397">                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L1398">                ) {</span>
+<span class="nc bnc" id="L1399" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L1400">                        modifier = Modifier.padding(20.dp)</span>
+                    ) {
+<span class="nc" id="L1402">                        Text(</span>
+<span class="nc" id="L1403">                            text = &quot;Create Group Session&quot;,</span>
+<span class="nc" id="L1404">                            fontSize = 20.sp,</span>
+<span class="nc" id="L1405">                            fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L1406">                            modifier = Modifier.padding(bottom = 16.dp)</span>
+                        )
+                        
+<span class="nc" id="L1409">                        OutlinedTextField(</span>
+<span class="nc" id="L1410">                            value = sessionName,</span>
+<span class="nc" id="L1411">                            onValueChange = { sessionName = it },</span>
+<span class="nc bnc" id="L1412" title="All 8 branches missed.">                            label = { Text(&quot;Session Name&quot;) },</span>
+<span class="nc" id="L1413">                            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L1414">                            singleLine = true</span>
+                        )
+                        
+<span class="nc" id="L1417">                        Spacer(modifier = Modifier.height(12.dp))</span>
+                        
+<span class="nc" id="L1419">                        OutlinedTextField(</span>
+<span class="nc" id="L1420">                            value = topic,</span>
+<span class="nc" id="L1421">                            onValueChange = { topic = it },</span>
+<span class="nc bnc" id="L1422" title="All 8 branches missed.">                            label = { Text(&quot;Topic (Optional)&quot;) },</span>
+<span class="nc" id="L1423">                            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L1424">                            singleLine = true</span>
+                        )
+                        
+<span class="nc" id="L1427">                        Spacer(modifier = Modifier.height(12.dp))</span>
+                        
+<span class="nc" id="L1429">                        OutlinedTextField(</span>
+<span class="nc" id="L1430">                            value = maxParticipants.toString(),</span>
+<span class="nc" id="L1431">                            onValueChange = { </span>
+<span class="nc bnc" id="L1432" title="All 2 branches missed.">                                maxParticipants = it.toIntOrNull() ?: 8</span>
+<span class="nc" id="L1433">                            },</span>
+<span class="nc bnc" id="L1434" title="All 8 branches missed.">                            label = { Text(&quot;Max Participants&quot;) },</span>
+<span class="nc" id="L1435">                            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L1436">                            singleLine = true,</span>
+<span class="nc" id="L1437">                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)</span>
+                        )
+                        
+<span class="nc" id="L1440">                        Spacer(modifier = Modifier.height(16.dp))</span>
+                        
+<span class="nc" id="L1442">                        Button(</span>
+<span class="nc" id="L1443">                            onClick = {</span>
+<span class="nc bnc" id="L1444" title="All 4 branches missed.">                                if (sessionName.isNotBlank()) {</span>
+<span class="nc" id="L1445">                                    val session = useCase.createGroupSession(</span>
+<span class="nc" id="L1446">                                        sessionName = sessionName,</span>
+<span class="nc" id="L1447">                                        facilitatorId = &quot;user123&quot;, // In production, get from auth</span>
+<span class="nc" id="L1448">                                        maxParticipants = maxParticipants,</span>
+<span class="nc bnc" id="L1449" title="All 2 branches missed.">                                        topic = topic.ifBlank { null }</span>
+                                    )
+<span class="nc" id="L1451">                                    currentSession = session</span>
+<span class="nc" id="L1452">                                    virtualParticipants = useCase.createVirtualParticipants(session.id, 5)</span>
+                                }
+<span class="nc" id="L1454">                            },</span>
+<span class="nc" id="L1455">                            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc bnc" id="L1456" title="All 2 branches missed.">                            enabled = sessionName.isNotBlank()</span>
+<span class="nc" id="L1457">                        ) {</span>
+<span class="nc bnc" id="L1458" title="All 8 branches missed.">                            Text(&quot;Create Session&quot;)</span>
+<span class="nc" id="L1459">                        }</span>
+<span class="nc" id="L1460">                    }</span>
+<span class="nc" id="L1461">                }</span>
+<span class="nc" id="L1462">            } else {</span>
+                // Active Session View
+<span class="nc" id="L1464">                val session = currentSession!!</span>
+                
+<span class="nc" id="L1466">                Card(</span>
+<span class="nc" id="L1467">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L1468">                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L1469">                ) {</span>
+<span class="nc bnc" id="L1470" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L1471">                        modifier = Modifier.padding(20.dp)</span>
+                    ) {
+<span class="nc" id="L1473">                        Text(</span>
+<span class="nc" id="L1474">                            text = session.name,</span>
+<span class="nc" id="L1475">                            fontSize = 20.sp,</span>
+<span class="nc" id="L1476">                            fontWeight = FontWeight.Bold</span>
+                        )
+                        
+<span class="nc bnc" id="L1479" title="All 2 branches missed.">                        if (session.topic != null) {</span>
+<span class="nc" id="L1480">                            Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L1481">                            Text(</span>
+<span class="nc" id="L1482">                                text = &quot;Topic: ${session.topic}&quot;,</span>
+<span class="nc" id="L1483">                                fontSize = 14.sp,</span>
+<span class="nc" id="L1484">                                color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                            )
+                        }
+                        
+<span class="nc" id="L1488">                        Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L1489">                        Text(</span>
+<span class="nc" id="L1490">                            text = &quot;Participants: ${session.participants.size}/${session.maxParticipants}&quot;,</span>
+<span class="nc" id="L1491">                            fontSize = 14.sp</span>
+                        )
+                        
+<span class="nc" id="L1494">                        Spacer(modifier = Modifier.height(16.dp))</span>
+                        
+<span class="nc bnc" id="L1496" title="All 4 branches missed.">                        if (virtualParticipants.isNotEmpty()) {</span>
+<span class="nc" id="L1497">                            Text(</span>
+<span class="nc" id="L1498">                                text = &quot;Virtual Participants:&quot;,</span>
+<span class="nc" id="L1499">                                fontSize = 16.sp,</span>
+<span class="nc" id="L1500">                                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L1501">                                modifier = Modifier.padding(bottom = 8.dp)</span>
+                            )
+<span class="nc" id="L1503">                            virtualParticipants.forEach { participant -&gt;</span>
+<span class="nc" id="L1504">                                Text(</span>
+<span class="nc" id="L1505">                                    text = &quot;• ${participant.name} (${participant.personality})&quot;,</span>
+<span class="nc" id="L1506">                                    fontSize = 14.sp,</span>
+<span class="nc" id="L1507">                                    modifier = Modifier.padding(start = 8.dp, bottom = 4.dp)</span>
+                                )
+<span class="nc" id="L1509">                            }</span>
+                        }
+                        
+<span class="nc" id="L1512">                        Spacer(modifier = Modifier.height(16.dp))</span>
+                        
+<span class="nc" id="L1514">                        Button(</span>
+<span class="nc" id="L1515">                            onClick = {</span>
+<span class="nc" id="L1516">                                currentSession = null</span>
+<span class="nc" id="L1517">                                virtualParticipants = emptyList()</span>
+<span class="nc" id="L1518">                                sessionName = &quot;&quot;</span>
+<span class="nc" id="L1519">                                topic = &quot;&quot;</span>
+<span class="nc" id="L1520">                                maxParticipants = 8</span>
+<span class="nc" id="L1521">                            },</span>
+<span class="nc" id="L1522">                            modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L1523">                        ) {</span>
+<span class="nc bnc" id="L1524" title="All 8 branches missed.">                            Text(&quot;End Session&quot;)</span>
+<span class="nc" id="L1525">                        }</span>
+<span class="nc" id="L1526">                    }</span>
+<span class="nc" id="L1527">                }</span>
+            }
+<span class="nc" id="L1529">        }</span>
+<span class="nc" id="L1530">    }</span>
+<span class="nc bnc" id="L1531" title="All 2 branches missed.">}</span>
+
+// Voice Therapy Screen (UC38)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L1536" title="All 10 branches missed.">fun VoiceTherapyScreen(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc" id="L1537">    val useCase = remember { com.serenityai.usecases.VoiceEnabledTherapyUseCase() }</span>
+<span class="nc" id="L1538">    var currentSession by remember { mutableStateOf&lt;com.serenityai.usecases.VoiceSession?&gt;(null) }</span>
+<span class="nc" id="L1539">    var isRecording by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L1540">    var language by remember { mutableStateOf(&quot;en-US&quot;) }</span>
+    
+<span class="nc bnc" id="L1542" title="All 2 branches missed.">    Scaffold(</span>
+<span class="nc" id="L1543">        topBar = {</span>
+<span class="nc bnc" id="L1544" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L1545" title="All 8 branches missed.">                title = { Text(&quot;Voice Therapy&quot;) },</span>
+<span class="nc" id="L1546">                navigationIcon = {</span>
+<span class="nc bnc" id="L1547" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L1548" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L1549">                    }</span>
+<span class="nc" id="L1550">                },</span>
+<span class="nc" id="L1551">                colors = TopAppBarDefaults.topAppBarColors(</span>
+<span class="nc" id="L1552">                    containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+                )
+<span class="nc" id="L1554">            )</span>
+<span class="nc" id="L1555">        }</span>
+<span class="nc" id="L1556">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L1557" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L1558">            modifier = Modifier</span>
+<span class="nc" id="L1559">                .fillMaxSize()</span>
+<span class="nc" id="L1560">                .padding(paddingValues)</span>
+<span class="nc" id="L1561">                .padding(16.dp),</span>
+<span class="nc" id="L1562">            horizontalAlignment = Alignment.CenterHorizontally,</span>
+<span class="nc" id="L1563">            verticalArrangement = Arrangement.Center</span>
+        ) {
+<span class="nc bnc" id="L1565" title="All 2 branches missed.">            if (currentSession == null) {</span>
+                // Start Session
+<span class="nc" id="L1567">                Card(</span>
+<span class="nc" id="L1568">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L1569">                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L1570">                ) {</span>
+<span class="nc bnc" id="L1571" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L1572">                        modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L1573">                        horizontalAlignment = Alignment.CenterHorizontally</span>
+                    ) {
+<span class="nc" id="L1575">                        Icon(</span>
+<span class="nc" id="L1576">                            Icons.Default.Mic,</span>
+<span class="nc" id="L1577">                            contentDescription = null,</span>
+<span class="nc" id="L1578">                            modifier = Modifier.size(64.dp),</span>
+<span class="nc" id="L1579">                            tint = MaterialTheme.colorScheme.primary</span>
+                        )
+<span class="nc" id="L1581">                        Spacer(modifier = Modifier.height(16.dp))</span>
+<span class="nc" id="L1582">                        Text(</span>
+<span class="nc" id="L1583">                            text = &quot;Voice Therapy Session&quot;,</span>
+<span class="nc" id="L1584">                            fontSize = 20.sp,</span>
+<span class="nc" id="L1585">                            fontWeight = FontWeight.Bold</span>
+                        )
+<span class="nc" id="L1587">                        Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L1588">                        Text(</span>
+<span class="nc" id="L1589">                            text = &quot;Have a voice conversation with your AI therapist&quot;,</span>
+<span class="nc" id="L1590">                            fontSize = 14.sp,</span>
+<span class="nc" id="L1591">                            color = MaterialTheme.colorScheme.onSurfaceVariant,</span>
+<span class="nc" id="L1592">                            textAlign = TextAlign.Center</span>
+                        )
+<span class="nc" id="L1594">                        Spacer(modifier = Modifier.height(24.dp))</span>
+<span class="nc" id="L1595">                        Button(</span>
+<span class="nc" id="L1596">                            onClick = {</span>
+<span class="nc" id="L1597">                                val session = useCase.startVoiceSession(</span>
+<span class="nc" id="L1598">                                    userId = &quot;user123&quot;, // In production, get from auth</span>
+<span class="nc" id="L1599">                                    language = language</span>
+                                )
+<span class="nc" id="L1601">                                currentSession = session</span>
+<span class="nc" id="L1602">                            },</span>
+<span class="nc" id="L1603">                            modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L1604">                        ) {</span>
+<span class="nc bnc" id="L1605" title="All 8 branches missed.">                            Text(&quot;Start Voice Session&quot;)</span>
+<span class="nc" id="L1606">                        }</span>
+<span class="nc" id="L1607">                    }</span>
+<span class="nc" id="L1608">                }</span>
+<span class="nc" id="L1609">            } else {</span>
+                // Active Session
+<span class="nc" id="L1611">                Card(</span>
+<span class="nc" id="L1612">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L1613">                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L1614">                ) {</span>
+<span class="nc bnc" id="L1615" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L1616">                        modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L1617">                        horizontalAlignment = Alignment.CenterHorizontally</span>
+                    ) {
+<span class="nc" id="L1619">                        Text(</span>
+<span class="nc" id="L1620">                            text = &quot;Voice Session Active&quot;,</span>
+<span class="nc" id="L1621">                            fontSize = 18.sp,</span>
+<span class="nc" id="L1622">                            fontWeight = FontWeight.Bold</span>
+                        )
+<span class="nc" id="L1624">                        Spacer(modifier = Modifier.height(24.dp))</span>
+                        
+<span class="nc" id="L1626">                        Icon(</span>
+<span class="nc bnc" id="L1627" title="All 2 branches missed.">                            if (isRecording) Icons.Default.Mic else Icons.Default.MicOff,</span>
+<span class="nc" id="L1628">                            contentDescription = null,</span>
+<span class="nc" id="L1629">                            modifier = Modifier.size(64.dp),</span>
+<span class="nc bnc" id="L1630" title="All 2 branches missed.">                            tint = if (isRecording) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary</span>
+                        )
+                        
+<span class="nc" id="L1633">                        Spacer(modifier = Modifier.height(16.dp))</span>
+<span class="nc" id="L1634">                        Text(</span>
+<span class="nc bnc" id="L1635" title="All 2 branches missed.">                            text = if (isRecording) &quot;Listening...&quot; else &quot;Tap to speak&quot;,</span>
+<span class="nc" id="L1636">                            fontSize = 16.sp</span>
+                        )
+                        
+<span class="nc" id="L1639">                        Spacer(modifier = Modifier.height(24.dp))</span>
+                        
+<span class="nc" id="L1641">                        Row(</span>
+<span class="nc" id="L1642">                            horizontalArrangement = Arrangement.spacedBy(12.dp)</span>
+                        ) {
+<span class="nc" id="L1644">                            Button(</span>
+<span class="nc bnc" id="L1645" title="All 2 branches missed.">                                onClick = { isRecording = !isRecording }</span>
+<span class="nc" id="L1646">                            ) {</span>
+<span class="nc bnc" id="L1647" title="All 10 branches missed.">                                Text(if (isRecording) &quot;Stop Recording&quot; else &quot;Start Recording&quot;)</span>
+<span class="nc" id="L1648">                            }</span>
+<span class="nc" id="L1649">                            Button(</span>
+<span class="nc" id="L1650">                                onClick = {</span>
+<span class="nc" id="L1651">                                    currentSession = null</span>
+<span class="nc" id="L1652">                                    isRecording = false</span>
+<span class="nc" id="L1653">                                }</span>
+<span class="nc" id="L1654">                            ) {</span>
+<span class="nc bnc" id="L1655" title="All 8 branches missed.">                                Text(&quot;End Session&quot;)</span>
+<span class="nc" id="L1656">                            }</span>
+<span class="nc" id="L1657">                        }</span>
+<span class="nc" id="L1658">                    }</span>
+<span class="nc" id="L1659">                }</span>
+            }
+<span class="nc" id="L1661">        }</span>
+<span class="nc" id="L1662">    }</span>
+<span class="nc bnc" id="L1663" title="All 2 branches missed.">}</span>
+
+// Wellness Activities Screens
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun WellnessActivitiesScreen(
+    onNavigateToGuidedBreathing: () -&gt; Unit,
+    onNavigateToDailyAffirmations: () -&gt; Unit,
+    onNavigateBack: () -&gt; Unit
+<span class="nc bnc" id="L1672" title="All 18 branches missed.">) {</span>
+<span class="nc bnc" id="L1673" title="All 2 branches missed.">    Scaffold(</span>
+<span class="nc" id="L1674">        topBar = {</span>
+<span class="nc bnc" id="L1675" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L1676" title="All 8 branches missed.">                title = { Text(&quot;Wellness Activities&quot;) },</span>
+<span class="nc" id="L1677">                navigationIcon = {</span>
+<span class="nc bnc" id="L1678" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L1679" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L1680">                    }</span>
+<span class="nc" id="L1681">                },</span>
+<span class="nc" id="L1682">                colors = TopAppBarDefaults.topAppBarColors(</span>
+<span class="nc" id="L1683">                    containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+                )
+<span class="nc" id="L1685">            )</span>
+<span class="nc" id="L1686">        }</span>
+<span class="nc" id="L1687">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L1688" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L1689">            modifier = Modifier</span>
+<span class="nc" id="L1690">                .fillMaxSize()</span>
+<span class="nc" id="L1691">                .padding(paddingValues)</span>
+<span class="nc" id="L1692">                .padding(16.dp)</span>
+<span class="nc" id="L1693">                .verticalScroll(rememberScrollState())</span>
+        ) {
+            // Guided Breathing
+<span class="nc" id="L1696">            Card(</span>
+<span class="nc" id="L1697">                onClick = onNavigateToGuidedBreathing,</span>
+<span class="nc" id="L1698">                modifier = Modifier</span>
+<span class="nc" id="L1699">                    .fillMaxWidth()</span>
+<span class="nc" id="L1700">                    .padding(bottom = 12.dp),</span>
+<span class="nc" id="L1701">                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L1702">            ) {</span>
+<span class="nc bnc" id="L1703" title="All 6 branches missed.">                Row(</span>
+<span class="nc" id="L1704">                    modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L1705">                    verticalAlignment = Alignment.CenterVertically</span>
+                ) {
+<span class="nc" id="L1707">                    Icon(</span>
+<span class="nc" id="L1708">                        Icons.Default.Air,</span>
+<span class="nc" id="L1709">                        contentDescription = null,</span>
+<span class="nc" id="L1710">                        modifier = Modifier.size(40.dp),</span>
+<span class="nc" id="L1711">                        tint = MaterialTheme.colorScheme.primary</span>
+                    )
+<span class="nc" id="L1713">                    Spacer(modifier = Modifier.width(16.dp))</span>
+<span class="nc" id="L1714">                    Text(</span>
+<span class="nc" id="L1715">                        text = &quot;Guided Breathing&quot;,</span>
+<span class="nc" id="L1716">                        fontSize = 18.sp,</span>
+<span class="nc" id="L1717">                        fontWeight = FontWeight.Bold</span>
+                    )
+<span class="nc" id="L1719">                }</span>
+<span class="nc" id="L1720">            }</span>
+            
+            // Daily Affirmations
+<span class="nc" id="L1723">            Card(</span>
+<span class="nc" id="L1724">                onClick = onNavigateToDailyAffirmations,</span>
+<span class="nc" id="L1725">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L1726">                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L1727">            ) {</span>
+<span class="nc bnc" id="L1728" title="All 6 branches missed.">                Row(</span>
+<span class="nc" id="L1729">                    modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L1730">                    verticalAlignment = Alignment.CenterVertically</span>
+                ) {
+<span class="nc" id="L1732">                    Icon(</span>
+<span class="nc" id="L1733">                        Icons.Default.Favorite,</span>
+<span class="nc" id="L1734">                        contentDescription = null,</span>
+<span class="nc" id="L1735">                        modifier = Modifier.size(40.dp),</span>
+<span class="nc" id="L1736">                        tint = MaterialTheme.colorScheme.primary</span>
+                    )
+<span class="nc" id="L1738">                    Spacer(modifier = Modifier.width(16.dp))</span>
+<span class="nc" id="L1739">                    Text(</span>
+<span class="nc" id="L1740">                        text = &quot;Daily Affirmations&quot;,</span>
+<span class="nc" id="L1741">                        fontSize = 18.sp,</span>
+<span class="nc" id="L1742">                        fontWeight = FontWeight.Bold</span>
+                    )
+<span class="nc" id="L1744">                }</span>
+<span class="nc" id="L1745">            }</span>
+<span class="nc" id="L1746">        }</span>
+<span class="nc" id="L1747">    }</span>
+<span class="nc bnc" id="L1748" title="All 2 branches missed.">}</span>
+
+// Settings Screens
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SettingsScreen(
+    onNavigateToSecurityProtocols: () -&gt; Unit,
+    onNavigateToPersonalization: () -&gt; Unit,
+    onNavigateToAccessibility: () -&gt; Unit,
+    onNavigateToNotifications: () -&gt; Unit,
+    onNavigateToAppPreferences: () -&gt; Unit,
+    onNavigateToSystemHealth: () -&gt; Unit,
+    onNavigateToApplicationFeedback: () -&gt; Unit,
+    onNavigateBack: () -&gt; Unit
+<span class="nc bnc" id="L1762" title="All 38 branches missed.">) {</span>
+<span class="nc" id="L1763">    val settingsItems = listOf(</span>
+<span class="nc" id="L1764">        Triple(&quot;Security Protocols&quot;, Icons.Default.Lock, onNavigateToSecurityProtocols),</span>
+<span class="nc" id="L1765">        Triple(&quot;Personalization&quot;, Icons.Default.Person, onNavigateToPersonalization),</span>
+<span class="nc" id="L1766">        Triple(&quot;Accessibility&quot;, Icons.Default.Accessibility, onNavigateToAccessibility),</span>
+<span class="nc" id="L1767">        Triple(&quot;Notifications&quot;, Icons.Default.Notifications, onNavigateToNotifications),</span>
+<span class="nc" id="L1768">        Triple(&quot;App Preferences&quot;, Icons.Default.Settings, onNavigateToAppPreferences),</span>
+<span class="nc" id="L1769">        Triple(&quot;System Health&quot;, Icons.Default.HealthAndSafety, onNavigateToSystemHealth),</span>
+<span class="nc" id="L1770">        Triple(&quot;Application Feedback&quot;, Icons.Default.Feedback, onNavigateToApplicationFeedback)</span>
+    )
+
+<span class="nc bnc" id="L1773" title="All 2 branches missed.">    Scaffold(</span>
+<span class="nc" id="L1774">        topBar = {</span>
+<span class="nc bnc" id="L1775" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L1776" title="All 8 branches missed.">                title = { Text(&quot;Settings &amp; Personalization&quot;) },</span>
+<span class="nc" id="L1777">                navigationIcon = {</span>
+<span class="nc bnc" id="L1778" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L1779" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L1780">                    }</span>
+<span class="nc" id="L1781">                },</span>
+<span class="nc" id="L1782">                colors = TopAppBarDefaults.topAppBarColors(</span>
+<span class="nc" id="L1783">                    containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+                )
+<span class="nc" id="L1785">            )</span>
+<span class="nc" id="L1786">        }</span>
+<span class="nc" id="L1787">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L1788" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L1789">            modifier = Modifier</span>
+<span class="nc" id="L1790">                .fillMaxSize()</span>
+<span class="nc" id="L1791">                .padding(paddingValues)</span>
+<span class="nc" id="L1792">                .padding(16.dp)</span>
+        ) {
+<span class="nc" id="L1794">            LazyColumn(</span>
+<span class="nc" id="L1795">                verticalArrangement = Arrangement.spacedBy(12.dp)</span>
+<span class="nc" id="L1796">            ) {</span>
+<span class="nc" id="L1797">                items(settingsItems) { item -&gt;</span>
+                    val (title, icon, onClick) = item
+                    Card(
+                        onClick = onClick,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+<span class="nc bnc" id="L1803" title="All 6 branches missed.">                        Row(</span>
+<span class="nc" id="L1804">                            modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L1805">                            verticalAlignment = Alignment.CenterVertically</span>
+                        ) {
+<span class="nc" id="L1807">                            Icon(</span>
+<span class="nc" id="L1808">                                icon,</span>
+<span class="nc" id="L1809">                                contentDescription = null,</span>
+<span class="nc" id="L1810">                                modifier = Modifier.size(40.dp),</span>
+<span class="nc" id="L1811">                                tint = MaterialTheme.colorScheme.primary</span>
+                            )
+<span class="nc" id="L1813">                            Spacer(modifier = Modifier.width(16.dp))</span>
+<span class="nc" id="L1814">                            Text(</span>
+<span class="nc" id="L1815">                                text = title,</span>
+<span class="nc" id="L1816">                                fontSize = 18.sp,</span>
+<span class="nc" id="L1817">                                fontWeight = FontWeight.Bold</span>
+                            )
+<span class="nc" id="L1819">                        }</span>
+<span class="nc" id="L1820">                    }</span>
+                }
+<span class="nc" id="L1822">            }</span>
+<span class="nc" id="L1823">        }</span>
+<span class="nc" id="L1824">    }</span>
+<span class="nc bnc" id="L1825" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L1829" title="All 10 branches missed.">fun SecurityProtocolsScreen(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc" id="L1830">    var biometricEnabled by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L1831">    var twoFactorEnabled by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L1832">    var dataEncryptionEnabled by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L1833">    var sessionTimeout by remember { mutableStateOf(&quot;30 minutes&quot;) }</span>
+<span class="nc" id="L1834">    var showPasswordDialog by remember { mutableStateOf(false) }</span>
+    
+<span class="nc" id="L1836">    val timeoutOptions = listOf(&quot;15 minutes&quot;, &quot;30 minutes&quot;, &quot;1 hour&quot;, &quot;2 hours&quot;, &quot;Never&quot;)</span>
+
+<span class="nc" id="L1838">    Scaffold(</span>
+<span class="nc" id="L1839">        topBar = {</span>
+<span class="nc bnc" id="L1840" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L1841" title="All 8 branches missed.">                title = { Text(&quot;Security Protocols&quot;) },</span>
+<span class="nc" id="L1842">                navigationIcon = {</span>
+<span class="nc bnc" id="L1843" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L1844" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L1845">                    }</span>
+<span class="nc" id="L1846">                }</span>
+<span class="nc" id="L1847">            )</span>
+<span class="nc" id="L1848">        }</span>
+<span class="nc" id="L1849">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L1850" title="All 8 branches missed.">        LazyColumn(</span>
+<span class="nc" id="L1851">            modifier = Modifier</span>
+<span class="nc" id="L1852">                .fillMaxSize()</span>
+<span class="nc" id="L1853">                .padding(paddingValues)</span>
+<span class="nc" id="L1854">                .padding(16.dp),</span>
+<span class="nc" id="L1855">            verticalArrangement = Arrangement.spacedBy(16.dp)</span>
+<span class="nc" id="L1856">        ) {</span>
+<span class="nc" id="L1857">            item {</span>
+<span class="nc bnc" id="L1858" title="All 8 branches missed.">                SecurityOverviewCard()</span>
+<span class="nc" id="L1859">            }</span>
+            
+<span class="nc" id="L1861">            item {</span>
+<span class="nc bnc" id="L1862" title="All 8 branches missed.">                Text(</span>
+<span class="nc" id="L1863">                    text = &quot;Authentication Settings&quot;,</span>
+<span class="nc" id="L1864">                    style = MaterialTheme.typography.titleLarge,</span>
+<span class="nc" id="L1865">                    fontWeight = FontWeight.Bold</span>
+<span class="nc" id="L1866">                )</span>
+<span class="nc" id="L1867">            }</span>
+            
+<span class="nc" id="L1869">            item {</span>
+<span class="nc bnc" id="L1870" title="All 8 branches missed.">                SecuritySettingCard(</span>
+<span class="nc" id="L1871">                    title = &quot;Biometric Authentication&quot;,</span>
+<span class="nc" id="L1872">                    description = &quot;Use fingerprint or face recognition to unlock the app&quot;,</span>
+<span class="nc" id="L1873">                    icon = Icons.Default.Fingerprint,</span>
+<span class="nc" id="L1874">                    isEnabled = biometricEnabled,</span>
+<span class="nc" id="L1875">                    onToggle = { biometricEnabled = it }</span>
+<span class="nc" id="L1876">                )</span>
+<span class="nc" id="L1877">            }</span>
+            
+<span class="nc" id="L1879">            item {</span>
+<span class="nc bnc" id="L1880" title="All 8 branches missed.">                SecuritySettingCard(</span>
+<span class="nc" id="L1881">                    title = &quot;Two-Factor Authentication&quot;,</span>
+<span class="nc" id="L1882">                    description = &quot;Require additional verification for sensitive actions&quot;,</span>
+<span class="nc" id="L1883">                    icon = Icons.Default.Security,</span>
+<span class="nc" id="L1884">                    isEnabled = twoFactorEnabled,</span>
+<span class="nc" id="L1885">                    onToggle = { twoFactorEnabled = it }</span>
+<span class="nc" id="L1886">                )</span>
+<span class="nc" id="L1887">            }</span>
+            
+<span class="nc" id="L1889">            item {</span>
+<span class="nc bnc" id="L1890" title="All 8 branches missed.">                SecuritySettingCard(</span>
+<span class="nc" id="L1891">                    title = &quot;Data Encryption&quot;,</span>
+<span class="nc" id="L1892">                    description = &quot;Encrypt all stored data for maximum security&quot;,</span>
+<span class="nc" id="L1893">                    icon = Icons.Default.Lock,</span>
+<span class="nc" id="L1894">                    isEnabled = dataEncryptionEnabled,</span>
+<span class="nc" id="L1895">                    onToggle = { dataEncryptionEnabled = it }</span>
+<span class="nc" id="L1896">                )</span>
+<span class="nc" id="L1897">            }</span>
+            
+<span class="nc" id="L1899">            item {</span>
+<span class="nc bnc" id="L1900" title="All 8 branches missed.">                Text(</span>
+<span class="nc" id="L1901">                    text = &quot;Session Management&quot;,</span>
+<span class="nc" id="L1902">                    style = MaterialTheme.typography.titleLarge,</span>
+<span class="nc" id="L1903">                    fontWeight = FontWeight.Bold</span>
+<span class="nc" id="L1904">                )</span>
+<span class="nc" id="L1905">            }</span>
+            
+<span class="nc" id="L1907">            item {</span>
+<span class="nc bnc" id="L1908" title="All 8 branches missed.">                SessionTimeoutCard(</span>
+<span class="nc" id="L1909">                    currentTimeout = sessionTimeout,</span>
+<span class="nc" id="L1910">                    options = timeoutOptions,</span>
+<span class="nc" id="L1911">                    onTimeoutSelected = { sessionTimeout = it }</span>
+<span class="nc" id="L1912">                )</span>
+<span class="nc" id="L1913">            }</span>
+            
+<span class="nc" id="L1915">            item {</span>
+<span class="nc bnc" id="L1916" title="All 8 branches missed.">                Text(</span>
+<span class="nc" id="L1917">                    text = &quot;Privacy Controls&quot;,</span>
+<span class="nc" id="L1918">                    style = MaterialTheme.typography.titleLarge,</span>
+<span class="nc" id="L1919">                    fontWeight = FontWeight.Bold</span>
+<span class="nc" id="L1920">                )</span>
+<span class="nc" id="L1921">            }</span>
+            
+<span class="nc" id="L1923">            item {</span>
+<span class="nc bnc" id="L1924" title="All 8 branches missed.">                PrivacyControlsCard()</span>
+<span class="nc" id="L1925">            }</span>
+            
+<span class="nc" id="L1927">            item {</span>
+<span class="nc bnc" id="L1928" title="All 8 branches missed.">                Button(</span>
+<span class="nc" id="L1929">                    onClick = { showPasswordDialog = true },</span>
+<span class="nc" id="L1930">                    modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L1931">                ) {</span>
+<span class="nc bnc" id="L1932" title="All 8 branches missed.">                    Text(&quot;Change Password&quot;)</span>
+<span class="nc" id="L1933">                }</span>
+<span class="nc" id="L1934">            }</span>
+<span class="nc" id="L1935">        }</span>
+<span class="nc" id="L1936">    }</span>
+    
+<span class="nc bnc" id="L1938" title="All 2 branches missed.">    if (showPasswordDialog) {</span>
+<span class="nc bnc" id="L1939" title="All 2 branches missed.">        ChangePasswordDialog(</span>
+<span class="nc" id="L1940">            onDismiss = { showPasswordDialog = false },</span>
+<span class="nc" id="L1941">            onPasswordChanged = { showPasswordDialog = false }</span>
+        )
+    }
+<span class="nc bnc" id="L1944" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L1947" title="All 6 branches missed.">fun SecurityOverviewCard() {</span>
+<span class="nc bnc" id="L1948" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L1949">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L1950">        colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L1951">            containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+        )
+<span class="nc" id="L1953">    ) {</span>
+<span class="nc bnc" id="L1954" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L1955">            modifier = Modifier.padding(16.dp),</span>
+<span class="nc" id="L1956">            horizontalAlignment = Alignment.CenterHorizontally</span>
+        ) {
+<span class="nc" id="L1958">            Icon(</span>
+<span class="nc" id="L1959">                Icons.Default.Security,</span>
+<span class="nc" id="L1960">                contentDescription = null,</span>
+<span class="nc" id="L1961">                modifier = Modifier.size(48.dp),</span>
+<span class="nc" id="L1962">                tint = MaterialTheme.colorScheme.onPrimaryContainer</span>
+            )
+<span class="nc" id="L1964">            Spacer(modifier = Modifier.height(12.dp))</span>
+<span class="nc" id="L1965">            Text(</span>
+<span class="nc" id="L1966">                text = &quot;Security Status: Active&quot;,</span>
+<span class="nc" id="L1967">                style = MaterialTheme.typography.titleLarge,</span>
+<span class="nc" id="L1968">                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L1969">                color = MaterialTheme.colorScheme.onPrimaryContainer</span>
+            )
+<span class="nc" id="L1971">            Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L1972">            Text(</span>
+<span class="nc" id="L1973">                text = &quot;Your data is protected with enterprise-grade security&quot;,</span>
+<span class="nc" id="L1974">                style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L1975">                color = MaterialTheme.colorScheme.onPrimaryContainer,</span>
+<span class="nc" id="L1976">                textAlign = TextAlign.Center</span>
+            )
+<span class="nc" id="L1978">        }</span>
+<span class="nc" id="L1979">    }</span>
+<span class="nc bnc" id="L1980" title="All 2 branches missed.">}</span>
+
+@Composable
+fun SecuritySettingCard(
+    title: String,
+    description: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    isEnabled: Boolean,
+    onToggle: (Boolean) -&gt; Unit
+<span class="nc bnc" id="L1989" title="All 26 branches missed.">) {</span>
+<span class="nc bnc" id="L1990" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L1991">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L1992">        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L1993">    ) {</span>
+<span class="nc bnc" id="L1994" title="All 6 branches missed.">        Row(</span>
+<span class="nc" id="L1995">            modifier = Modifier</span>
+<span class="nc" id="L1996">                .fillMaxWidth()</span>
+<span class="nc" id="L1997">                .padding(16.dp),</span>
+<span class="nc" id="L1998">            verticalAlignment = Alignment.CenterVertically</span>
+        ) {
+<span class="nc" id="L2000">            Icon(</span>
+<span class="nc" id="L2001">                icon,</span>
+<span class="nc" id="L2002">                contentDescription = null,</span>
+<span class="nc" id="L2003">                modifier = Modifier.size(32.dp),</span>
+<span class="nc" id="L2004">                tint = MaterialTheme.colorScheme.primary</span>
+            )
+<span class="nc" id="L2006">            Spacer(modifier = Modifier.width(16.dp))</span>
+<span class="nc" id="L2007">            Column(</span>
+<span class="nc" id="L2008">                modifier = Modifier.weight(1f)</span>
+            ) {
+<span class="nc" id="L2010">                Text(</span>
+<span class="nc" id="L2011">                    text = title,</span>
+<span class="nc" id="L2012">                    style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L2013">                    fontWeight = FontWeight.Bold</span>
+                )
+<span class="nc" id="L2015">                Spacer(modifier = Modifier.height(4.dp))</span>
+<span class="nc" id="L2016">                Text(</span>
+<span class="nc" id="L2017">                    text = description,</span>
+<span class="nc" id="L2018">                    style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L2019">                    color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                )
+<span class="nc" id="L2021">            }</span>
+<span class="nc" id="L2022">            Switch(</span>
+<span class="nc" id="L2023">                checked = isEnabled,</span>
+<span class="nc" id="L2024">                onCheckedChange = onToggle</span>
+            )
+<span class="nc" id="L2026">        }</span>
+<span class="nc" id="L2027">    }</span>
+<span class="nc bnc" id="L2028" title="All 2 branches missed.">}</span>
+
+@Composable
+fun SessionTimeoutCard(
+    currentTimeout: String,
+    options: List&lt;String&gt;,
+    onTimeoutSelected: (String) -&gt; Unit
+<span class="nc bnc" id="L2035" title="All 18 branches missed.">) {</span>
+<span class="nc bnc" id="L2036" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L2037">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L2038">        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L2039">    ) {</span>
+<span class="nc bnc" id="L2040" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L2041">            modifier = Modifier.padding(16.dp)</span>
+        ) {
+<span class="nc" id="L2043">            Text(</span>
+<span class="nc" id="L2044">                text = &quot;Session Timeout&quot;,</span>
+<span class="nc" id="L2045">                style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L2046">                fontWeight = FontWeight.Bold</span>
+            )
+<span class="nc" id="L2048">            Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L2049">            Text(</span>
+<span class="nc" id="L2050">                text = &quot;Automatically log out after inactivity&quot;,</span>
+<span class="nc" id="L2051">                style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L2052">                color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+            )
+<span class="nc" id="L2054">            Spacer(modifier = Modifier.height(12.dp))</span>
+            
+<span class="nc" id="L2056">            LazyRow(</span>
+<span class="nc" id="L2057">                horizontalArrangement = Arrangement.spacedBy(8.dp)</span>
+<span class="nc" id="L2058">            ) {</span>
+<span class="nc" id="L2059">                items(options) { option -&gt;</span>
+                    FilterChip(
+                        selected = currentTimeout == option,
+<span class="nc" id="L2062">                        onClick = { onTimeoutSelected(option) },</span>
+<span class="nc bnc" id="L2063" title="All 8 branches missed.">                        label = { Text(option) }</span>
+                    )
+                }
+<span class="nc" id="L2066">            }</span>
+<span class="nc" id="L2067">        }</span>
+<span class="nc" id="L2068">    }</span>
+<span class="nc bnc" id="L2069" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L2072" title="All 6 branches missed.">fun PrivacyControlsCard() {</span>
+<span class="nc bnc" id="L2073" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L2074">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L2075">        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L2076">    ) {</span>
+<span class="nc bnc" id="L2077" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L2078">            modifier = Modifier.padding(16.dp)</span>
+        ) {
+<span class="nc" id="L2080">            Text(</span>
+<span class="nc" id="L2081">                text = &quot;Data Privacy&quot;,</span>
+<span class="nc" id="L2082">                style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L2083">                fontWeight = FontWeight.Bold</span>
+            )
+<span class="nc" id="L2085">            Spacer(modifier = Modifier.height(12.dp))</span>
+            
+<span class="nc" id="L2087">            val privacyFeatures = listOf(</span>
+<span class="nc" id="L2088">                &quot;End-to-end encryption for all conversations&quot;,</span>
+<span class="nc" id="L2089">                &quot;Local data storage with optional cloud sync&quot;,</span>
+<span class="nc" id="L2090">                &quot;No data sharing with third parties&quot;,</span>
+<span class="nc" id="L2091">                &quot;GDPR compliant data handling&quot;,</span>
+<span class="nc" id="L2092">                &quot;Automatic data deletion after 2 years&quot;</span>
+            )
+            
+<span class="nc" id="L2095">            privacyFeatures.forEach { feature -&gt;</span>
+<span class="nc" id="L2096">                Row(</span>
+<span class="nc" id="L2097">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L2098">                    verticalAlignment = Alignment.CenterVertically</span>
+                ) {
+<span class="nc" id="L2100">                    Icon(</span>
+<span class="nc" id="L2101">                        Icons.Default.CheckCircle,</span>
+<span class="nc" id="L2102">                        contentDescription = null,</span>
+<span class="nc" id="L2103">                        tint = MaterialTheme.colorScheme.primary,</span>
+<span class="nc" id="L2104">                        modifier = Modifier.size(20.dp)</span>
+                    )
+<span class="nc" id="L2106">                    Spacer(modifier = Modifier.width(12.dp))</span>
+<span class="nc" id="L2107">                    Text(</span>
+<span class="nc" id="L2108">                        text = feature,</span>
+<span class="nc" id="L2109">                        style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L2110">                        modifier = Modifier.weight(1f)</span>
+                    )
+<span class="nc" id="L2112">                }</span>
+<span class="nc" id="L2113">                Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L2114">            }</span>
+<span class="nc" id="L2115">        }</span>
+<span class="nc" id="L2116">    }</span>
+<span class="nc bnc" id="L2117" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ChangePasswordDialog(
+    onDismiss: () -&gt; Unit,
+    onPasswordChanged: () -&gt; Unit
+<span class="nc bnc" id="L2124" title="All 14 branches missed.">) {</span>
+<span class="nc" id="L2125">    var currentPassword by remember { mutableStateOf(&quot;&quot;) }</span>
+<span class="nc" id="L2126">    var newPassword by remember { mutableStateOf(&quot;&quot;) }</span>
+<span class="nc" id="L2127">    var confirmPassword by remember { mutableStateOf(&quot;&quot;) }</span>
+<span class="nc" id="L2128">    var showPasswords by remember { mutableStateOf(false) }</span>
+    
+<span class="nc bnc" id="L2130" title="All 2 branches missed.">    AlertDialog(</span>
+<span class="nc" id="L2131">        onDismissRequest = onDismiss,</span>
+<span class="nc bnc" id="L2132" title="All 8 branches missed.">        title = { Text(&quot;Change Password&quot;) },</span>
+<span class="nc" id="L2133">        text = {</span>
+<span class="nc bnc" id="L2134" title="All 6 branches missed.">            Column {</span>
+<span class="nc" id="L2135">                OutlinedTextField(</span>
+<span class="nc" id="L2136">                    value = currentPassword,</span>
+<span class="nc" id="L2137">                    onValueChange = { currentPassword = it },</span>
+<span class="nc bnc" id="L2138" title="All 8 branches missed.">                    label = { Text(&quot;Current Password&quot;) },</span>
+<span class="nc bnc" id="L2139" title="All 2 branches missed.">                    visualTransformation = if (showPasswords) VisualTransformation.None else PasswordVisualTransformation(),</span>
+<span class="nc" id="L2140">                    trailingIcon = {</span>
+<span class="nc bnc" id="L2141" title="All 10 branches missed.">                        IconButton(onClick = { showPasswords = !showPasswords }) {</span>
+<span class="nc bnc" id="L2142" title="All 8 branches missed.">                            Icon(</span>
+<span class="nc bnc" id="L2143" title="All 2 branches missed.">                                if (showPasswords) Icons.Default.VisibilityOff else Icons.Default.Visibility,</span>
+<span class="nc bnc" id="L2144" title="All 2 branches missed.">                                contentDescription = if (showPasswords) &quot;Hide password&quot; else &quot;Show password&quot;</span>
+<span class="nc" id="L2145">                            )</span>
+<span class="nc" id="L2146">                        }</span>
+<span class="nc" id="L2147">                    },</span>
+<span class="nc" id="L2148">                    modifier = Modifier.fillMaxWidth()</span>
+                )
+<span class="nc" id="L2150">                Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L2151">                OutlinedTextField(</span>
+<span class="nc" id="L2152">                    value = newPassword,</span>
+<span class="nc" id="L2153">                    onValueChange = { newPassword = it },</span>
+<span class="nc bnc" id="L2154" title="All 8 branches missed.">                    label = { Text(&quot;New Password&quot;) },</span>
+<span class="nc bnc" id="L2155" title="All 2 branches missed.">                    visualTransformation = if (showPasswords) VisualTransformation.None else PasswordVisualTransformation(),</span>
+<span class="nc" id="L2156">                    modifier = Modifier.fillMaxWidth()</span>
+                )
+<span class="nc" id="L2158">                Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L2159">                OutlinedTextField(</span>
+<span class="nc" id="L2160">                    value = confirmPassword,</span>
+<span class="nc" id="L2161">                    onValueChange = { confirmPassword = it },</span>
+<span class="nc bnc" id="L2162" title="All 8 branches missed.">                    label = { Text(&quot;Confirm New Password&quot;) },</span>
+<span class="nc bnc" id="L2163" title="All 2 branches missed.">                    visualTransformation = if (showPasswords) VisualTransformation.None else PasswordVisualTransformation(),</span>
+<span class="nc" id="L2164">                    modifier = Modifier.fillMaxWidth()</span>
+                )
+<span class="nc" id="L2166">            }</span>
+<span class="nc" id="L2167">        },</span>
+<span class="nc" id="L2168">        confirmButton = {</span>
+<span class="nc bnc" id="L2169" title="All 8 branches missed.">            TextButton(</span>
+<span class="nc" id="L2170">                onClick = {</span>
+<span class="nc bnc" id="L2171" title="All 6 branches missed.">                    if (newPassword == confirmPassword &amp;&amp; newPassword.isNotEmpty()) {</span>
+<span class="nc" id="L2172">                        onPasswordChanged()</span>
+                    }
+<span class="nc" id="L2174">                },</span>
+<span class="nc bnc" id="L2175" title="All 6 branches missed.">                enabled = newPassword == confirmPassword &amp;&amp; newPassword.isNotEmpty()</span>
+<span class="nc" id="L2176">            ) {</span>
+<span class="nc bnc" id="L2177" title="All 8 branches missed.">                Text(&quot;Change Password&quot;)</span>
+<span class="nc" id="L2178">            }</span>
+<span class="nc" id="L2179">        },</span>
+<span class="nc" id="L2180">        dismissButton = {</span>
+<span class="nc bnc" id="L2181" title="All 8 branches missed.">            TextButton(onClick = onDismiss) {</span>
+<span class="nc bnc" id="L2182" title="All 8 branches missed.">                Text(&quot;Cancel&quot;)</span>
+<span class="nc" id="L2183">            }</span>
+<span class="nc" id="L2184">        }</span>
+    )
+<span class="nc bnc" id="L2186" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L2190" title="All 10 branches missed.">fun PersonalizationScreen(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc" id="L2191">    var selectedTheme by remember { mutableStateOf(&quot;System&quot;) }</span>
+<span class="nc" id="L2192">    var selectedLanguage by remember { mutableStateOf(&quot;English&quot;) }</span>
+<span class="nc" id="L2193">    var fontSize by remember { mutableStateOf(&quot;Medium&quot;) }</span>
+<span class="nc" id="L2194">    var aiPersonality by remember { mutableStateOf(&quot;Supportive&quot;) }</span>
+<span class="nc" id="L2195">    var notificationStyle by remember { mutableStateOf(&quot;Gentle&quot;) }</span>
+<span class="nc" id="L2196">    var showThemeDialog by remember { mutableStateOf(false) }</span>
+    
+<span class="nc" id="L2198">    val themes = listOf(&quot;Light&quot;, &quot;Dark&quot;, &quot;System&quot;)</span>
+<span class="nc" id="L2199">    val languages = listOf(&quot;English&quot;, &quot;Spanish&quot;, &quot;French&quot;, &quot;German&quot;, &quot;Chinese&quot;)</span>
+<span class="nc" id="L2200">    val fontSizes = listOf(&quot;Small&quot;, &quot;Medium&quot;, &quot;Large&quot;, &quot;Extra Large&quot;)</span>
+<span class="nc" id="L2201">    val aiPersonalities = listOf(&quot;Supportive&quot;, &quot;Professional&quot;, &quot;Friendly&quot;, &quot;Direct&quot;, &quot;Empathetic&quot;)</span>
+<span class="nc" id="L2202">    val notificationStyles = listOf(&quot;Gentle&quot;, &quot;Standard&quot;, &quot;Minimal&quot;, &quot;Detailed&quot;)</span>
+
+<span class="nc" id="L2204">    Scaffold(</span>
+<span class="nc" id="L2205">        topBar = {</span>
+<span class="nc bnc" id="L2206" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L2207" title="All 8 branches missed.">                title = { Text(&quot;Personalization&quot;) },</span>
+<span class="nc" id="L2208">                navigationIcon = {</span>
+<span class="nc bnc" id="L2209" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L2210" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L2211">                    }</span>
+<span class="nc" id="L2212">                }</span>
+<span class="nc" id="L2213">            )</span>
+<span class="nc" id="L2214">        }</span>
+<span class="nc" id="L2215">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L2216" title="All 8 branches missed.">        LazyColumn(</span>
+<span class="nc" id="L2217">            modifier = Modifier</span>
+<span class="nc" id="L2218">                .fillMaxSize()</span>
+<span class="nc" id="L2219">                .padding(paddingValues)</span>
+<span class="nc" id="L2220">                .padding(16.dp),</span>
+<span class="nc" id="L2221">            verticalArrangement = Arrangement.spacedBy(16.dp)</span>
+<span class="nc" id="L2222">        ) {</span>
+<span class="nc" id="L2223">            item {</span>
+<span class="nc bnc" id="L2224" title="All 8 branches missed.">                PersonalizationOverviewCard()</span>
+<span class="nc" id="L2225">            }</span>
+            
+<span class="nc" id="L2227">            item {</span>
+<span class="nc bnc" id="L2228" title="All 8 branches missed.">                Text(</span>
+<span class="nc" id="L2229">                    text = &quot;Appearance&quot;,</span>
+<span class="nc" id="L2230">                    style = MaterialTheme.typography.titleLarge,</span>
+<span class="nc" id="L2231">                    fontWeight = FontWeight.Bold</span>
+<span class="nc" id="L2232">                )</span>
+<span class="nc" id="L2233">            }</span>
+            
+<span class="nc" id="L2235">            item {</span>
+<span class="nc bnc" id="L2236" title="All 8 branches missed.">                PersonalizationSettingCard(</span>
+<span class="nc" id="L2237">                    title = &quot;Theme&quot;,</span>
+<span class="nc" id="L2238">                    description = &quot;Choose your preferred app theme&quot;,</span>
+<span class="nc" id="L2239">                    icon = Icons.Default.Palette,</span>
+<span class="nc" id="L2240">                    currentValue = selectedTheme,</span>
+<span class="nc" id="L2241">                    onValueClick = { showThemeDialog = true }</span>
+<span class="nc" id="L2242">                )</span>
+<span class="nc" id="L2243">            }</span>
+            
+<span class="nc" id="L2245">            item {</span>
+<span class="nc bnc" id="L2246" title="All 8 branches missed.">                PersonalizationSettingCard(</span>
+<span class="nc" id="L2247">                    title = &quot;Font Size&quot;,</span>
+<span class="nc" id="L2248">                    description = &quot;Adjust text size for better readability&quot;,</span>
+<span class="nc" id="L2249">                    icon = Icons.Default.TextFields,</span>
+<span class="nc" id="L2250">                    currentValue = fontSize,</span>
+<span class="nc" id="L2251">                    onValueClick = { /* Show font size picker */ }</span>
+<span class="nc" id="L2252">                )</span>
+<span class="nc" id="L2253">            }</span>
+            
+<span class="nc" id="L2255">            item {</span>
+<span class="nc bnc" id="L2256" title="All 8 branches missed.">                Text(</span>
+<span class="nc" id="L2257">                    text = &quot;AI Interaction&quot;,</span>
+<span class="nc" id="L2258">                    style = MaterialTheme.typography.titleLarge,</span>
+<span class="nc" id="L2259">                    fontWeight = FontWeight.Bold</span>
+<span class="nc" id="L2260">                )</span>
+<span class="nc" id="L2261">            }</span>
+            
+<span class="nc" id="L2263">            item {</span>
+<span class="nc bnc" id="L2264" title="All 8 branches missed.">                PersonalizationSettingCard(</span>
+<span class="nc" id="L2265">                    title = &quot;AI Personality&quot;,</span>
+<span class="nc" id="L2266">                    description = &quot;Customize how the AI therapist communicates&quot;,</span>
+<span class="nc" id="L2267">                    icon = Icons.Default.Psychology,</span>
+<span class="nc" id="L2268">                    currentValue = aiPersonality,</span>
+<span class="nc" id="L2269">                    onValueClick = { /* Show personality picker */ }</span>
+<span class="nc" id="L2270">                )</span>
+<span class="nc" id="L2271">            }</span>
+            
+<span class="nc" id="L2273">            item {</span>
+<span class="nc bnc" id="L2274" title="All 8 branches missed.">                Text(</span>
+<span class="nc" id="L2275">                    text = &quot;Content Preferences&quot;,</span>
+<span class="nc" id="L2276">                    style = MaterialTheme.typography.titleLarge,</span>
+<span class="nc" id="L2277">                    fontWeight = FontWeight.Bold</span>
+<span class="nc" id="L2278">                )</span>
+<span class="nc" id="L2279">            }</span>
+            
+<span class="nc" id="L2281">            item {</span>
+<span class="nc bnc" id="L2282" title="All 8 branches missed.">                ContentPreferencesCard()</span>
+<span class="nc" id="L2283">            }</span>
+            
+<span class="nc" id="L2285">            item {</span>
+<span class="nc bnc" id="L2286" title="All 8 branches missed.">                Text(</span>
+<span class="nc" id="L2287">                    text = &quot;Language &amp; Region&quot;,</span>
+<span class="nc" id="L2288">                    style = MaterialTheme.typography.titleLarge,</span>
+<span class="nc" id="L2289">                    fontWeight = FontWeight.Bold</span>
+<span class="nc" id="L2290">                )</span>
+<span class="nc" id="L2291">            }</span>
+            
+<span class="nc" id="L2293">            item {</span>
+<span class="nc bnc" id="L2294" title="All 8 branches missed.">                PersonalizationSettingCard(</span>
+<span class="nc" id="L2295">                    title = &quot;Language&quot;,</span>
+<span class="nc" id="L2296">                    description = &quot;Select your preferred language&quot;,</span>
+<span class="nc" id="L2297">                    icon = Icons.Default.Language,</span>
+<span class="nc" id="L2298">                    currentValue = selectedLanguage,</span>
+<span class="nc" id="L2299">                    onValueClick = { /* Show language picker */ }</span>
+<span class="nc" id="L2300">                )</span>
+<span class="nc" id="L2301">            }</span>
+            
+<span class="nc" id="L2303">            item {</span>
+<span class="nc bnc" id="L2304" title="All 8 branches missed.">                Text(</span>
+<span class="nc" id="L2305">                    text = &quot;Notifications&quot;,</span>
+<span class="nc" id="L2306">                    style = MaterialTheme.typography.titleLarge,</span>
+<span class="nc" id="L2307">                    fontWeight = FontWeight.Bold</span>
+<span class="nc" id="L2308">                )</span>
+<span class="nc" id="L2309">            }</span>
+            
+<span class="nc" id="L2311">            item {</span>
+<span class="nc bnc" id="L2312" title="All 8 branches missed.">                PersonalizationSettingCard(</span>
+<span class="nc" id="L2313">                    title = &quot;Notification Style&quot;,</span>
+<span class="nc" id="L2314">                    description = &quot;Choose how notifications appear&quot;,</span>
+<span class="nc" id="L2315">                    icon = Icons.Default.Notifications,</span>
+<span class="nc" id="L2316">                    currentValue = notificationStyle,</span>
+<span class="nc" id="L2317">                    onValueClick = { /* Show notification style picker */ }</span>
+<span class="nc" id="L2318">                )</span>
+<span class="nc" id="L2319">            }</span>
+            
+<span class="nc" id="L2321">            item {</span>
+<span class="nc bnc" id="L2322" title="All 8 branches missed.">                Button(</span>
+<span class="nc" id="L2323">                    onClick = { /* Save preferences */ },</span>
+<span class="nc" id="L2324">                    modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L2325">                ) {</span>
+<span class="nc bnc" id="L2326" title="All 8 branches missed.">                    Text(&quot;Save Preferences&quot;)</span>
+<span class="nc" id="L2327">                }</span>
+<span class="nc" id="L2328">            }</span>
+<span class="nc" id="L2329">        }</span>
+<span class="nc" id="L2330">    }</span>
+    
+<span class="nc bnc" id="L2332" title="All 2 branches missed.">    if (showThemeDialog) {</span>
+<span class="nc bnc" id="L2333" title="All 2 branches missed.">        ThemeSelectionDialog(</span>
+<span class="nc" id="L2334">            currentTheme = selectedTheme,</span>
+<span class="nc" id="L2335">            themes = themes,</span>
+<span class="nc" id="L2336">            onThemeSelected = { </span>
+<span class="nc" id="L2337">                selectedTheme = it</span>
+<span class="nc" id="L2338">                showThemeDialog = false</span>
+<span class="nc" id="L2339">            },</span>
+<span class="nc" id="L2340">            onDismiss = { showThemeDialog = false }</span>
+        )
+    }
+<span class="nc bnc" id="L2343" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L2346" title="All 6 branches missed.">fun PersonalizationOverviewCard() {</span>
+<span class="nc bnc" id="L2347" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L2348">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L2349">        colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L2350">            containerColor = MaterialTheme.colorScheme.secondaryContainer</span>
+        )
+<span class="nc" id="L2352">    ) {</span>
+<span class="nc bnc" id="L2353" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L2354">            modifier = Modifier.padding(16.dp),</span>
+<span class="nc" id="L2355">            horizontalAlignment = Alignment.CenterHorizontally</span>
+        ) {
+<span class="nc" id="L2357">            Icon(</span>
+<span class="nc" id="L2358">                Icons.Default.Person,</span>
+<span class="nc" id="L2359">                contentDescription = null,</span>
+<span class="nc" id="L2360">                modifier = Modifier.size(48.dp),</span>
+<span class="nc" id="L2361">                tint = MaterialTheme.colorScheme.onSecondaryContainer</span>
+            )
+<span class="nc" id="L2363">            Spacer(modifier = Modifier.height(12.dp))</span>
+<span class="nc" id="L2364">            Text(</span>
+<span class="nc" id="L2365">                text = &quot;Personalized Experience&quot;,</span>
+<span class="nc" id="L2366">                style = MaterialTheme.typography.titleLarge,</span>
+<span class="nc" id="L2367">                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L2368">                color = MaterialTheme.colorScheme.onSecondaryContainer</span>
+            )
+<span class="nc" id="L2370">            Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L2371">            Text(</span>
+<span class="nc" id="L2372">                text = &quot;Customize your AI therapist experience to match your preferences&quot;,</span>
+<span class="nc" id="L2373">                style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L2374">                color = MaterialTheme.colorScheme.onSecondaryContainer,</span>
+<span class="nc" id="L2375">                textAlign = TextAlign.Center</span>
+            )
+<span class="nc" id="L2377">        }</span>
+<span class="nc" id="L2378">    }</span>
+<span class="nc bnc" id="L2379" title="All 2 branches missed.">}</span>
+
+@Composable
+fun PersonalizationSettingCard(
+    title: String,
+    description: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    currentValue: String,
+    onValueClick: () -&gt; Unit
+<span class="nc bnc" id="L2388" title="All 26 branches missed.">) {</span>
+<span class="nc bnc" id="L2389" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L2390">        modifier = Modifier</span>
+<span class="nc" id="L2391">            .fillMaxWidth()</span>
+<span class="nc bnc" id="L2392" title="All 2 branches missed.">            .clickable { onValueClick() },</span>
+<span class="nc" id="L2393">        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L2394">    ) {</span>
+<span class="nc bnc" id="L2395" title="All 6 branches missed.">        Row(</span>
+<span class="nc" id="L2396">            modifier = Modifier</span>
+<span class="nc" id="L2397">                .fillMaxWidth()</span>
+<span class="nc" id="L2398">                .padding(16.dp),</span>
+<span class="nc" id="L2399">            verticalAlignment = Alignment.CenterVertically</span>
+        ) {
+<span class="nc" id="L2401">            Icon(</span>
+<span class="nc" id="L2402">                icon,</span>
+<span class="nc" id="L2403">                contentDescription = null,</span>
+<span class="nc" id="L2404">                modifier = Modifier.size(32.dp),</span>
+<span class="nc" id="L2405">                tint = MaterialTheme.colorScheme.primary</span>
+            )
+<span class="nc" id="L2407">            Spacer(modifier = Modifier.width(16.dp))</span>
+<span class="nc" id="L2408">            Column(</span>
+<span class="nc" id="L2409">                modifier = Modifier.weight(1f)</span>
+            ) {
+<span class="nc" id="L2411">                Text(</span>
+<span class="nc" id="L2412">                    text = title,</span>
+<span class="nc" id="L2413">                    style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L2414">                    fontWeight = FontWeight.Bold</span>
+                )
+<span class="nc" id="L2416">                Spacer(modifier = Modifier.height(4.dp))</span>
+<span class="nc" id="L2417">                Text(</span>
+<span class="nc" id="L2418">                    text = description,</span>
+<span class="nc" id="L2419">                    style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L2420">                    color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                )
+<span class="nc" id="L2422">            }</span>
+<span class="nc" id="L2423">            Text(</span>
+<span class="nc" id="L2424">                text = currentValue,</span>
+<span class="nc" id="L2425">                style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L2426">                color = MaterialTheme.colorScheme.primary,</span>
+<span class="nc" id="L2427">                fontWeight = FontWeight.Medium</span>
+            )
+<span class="nc" id="L2429">            Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L2430">            Icon(</span>
+<span class="nc" id="L2431">                Icons.Default.ChevronRight,</span>
+<span class="nc" id="L2432">                contentDescription = null,</span>
+<span class="nc" id="L2433">                tint = MaterialTheme.colorScheme.onSurfaceVariant</span>
+            )
+<span class="nc" id="L2435">        }</span>
+<span class="nc" id="L2436">    }</span>
+<span class="nc bnc" id="L2437" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L2440" title="All 6 branches missed.">fun ContentPreferencesCard() {</span>
+<span class="nc bnc" id="L2441" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L2442">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L2443">        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L2444">    ) {</span>
+<span class="nc bnc" id="L2445" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L2446">            modifier = Modifier.padding(16.dp)</span>
+        ) {
+<span class="nc" id="L2448">            Text(</span>
+<span class="nc" id="L2449">                text = &quot;Content Customization&quot;,</span>
+<span class="nc" id="L2450">                style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L2451">                fontWeight = FontWeight.Bold</span>
+            )
+<span class="nc" id="L2453">            Spacer(modifier = Modifier.height(12.dp))</span>
+            
+<span class="nc" id="L2455">            val preferences = listOf(</span>
+<span class="nc" id="L2456">                &quot;Focus on anxiety management&quot;,</span>
+<span class="nc" id="L2457">                &quot;Include mindfulness exercises&quot;,</span>
+<span class="nc" id="L2458">                &quot;Show progress tracking&quot;,</span>
+<span class="nc" id="L2459">                &quot;Enable mood forecasting&quot;,</span>
+<span class="nc" id="L2460">                &quot;Include crisis support resources&quot;</span>
+            )
+            
+<span class="nc" id="L2463">            preferences.forEach { preference -&gt;</span>
+<span class="nc" id="L2464">                Row(</span>
+<span class="nc" id="L2465">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L2466">                    verticalAlignment = Alignment.CenterVertically</span>
+                ) {
+<span class="nc" id="L2468">                    Checkbox(</span>
+<span class="nc" id="L2469">                        checked = true, // This would be stateful in real implementation</span>
+<span class="nc" id="L2470">                        onCheckedChange = { /* Handle preference toggle */ }</span>
+                    )
+<span class="nc" id="L2472">                    Spacer(modifier = Modifier.width(12.dp))</span>
+<span class="nc" id="L2473">                    Text(</span>
+<span class="nc" id="L2474">                        text = preference,</span>
+<span class="nc" id="L2475">                        style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L2476">                        modifier = Modifier.weight(1f)</span>
+                    )
+<span class="nc" id="L2478">                }</span>
+<span class="nc" id="L2479">                Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L2480">            }</span>
+<span class="nc" id="L2481">        }</span>
+<span class="nc" id="L2482">    }</span>
+<span class="nc bnc" id="L2483" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ThemeSelectionDialog(
+    currentTheme: String,
+    themes: List&lt;String&gt;,
+    onThemeSelected: (String) -&gt; Unit,
+    onDismiss: () -&gt; Unit
+<span class="nc bnc" id="L2492" title="All 22 branches missed.">) {</span>
+<span class="nc bnc" id="L2493" title="All 2 branches missed.">    AlertDialog(</span>
+<span class="nc" id="L2494">        onDismissRequest = onDismiss,</span>
+<span class="nc bnc" id="L2495" title="All 8 branches missed.">        title = { Text(&quot;Select Theme&quot;) },</span>
+<span class="nc" id="L2496">        text = {</span>
+<span class="nc bnc" id="L2497" title="All 6 branches missed.">            Column {</span>
+<span class="nc" id="L2498">                themes.forEach { theme -&gt;</span>
+<span class="nc" id="L2499">                    Row(</span>
+<span class="nc" id="L2500">                        modifier = Modifier</span>
+<span class="nc" id="L2501">                            .fillMaxWidth()</span>
+<span class="nc" id="L2502">                            .clickable { onThemeSelected(theme) }</span>
+<span class="nc" id="L2503">                            .padding(vertical = 8.dp),</span>
+<span class="nc" id="L2504">                        verticalAlignment = Alignment.CenterVertically</span>
+                    ) {
+<span class="nc" id="L2506">                        RadioButton(</span>
+<span class="nc" id="L2507">                            selected = currentTheme == theme,</span>
+<span class="nc" id="L2508">                            onClick = { onThemeSelected(theme) }</span>
+                        )
+<span class="nc" id="L2510">                        Spacer(modifier = Modifier.width(12.dp))</span>
+<span class="nc" id="L2511">                        Text(</span>
+<span class="nc" id="L2512">                            text = theme,</span>
+<span class="nc" id="L2513">                            style = MaterialTheme.typography.bodyLarge</span>
+                        )
+<span class="nc" id="L2515">                    }</span>
+<span class="nc" id="L2516">                }</span>
+<span class="nc" id="L2517">            }</span>
+<span class="nc" id="L2518">        },</span>
+<span class="nc" id="L2519">        confirmButton = {</span>
+<span class="nc bnc" id="L2520" title="All 8 branches missed.">            TextButton(onClick = onDismiss) {</span>
+<span class="nc bnc" id="L2521" title="All 8 branches missed.">                Text(&quot;Done&quot;)</span>
+<span class="nc" id="L2522">            }</span>
+<span class="nc" id="L2523">        }</span>
+    )
+<span class="nc bnc" id="L2525" title="All 2 branches missed.">}</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

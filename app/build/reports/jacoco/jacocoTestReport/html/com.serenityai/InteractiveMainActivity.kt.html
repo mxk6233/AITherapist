@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InteractiveMainActivity.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai</a> &gt; <span class="el_source">InteractiveMainActivity.kt</span></div><h1>InteractiveMainActivity.kt</h1><pre class="source lang-java linenums">package com.serenityai
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
+import com.serenityai.navigation.AppNavigation
+import com.serenityai.ui.theme.AITherapistTheme
+
+<span class="nc" id="L16">class InteractiveMainActivity : ComponentActivity() {</span>
+    override fun onCreate(savedInstanceState: Bundle?) {
+<span class="nc" id="L18">        super.onCreate(savedInstanceState)</span>
+<span class="nc" id="L19">        enableEdgeToEdge()</span>
+<span class="nc" id="L20">        setContent {</span>
+<span class="nc bnc" id="L21" title="All 8 branches missed.">            AITherapistTheme {</span>
+<span class="nc bnc" id="L22" title="All 8 branches missed.">                Surface(</span>
+<span class="nc" id="L23">                    modifier = Modifier.fillMaxSize(),</span>
+<span class="nc" id="L24">                    color = MaterialTheme.colorScheme.background</span>
+<span class="nc" id="L25">                ) {</span>
+<span class="nc bnc" id="L26" title="All 8 branches missed.">                    AppContent()</span>
+<span class="nc" id="L27">                }</span>
+<span class="nc" id="L28">            }</span>
+<span class="nc" id="L29">        }</span>
+<span class="nc" id="L30">    }</span>
+}
+
+@Composable
+<span class="nc bnc" id="L34" title="All 6 branches missed.">fun AppContent() {</span>
+<span class="nc" id="L35">    val navController = rememberNavController()</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">    AppNavigation(navController = navController)</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">}</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

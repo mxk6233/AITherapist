@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 1: Voice Session Management - Validates Core UC38 Functionality" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:07" hostname="Mohammads-MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="UC38-REQ-2: System MUST process voice input and generate responses" classname="com.serenityai.tests.unit.usecases.uc38_voice_therapy.VoiceEnabledTherapyUseCaseUnitTests$SessionManagementTests" time="0.001"/>
+  <testcase name="UC38-REQ-1: System MUST start voice therapy sessions" classname="com.serenityai.tests.unit.usecases.uc38_voice_therapy.VoiceEnabledTherapyUseCaseUnitTests$SessionManagementTests" time="0.0"/>
+  <testcase name="UC38-REQ-3: System MUST process text input and convert AI response to voice" classname="com.serenityai.tests.unit.usecases.uc38_voice_therapy.VoiceEnabledTherapyUseCaseUnitTests$SessionManagementTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

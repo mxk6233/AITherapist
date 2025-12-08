@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CopingExercisesScreen.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.screens</a> &gt; <span class="el_source">CopingExercisesScreen.kt</span></div><h1>CopingExercisesScreen.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.screens
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.serenityai.utils.GreedyCopingStrategySelector
+import com.serenityai.utils.UserConstraints
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CopingExercisesScreen(
+    onNavigateBack: () -&gt; Unit,
+    onStartExercise: (String) -&gt; Unit,
+<span class="nc bnc" id="L30" title="All 2 branches missed.">    currentMood: String = &quot;Neutral&quot;,</span>
+<span class="nc bnc" id="L31" title="All 2 branches missed.">    availableTimeMinutes: Int = 30,</span>
+<span class="nc bnc" id="L32" title="All 2 branches missed.">    currentEnergyLevel: Int = 7,</span>
+<span class="nc bnc" id="L33" title="All 2 branches missed.">    stressLevel: Int = 5</span>
+<span class="nc bnc" id="L34" title="All 42 branches missed.">) {</span>
+<span class="nc" id="L35">    var selectedCategory by remember { mutableStateOf(&quot;All&quot;) }</span>
+<span class="nc" id="L36">    var selectedMood by remember { mutableStateOf(&quot;All&quot;) }</span>
+<span class="nc" id="L37">    var showProgressDialog by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L38">    var useGreedyAlgorithm by remember { mutableStateOf(true) }</span>
+    
+<span class="nc" id="L40">    val categories = listOf(&quot;All&quot;, &quot;Breathing&quot;, &quot;Mindfulness&quot;, &quot;Physical&quot;, &quot;Creative&quot;, &quot;Social&quot;)</span>
+<span class="nc" id="L41">    val moods = listOf(&quot;All&quot;, &quot;Anxious&quot;, &quot;Sad&quot;, &quot;Angry&quot;, &quot;Stressed&quot;, &quot;Overwhelmed&quot;)</span>
+    
+<span class="nc" id="L43">    val exercises = remember {</span>
+<span class="nc" id="L44">        listOf(</span>
+<span class="nc" id="L45">            CopingExercise(</span>
+<span class="nc" id="L46">                id = &quot;1&quot;,</span>
+<span class="nc" id="L47">                title = &quot;4-7-8 Breathing&quot;,</span>
+<span class="nc" id="L48">                description = &quot;Calm your nervous system with this simple breathing technique&quot;,</span>
+<span class="nc" id="L49">                category = &quot;Breathing&quot;,</span>
+<span class="nc" id="L50">                duration = &quot;5 minutes&quot;,</span>
+<span class="nc" id="L51">                difficulty = &quot;Easy&quot;,</span>
+<span class="nc" id="L52">                moodTags = listOf(&quot;Anxious&quot;, &quot;Stressed&quot;),</span>
+<span class="nc" id="L53">                effectiveness = 4.5f,</span>
+<span class="nc" id="L54">                isCompleted = true,</span>
+<span class="nc" id="L55">                timesCompleted = 3</span>
+            ),
+<span class="nc" id="L57">            CopingExercise(</span>
+<span class="nc" id="L58">                id = &quot;2&quot;,</span>
+<span class="nc" id="L59">                title = &quot;Body Scan Meditation&quot;,</span>
+<span class="nc" id="L60">                description = &quot;Progressive relaxation to release tension throughout your body&quot;,</span>
+<span class="nc" id="L61">                category = &quot;Mindfulness&quot;,</span>
+<span class="nc" id="L62">                duration = &quot;15 minutes&quot;,</span>
+<span class="nc" id="L63">                difficulty = &quot;Medium&quot;,</span>
+<span class="nc" id="L64">                moodTags = listOf(&quot;Stressed&quot;, &quot;Overwhelmed&quot;),</span>
+<span class="nc" id="L65">                effectiveness = 4.8f,</span>
+<span class="nc" id="L66">                isCompleted = false,</span>
+<span class="nc" id="L67">                timesCompleted = 0</span>
+            ),
+<span class="nc" id="L69">            CopingExercise(</span>
+<span class="nc" id="L70">                id = &quot;3&quot;,</span>
+<span class="nc" id="L71">                title = &quot;Progressive Muscle Relaxation&quot;,</span>
+<span class="nc" id="L72">                description = &quot;Systematically tense and release muscle groups for deep relaxation&quot;,</span>
+<span class="nc" id="L73">                category = &quot;Physical&quot;,</span>
+<span class="nc" id="L74">                duration = &quot;20 minutes&quot;,</span>
+<span class="nc" id="L75">                difficulty = &quot;Medium&quot;,</span>
+<span class="nc" id="L76">                moodTags = listOf(&quot;Stressed&quot;, &quot;Angry&quot;),</span>
+<span class="nc" id="L77">                effectiveness = 4.2f,</span>
+<span class="nc" id="L78">                isCompleted = true,</span>
+<span class="nc" id="L79">                timesCompleted = 1</span>
+            ),
+<span class="nc" id="L81">            CopingExercise(</span>
+<span class="nc" id="L82">                id = &quot;4&quot;,</span>
+<span class="nc" id="L83">                title = &quot;Gratitude Journaling&quot;,</span>
+<span class="nc" id="L84">                description = &quot;Write down three things you're grateful for today&quot;,</span>
+<span class="nc" id="L85">                category = &quot;Creative&quot;,</span>
+<span class="nc" id="L86">                duration = &quot;10 minutes&quot;,</span>
+<span class="nc" id="L87">                difficulty = &quot;Easy&quot;,</span>
+<span class="nc" id="L88">                moodTags = listOf(&quot;Sad&quot;, &quot;Overwhelmed&quot;),</span>
+<span class="nc" id="L89">                effectiveness = 4.6f,</span>
+<span class="nc" id="L90">                isCompleted = false,</span>
+<span class="nc" id="L91">                timesCompleted = 0</span>
+            ),
+<span class="nc" id="L93">            CopingExercise(</span>
+<span class="nc" id="L94">                id = &quot;5&quot;,</span>
+<span class="nc" id="L95">                title = &quot;Grounding 5-4-3-2-1&quot;,</span>
+<span class="nc" id="L96">                description = &quot;Use your senses to ground yourself in the present moment&quot;,</span>
+<span class="nc" id="L97">                category = &quot;Mindfulness&quot;,</span>
+<span class="nc" id="L98">                duration = &quot;5 minutes&quot;,</span>
+<span class="nc" id="L99">                difficulty = &quot;Easy&quot;,</span>
+<span class="nc" id="L100">                moodTags = listOf(&quot;Anxious&quot;, &quot;Overwhelmed&quot;),</span>
+<span class="nc" id="L101">                effectiveness = 4.7f,</span>
+<span class="nc" id="L102">                isCompleted = true,</span>
+<span class="nc" id="L103">                timesCompleted = 5</span>
+            ),
+<span class="nc" id="L105">            CopingExercise(</span>
+<span class="nc" id="L106">                id = &quot;6&quot;,</span>
+<span class="nc" id="L107">                title = &quot;Gentle Yoga Flow&quot;,</span>
+<span class="nc" id="L108">                description = &quot;Slow, mindful movements to connect body and mind&quot;,</span>
+<span class="nc" id="L109">                category = &quot;Physical&quot;,</span>
+<span class="nc" id="L110">                duration = &quot;25 minutes&quot;,</span>
+<span class="nc" id="L111">                difficulty = &quot;Medium&quot;,</span>
+<span class="nc" id="L112">                moodTags = listOf(&quot;Stressed&quot;, &quot;Sad&quot;),</span>
+<span class="nc" id="L113">                effectiveness = 4.4f,</span>
+<span class="nc" id="L114">                isCompleted = false,</span>
+<span class="nc" id="L115">                timesCompleted = 0</span>
+            )
+<span class="nc" id="L117">        )</span>
+    }
+    
+<span class="nc" id="L120">    val filteredExercises = exercises.filter { exercise -&gt;</span>
+<span class="nc bnc" id="L121" title="All 4 branches missed.">        val matchesCategory = selectedCategory == &quot;All&quot; || exercise.category == selectedCategory</span>
+<span class="nc bnc" id="L122" title="All 4 branches missed.">        val matchesMood = selectedMood == &quot;All&quot; || exercise.moodTags.contains(selectedMood)</span>
+<span class="nc bnc" id="L123" title="All 4 branches missed.">        matchesCategory &amp;&amp; matchesMood</span>
+    }
+    
+<span class="nc" id="L126">    Scaffold(</span>
+<span class="nc" id="L127">        topBar = {</span>
+<span class="nc bnc" id="L128" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L129" title="All 8 branches missed.">                title = { Text(&quot;Coping Exercises&quot;) },</span>
+<span class="nc" id="L130">                navigationIcon = {</span>
+<span class="nc bnc" id="L131" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L132" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L133">                    }</span>
+<span class="nc" id="L134">                },</span>
+<span class="nc" id="L135">                actions = {</span>
+<span class="nc bnc" id="L136" title="All 8 branches missed.">                    IconButton(onClick = { showProgressDialog = true }) {</span>
+<span class="nc bnc" id="L137" title="All 8 branches missed.">                        Icon(Icons.Default.Analytics, contentDescription = &quot;Progress&quot;)</span>
+<span class="nc" id="L138">                    }</span>
+<span class="nc" id="L139">                }</span>
+<span class="nc" id="L140">            )</span>
+<span class="nc" id="L141">        }</span>
+<span class="nc" id="L142">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L143" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L144">            modifier = Modifier</span>
+<span class="nc" id="L145">                .fillMaxSize()</span>
+<span class="nc" id="L146">                .padding(paddingValues)</span>
+<span class="nc" id="L147">                .padding(16.dp)</span>
+        ) {
+            // Personalized Recommendations
+<span class="nc" id="L150">            Card(</span>
+<span class="nc" id="L151">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L152">                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L153">            ) {</span>
+<span class="nc bnc" id="L154" title="All 6 branches missed.">                Column(</span>
+<span class="nc" id="L155">                    modifier = Modifier.padding(16.dp)</span>
+                ) {
+<span class="nc" id="L157">                    Row(</span>
+<span class="nc" id="L158">                        verticalAlignment = Alignment.CenterVertically</span>
+                    ) {
+<span class="nc" id="L160">                        Icon(</span>
+<span class="nc" id="L161">                            Icons.Default.Recommend,</span>
+<span class="nc" id="L162">                            contentDescription = null,</span>
+<span class="nc" id="L163">                            tint = MaterialTheme.colorScheme.primary</span>
+                        )
+<span class="nc" id="L165">                        Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L166">                        Text(</span>
+<span class="nc" id="L167">                            text = &quot;Personalized for You&quot;,</span>
+<span class="nc" id="L168">                            style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L169">                            fontWeight = FontWeight.Bold</span>
+                        )
+<span class="nc" id="L171">                    }</span>
+                    
+<span class="nc" id="L173">                    Spacer(modifier = Modifier.height(12.dp))</span>
+                    
+<span class="nc" id="L175">                    Text(</span>
+<span class="nc" id="L176">                        text = &quot;Based on your recent mood patterns, we recommend:&quot;,</span>
+<span class="nc" id="L177">                        style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L178">                        color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                    )
+                    
+<span class="nc" id="L181">                    Spacer(modifier = Modifier.height(8.dp))</span>
+                    
+                    // Use Greedy Algorithm for optimal recommendations
+<span class="nc" id="L184">                    val greedySelector = remember { GreedyCopingStrategySelector() }</span>
+<span class="nc" id="L185">                    val constraints = remember {</span>
+<span class="nc" id="L186">                        UserConstraints(</span>
+<span class="nc" id="L187">                            availableTimeMinutes = availableTimeMinutes,</span>
+<span class="nc" id="L188">                            currentEnergyLevel = currentEnergyLevel,</span>
+<span class="nc" id="L189">                            currentMood = currentMood,</span>
+<span class="nc" id="L190">                            stressLevel = stressLevel</span>
+<span class="nc" id="L191">                        )</span>
+                    }
+                    
+<span class="nc" id="L194">                    val greedyRecommendations = remember {</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">                        if (useGreedyAlgorithm) {</span>
+<span class="nc" id="L196">                            greedySelector.getTopRecommendations(exercises, constraints, 3)</span>
+                        } else {
+<span class="nc" id="L198">                            exercises.take(3)</span>
+<span class="nc" id="L199">                        }</span>
+                    }
+                    
+<span class="nc" id="L202">                    LazyRow(</span>
+<span class="nc" id="L203">                        horizontalArrangement = Arrangement.spacedBy(8.dp)</span>
+<span class="nc" id="L204">                    ) {</span>
+<span class="nc" id="L205">                        items(greedyRecommendations) { exercise -&gt;</span>
+                            RecommendationCard(
+                                exercise = exercise,
+<span class="nc" id="L208">                                onClick = { onStartExercise(exercise.id) }</span>
+                            )
+                        }
+<span class="nc" id="L211">                    }</span>
+<span class="nc" id="L212">                }</span>
+<span class="nc" id="L213">            }</span>
+            
+<span class="nc" id="L215">            Spacer(modifier = Modifier.height(16.dp))</span>
+            
+            // Filter Section
+<span class="nc" id="L218">            Card(</span>
+<span class="nc" id="L219">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L220">                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L221">            ) {</span>
+<span class="nc bnc" id="L222" title="All 6 branches missed.">                Column(</span>
+<span class="nc" id="L223">                    modifier = Modifier.padding(16.dp)</span>
+                ) {
+<span class="nc" id="L225">                    Text(</span>
+<span class="nc" id="L226">                        text = &quot;Filter Exercises&quot;,</span>
+<span class="nc" id="L227">                        style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L228">                        fontWeight = FontWeight.Bold</span>
+                    )
+                    
+<span class="nc" id="L231">                    Spacer(modifier = Modifier.height(12.dp))</span>
+                    
+<span class="nc" id="L233">                    Text(</span>
+<span class="nc" id="L234">                        text = &quot;Category:&quot;,</span>
+<span class="nc" id="L235">                        style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L236">                        fontWeight = FontWeight.Medium</span>
+                    )
+                    
+<span class="nc" id="L239">                    Spacer(modifier = Modifier.height(8.dp))</span>
+                    
+<span class="nc" id="L241">                    LazyRow(</span>
+<span class="nc" id="L242">                        horizontalArrangement = Arrangement.spacedBy(8.dp)</span>
+<span class="nc" id="L243">                    ) {</span>
+<span class="nc" id="L244">                        items(categories) { category -&gt;</span>
+                            FilterChip(
+<span class="nc" id="L246">                                onClick = { selectedCategory = category },</span>
+<span class="nc bnc" id="L247" title="All 8 branches missed.">                                label = { Text(category) },</span>
+                                selected = selectedCategory == category
+                            )
+                        }
+<span class="nc" id="L251">                    }</span>
+                    
+<span class="nc" id="L253">                    Spacer(modifier = Modifier.height(12.dp))</span>
+                    
+<span class="nc" id="L255">                    Text(</span>
+<span class="nc" id="L256">                        text = &quot;Mood:&quot;,</span>
+<span class="nc" id="L257">                        style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L258">                        fontWeight = FontWeight.Medium</span>
+                    )
+                    
+<span class="nc" id="L261">                    Spacer(modifier = Modifier.height(8.dp))</span>
+                    
+<span class="nc" id="L263">                    LazyRow(</span>
+<span class="nc" id="L264">                        horizontalArrangement = Arrangement.spacedBy(8.dp)</span>
+<span class="nc" id="L265">                    ) {</span>
+<span class="nc" id="L266">                        items(moods) { mood -&gt;</span>
+                            FilterChip(
+<span class="nc" id="L268">                                onClick = { selectedMood = mood },</span>
+<span class="nc bnc" id="L269" title="All 8 branches missed.">                                label = { Text(mood) },</span>
+                                selected = selectedMood == mood
+                            )
+                        }
+<span class="nc" id="L273">                    }</span>
+<span class="nc" id="L274">                }</span>
+<span class="nc" id="L275">            }</span>
+            
+<span class="nc" id="L277">            Spacer(modifier = Modifier.height(16.dp))</span>
+            
+            // Exercise Library
+<span class="nc" id="L280">            Text(</span>
+<span class="nc" id="L281">                text = &quot;Exercise Library (${filteredExercises.size})&quot;,</span>
+<span class="nc" id="L282">                style = MaterialTheme.typography.headlineSmall,</span>
+<span class="nc" id="L283">                fontWeight = FontWeight.Bold</span>
+            )
+            
+<span class="nc" id="L286">            Spacer(modifier = Modifier.height(8.dp))</span>
+            
+<span class="nc" id="L288">            LazyColumn(</span>
+<span class="nc" id="L289">                verticalArrangement = Arrangement.spacedBy(12.dp)</span>
+<span class="nc" id="L290">            ) {</span>
+<span class="nc" id="L291">                items(filteredExercises) { exercise -&gt;</span>
+                    ExerciseCard(
+                        exercise = exercise,
+<span class="nc" id="L294">                        onClick = { onStartExercise(exercise.id) }</span>
+                    )
+                }
+<span class="nc" id="L297">            }</span>
+<span class="nc" id="L298">        }</span>
+<span class="nc" id="L299">    }</span>
+    
+    // Progress Dialog
+<span class="nc bnc" id="L302" title="All 2 branches missed.">    if (showProgressDialog) {</span>
+<span class="nc bnc" id="L303" title="All 2 branches missed.">        AlertDialog(</span>
+<span class="nc" id="L304">            onDismissRequest = { showProgressDialog = false },</span>
+<span class="nc bnc" id="L305" title="All 8 branches missed.">            title = { Text(&quot;Exercise Progress&quot;) },</span>
+<span class="nc" id="L306">            text = {</span>
+<span class="nc bnc" id="L307" title="All 6 branches missed.">                Column {</span>
+<span class="nc" id="L308">                    Text(&quot;Completed Exercises: ${exercises.count { it.isCompleted }}&quot;)</span>
+<span class="nc bnc" id="L309" title="All 2 branches missed.">                    Text(&quot;Total Sessions: ${exercises.sumOf { it.timesCompleted }}&quot;)</span>
+<span class="nc" id="L310">                    Text(&quot;Average Effectiveness: ${exercises.map { it.effectiveness }.average().let { &quot;%.1f&quot;.format(it) }}/5.0&quot;)</span>
+<span class="nc" id="L311">                }</span>
+<span class="nc" id="L312">            },</span>
+<span class="nc" id="L313">            confirmButton = {</span>
+<span class="nc bnc" id="L314" title="All 8 branches missed.">                TextButton(onClick = { showProgressDialog = false }) {</span>
+<span class="nc bnc" id="L315" title="All 8 branches missed.">                    Text(&quot;Close&quot;)</span>
+<span class="nc" id="L316">                }</span>
+<span class="nc" id="L317">            }</span>
+        )
+    }
+<span class="nc bnc" id="L320" title="All 2 branches missed.">}</span>
+
+@Composable
+fun RecommendationCard(
+    exercise: CopingExercise,
+    onClick: () -&gt; Unit
+<span class="nc bnc" id="L326" title="All 14 branches missed.">) {</span>
+<span class="nc bnc" id="L327" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L328">        modifier = Modifier</span>
+<span class="nc" id="L329">            .width(200.dp)</span>
+<span class="nc bnc" id="L330" title="All 2 branches missed.">            .clickable { onClick() },</span>
+<span class="nc" id="L331">        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)</span>
+<span class="nc" id="L332">    ) {</span>
+<span class="nc bnc" id="L333" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L334">            modifier = Modifier.padding(12.dp)</span>
+        ) {
+<span class="nc" id="L336">            Text(</span>
+<span class="nc" id="L337">                text = exercise.title,</span>
+<span class="nc" id="L338">                style = MaterialTheme.typography.titleSmall,</span>
+<span class="nc" id="L339">                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L340">                maxLines = 2</span>
+            )
+            
+<span class="nc" id="L343">            Spacer(modifier = Modifier.height(4.dp))</span>
+            
+<span class="nc" id="L345">            Text(</span>
+<span class="nc" id="L346">                text = exercise.description,</span>
+<span class="nc" id="L347">                style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L348">                color = MaterialTheme.colorScheme.onSurfaceVariant,</span>
+<span class="nc" id="L349">                maxLines = 2</span>
+            )
+            
+<span class="nc" id="L352">            Spacer(modifier = Modifier.height(8.dp))</span>
+            
+<span class="nc" id="L354">            Row(</span>
+<span class="nc" id="L355">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L356">                horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L357">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L359">                Text(</span>
+<span class="nc" id="L360">                    text = exercise.duration,</span>
+<span class="nc" id="L361">                    style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L362">                    color = MaterialTheme.colorScheme.primary</span>
+                )
+                
+<span class="nc" id="L365">                Row(</span>
+<span class="nc" id="L366">                    verticalAlignment = Alignment.CenterVertically</span>
+                ) {
+<span class="nc" id="L368">                    Icon(</span>
+<span class="nc" id="L369">                        Icons.Default.Star,</span>
+<span class="nc" id="L370">                        contentDescription = null,</span>
+<span class="nc" id="L371">                        modifier = Modifier.size(14.dp),</span>
+<span class="nc" id="L372">                        tint = Color(0xFFFFD700)</span>
+                    )
+<span class="nc" id="L374">                    Spacer(modifier = Modifier.width(2.dp))</span>
+<span class="nc" id="L375">                    Text(</span>
+<span class="nc" id="L376">                        text = exercise.effectiveness.toString(),</span>
+<span class="nc" id="L377">                        style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L378">                        color = Color(0xFFFFD700)</span>
+                    )
+<span class="nc" id="L380">                }</span>
+<span class="nc" id="L381">            }</span>
+<span class="nc" id="L382">        }</span>
+<span class="nc" id="L383">    }</span>
+<span class="nc bnc" id="L384" title="All 2 branches missed.">}</span>
+
+@Composable
+fun ExerciseCard(
+    exercise: CopingExercise,
+    onClick: () -&gt; Unit
+<span class="nc bnc" id="L390" title="All 14 branches missed.">) {</span>
+<span class="nc bnc" id="L391" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L392">        modifier = Modifier</span>
+<span class="nc" id="L393">            .fillMaxWidth()</span>
+<span class="nc bnc" id="L394" title="All 2 branches missed.">            .clickable { onClick() },</span>
+<span class="nc" id="L395">        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)</span>
+<span class="nc" id="L396">    ) {</span>
+<span class="nc bnc" id="L397" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L398">            modifier = Modifier.padding(16.dp)</span>
+        ) {
+<span class="nc" id="L400">            Row(</span>
+<span class="nc" id="L401">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L402">                horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L403">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L405">                Text(</span>
+<span class="nc" id="L406">                    text = exercise.title,</span>
+<span class="nc" id="L407">                    style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L408">                    fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L409">                    modifier = Modifier.weight(1f)</span>
+                )
+                
+<span class="nc bnc" id="L412" title="All 2 branches missed.">                if (exercise.isCompleted) {</span>
+<span class="nc" id="L413">                    Icon(</span>
+<span class="nc" id="L414">                        Icons.Default.CheckCircle,</span>
+<span class="nc" id="L415">                        contentDescription = &quot;Completed&quot;,</span>
+<span class="nc" id="L416">                        tint = Color(0xFF4CAF50),</span>
+<span class="nc" id="L417">                        modifier = Modifier.size(20.dp)</span>
+                    )
+                }
+<span class="nc" id="L420">            }</span>
+            
+<span class="nc" id="L422">            Spacer(modifier = Modifier.height(8.dp))</span>
+            
+<span class="nc" id="L424">            Text(</span>
+<span class="nc" id="L425">                text = exercise.description,</span>
+<span class="nc" id="L426">                style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L427">                color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+            )
+            
+<span class="nc" id="L430">            Spacer(modifier = Modifier.height(12.dp))</span>
+            
+<span class="nc" id="L432">            Row(</span>
+<span class="nc" id="L433">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L434">                horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L435">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L437">                Row(</span>
+<span class="nc" id="L438">                    verticalAlignment = Alignment.CenterVertically</span>
+                ) {
+<span class="nc" id="L440">                    Icon(</span>
+<span class="nc" id="L441">                        Icons.Default.Timer,</span>
+<span class="nc" id="L442">                        contentDescription = null,</span>
+<span class="nc" id="L443">                        modifier = Modifier.size(16.dp),</span>
+<span class="nc" id="L444">                        tint = MaterialTheme.colorScheme.primary</span>
+                    )
+<span class="nc" id="L446">                    Spacer(modifier = Modifier.width(4.dp))</span>
+<span class="nc" id="L447">                    Text(</span>
+<span class="nc" id="L448">                        text = exercise.duration,</span>
+<span class="nc" id="L449">                        style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L450">                        color = MaterialTheme.colorScheme.primary</span>
+                    )
+<span class="nc" id="L452">                }</span>
+                
+<span class="nc" id="L454">                Row(</span>
+<span class="nc" id="L455">                    verticalAlignment = Alignment.CenterVertically</span>
+                ) {
+<span class="nc" id="L457">                    Icon(</span>
+<span class="nc" id="L458">                        Icons.Default.Star,</span>
+<span class="nc" id="L459">                        contentDescription = null,</span>
+<span class="nc" id="L460">                        modifier = Modifier.size(16.dp),</span>
+<span class="nc" id="L461">                        tint = Color(0xFFFFD700)</span>
+                    )
+<span class="nc" id="L463">                    Spacer(modifier = Modifier.width(4.dp))</span>
+<span class="nc" id="L464">                    Text(</span>
+<span class="nc" id="L465">                        text = exercise.effectiveness.toString(),</span>
+<span class="nc" id="L466">                        style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L467">                        color = Color(0xFFFFD700)</span>
+                    )
+<span class="nc" id="L469">                }</span>
+                
+<span class="nc" id="L471">                DifficultyChip(difficulty = exercise.difficulty)</span>
+<span class="nc" id="L472">            }</span>
+            
+<span class="nc" id="L474">            Spacer(modifier = Modifier.height(8.dp))</span>
+            
+<span class="nc" id="L476">            Row(</span>
+<span class="nc" id="L477">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L478">                horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L479">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L481">                LazyRow(</span>
+<span class="nc" id="L482">                    horizontalArrangement = Arrangement.spacedBy(4.dp)</span>
+<span class="nc" id="L483">                ) {</span>
+<span class="nc" id="L484">                    items(exercise.moodTags) { mood -&gt;</span>
+                        MoodTag(mood = mood)
+                    }
+<span class="nc" id="L487">                }</span>
+                
+<span class="nc bnc" id="L489" title="All 2 branches missed.">                if (exercise.timesCompleted &gt; 0) {</span>
+<span class="nc" id="L490">                    Text(</span>
+<span class="nc" id="L491">                        text = &quot;${exercise.timesCompleted}x completed&quot;,</span>
+<span class="nc" id="L492">                        style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L493">                        color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                    )
+                }
+<span class="nc" id="L496">            }</span>
+<span class="nc" id="L497">        }</span>
+<span class="nc" id="L498">    }</span>
+<span class="nc bnc" id="L499" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L502" title="All 10 branches missed.">fun DifficultyChip(difficulty: String) {</span>
+<span class="nc bnc" id="L503" title="All 10 branches missed.">    val color = when (difficulty.lowercase()) {</span>
+<span class="nc" id="L504">        &quot;easy&quot; -&gt; Color(0xFF4CAF50)</span>
+<span class="nc" id="L505">        &quot;medium&quot; -&gt; Color(0xFFFF9800)</span>
+<span class="nc" id="L506">        &quot;hard&quot; -&gt; Color(0xFFF44336)</span>
+<span class="nc" id="L507">        else -&gt; MaterialTheme.colorScheme.primary</span>
+    }
+    
+<span class="nc" id="L510">    Box(</span>
+<span class="nc" id="L511">        modifier = Modifier</span>
+<span class="nc" id="L512">            .clip(RoundedCornerShape(8.dp))</span>
+<span class="nc" id="L513">            .background(color.copy(alpha = 0.1f))</span>
+<span class="nc" id="L514">            .padding(horizontal = 8.dp, vertical = 4.dp)</span>
+    ) {
+<span class="nc" id="L516">        Text(</span>
+<span class="nc" id="L517">            text = difficulty,</span>
+<span class="nc" id="L518">            style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L519">            color = color,</span>
+<span class="nc" id="L520">            fontWeight = FontWeight.Medium</span>
+        )
+<span class="nc" id="L522">    }</span>
+<span class="nc bnc" id="L523" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L526" title="All 10 branches missed.">fun MoodTag(mood: String) {</span>
+<span class="nc bnc" id="L527" title="All 6 branches missed.">    val color = when (mood.lowercase()) {</span>
+<span class="nc" id="L528">        &quot;anxious&quot; -&gt; Color(0xFFFF9800)</span>
+<span class="nc" id="L529">        &quot;sad&quot; -&gt; Color(0xFF2196F3)</span>
+<span class="nc" id="L530">        &quot;angry&quot; -&gt; Color(0xFFF44336)</span>
+<span class="nc" id="L531">        &quot;stressed&quot; -&gt; Color(0xFFFF5722)</span>
+<span class="nc" id="L532">        &quot;overwhelmed&quot; -&gt; Color(0xFF9C27B0)</span>
+<span class="nc" id="L533">        else -&gt; MaterialTheme.colorScheme.primary</span>
+    }
+    
+<span class="nc" id="L536">    Box(</span>
+<span class="nc" id="L537">        modifier = Modifier</span>
+<span class="nc" id="L538">            .clip(RoundedCornerShape(6.dp))</span>
+<span class="nc" id="L539">            .background(color.copy(alpha = 0.1f))</span>
+<span class="nc" id="L540">            .padding(horizontal = 6.dp, vertical = 2.dp)</span>
+    ) {
+<span class="nc" id="L542">        Text(</span>
+<span class="nc" id="L543">            text = mood,</span>
+<span class="nc" id="L544">            style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L545">            color = color,</span>
+<span class="nc" id="L546">            fontSize = 10.sp</span>
+        )
+<span class="nc" id="L548">    }</span>
+<span class="nc bnc" id="L549" title="All 2 branches missed.">}</span>
+
+<span class="nc" id="L551">data class CopingExercise(</span>
+<span class="nc" id="L552">    val id: String,</span>
+<span class="nc" id="L553">    val title: String,</span>
+<span class="nc" id="L554">    val description: String,</span>
+<span class="nc" id="L555">    val category: String,</span>
+<span class="nc" id="L556">    val duration: String,</span>
+<span class="nc" id="L557">    val difficulty: String,</span>
+<span class="nc" id="L558">    val moodTags: List&lt;String&gt;,</span>
+<span class="nc" id="L559">    val effectiveness: Float,</span>
+<span class="nc" id="L560">    val isCompleted: Boolean,</span>
+<span class="nc" id="L561">    val timesCompleted: Int</span>
+)
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

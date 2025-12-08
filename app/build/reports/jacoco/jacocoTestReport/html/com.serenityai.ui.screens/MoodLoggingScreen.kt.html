@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MoodLoggingScreen.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.screens</a> &gt; <span class="el_source">MoodLoggingScreen.kt</span></div><h1>MoodLoggingScreen.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.screens
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.UUID
+
+// Data classes for mood logging
+<span class="nc" id="L24">data class MoodEntry(</span>
+<span class="nc" id="L25">    val id: String,</span>
+<span class="nc" id="L26">    val mood: MoodLevel,</span>
+<span class="nc" id="L27">    val timestamp: Long,</span>
+<span class="nc" id="L28">    val notes: String = &quot;&quot;,</span>
+<span class="nc" id="L29">    val activities: List&lt;String&gt; = emptyList(),</span>
+<span class="nc" id="L30">    val triggers: List&lt;String&gt; = emptyList()</span>
+<span class="nc" id="L31">)</span>
+
+<span class="nc" id="L33">enum class MoodLevel(val emoji: String, val color: Color, val description: String) {</span>
+<span class="nc" id="L34">    VERY_HAPPY(&quot;😄&quot;, Color(0xFF4CAF50), &quot;Very Happy&quot;),</span>
+<span class="nc" id="L35">    HAPPY(&quot;😊&quot;, Color(0xFF8BC34A), &quot;Happy&quot;),</span>
+<span class="nc" id="L36">    NEUTRAL(&quot;😐&quot;, Color(0xFFFFC107), &quot;Neutral&quot;),</span>
+<span class="nc" id="L37">    SAD(&quot;😢&quot;, Color(0xFFFF9800), &quot;Sad&quot;),</span>
+<span class="nc" id="L38">    VERY_SAD(&quot;😭&quot;, Color(0xFFF44336), &quot;Very Sad&quot;),</span>
+<span class="nc" id="L39">    ANXIOUS(&quot;😰&quot;, Color(0xFF9C27B0), &quot;Anxious&quot;),</span>
+<span class="nc" id="L40">    STRESSED(&quot;😤&quot;, Color(0xFFE91E63), &quot;Stressed&quot;),</span>
+<span class="nc" id="L41">    CALM(&quot;😌&quot;, Color(0xFF2196F3), &quot;Calm&quot;)</span>
+<span class="nc" id="L42">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L46" title="All 10 branches missed.">fun LogDailyMoodScreenDetailed(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc" id="L47">    var selectedMood by remember { mutableStateOf&lt;MoodLevel?&gt;(null) }</span>
+<span class="nc" id="L48">    var moodNotes by remember { mutableStateOf(&quot;&quot;) }</span>
+<span class="nc" id="L49">    var selectedActivities by remember { mutableStateOf&lt;List&lt;String&gt;&gt;(emptyList()) }</span>
+<span class="nc" id="L50">    var selectedTriggers by remember { mutableStateOf&lt;List&lt;String&gt;&gt;(emptyList()) }</span>
+<span class="nc" id="L51">    var showSuccessDialog by remember { mutableStateOf(false) }</span>
+    
+<span class="nc" id="L53">    val moodActivities = listOf(</span>
+<span class="nc" id="L54">        &quot;Exercise&quot;, &quot;Work&quot;, &quot;Socializing&quot;, &quot;Reading&quot;, &quot;Music&quot;,</span>
+<span class="nc" id="L55">        &quot;Cooking&quot;, &quot;Walking&quot;, &quot;Meditation&quot;, &quot;Sleep&quot;, &quot;Family Time&quot;</span>
+    )
+    
+<span class="nc" id="L58">    val moodTriggers = listOf(</span>
+<span class="nc" id="L59">        &quot;Work Stress&quot;, &quot;Relationship Issues&quot;, &quot;Health Concerns&quot;,</span>
+<span class="nc" id="L60">        &quot;Financial Worries&quot;, &quot;Social Anxiety&quot;, &quot;Weather&quot;,</span>
+<span class="nc" id="L61">        &quot;Sleep Issues&quot;, &quot;News&quot;, &quot;Social Media&quot;, &quot;None&quot;</span>
+    )
+
+<span class="nc" id="L64">    Scaffold(</span>
+<span class="nc" id="L65">        topBar = {</span>
+<span class="nc bnc" id="L66" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L67" title="All 8 branches missed.">                title = { Text(&quot;Log Daily Mood&quot;) },</span>
+<span class="nc" id="L68">                navigationIcon = {</span>
+<span class="nc bnc" id="L69" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L70" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L71">                    }</span>
+<span class="nc" id="L72">                },</span>
+<span class="nc" id="L73">                colors = TopAppBarDefaults.topAppBarColors(</span>
+<span class="nc" id="L74">                    containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+                )
+<span class="nc" id="L76">            )</span>
+<span class="nc" id="L77">        }</span>
+<span class="nc" id="L78">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L79" title="All 8 branches missed.">        LazyColumn(</span>
+<span class="nc" id="L80">            modifier = Modifier</span>
+<span class="nc" id="L81">                .fillMaxSize()</span>
+<span class="nc" id="L82">                .padding(paddingValues)</span>
+<span class="nc" id="L83">                .padding(16.dp),</span>
+<span class="nc" id="L84">            verticalArrangement = Arrangement.spacedBy(16.dp)</span>
+<span class="nc" id="L85">        ) {</span>
+<span class="nc" id="L86">            item {</span>
+<span class="nc bnc" id="L87" title="All 8 branches missed.">                Text(</span>
+<span class="nc" id="L88">                    text = &quot;How are you feeling today?&quot;,</span>
+<span class="nc" id="L89">                    fontSize = 24.sp,</span>
+<span class="nc" id="L90">                    fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L91">                    textAlign = TextAlign.Center,</span>
+<span class="nc" id="L92">                    modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L93">                )</span>
+<span class="nc" id="L94">            }</span>
+            
+<span class="nc" id="L96">            item {</span>
+<span class="nc bnc" id="L97" title="All 8 branches missed.">                MoodSelector(</span>
+<span class="nc" id="L98">                    selectedMood = selectedMood,</span>
+<span class="nc" id="L99">                    onMoodSelected = { selectedMood = it }</span>
+<span class="nc" id="L100">                )</span>
+<span class="nc" id="L101">            }</span>
+            
+<span class="nc" id="L103">            item {</span>
+<span class="nc bnc" id="L104" title="All 8 branches missed.">                Text(</span>
+<span class="nc" id="L105">                    text = &quot;What activities did you do today?&quot;,</span>
+<span class="nc" id="L106">                    fontSize = 18.sp,</span>
+<span class="nc" id="L107">                    fontWeight = FontWeight.Medium</span>
+<span class="nc" id="L108">                )</span>
+<span class="nc" id="L109">            }</span>
+            
+<span class="nc" id="L111">            item {</span>
+<span class="nc bnc" id="L112" title="All 8 branches missed.">                ActivitySelector(</span>
+<span class="nc" id="L113">                    activities = moodActivities,</span>
+<span class="nc" id="L114">                    selectedActivities = selectedActivities,</span>
+<span class="nc" id="L115">                    onActivityToggle = { activity -&gt;</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">                        selectedActivities = if (selectedActivities.contains(activity)) {</span>
+<span class="nc" id="L117">                            selectedActivities - activity</span>
+                        } else {
+<span class="nc" id="L119">                            selectedActivities + activity</span>
+                        }
+<span class="nc" id="L121">                    }</span>
+<span class="nc" id="L122">                )</span>
+<span class="nc" id="L123">            }</span>
+            
+<span class="nc" id="L125">            item {</span>
+<span class="nc bnc" id="L126" title="All 8 branches missed.">                Text(</span>
+<span class="nc" id="L127">                    text = &quot;What might have influenced your mood?&quot;,</span>
+<span class="nc" id="L128">                    fontSize = 18.sp,</span>
+<span class="nc" id="L129">                    fontWeight = FontWeight.Medium</span>
+<span class="nc" id="L130">                )</span>
+<span class="nc" id="L131">            }</span>
+            
+<span class="nc" id="L133">            item {</span>
+<span class="nc bnc" id="L134" title="All 8 branches missed.">                TriggerSelector(</span>
+<span class="nc" id="L135">                    triggers = moodTriggers,</span>
+<span class="nc" id="L136">                    selectedTriggers = selectedTriggers,</span>
+<span class="nc" id="L137">                    onTriggerToggle = { trigger -&gt;</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">                        selectedTriggers = if (selectedTriggers.contains(trigger)) {</span>
+<span class="nc" id="L139">                            selectedTriggers - trigger</span>
+                        } else {
+<span class="nc" id="L141">                            selectedTriggers + trigger</span>
+                        }
+<span class="nc" id="L143">                    }</span>
+<span class="nc" id="L144">                )</span>
+<span class="nc" id="L145">            }</span>
+            
+<span class="nc" id="L147">            item {</span>
+<span class="nc bnc" id="L148" title="All 8 branches missed.">                Text(</span>
+<span class="nc" id="L149">                    text = &quot;Additional Notes (Optional)&quot;,</span>
+<span class="nc" id="L150">                    fontSize = 18.sp,</span>
+<span class="nc" id="L151">                    fontWeight = FontWeight.Medium</span>
+<span class="nc" id="L152">                )</span>
+<span class="nc" id="L153">            }</span>
+            
+<span class="nc" id="L155">            item {</span>
+<span class="nc bnc" id="L156" title="All 8 branches missed.">                OutlinedTextField(</span>
+<span class="nc" id="L157">                    value = moodNotes,</span>
+<span class="nc" id="L158">                    onValueChange = { moodNotes = it },</span>
+<span class="nc bnc" id="L159" title="All 8 branches missed.">                    label = { Text(&quot;How are you feeling? Any thoughts?&quot;) },</span>
+<span class="nc" id="L160">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L161">                    minLines = 3,</span>
+<span class="nc" id="L162">                    maxLines = 5</span>
+<span class="nc" id="L163">                )</span>
+<span class="nc" id="L164">            }</span>
+            
+<span class="nc" id="L166">            item {</span>
+<span class="nc bnc" id="L167" title="All 8 branches missed.">                Button(</span>
+<span class="nc" id="L168">                    onClick = {</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">                        if (selectedMood != null) {</span>
+<span class="nc" id="L170">                            val moodEntry = MoodEntry(</span>
+<span class="nc" id="L171">                                id = UUID.randomUUID().toString(),</span>
+<span class="nc" id="L172">                                mood = selectedMood!!,</span>
+<span class="nc" id="L173">                                timestamp = System.currentTimeMillis(),</span>
+<span class="nc" id="L174">                                notes = moodNotes,</span>
+<span class="nc" id="L175">                                activities = selectedActivities,</span>
+<span class="nc" id="L176">                                triggers = selectedTriggers</span>
+                            )
+                            // Here you would save the mood entry
+<span class="nc" id="L179">                            showSuccessDialog = true</span>
+                        }
+<span class="nc" id="L181">                    },</span>
+<span class="nc" id="L182">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc bnc" id="L183" title="All 2 branches missed.">                    enabled = selectedMood != null</span>
+<span class="nc" id="L184">                ) {</span>
+<span class="nc bnc" id="L185" title="All 8 branches missed.">                    Text(&quot;Save Mood Entry&quot;, fontSize = 16.sp)</span>
+<span class="nc" id="L186">                }</span>
+<span class="nc" id="L187">            }</span>
+<span class="nc" id="L188">        }</span>
+<span class="nc" id="L189">    }</span>
+    
+<span class="nc bnc" id="L191" title="All 2 branches missed.">    if (showSuccessDialog) {</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">        AlertDialog(</span>
+<span class="nc" id="L193">            onDismissRequest = { showSuccessDialog = false },</span>
+<span class="nc bnc" id="L194" title="All 8 branches missed.">            title = { Text(&quot;Mood Logged Successfully!&quot;) },</span>
+<span class="nc bnc" id="L195" title="All 8 branches missed.">            text = { Text(&quot;Your mood has been saved. Keep tracking to see patterns over time.&quot;) },</span>
+<span class="nc" id="L196">            confirmButton = {</span>
+<span class="nc bnc" id="L197" title="All 8 branches missed.">                TextButton(</span>
+<span class="nc" id="L198">                    onClick = {</span>
+<span class="nc" id="L199">                        showSuccessDialog = false</span>
+<span class="nc" id="L200">                        onNavigateBack()</span>
+<span class="nc" id="L201">                    }</span>
+<span class="nc" id="L202">                ) {</span>
+<span class="nc bnc" id="L203" title="All 8 branches missed.">                    Text(&quot;OK&quot;)</span>
+<span class="nc" id="L204">                }</span>
+<span class="nc" id="L205">            }</span>
+        )
+    }
+<span class="nc bnc" id="L208" title="All 2 branches missed.">}</span>
+
+@Composable
+fun MoodSelector(
+    selectedMood: MoodLevel?,
+    onMoodSelected: (MoodLevel) -&gt; Unit
+<span class="nc bnc" id="L214" title="All 14 branches missed.">) {</span>
+<span class="nc" id="L215">    Column(</span>
+<span class="nc" id="L216">        verticalArrangement = Arrangement.spacedBy(8.dp)</span>
+    ) {
+<span class="nc" id="L218">        val moods = MoodLevel.values()</span>
+<span class="nc" id="L219">        val moodRows = listOf(</span>
+<span class="nc" id="L220">            moods.slice(0..3),</span>
+<span class="nc" id="L221">            moods.slice(4..7)</span>
+        )
+        
+<span class="nc" id="L224">        moodRows.forEach { moodRow -&gt;</span>
+<span class="nc" id="L225">            Row(</span>
+<span class="nc" id="L226">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L227">                horizontalArrangement = Arrangement.SpaceEvenly</span>
+            ) {
+<span class="nc" id="L229">                moodRow.forEach { mood -&gt;</span>
+<span class="nc" id="L230">                    MoodButton(</span>
+<span class="nc" id="L231">                        mood = mood,</span>
+<span class="nc bnc" id="L232" title="All 4 branches missed.">                        isSelected = selectedMood == mood,</span>
+<span class="nc" id="L233">                        onClick = { onMoodSelected(mood) }</span>
+                    )
+<span class="nc" id="L235">                }</span>
+<span class="nc" id="L236">            }</span>
+<span class="nc" id="L237">        }</span>
+<span class="nc" id="L238">    }</span>
+<span class="nc bnc" id="L239" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MoodButton(
+    mood: MoodLevel,
+    isSelected: Boolean,
+    onClick: () -&gt; Unit
+<span class="nc bnc" id="L247" title="All 18 branches missed.">) {</span>
+<span class="nc bnc" id="L248" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L249">        onClick = onClick,</span>
+<span class="nc" id="L250">        modifier = Modifier.size(80.dp),</span>
+<span class="nc" id="L251">        colors = CardDefaults.cardColors(</span>
+<span class="nc bnc" id="L252" title="All 2 branches missed.">            containerColor = if (isSelected) mood.color.copy(alpha = 0.3f) else MaterialTheme.colorScheme.surface</span>
+        ),
+<span class="nc bnc" id="L254" title="All 2 branches missed.">        border = if (isSelected) CardDefaults.outlinedCardBorder().copy(</span>
+<span class="nc" id="L255">            brush = androidx.compose.foundation.BorderStroke(2.dp, mood.color).brush</span>
+<span class="nc" id="L256">        ) else null</span>
+<span class="nc" id="L257">    ) {</span>
+<span class="nc bnc" id="L258" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L259">            modifier = Modifier.fillMaxSize(),</span>
+<span class="nc" id="L260">            horizontalAlignment = Alignment.CenterHorizontally,</span>
+<span class="nc" id="L261">            verticalArrangement = Arrangement.Center</span>
+        ) {
+<span class="nc" id="L263">            Text(</span>
+<span class="nc" id="L264">                text = mood.emoji,</span>
+<span class="nc" id="L265">                fontSize = 32.sp</span>
+            )
+<span class="nc" id="L267">            Text(</span>
+<span class="nc" id="L268">                text = mood.description,</span>
+<span class="nc" id="L269">                fontSize = 10.sp,</span>
+<span class="nc" id="L270">                textAlign = TextAlign.Center,</span>
+<span class="nc" id="L271">                maxLines = 2</span>
+            )
+<span class="nc" id="L273">        }</span>
+<span class="nc" id="L274">    }</span>
+<span class="nc bnc" id="L275" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ActivitySelector(
+    activities: List&lt;String&gt;,
+    selectedActivities: List&lt;String&gt;,
+    onActivityToggle: (String) -&gt; Unit
+<span class="nc bnc" id="L283" title="All 18 branches missed.">) {</span>
+<span class="nc" id="L284">    Column(</span>
+<span class="nc" id="L285">        verticalArrangement = Arrangement.spacedBy(8.dp)</span>
+    ) {
+<span class="nc" id="L287">        val activityRows = listOf(</span>
+<span class="nc" id="L288">            activities.slice(0..4),</span>
+<span class="nc" id="L289">            activities.slice(5..9)</span>
+        )
+        
+<span class="nc" id="L292">        activityRows.forEach { activityRow -&gt;</span>
+<span class="nc" id="L293">            Row(</span>
+<span class="nc" id="L294">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L295">                horizontalArrangement = Arrangement.spacedBy(8.dp)</span>
+            ) {
+<span class="nc" id="L297">                activityRow.forEach { activity -&gt;</span>
+<span class="nc" id="L298">                    FilterChip(</span>
+<span class="nc" id="L299">                        onClick = { onActivityToggle(activity) },</span>
+<span class="nc bnc" id="L300" title="All 8 branches missed.">                        label = { Text(activity) },</span>
+<span class="nc bnc" id="L301" title="All 2 branches missed.">                        selected = selectedActivities.contains(activity),</span>
+<span class="nc" id="L302">                        modifier = Modifier.weight(1f)</span>
+                    )
+<span class="nc" id="L304">                }</span>
+<span class="nc" id="L305">            }</span>
+<span class="nc" id="L306">        }</span>
+<span class="nc" id="L307">    }</span>
+<span class="nc bnc" id="L308" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TriggerSelector(
+    triggers: List&lt;String&gt;,
+    selectedTriggers: List&lt;String&gt;,
+    onTriggerToggle: (String) -&gt; Unit
+<span class="nc bnc" id="L316" title="All 18 branches missed.">) {</span>
+<span class="nc" id="L317">    Column(</span>
+<span class="nc" id="L318">        verticalArrangement = Arrangement.spacedBy(8.dp)</span>
+    ) {
+<span class="nc" id="L320">        val triggerRows = listOf(</span>
+<span class="nc" id="L321">            triggers.slice(0..4),</span>
+<span class="nc" id="L322">            triggers.slice(5..9)</span>
+        )
+        
+<span class="nc" id="L325">        triggerRows.forEach { triggerRow -&gt;</span>
+<span class="nc" id="L326">            Row(</span>
+<span class="nc" id="L327">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L328">                horizontalArrangement = Arrangement.spacedBy(8.dp)</span>
+            ) {
+<span class="nc" id="L330">                triggerRow.forEach { trigger -&gt;</span>
+<span class="nc" id="L331">                    FilterChip(</span>
+<span class="nc" id="L332">                        onClick = { onTriggerToggle(trigger) },</span>
+<span class="nc bnc" id="L333" title="All 8 branches missed.">                        label = { Text(trigger) },</span>
+<span class="nc bnc" id="L334" title="All 2 branches missed.">                        selected = selectedTriggers.contains(trigger),</span>
+<span class="nc" id="L335">                        modifier = Modifier.weight(1f)</span>
+                    )
+<span class="nc" id="L337">                }</span>
+<span class="nc" id="L338">            }</span>
+<span class="nc" id="L339">        }</span>
+<span class="nc" id="L340">    }</span>
+<span class="nc bnc" id="L341" title="All 2 branches missed.">}</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FirebaseSource.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.data.remote</a> &gt; <span class="el_source">FirebaseSource.kt</span></div><h1>FirebaseSource.kt</h1><pre class="source lang-java linenums">package com.serenityai.data.remote
+
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.serenityai.usecases.EducationalResource
+import com.serenityai.usecases.LearningProgress
+import kotlinx.coroutines.tasks.await
+import java.util.Date
+
+/**
+ * Firebase data source for educational resources and learning progress.
+ * Currently implements only methods that are actively used in the application.
+ */
+<span class="nc" id="L14">class FirebaseSource {</span>
+<span class="nc" id="L15">    private val firestore = FirebaseFirestore.getInstance()</span>
+
+    // Educational Resources operations
+<span class="nc" id="L18">    suspend fun getEducationalResources(</span>
+<span class="nc" id="L19">        category: String? = null,</span>
+<span class="nc" id="L20">        format: String? = null</span>
+    ): Result&lt;List&lt;EducationalResource&gt;&gt; {
+<span class="nc" id="L22">        return try {</span>
+<span class="nc" id="L23">            var query: Query = firestore.collection(&quot;educational_resources&quot;)</span>
+            
+            // Apply filters
+<span class="nc bnc" id="L26" title="All 2 branches missed.">            if (category != null) {</span>
+<span class="nc" id="L27">                query = query.whereEqualTo(&quot;category&quot;, category)</span>
+            }
+<span class="nc bnc" id="L29" title="All 2 branches missed.">            if (format != null) {</span>
+<span class="nc" id="L30">                query = query.whereEqualTo(&quot;format&quot;, format)</span>
+            }
+            
+<span class="nc" id="L33">            val snapshot = query.get().await()</span>
+<span class="nc" id="L34">            val resources = snapshot.documents.mapNotNull { doc -&gt;</span>
+<span class="nc" id="L35">                try {</span>
+<span class="nc" id="L36">                    EducationalResource(</span>
+<span class="nc" id="L37">                        id = doc.id,</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">                        title = doc.getString(&quot;title&quot;) ?: &quot;&quot;,</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">                        description = doc.getString(&quot;description&quot;) ?: &quot;&quot;,</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">                        category = doc.getString(&quot;category&quot;) ?: &quot;&quot;,</span>
+<span class="nc" id="L41">                        format = com.serenityai.usecases.ContentFormat.valueOf(</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">                            doc.getString(&quot;format&quot;) ?: &quot;TEXT&quot;</span>
+                        ),
+<span class="nc bnc" id="L44" title="All 2 branches missed.">                        url = doc.getString(&quot;url&quot;) ?: &quot;&quot;,</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">                        duration = doc.getLong(&quot;duration&quot;)?.toInt() ?: 0,</span>
+<span class="nc bnc" id="L46" title="All 6 branches missed.">                        tags = (doc.get(&quot;tags&quot;) as? List&lt;*&gt;)?.mapNotNull { it as? String } ?: emptyList(),</span>
+<span class="nc" id="L47">                        difficulty = com.serenityai.usecases.DifficultyLevel.valueOf(</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">                            doc.getString(&quot;difficulty&quot;) ?: &quot;BEGINNER&quot;</span>
+                        ),
+<span class="nc bnc" id="L50" title="All 2 branches missed.">                        relevanceScore = (doc.getDouble(&quot;relevanceScore&quot;)?.toFloat()) ?: 0f,</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">                        createdAt = doc.getDate(&quot;createdAt&quot;) ?: Date()</span>
+                    )
+<span class="nc" id="L53">                } catch (e: Exception) {</span>
+<span class="nc" id="L54">                    null</span>
+<span class="nc" id="L55">                }</span>
+            }
+<span class="nc" id="L57">            Result.success(resources)</span>
+<span class="nc" id="L58">        } catch (e: Exception) {</span>
+<span class="nc" id="L59">            Result.failure(e)</span>
+        }
+    }
+
+<span class="nc" id="L63">    suspend fun searchEducationalResources(query: String): Result&lt;List&lt;EducationalResource&gt;&gt; {</span>
+<span class="nc" id="L64">        return try {</span>
+<span class="nc" id="L65">            val snapshot = firestore.collection(&quot;educational_resources&quot;)</span>
+<span class="nc" id="L66">                .get()</span>
+<span class="nc" id="L67">                .await()</span>
+            
+<span class="nc" id="L69">            val lowerQuery = query.lowercase()</span>
+<span class="nc" id="L70">            val resources = snapshot.documents.mapNotNull { doc -&gt;</span>
+<span class="nc" id="L71">                try {</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">                    val title = doc.getString(&quot;title&quot;) ?: &quot;&quot;</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">                    val description = doc.getString(&quot;description&quot;) ?: &quot;&quot;</span>
+<span class="nc bnc" id="L74" title="All 6 branches missed.">                    val tags = (doc.get(&quot;tags&quot;) as? List&lt;*&gt;)?.mapNotNull { it as? String } ?: emptyList()</span>
+                    
+                    // Check if query matches title, description, or tags
+<span class="nc bnc" id="L77" title="All 2 branches missed.">                    val matches = title.lowercase().contains(lowerQuery) ||</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">                            description.lowercase().contains(lowerQuery) ||</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">                            tags.any { it.lowercase().contains(lowerQuery) }</span>
+                    
+<span class="nc bnc" id="L81" title="All 2 branches missed.">                    if (matches) {</span>
+<span class="nc" id="L82">                        EducationalResource(</span>
+<span class="nc" id="L83">                            id = doc.id,</span>
+<span class="nc" id="L84">                            title = title,</span>
+<span class="nc" id="L85">                            description = description,</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">                            category = doc.getString(&quot;category&quot;) ?: &quot;&quot;,</span>
+<span class="nc" id="L87">                            format = com.serenityai.usecases.ContentFormat.valueOf(</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">                                doc.getString(&quot;format&quot;) ?: &quot;TEXT&quot;</span>
+                            ),
+<span class="nc bnc" id="L90" title="All 2 branches missed.">                            url = doc.getString(&quot;url&quot;) ?: &quot;&quot;,</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">                            duration = doc.getLong(&quot;duration&quot;)?.toInt() ?: 0,</span>
+<span class="nc" id="L92">                            tags = tags,</span>
+<span class="nc" id="L93">                            difficulty = com.serenityai.usecases.DifficultyLevel.valueOf(</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">                                doc.getString(&quot;difficulty&quot;) ?: &quot;BEGINNER&quot;</span>
+                            ),
+<span class="nc bnc" id="L96" title="All 2 branches missed.">                            relevanceScore = (doc.getDouble(&quot;relevanceScore&quot;)?.toFloat()) ?: 0f,</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">                            createdAt = doc.getDate(&quot;createdAt&quot;) ?: Date()</span>
+                        )
+                    } else {
+<span class="nc" id="L100">                        null</span>
+                    }
+<span class="nc" id="L102">                } catch (e: Exception) {</span>
+<span class="nc" id="L103">                    null</span>
+<span class="nc" id="L104">                }</span>
+            }
+<span class="nc" id="L106">            Result.success(resources)</span>
+<span class="nc" id="L107">        } catch (e: Exception) {</span>
+<span class="nc" id="L108">            Result.failure(e)</span>
+        }
+    }
+
+<span class="nc" id="L112">    suspend fun getResourceCategories(): Result&lt;List&lt;String&gt;&gt; {</span>
+<span class="nc" id="L113">        return try {</span>
+<span class="nc" id="L114">            val snapshot = firestore.collection(&quot;educational_resources&quot;)</span>
+<span class="nc" id="L115">                .get()</span>
+<span class="nc" id="L116">                .await()</span>
+            
+<span class="nc" id="L118">            val categories = snapshot.documents</span>
+<span class="nc" id="L119">                .mapNotNull { it.getString(&quot;category&quot;) }</span>
+<span class="nc" id="L120">                .distinct()</span>
+<span class="nc" id="L121">                .sorted()</span>
+            
+<span class="nc" id="L123">            Result.success(categories)</span>
+<span class="nc" id="L124">        } catch (e: Exception) {</span>
+<span class="nc" id="L125">            Result.failure(e)</span>
+        }
+    }
+
+    // Learning Progress operations
+<span class="nc" id="L130">    suspend fun saveLearningProgress(progress: LearningProgress): Result&lt;LearningProgress&gt; {</span>
+<span class="nc" id="L131">        return try {</span>
+<span class="nc" id="L132">            val progressData = hashMapOf(</span>
+<span class="nc" id="L133">                &quot;userId&quot; to progress.userId,</span>
+<span class="nc" id="L134">                &quot;resourceId&quot; to progress.resourceId,</span>
+<span class="nc" id="L135">                &quot;progress&quot; to progress.progress,</span>
+<span class="nc" id="L136">                &quot;timeSpent&quot; to progress.timeSpent,</span>
+<span class="nc" id="L137">                &quot;completedAt&quot; to progress.completedAt,</span>
+<span class="nc" id="L138">                &quot;notes&quot; to progress.notes,</span>
+<span class="nc" id="L139">                &quot;updatedAt&quot; to Date()</span>
+            )
+            
+<span class="nc bnc" id="L142" title="All 6 branches missed.">            val savedProgress = if (progress.id.isNotEmpty() &amp;&amp; progress.id != &quot;0&quot;) {</span>
+                // Update existing progress
+<span class="nc" id="L144">                firestore.collection(&quot;learning_progress&quot;)</span>
+<span class="nc" id="L145">                    .document(progress.id)</span>
+<span class="nc" id="L146">                    .set(progressData)</span>
+<span class="nc" id="L147">                    .await()</span>
+<span class="nc" id="L148">                progress</span>
+            } else {
+                // Create new progress
+<span class="nc" id="L151">                val docRef = firestore.collection(&quot;learning_progress&quot;)</span>
+<span class="nc" id="L152">                    .add(progressData)</span>
+<span class="nc" id="L153">                    .await()</span>
+<span class="nc" id="L154">                progress.copy(id = docRef.id)</span>
+            }
+            
+<span class="nc" id="L157">            Result.success(savedProgress)</span>
+<span class="nc" id="L158">        } catch (e: Exception) {</span>
+<span class="nc" id="L159">            Result.failure(e)</span>
+        }
+    }
+
+<span class="nc" id="L163">    suspend fun getLearningHistory(userId: String): Result&lt;List&lt;LearningProgress&gt;&gt; {</span>
+<span class="nc" id="L164">        return try {</span>
+<span class="nc" id="L165">            val snapshot = firestore.collection(&quot;learning_progress&quot;)</span>
+<span class="nc" id="L166">                .whereEqualTo(&quot;userId&quot;, userId)</span>
+<span class="nc" id="L167">                .orderBy(&quot;updatedAt&quot;, com.google.firebase.firestore.Query.Direction.DESCENDING)</span>
+<span class="nc" id="L168">                .get()</span>
+<span class="nc" id="L169">                .await()</span>
+            
+<span class="nc" id="L171">            val progressList = snapshot.documents.mapNotNull { doc -&gt;</span>
+<span class="nc" id="L172">                try {</span>
+<span class="nc" id="L173">                    LearningProgress(</span>
+<span class="nc" id="L174">                        id = doc.id,</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">                        userId = doc.getString(&quot;userId&quot;) ?: &quot;&quot;,</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">                        resourceId = doc.getString(&quot;resourceId&quot;) ?: &quot;&quot;,</span>
+<span class="nc" id="L177">                        completedAt = doc.getDate(&quot;completedAt&quot;),</span>
+<span class="nc bnc" id="L178" title="All 2 branches missed.">                        progress = (doc.getLong(&quot;progress&quot;)?.toInt()) ?: 0,</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">                        timeSpent = (doc.getDouble(&quot;timeSpent&quot;)?.toFloat()) ?: 0f,</span>
+<span class="nc" id="L180">                        notes = doc.getString(&quot;notes&quot;)</span>
+                    )
+<span class="nc" id="L182">                } catch (e: Exception) {</span>
+<span class="nc" id="L183">                    null</span>
+<span class="nc" id="L184">                }</span>
+            }
+<span class="nc" id="L186">            Result.success(progressList)</span>
+<span class="nc" id="L187">        } catch (e: Exception) {</span>
+<span class="nc" id="L188">            Result.failure(e)</span>
+        }
+    }
+
+<span class="nc" id="L192">    suspend fun getLearningProgress(userId: String, resourceId: String): Result&lt;LearningProgress?&gt; {</span>
+<span class="nc" id="L193">        return try {</span>
+<span class="nc" id="L194">            val snapshot = firestore.collection(&quot;learning_progress&quot;)</span>
+<span class="nc" id="L195">                .whereEqualTo(&quot;userId&quot;, userId)</span>
+<span class="nc" id="L196">                .whereEqualTo(&quot;resourceId&quot;, resourceId)</span>
+<span class="nc" id="L197">                .limit(1)</span>
+<span class="nc" id="L198">                .get()</span>
+<span class="nc" id="L199">                .await()</span>
+            
+<span class="nc bnc" id="L201" title="All 2 branches missed.">            if (snapshot.isEmpty) {</span>
+<span class="nc" id="L202">                Result.success(null)</span>
+            } else {
+<span class="nc" id="L204">                val doc = snapshot.documents.first()</span>
+<span class="nc" id="L205">                val progress = LearningProgress(</span>
+<span class="nc" id="L206">                    id = doc.id,</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">                    userId = doc.getString(&quot;userId&quot;) ?: &quot;&quot;,</span>
+<span class="nc bnc" id="L208" title="All 2 branches missed.">                    resourceId = doc.getString(&quot;resourceId&quot;) ?: &quot;&quot;,</span>
+<span class="nc" id="L209">                    completedAt = doc.getDate(&quot;completedAt&quot;),</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">                    progress = (doc.getLong(&quot;progress&quot;)?.toInt()) ?: 0,</span>
+<span class="nc bnc" id="L211" title="All 2 branches missed.">                    timeSpent = (doc.getDouble(&quot;timeSpent&quot;)?.toFloat()) ?: 0f,</span>
+<span class="nc" id="L212">                    notes = doc.getString(&quot;notes&quot;)</span>
+                )
+<span class="nc" id="L214">                Result.success(progress)</span>
+            }
+<span class="nc" id="L216">        } catch (e: Exception) {</span>
+<span class="nc" id="L217">            Result.failure(e)</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

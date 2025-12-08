@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 3: Session Customization and User Experience" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-07T08:20:33" hostname="Mohammads-MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="should customize session parameters based on user preferences()" classname="com.serenityai.tests.usecases.uc27_guided_breathing.unit.GuidedBreathingUseCaseTests$SessionCustomizationTests" time="0.0"/>
+  <testcase name="should validate session accessibility and inclusivity features()" classname="com.serenityai.tests.usecases.uc27_guided_breathing.unit.GuidedBreathingUseCaseTests$SessionCustomizationTests" time="0.0"/>
+  <testcase name="should track user engagement and session completion rates()" classname="com.serenityai.tests.usecases.uc27_guided_breathing.unit.GuidedBreathingUseCaseTests$SessionCustomizationTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 3: Future Risk Prediction - Validates Advanced UC37 Functionality" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-07T08:20:33" hostname="Mohammads-MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="UC37-REQ-8: System MUST calculate prediction confidence" classname="com.serenityai.tests.unit.usecases.uc37_burnout_detection.PredictiveBurnoutDetectionUseCaseUnitTests$PredictionTests" time="0.001"/>
+  <testcase name="UC37-REQ-9: System MUST identify burnout risk trends" classname="com.serenityai.tests.unit.usecases.uc37_burnout_detection.PredictiveBurnoutDetectionUseCaseUnitTests$PredictionTests" time="0.0"/>
+  <testcase name="UC37-REQ-7: System MUST predict future burnout risk" classname="com.serenityai.tests.unit.usecases.uc37_burnout_detection.PredictiveBurnoutDetectionUseCaseUnitTests$PredictionTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdaptiveCrisisDeescalationUseCase.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.usecases</a> &gt; <span class="el_source">AdaptiveCrisisDeescalationUseCase.kt</span></div><h1>AdaptiveCrisisDeescalationUseCase.kt</h1><pre class="source lang-java linenums">package com.serenityai.usecases
+
+import com.serenityai.data.models.*
+import java.util.Date
+
+/** UC36: Adaptive crisis deescalation scripts system that provides personalized crisis intervention responses. */
+<span class="nc" id="L7">class AdaptiveCrisisDeescalationUseCase {</span>
+    
+<span class="nc" id="L9">    private val crisisScripts = mutableMapOf&lt;String, CrisisScript&gt;()</span>
+<span class="nc" id="L10">    private val deescalationHistory = mutableMapOf&lt;String, MutableList&lt;DeescalationSession&gt;&gt;()</span>
+    
+    /** Assesses crisis level from user input. */
+    fun assessCrisisLevel(userInput: String, userId: String): CrisisAssessment {
+<span class="nc" id="L14">        val sentiment = analyzeSentiment(userInput)</span>
+<span class="nc" id="L15">        val indicators = detectCrisisIndicators(userInput)</span>
+<span class="nc" id="L16">        val intensity = calculateCrisisIntensity(userInput, indicators)</span>
+        
+<span class="nc" id="L18">        val level = when {</span>
+<span class="nc bnc" id="L19" title="All 2 branches missed.">            indicators.contains(CrisisIndicator.SUICIDAL_IDEATION) -&gt; CrisisLevel.CRITICAL</span>
+<span class="nc bnc" id="L20" title="All 4 branches missed.">            intensity &gt; 0.9f &amp;&amp; sentiment.type == SentimentType.VERY_NEGATIVE -&gt; CrisisLevel.HIGH</span>
+<span class="nc bnc" id="L21" title="All 4 branches missed.">            intensity &gt; 0.7f &amp;&amp; sentiment.type == SentimentType.NEGATIVE -&gt; CrisisLevel.MEDIUM</span>
+<span class="nc bnc" id="L22" title="All 2 branches missed.">            intensity &gt; 0.5f -&gt; CrisisLevel.LOW</span>
+<span class="nc" id="L23">            else -&gt; CrisisLevel.NONE</span>
+        }
+        
+<span class="nc" id="L26">        return CrisisAssessment(</span>
+<span class="nc" id="L27">            level = level,</span>
+<span class="nc" id="L28">            indicators = indicators,</span>
+<span class="nc" id="L29">            intensity = intensity,</span>
+<span class="nc" id="L30">            riskFactors = identifyRiskFactors(userInput, userId),</span>
+<span class="nc" id="L31">            assessedAt = Date()</span>
+        )
+    }
+    
+    /** Generates adaptive deescalation script. */
+    fun generateDeescalationScript(assessment: CrisisAssessment, userId: String): CrisisScript {
+<span class="nc" id="L37">        val scriptId = &quot;script_${System.currentTimeMillis()}&quot;</span>
+<span class="nc bnc" id="L38" title="All 5 branches missed.">        val steps = when (assessment.level) {</span>
+<span class="nc" id="L39">            CrisisLevel.CRITICAL -&gt; generateCriticalScript(assessment)</span>
+<span class="nc" id="L40">            CrisisLevel.HIGH -&gt; generateHighScript(assessment)</span>
+<span class="nc" id="L41">            CrisisLevel.MEDIUM -&gt; generateMediumScript(assessment)</span>
+<span class="nc" id="L42">            CrisisLevel.LOW -&gt; generateLowScript(assessment)</span>
+<span class="nc" id="L43">            CrisisLevel.NONE -&gt; emptyList()</span>
+        }
+        
+<span class="nc" id="L46">        val script = CrisisScript(</span>
+<span class="nc" id="L47">            id = scriptId,</span>
+<span class="nc" id="L48">            userId = userId,</span>
+<span class="nc" id="L49">            crisisLevel = assessment.level,</span>
+<span class="nc" id="L50">            steps = steps,</span>
+<span class="nc" id="L51">            estimatedDuration = calculateDuration(assessment.level),</span>
+<span class="nc" id="L52">            createdAt = Date()</span>
+        )
+        
+<span class="nc" id="L55">        crisisScripts[scriptId] = script</span>
+<span class="nc" id="L56">        return script</span>
+    }
+    
+    /** Executes deescalation step. */
+    fun executeDeescalationStep(scriptId: String, stepIndex: Int, userResponse: String?): DeescalationStepResult {
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        val script = crisisScripts[scriptId] ?: throw IllegalArgumentException(&quot;Script not found&quot;)</span>
+<span class="nc bnc" id="L62" title="All 4 branches missed.">        require(stepIndex &lt; script.steps.size) { &quot;Step index out of bounds&quot; }</span>
+        
+<span class="nc" id="L64">        val step = script.steps[stepIndex]</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        val response = userResponse ?: &quot;&quot;</span>
+<span class="nc bnc" id="L66" title="All 4 branches missed.">        val newAssessment = if (response.isNotEmpty()) {</span>
+<span class="nc" id="L67">            assessCrisisLevel(response, script.userId)</span>
+        } else {
+<span class="nc" id="L69">            null</span>
+        }
+        
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        val isCompleted = stepIndex &gt;= script.steps.size - 1</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        val nextStep = if (!isCompleted) script.steps[stepIndex + 1] else null</span>
+        
+<span class="nc" id="L75">        return DeescalationStepResult(</span>
+<span class="nc" id="L76">            step = step,</span>
+<span class="nc" id="L77">            userResponse = response,</span>
+<span class="nc" id="L78">            newAssessment = newAssessment,</span>
+<span class="nc" id="L79">            nextStep = nextStep,</span>
+<span class="nc" id="L80">            isCompleted = isCompleted,</span>
+<span class="nc" id="L81">            progress = ((stepIndex + 1).toFloat() / script.steps.size) * 100f</span>
+        )
+    }
+    
+    /** Adapts script based on user response. */
+    fun adaptScript(scriptId: String, userResponse: String): CrisisScript? {
+<span class="nc bnc" id="L87" title="All 2 branches missed.">        val script = crisisScripts[scriptId] ?: return null</span>
+<span class="nc" id="L88">        val assessment = assessCrisisLevel(userResponse, script.userId)</span>
+        
+<span class="nc" id="L90">        return when {</span>
+<span class="nc bnc" id="L91" title="All 4 branches missed.">            assessment.level == CrisisLevel.CRITICAL &amp;&amp; script.crisisLevel != CrisisLevel.CRITICAL -&gt; {</span>
+<span class="nc" id="L92">                val newScript = generateDeescalationScript(assessment, script.userId)</span>
+<span class="nc" id="L93">                crisisScripts[scriptId] = newScript.copy(id = scriptId)</span>
+<span class="nc" id="L94">                newScript.copy(id = scriptId)</span>
+            }
+<span class="nc bnc" id="L96" title="All 2 branches missed.">            assessment.level.ordinal &lt; script.crisisLevel.ordinal -&gt; {</span>
+<span class="nc" id="L97">                val improvedSteps = generateImprovedSteps(assessment)</span>
+<span class="nc" id="L98">                script.copy(steps = improvedSteps)</span>
+            }
+<span class="nc" id="L100">            else -&gt; script</span>
+        }
+    }
+    
+    /** Provides immediate safety measures. */
+    fun provideImmediateSafetyMeasures(assessment: CrisisAssessment): SafetyMeasures {
+<span class="nc bnc" id="L106" title="All 3 branches missed.">        return when (assessment.level) {</span>
+<span class="nc" id="L107">            CrisisLevel.CRITICAL -&gt; SafetyMeasures(</span>
+<span class="nc" id="L108">                immediateActions = listOf(</span>
+<span class="nc" id="L109">                    &quot;Contact emergency services: 911&quot;,</span>
+<span class="nc" id="L110">                    &quot;Reach out to crisis hotline: 988&quot;,</span>
+<span class="nc" id="L111">                    &quot;Contact trusted emergency contact&quot;,</span>
+<span class="nc" id="L112">                    &quot;Remove access to harmful means&quot;</span>
+                ),
+<span class="nc" id="L114">                safetyPlan = createEmergencySafetyPlan(assessment),</span>
+<span class="nc" id="L115">                resources = getCriticalResources()</span>
+            )
+<span class="nc" id="L117">            CrisisLevel.HIGH -&gt; SafetyMeasures(</span>
+<span class="nc" id="L118">                immediateActions = listOf(</span>
+<span class="nc" id="L119">                    &quot;Use grounding techniques&quot;,</span>
+<span class="nc" id="L120">                    &quot;Contact support network&quot;,</span>
+<span class="nc" id="L121">                    &quot;Access crisis resources&quot;,</span>
+<span class="nc" id="L122">                    &quot;Practice breathing exercises&quot;</span>
+                ),
+<span class="nc" id="L124">                safetyPlan = createSafetyPlan(assessment),</span>
+<span class="nc" id="L125">                resources = getHighRiskResources()</span>
+            )
+<span class="nc" id="L127">            else -&gt; SafetyMeasures(</span>
+<span class="nc" id="L128">                immediateActions = listOf(</span>
+<span class="nc" id="L129">                    &quot;Practice self-care&quot;,</span>
+<span class="nc" id="L130">                    &quot;Use coping strategies&quot;,</span>
+<span class="nc" id="L131">                    &quot;Reach out for support&quot;</span>
+                ),
+<span class="nc" id="L133">                safetyPlan = null,</span>
+<span class="nc" id="L134">                resources = getGeneralResources()</span>
+            )
+        }
+    }
+    
+    /** Monitors deescalation progress. */
+    fun monitorProgress(sessionId: String): DeescalationProgress {
+<span class="nc bnc" id="L141" title="All 6 branches missed.">        val session = deescalationHistory.values.flatten().find { it.id == sessionId }</span>
+<span class="nc" id="L142">            ?: throw IllegalArgumentException(&quot;Session not found&quot;)</span>
+        
+<span class="nc" id="L144">        val initialLevel = session.initialAssessment.level</span>
+<span class="nc bnc" id="L145" title="All 4 branches missed.">        val currentLevel = session.currentAssessment?.level ?: initialLevel</span>
+<span class="nc" id="L146">        val progress = calculateProgress(initialLevel, currentLevel)</span>
+        
+<span class="nc" id="L148">        return DeescalationProgress(</span>
+<span class="nc" id="L149">            sessionId = sessionId,</span>
+<span class="nc" id="L150">            initialLevel = initialLevel,</span>
+<span class="nc" id="L151">            currentLevel = currentLevel,</span>
+<span class="nc" id="L152">            progressPercentage = progress,</span>
+<span class="nc" id="L153">            stepsCompleted = session.completedSteps.size,</span>
+<span class="nc" id="L154">            totalSteps = session.script.steps.size,</span>
+<span class="nc" id="L155">            timeElapsed = Date().time - session.startedAt.time,</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">            isStable = currentLevel.ordinal &lt;= CrisisLevel.LOW.ordinal</span>
+        )
+    }
+    
+    /** Creates deescalation session. */
+    fun createSession(userId: String, initialInput: String): DeescalationSession {
+<span class="nc" id="L162">        val assessment = assessCrisisLevel(initialInput, userId)</span>
+<span class="nc" id="L163">        val script = generateDeescalationScript(assessment, userId)</span>
+        
+<span class="nc" id="L165">        val session = DeescalationSession(</span>
+<span class="nc" id="L166">            id = &quot;session_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L167">            userId = userId,</span>
+<span class="nc" id="L168">            initialAssessment = assessment,</span>
+<span class="nc" id="L169">            currentAssessment = assessment,</span>
+<span class="nc" id="L170">            script = script,</span>
+<span class="nc" id="L171">            completedSteps = emptyList(),</span>
+<span class="nc" id="L172">            startedAt = Date(),</span>
+<span class="nc" id="L173">            status = DeescalationStatus.ACTIVE</span>
+        )
+        
+<span class="nc" id="L176">        deescalationHistory.getOrPut(userId) { mutableListOf() }.add(session)</span>
+<span class="nc" id="L177">        return session</span>
+    }
+    
+    /** Gets active sessions for user. */
+    fun getActiveSessions(userId: String): List&lt;DeescalationSession&gt; {
+<span class="nc bnc" id="L182" title="All 4 branches missed.">        return deescalationHistory[userId]?.filter { it.status == DeescalationStatus.ACTIVE } ?: emptyList()</span>
+    }
+    
+    /** Completes deescalation session. */
+    fun completeSession(sessionId: String, finalAssessment: CrisisAssessment): DeescalationSession {
+<span class="nc bnc" id="L187" title="All 6 branches missed.">        val session = deescalationHistory.values.flatten().find { it.id == sessionId }</span>
+<span class="nc" id="L188">            ?: throw IllegalArgumentException(&quot;Session not found&quot;)</span>
+        
+<span class="nc" id="L190">        val updatedSession = session.copy(</span>
+<span class="nc" id="L191">            currentAssessment = finalAssessment,</span>
+<span class="nc" id="L192">            status = DeescalationStatus.COMPLETED,</span>
+<span class="nc" id="L193">            completedAt = Date()</span>
+        )
+        
+<span class="nc bnc" id="L196" title="All 4 branches missed.">        deescalationHistory[session.userId]?.replaceAll { if (it.id == sessionId) updatedSession else it }</span>
+<span class="nc" id="L197">        return updatedSession</span>
+    }
+    
+    // Helper methods
+    private fun analyzeSentiment(message: String): SentimentAnalysis {
+<span class="nc" id="L202">        val lowerMessage = message.lowercase()</span>
+<span class="nc" id="L203">        val negativeWords = listOf(&quot;terrible&quot;, &quot;awful&quot;, &quot;hate&quot;, &quot;sad&quot;, &quot;depressed&quot;, &quot;anxious&quot;, &quot;worried&quot;, &quot;stressed&quot;, &quot;frustrated&quot;, &quot;angry&quot;, &quot;hopeless&quot;)</span>
+<span class="nc" id="L204">        val veryNegativeWords = listOf(&quot;suicide&quot;, &quot;kill&quot;, &quot;end&quot;, &quot;worthless&quot;, &quot;useless&quot;, &quot;despair&quot;)</span>
+        
+<span class="nc" id="L206">        val negativeCount = negativeWords.count { lowerMessage.contains(it) }</span>
+<span class="nc" id="L207">        val veryNegativeCount = veryNegativeWords.count { lowerMessage.contains(it) }</span>
+        
+<span class="nc" id="L209">        val sentimentType = when {</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">            veryNegativeCount &gt; 0 -&gt; SentimentType.VERY_NEGATIVE</span>
+<span class="nc bnc" id="L211" title="All 2 branches missed.">            negativeCount &gt; 2 -&gt; SentimentType.NEGATIVE</span>
+<span class="nc bnc" id="L212" title="All 2 branches missed.">            negativeCount &gt; 0 -&gt; SentimentType.NEGATIVE</span>
+<span class="nc" id="L213">            else -&gt; SentimentType.NEUTRAL</span>
+        }
+        
+<span class="nc" id="L216">        return SentimentAnalysis(</span>
+<span class="nc" id="L217">            type = sentimentType,</span>
+<span class="nc bnc" id="L218" title="All 2 branches missed.">            confidence = if (veryNegativeCount &gt; 0) 0.9f else 0.7f,</span>
+<span class="nc" id="L219">            keywords = emptyList(),</span>
+<span class="nc bnc" id="L220" title="All 2 branches missed.">            intensity = if (veryNegativeCount &gt; 0) 0.95f else 0.7f,</span>
+<span class="nc" id="L221">            detectedAt = Date()</span>
+        )
+    }
+    
+    private fun detectCrisisIndicators(message: String): List&lt;CrisisIndicator&gt; {
+<span class="nc" id="L226">        val indicators = mutableListOf&lt;CrisisIndicator&gt;()</span>
+<span class="nc" id="L227">        val lowerMessage = message.lowercase()</span>
+        
+<span class="nc" id="L229">        val crisisKeywords = listOf(&quot;suicide&quot;, &quot;kill myself&quot;, &quot;end it all&quot;, &quot;no point&quot;, &quot;worthless&quot;, &quot;hopeless&quot;, &quot;can't go on&quot;)</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">        if (crisisKeywords.any { lowerMessage.contains(it) }) {</span>
+<span class="nc" id="L231">            indicators.add(CrisisIndicator.SUICIDAL_IDEATION)</span>
+        }
+        
+<span class="nc bnc" id="L234" title="All 4 branches missed.">        if (lowerMessage.contains(&quot;hurt myself&quot;) || lowerMessage.contains(&quot;self harm&quot;)) {</span>
+<span class="nc" id="L235">            indicators.add(CrisisIndicator.SELF_HARM_RISK)</span>
+        }
+        
+<span class="nc" id="L238">        return indicators</span>
+    }
+    
+    private fun calculateCrisisIntensity(message: String, indicators: List&lt;CrisisIndicator&gt;): Float {
+<span class="nc" id="L242">        val baseIntensity = when {</span>
+<span class="nc bnc" id="L243" title="All 2 branches missed.">            indicators.contains(CrisisIndicator.SUICIDAL_IDEATION) -&gt; 0.95f</span>
+<span class="nc bnc" id="L244" title="All 2 branches missed.">            indicators.contains(CrisisIndicator.SELF_HARM_RISK) -&gt; 0.85f</span>
+<span class="nc bnc" id="L245" title="All 4 branches missed.">            indicators.isNotEmpty() -&gt; 0.75f</span>
+<span class="nc" id="L246">            else -&gt; 0.5f</span>
+        }
+        
+<span class="nc bnc" id="L249" title="All 2 branches missed.">        val exclamationCount = message.count { it == '!' }</span>
+<span class="nc" id="L250">        return (baseIntensity + (exclamationCount * 0.02f)).coerceAtMost(1.0f)</span>
+    }
+    
+    private fun identifyRiskFactors(message: String, userId: String): List&lt;String&gt; {
+<span class="nc" id="L254">        val factors = mutableListOf&lt;String&gt;()</span>
+<span class="nc" id="L255">        val lowerMessage = message.lowercase()</span>
+        
+<span class="nc bnc" id="L257" title="All 4 branches missed.">        if (lowerMessage.contains(&quot;alone&quot;) || lowerMessage.contains(&quot;isolated&quot;)) {</span>
+<span class="nc" id="L258">            factors.add(&quot;social_isolation&quot;)</span>
+        }
+<span class="nc bnc" id="L260" title="All 4 branches missed.">        if (lowerMessage.contains(&quot;sleep&quot;) &amp;&amp; lowerMessage.contains(&quot;can't&quot;)) {</span>
+<span class="nc" id="L261">            factors.add(&quot;sleep_disturbance&quot;)</span>
+        }
+<span class="nc bnc" id="L263" title="All 6 branches missed.">        if (lowerMessage.contains(&quot;substance&quot;) || lowerMessage.contains(&quot;alcohol&quot;) || lowerMessage.contains(&quot;drug&quot;)) {</span>
+<span class="nc" id="L264">            factors.add(&quot;substance_use&quot;)</span>
+        }
+        
+<span class="nc" id="L267">        return factors</span>
+    }
+    
+    private fun generateCriticalScript(assessment: CrisisAssessment): List&lt;DeescalationStep&gt; {
+<span class="nc" id="L271">        return listOf(</span>
+<span class="nc" id="L272">            DeescalationStep(</span>
+<span class="nc" id="L273">                order = 1,</span>
+<span class="nc" id="L274">                type = StepType.IMMEDIATE_SAFETY,</span>
+<span class="nc" id="L275">                prompt = &quot;I'm very concerned about your safety. Your life has value. Can you tell me where you are right now?&quot;,</span>
+<span class="nc" id="L276">                expectedResponse = &quot;location_or_safety_confirmation&quot;</span>
+            ),
+<span class="nc" id="L278">            DeescalationStep(</span>
+<span class="nc" id="L279">                order = 2,</span>
+<span class="nc" id="L280">                type = StepType.CRISIS_HOTLINE,</span>
+<span class="nc" id="L281">                prompt = &quot;I want to make sure you get immediate support. Can we call a crisis hotline together? The number is 988.&quot;,</span>
+<span class="nc" id="L282">                expectedResponse = &quot;agreement_or_alternative&quot;</span>
+            ),
+<span class="nc" id="L284">            DeescalationStep(</span>
+<span class="nc" id="L285">                order = 3,</span>
+<span class="nc" id="L286">                type = StepType.SAFETY_PLANNING,</span>
+<span class="nc" id="L287">                prompt = &quot;Let's create a safety plan together. Who can you reach out to right now for support?&quot;,</span>
+<span class="nc" id="L288">                expectedResponse = &quot;support_contacts&quot;</span>
+            ),
+<span class="nc" id="L290">            DeescalationStep(</span>
+<span class="nc" id="L291">                order = 4,</span>
+<span class="nc" id="L292">                type = StepType.GROUNDING,</span>
+<span class="nc" id="L293">                prompt = &quot;Let's do a grounding exercise together. Can you name 5 things you can see around you?&quot;,</span>
+<span class="nc" id="L294">                expectedResponse = &quot;grounding_response&quot;</span>
+            )
+        )
+    }
+    
+    private fun generateHighScript(assessment: CrisisAssessment): List&lt;DeescalationStep&gt; {
+<span class="nc" id="L300">        return listOf(</span>
+<span class="nc" id="L301">            DeescalationStep(</span>
+<span class="nc" id="L302">                order = 1,</span>
+<span class="nc" id="L303">                type = StepType.VALIDATION,</span>
+<span class="nc" id="L304">                prompt = &quot;I hear that you're going through an extremely difficult time. Your feelings are valid. Can you tell me what's making things so hard right now?&quot;,</span>
+<span class="nc" id="L305">                expectedResponse = &quot;emotional_expression&quot;</span>
+            ),
+<span class="nc" id="L307">            DeescalationStep(</span>
+<span class="nc" id="L308">                order = 2,</span>
+<span class="nc" id="L309">                type = StepType.COPING_STRATEGIES,</span>
+<span class="nc" id="L310">                prompt = &quot;Let's work through this together. What coping strategies have helped you in the past?&quot;,</span>
+<span class="nc" id="L311">                expectedResponse = &quot;coping_identification&quot;</span>
+            ),
+<span class="nc" id="L313">            DeescalationStep(</span>
+<span class="nc" id="L314">                order = 3,</span>
+<span class="nc" id="L315">                type = StepType.SUPPORT_NETWORK,</span>
+<span class="nc" id="L316">                prompt = &quot;Who in your life can you reach out to for support right now?&quot;,</span>
+<span class="nc" id="L317">                expectedResponse = &quot;support_identification&quot;</span>
+            ),
+<span class="nc" id="L319">            DeescalationStep(</span>
+<span class="nc" id="L320">                order = 4,</span>
+<span class="nc" id="L321">                type = StepType.RESOURCE_PROVISION,</span>
+<span class="nc" id="L322">                prompt = &quot;I want to make sure you have resources available. Would you like information about crisis support services?&quot;,</span>
+<span class="nc" id="L323">                expectedResponse = &quot;resource_acceptance&quot;</span>
+            )
+        )
+    }
+    
+    private fun generateMediumScript(assessment: CrisisAssessment): List&lt;DeescalationStep&gt; {
+<span class="nc" id="L329">        return listOf(</span>
+<span class="nc" id="L330">            DeescalationStep(</span>
+<span class="nc" id="L331">                order = 1,</span>
+<span class="nc" id="L332">                type = StepType.VALIDATION,</span>
+<span class="nc" id="L333">                prompt = &quot;It sounds like you're having a really tough time. I'm here to listen. What's been weighing on you?&quot;,</span>
+<span class="nc" id="L334">                expectedResponse = &quot;emotional_expression&quot;</span>
+            ),
+<span class="nc" id="L336">            DeescalationStep(</span>
+<span class="nc" id="L337">                order = 2,</span>
+<span class="nc" id="L338">                type = StepType.EXPLORATION,</span>
+<span class="nc" id="L339">                prompt = &quot;Can you tell me more about what's contributing to these difficult feelings?&quot;,</span>
+<span class="nc" id="L340">                expectedResponse = &quot;detailed_expression&quot;</span>
+            ),
+<span class="nc" id="L342">            DeescalationStep(</span>
+<span class="nc" id="L343">                order = 3,</span>
+<span class="nc" id="L344">                type = StepType.COPING_STRATEGIES,</span>
+<span class="nc" id="L345">                prompt = &quot;What are some things that have helped you feel better in similar situations?&quot;,</span>
+<span class="nc" id="L346">                expectedResponse = &quot;coping_identification&quot;</span>
+            )
+        )
+    }
+    
+    private fun generateLowScript(assessment: CrisisAssessment): List&lt;DeescalationStep&gt; {
+<span class="nc" id="L352">        return listOf(</span>
+<span class="nc" id="L353">            DeescalationStep(</span>
+<span class="nc" id="L354">                order = 1,</span>
+<span class="nc" id="L355">                type = StepType.VALIDATION,</span>
+<span class="nc" id="L356">                prompt = &quot;Thank you for sharing. I'm here to support you. What would be most helpful right now?&quot;,</span>
+<span class="nc" id="L357">                expectedResponse = &quot;support_request&quot;</span>
+            ),
+<span class="nc" id="L359">            DeescalationStep(</span>
+<span class="nc" id="L360">                order = 2,</span>
+<span class="nc" id="L361">                type = StepType.COPING_STRATEGIES,</span>
+<span class="nc" id="L362">                prompt = &quot;Let's explore some coping strategies that might help. What activities usually help you feel better?&quot;,</span>
+<span class="nc" id="L363">                expectedResponse = &quot;activity_identification&quot;</span>
+            )
+        )
+    }
+    
+    private fun generateImprovedSteps(assessment: CrisisAssessment): List&lt;DeescalationStep&gt; {
+<span class="nc bnc" id="L369" title="All 4 branches missed.">        return when (assessment.level) {</span>
+<span class="nc" id="L370">            CrisisLevel.HIGH -&gt; generateHighScript(assessment)</span>
+<span class="nc" id="L371">            CrisisLevel.MEDIUM -&gt; generateMediumScript(assessment)</span>
+<span class="nc" id="L372">            CrisisLevel.LOW -&gt; generateLowScript(assessment)</span>
+<span class="nc" id="L373">            else -&gt; emptyList()</span>
+        }
+    }
+    
+    private fun calculateDuration(level: CrisisLevel): Int {
+<span class="nc bnc" id="L378" title="All 5 branches missed.">        return when (level) {</span>
+<span class="nc" id="L379">            CrisisLevel.CRITICAL -&gt; 60</span>
+<span class="nc" id="L380">            CrisisLevel.HIGH -&gt; 45</span>
+<span class="nc" id="L381">            CrisisLevel.MEDIUM -&gt; 30</span>
+<span class="nc" id="L382">            CrisisLevel.LOW -&gt; 15</span>
+<span class="nc" id="L383">            CrisisLevel.NONE -&gt; 0</span>
+        }
+    }
+    
+    private fun calculateProgress(initial: CrisisLevel, current: CrisisLevel): Float {
+<span class="nc" id="L388">        val maxLevel = CrisisLevel.values().size - 1</span>
+<span class="nc" id="L389">        val initialScore = maxLevel - initial.ordinal</span>
+<span class="nc" id="L390">        val currentScore = maxLevel - current.ordinal</span>
+<span class="nc" id="L391">        return ((currentScore.toFloat() / initialScore.toFloat()) * 100f).coerceAtMost(100f)</span>
+    }
+    
+    private fun createEmergencySafetyPlan(assessment: CrisisAssessment): SafetyPlan {
+<span class="nc" id="L395">        return SafetyPlan(</span>
+<span class="nc" id="L396">            id = &quot;plan_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L397">            userId = &quot;&quot;,</span>
+<span class="nc" id="L398">            emergencyContacts = listOf(</span>
+<span class="nc" id="L399">                EmergencyContact(id = &quot;1&quot;, name = &quot;Crisis Hotline&quot;, role = &quot;Crisis Support&quot;, phone = &quot;988&quot;, isPrimary = true),</span>
+<span class="nc" id="L400">                EmergencyContact(id = &quot;2&quot;, name = &quot;Emergency Services&quot;, role = &quot;Emergency&quot;, phone = &quot;911&quot;, isPrimary = true)</span>
+            ),
+<span class="nc" id="L402">            copingStrategies = listOf(</span>
+<span class="nc" id="L403">                &quot;Deep breathing exercises&quot;,</span>
+<span class="nc" id="L404">                &quot;Grounding techniques (5-4-3-2-1)&quot;,</span>
+<span class="nc" id="L405">                &quot;Contact support network&quot;,</span>
+<span class="nc" id="L406">                &quot;Remove access to harmful means&quot;</span>
+            ),
+<span class="nc" id="L408">            warningSigns = assessment.indicators.map { it.name },</span>
+<span class="nc" id="L409">            personalizedTriggers = assessment.riskFactors</span>
+        )
+    }
+    
+    private fun createSafetyPlan(assessment: CrisisAssessment): SafetyPlan {
+<span class="nc" id="L414">        return SafetyPlan(</span>
+<span class="nc" id="L415">            id = &quot;plan_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L416">            userId = &quot;&quot;,</span>
+<span class="nc" id="L417">            emergencyContacts = emptyList(),</span>
+<span class="nc" id="L418">            copingStrategies = listOf(</span>
+<span class="nc" id="L419">                &quot;Mindful breathing&quot;,</span>
+<span class="nc" id="L420">                &quot;Progressive muscle relaxation&quot;,</span>
+<span class="nc" id="L421">                &quot;Reach out to support network&quot;,</span>
+<span class="nc" id="L422">                &quot;Use crisis resources&quot;</span>
+            ),
+<span class="nc" id="L424">            warningSigns = assessment.indicators.map { it.name },</span>
+<span class="nc" id="L425">            personalizedTriggers = assessment.riskFactors</span>
+        )
+    }
+    
+    private fun getCriticalResources(): List&lt;String&gt; {
+<span class="nc" id="L430">        return listOf(</span>
+<span class="nc" id="L431">            &quot;National Suicide Prevention Lifeline: 988&quot;,</span>
+<span class="nc" id="L432">            &quot;Crisis Text Line: Text HOME to 741741&quot;,</span>
+<span class="nc" id="L433">            &quot;Emergency Services: 911&quot;,</span>
+<span class="nc" id="L434">            &quot;988 Suicide &amp; Crisis Lifeline website&quot;</span>
+        )
+    }
+    
+    private fun getHighRiskResources(): List&lt;String&gt; {
+<span class="nc" id="L439">        return listOf(</span>
+<span class="nc" id="L440">            &quot;Crisis support hotline&quot;,</span>
+<span class="nc" id="L441">            &quot;Mental health professional directory&quot;,</span>
+<span class="nc" id="L442">            &quot;Support group resources&quot;,</span>
+<span class="nc" id="L443">            &quot;Crisis intervention services&quot;</span>
+        )
+    }
+    
+    private fun getGeneralResources(): List&lt;String&gt; {
+<span class="nc" id="L448">        return listOf(</span>
+<span class="nc" id="L449">            &quot;Self-help resources&quot;,</span>
+<span class="nc" id="L450">            &quot;Coping strategies guide&quot;,</span>
+<span class="nc" id="L451">            &quot;Community support options&quot;,</span>
+<span class="nc" id="L452">            &quot;Mental health information&quot;</span>
+        )
+    }
+}
+
+/** Data class for crisis assessment. */
+<span class="nc" id="L458">data class CrisisAssessment(</span>
+<span class="nc" id="L459">    val level: CrisisLevel,</span>
+<span class="nc" id="L460">    val indicators: List&lt;CrisisIndicator&gt;,</span>
+<span class="nc" id="L461">    val intensity: Float,</span>
+<span class="nc" id="L462">    val riskFactors: List&lt;String&gt;,</span>
+<span class="nc" id="L463">    val assessedAt: Date</span>
+)
+
+/** Enum for crisis levels. */
+enum class CrisisLevel {
+<span class="nc" id="L468">    NONE, LOW, MEDIUM, HIGH, CRITICAL</span>
+<span class="nc" id="L469">}</span>
+
+/** Data class for crisis script. */
+<span class="nc" id="L472">data class CrisisScript(</span>
+<span class="nc" id="L473">    val id: String,</span>
+<span class="nc" id="L474">    val userId: String,</span>
+<span class="nc" id="L475">    val crisisLevel: CrisisLevel,</span>
+<span class="nc" id="L476">    val steps: List&lt;DeescalationStep&gt;,</span>
+<span class="nc" id="L477">    val estimatedDuration: Int,</span>
+<span class="nc" id="L478">    val createdAt: Date</span>
+)
+
+/** Data class for deescalation step. */
+<span class="nc" id="L482">data class DeescalationStep(</span>
+<span class="nc" id="L483">    val order: Int,</span>
+<span class="nc" id="L484">    val type: StepType,</span>
+<span class="nc" id="L485">    val prompt: String,</span>
+<span class="nc" id="L486">    val expectedResponse: String</span>
+)
+
+/** Enum for step types. */
+enum class StepType {
+<span class="nc" id="L491">    IMMEDIATE_SAFETY, CRISIS_HOTLINE, SAFETY_PLANNING, VALIDATION, EXPLORATION, </span>
+<span class="nc" id="L492">    COPING_STRATEGIES, SUPPORT_NETWORK, RESOURCE_PROVISION, GROUNDING, FOLLOW_UP</span>
+<span class="nc" id="L493">}</span>
+
+/** Data class for deescalation step result. */
+<span class="nc" id="L496">data class DeescalationStepResult(</span>
+<span class="nc" id="L497">    val step: DeescalationStep,</span>
+<span class="nc" id="L498">    val userResponse: String,</span>
+<span class="nc" id="L499">    val newAssessment: CrisisAssessment?,</span>
+<span class="nc" id="L500">    val nextStep: DeescalationStep?,</span>
+<span class="nc" id="L501">    val isCompleted: Boolean,</span>
+<span class="nc" id="L502">    val progress: Float</span>
+)
+
+/** Data class for safety measures. */
+<span class="nc" id="L506">data class SafetyMeasures(</span>
+<span class="nc" id="L507">    val immediateActions: List&lt;String&gt;,</span>
+<span class="nc" id="L508">    val safetyPlan: SafetyPlan?,</span>
+<span class="nc" id="L509">    val resources: List&lt;String&gt;</span>
+)
+
+/** Data class for deescalation session. */
+<span class="nc" id="L513">data class DeescalationSession(</span>
+<span class="nc" id="L514">    val id: String,</span>
+<span class="nc" id="L515">    val userId: String,</span>
+<span class="nc" id="L516">    val initialAssessment: CrisisAssessment,</span>
+<span class="nc" id="L517">    val currentAssessment: CrisisAssessment?,</span>
+<span class="nc" id="L518">    val script: CrisisScript,</span>
+<span class="nc" id="L519">    val completedSteps: List&lt;DeescalationStepResult&gt;,</span>
+<span class="nc" id="L520">    val startedAt: Date,</span>
+<span class="nc" id="L521">    val completedAt: Date? = null,</span>
+<span class="nc" id="L522">    val status: DeescalationStatus</span>
+<span class="nc" id="L523">)</span>
+
+/** Enum for deescalation status. */
+enum class DeescalationStatus {
+<span class="nc" id="L527">    ACTIVE, COMPLETED, ESCALATED, CANCELLED</span>
+<span class="nc" id="L528">}</span>
+
+/** Data class for deescalation progress. */
+<span class="nc" id="L531">data class DeescalationProgress(</span>
+<span class="nc" id="L532">    val sessionId: String,</span>
+<span class="nc" id="L533">    val initialLevel: CrisisLevel,</span>
+<span class="nc" id="L534">    val currentLevel: CrisisLevel,</span>
+<span class="nc" id="L535">    val progressPercentage: Float,</span>
+<span class="nc" id="L536">    val stepsCompleted: Int,</span>
+<span class="nc" id="L537">    val totalSteps: Int,</span>
+<span class="nc" id="L538">    val timeElapsed: Long,</span>
+<span class="nc" id="L539">    val isStable: Boolean</span>
+)
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

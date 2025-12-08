@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 1: Support Ticket Management - Validates Core UC25 Functionality" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:07" hostname="Mohammads-MacBook-Pro.local" time="0.002">
+  <properties/>
+  <testcase name="UC25-REQ-2: System MUST validate support ticket input" classname="com.serenityai.tests.unit.usecases.uc25_user_support.UserSupportUseCaseUnitTests$SupportTicketTests" time="0.001"/>
+  <testcase name="UC25-REQ-1: System MUST create support tickets for user inquiries" classname="com.serenityai.tests.unit.usecases.uc25_user_support.UserSupportUseCaseUnitTests$SupportTicketTests" time="0.001"/>
+  <testcase name="UC25-REQ-3: System MUST allow adding responses to support tickets" classname="com.serenityai.tests.unit.usecases.uc25_user_support.UserSupportUseCaseUnitTests$SupportTicketTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

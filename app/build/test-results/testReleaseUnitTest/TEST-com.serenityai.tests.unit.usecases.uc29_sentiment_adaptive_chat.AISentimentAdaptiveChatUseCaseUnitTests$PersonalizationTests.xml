@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 8: Personalization" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:07" hostname="Mohammads-MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="UC29-REQ-20: System MUST personalize responses based on user profile" classname="com.serenityai.tests.unit.usecases.uc29_sentiment_adaptive_chat.AISentimentAdaptiveChatUseCaseUnitTests$PersonalizationTests" time="0.0"/>
+  <testcase name="UC29-REQ-22: System MUST adapt to user preferences" classname="com.serenityai.tests.unit.usecases.uc29_sentiment_adaptive_chat.AISentimentAdaptiveChatUseCaseUnitTests$PersonalizationTests" time="0.0"/>
+  <testcase name="UC29-REQ-21: System MUST adapt to emotional patterns" classname="com.serenityai.tests.unit.usecases.uc29_sentiment_adaptive_chat.AISentimentAdaptiveChatUseCaseUnitTests$PersonalizationTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

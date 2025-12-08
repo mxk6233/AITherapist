@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommunitySupportCirclesScreen.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.screens</a> &gt; <span class="el_source">CommunitySupportCirclesScreen.kt</span></div><h1>CommunitySupportCirclesScreen.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.screens
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.serenityai.usecases.*
+import java.util.Date
+
+/** UC39: Community Support Circles - UI Screen */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L23" title="All 10 branches missed.">fun CommunitySupportCirclesScreen(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc" id="L24">    val useCase = remember { CommunitySupportCirclesUseCase() }</span>
+<span class="nc" id="L25">    val userId = &quot;user123&quot; // In production, get from auth</span>
+    
+<span class="nc" id="L27">    var selectedTab by remember { mutableStateOf(0) }</span>
+<span class="nc" id="L28">    var showCreateCircleDialog by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L29">    var circleName by remember { mutableStateOf(&quot;&quot;) }</span>
+<span class="nc" id="L30">    var circleDescription by remember { mutableStateOf(&quot;&quot;) }</span>
+<span class="nc" id="L31">    var circleTopic by remember { mutableStateOf(&quot;&quot;) }</span>
+<span class="nc" id="L32">    var isPrivateCircle by remember { mutableStateOf(false) }</span>
+    
+<span class="nc" id="L34">    var userCircles by remember { mutableStateOf&lt;List&lt;SupportCircle&gt;&gt;(emptyList()) }</span>
+<span class="nc" id="L35">    var availableCircles by remember { mutableStateOf&lt;List&lt;SupportCircle&gt;&gt;(emptyList()) }</span>
+<span class="nc" id="L36">    var selectedCircle by remember { mutableStateOf&lt;SupportCircle?&gt;(null) }</span>
+<span class="nc" id="L37">    var circlePosts by remember { mutableStateOf&lt;List&lt;CirclePost&gt;&gt;(emptyList()) }</span>
+<span class="nc" id="L38">    var newPostContent by remember { mutableStateOf(&quot;&quot;) }</span>
+<span class="nc" id="L39">    var showPostDialog by remember { mutableStateOf(false) }</span>
+    
+    // Load user's circles and available circles
+<span class="nc bnc" id="L42" title="All 2 branches missed.">    LaunchedEffect(Unit) {</span>
+<span class="nc" id="L43">        userCircles = useCase.getUserSupportCircles(userId)</span>
+<span class="nc" id="L44">        availableCircles = useCase.getAvailableCircles()</span>
+<span class="nc" id="L45">    }</span>
+    
+    // Refresh when tab changes
+<span class="nc bnc" id="L48" title="All 2 branches missed.">    LaunchedEffect(selectedTab) {</span>
+<span class="nc bnc" id="L49" title="All 3 branches missed.">        when (selectedTab) {</span>
+<span class="nc" id="L50">            0 -&gt; userCircles = useCase.getUserSupportCircles(userId)</span>
+<span class="nc" id="L51">            1 -&gt; availableCircles = useCase.getAvailableCircles()</span>
+        }
+<span class="nc" id="L53">    }</span>
+    
+<span class="nc" id="L55">    Scaffold(</span>
+<span class="nc" id="L56">        topBar = {</span>
+<span class="nc bnc" id="L57" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L58" title="All 8 branches missed.">                title = { Text(&quot;Community Support Circles&quot;) },</span>
+<span class="nc" id="L59">                navigationIcon = {</span>
+<span class="nc bnc" id="L60" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L61" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L62">                    }</span>
+<span class="nc" id="L63">                },</span>
+<span class="nc" id="L64">                colors = TopAppBarDefaults.topAppBarColors(</span>
+<span class="nc" id="L65">                    containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+                ),
+<span class="nc" id="L67">                actions = {</span>
+<span class="nc bnc" id="L68" title="All 8 branches missed.">                    IconButton(onClick = { showCreateCircleDialog = true }) {</span>
+<span class="nc bnc" id="L69" title="All 8 branches missed.">                        Icon(Icons.Default.Add, contentDescription = &quot;Create Circle&quot;)</span>
+<span class="nc" id="L70">                    }</span>
+<span class="nc" id="L71">                }</span>
+<span class="nc" id="L72">            )</span>
+<span class="nc" id="L73">        }</span>
+<span class="nc" id="L74">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L75" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L76">            modifier = Modifier</span>
+<span class="nc" id="L77">                .fillMaxSize()</span>
+<span class="nc" id="L78">                .padding(paddingValues)</span>
+        ) {
+            // Tab Row
+<span class="nc" id="L81">            TabRow(selectedTabIndex = selectedTab) {</span>
+<span class="nc bnc" id="L82" title="All 6 branches missed.">                Tab(</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">                    selected = selectedTab == 0,</span>
+<span class="nc" id="L84">                    onClick = { selectedTab = 0 },</span>
+<span class="nc bnc" id="L85" title="All 8 branches missed.">                    text = { Text(&quot;My Circles&quot;) }</span>
+                )
+<span class="nc bnc" id="L87" title="All 2 branches missed.">                Tab(</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">                    selected = selectedTab == 1,</span>
+<span class="nc" id="L89">                    onClick = { selectedTab = 1 },</span>
+<span class="nc bnc" id="L90" title="All 8 branches missed.">                    text = { Text(&quot;Discover&quot;) }</span>
+<span class="nc" id="L91">                )</span>
+<span class="nc" id="L92">            }</span>
+            
+            // Content based on selected tab
+<span class="nc bnc" id="L95" title="All 3 branches missed.">            when (selectedTab) {</span>
+<span class="nc" id="L96">                0 -&gt; {</span>
+                    // My Circles Tab
+<span class="nc bnc" id="L98" title="All 2 branches missed.">                    if (userCircles.isEmpty()) {</span>
+<span class="nc" id="L99">                        Box(</span>
+<span class="nc" id="L100">                            modifier = Modifier</span>
+<span class="nc" id="L101">                                .fillMaxSize()</span>
+<span class="nc" id="L102">                                .padding(16.dp),</span>
+<span class="nc" id="L103">                            contentAlignment = Alignment.Center</span>
+                        ) {
+<span class="nc" id="L105">                            Column(</span>
+<span class="nc" id="L106">                                horizontalAlignment = Alignment.CenterHorizontally,</span>
+<span class="nc" id="L107">                                verticalArrangement = Arrangement.spacedBy(16.dp)</span>
+                            ) {
+<span class="nc" id="L109">                                Icon(</span>
+<span class="nc" id="L110">                                    Icons.Default.People,</span>
+<span class="nc" id="L111">                                    contentDescription = null,</span>
+<span class="nc" id="L112">                                    modifier = Modifier.size(64.dp),</span>
+<span class="nc" id="L113">                                    tint = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                                )
+<span class="nc" id="L115">                                Text(</span>
+<span class="nc" id="L116">                                    text = &quot;You haven't joined any circles yet&quot;,</span>
+<span class="nc" id="L117">                                    fontSize = 16.sp,</span>
+<span class="nc" id="L118">                                    color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                                )
+<span class="nc" id="L120">                                Button(onClick = { selectedTab = 1 }) {</span>
+<span class="nc bnc" id="L121" title="All 8 branches missed.">                                    Text(&quot;Discover Circles&quot;)</span>
+<span class="nc" id="L122">                                }</span>
+<span class="nc" id="L123">                            }</span>
+<span class="nc" id="L124">                        }</span>
+<span class="nc" id="L125">                    } else {</span>
+<span class="nc" id="L126">                        LazyColumn(</span>
+<span class="nc" id="L127">                            modifier = Modifier.fillMaxSize(),</span>
+<span class="nc" id="L128">                            contentPadding = PaddingValues(16.dp),</span>
+<span class="nc" id="L129">                            verticalArrangement = Arrangement.spacedBy(12.dp)</span>
+<span class="nc" id="L130">                        ) {</span>
+<span class="nc" id="L131">                            items(userCircles) { circle -&gt;</span>
+                                Card(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+<span class="nc" id="L136">                                            selectedCircle = circle</span>
+<span class="nc" id="L137">                                            circlePosts = useCase.getCirclePosts(circle.id)</span>
+<span class="nc" id="L138">                                        },</span>
+                                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                                ) {
+<span class="nc bnc" id="L141" title="All 6 branches missed.">                                    Column(</span>
+<span class="nc" id="L142">                                        modifier = Modifier.padding(16.dp)</span>
+                                    ) {
+<span class="nc" id="L144">                                        Row(</span>
+<span class="nc" id="L145">                                            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L146">                                            horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L147">                                            verticalAlignment = Alignment.CenterVertically</span>
+                                        ) {
+<span class="nc" id="L149">                                            Column(modifier = Modifier.weight(1f)) {</span>
+<span class="nc" id="L150">                                                Text(</span>
+<span class="nc" id="L151">                                                    text = circle.name,</span>
+<span class="nc" id="L152">                                                    fontSize = 18.sp,</span>
+<span class="nc" id="L153">                                                    fontWeight = FontWeight.Bold</span>
+                                                )
+<span class="nc bnc" id="L155" title="All 2 branches missed.">                                                if (circle.topic != null) {</span>
+<span class="nc" id="L156">                                                    Text(</span>
+<span class="nc" id="L157">                                                        text = circle.topic,</span>
+<span class="nc" id="L158">                                                        fontSize = 12.sp,</span>
+<span class="nc" id="L159">                                                        color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                                                    )
+                                                }
+<span class="nc" id="L162">                                            }</span>
+<span class="nc bnc" id="L163" title="All 2 branches missed.">                                            if (circle.isPrivate) {</span>
+<span class="nc" id="L164">                                                Icon(</span>
+<span class="nc" id="L165">                                                    Icons.Default.Lock,</span>
+<span class="nc" id="L166">                                                    contentDescription = &quot;Private&quot;,</span>
+<span class="nc" id="L167">                                                    modifier = Modifier.size(20.dp),</span>
+<span class="nc" id="L168">                                                    tint = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                                                )
+                                            }
+<span class="nc" id="L171">                                        }</span>
+<span class="nc" id="L172">                                        Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L173">                                        Text(</span>
+<span class="nc" id="L174">                                            text = circle.description,</span>
+<span class="nc" id="L175">                                            fontSize = 14.sp,</span>
+<span class="nc" id="L176">                                            color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                                        )
+<span class="nc" id="L178">                                        Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L179">                                        Row(</span>
+<span class="nc" id="L180">                                            horizontalArrangement = Arrangement.spacedBy(16.dp)</span>
+                                        ) {
+<span class="nc" id="L182">                                            Text(</span>
+<span class="nc" id="L183">                                                text = &quot;${circle.memberCount} members&quot;,</span>
+<span class="nc" id="L184">                                                fontSize = 12.sp,</span>
+<span class="nc" id="L185">                                                color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                                            )
+<span class="nc" id="L187">                                            Text(</span>
+<span class="nc" id="L188">                                                text = &quot;${useCase.getCirclePosts(circle.id).size} posts&quot;,</span>
+<span class="nc" id="L189">                                                fontSize = 12.sp,</span>
+<span class="nc" id="L190">                                                color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                                            )
+<span class="nc" id="L192">                                        }</span>
+<span class="nc" id="L193">                                    }</span>
+<span class="nc" id="L194">                                }</span>
+                            }
+<span class="nc" id="L196">                        }</span>
+                    }
+                }
+<span class="nc" id="L199">                1 -&gt; {</span>
+                    // Discover Tab
+<span class="nc" id="L201">                    LazyColumn(</span>
+<span class="nc" id="L202">                        modifier = Modifier.fillMaxSize(),</span>
+<span class="nc" id="L203">                        contentPadding = PaddingValues(16.dp),</span>
+<span class="nc" id="L204">                        verticalArrangement = Arrangement.spacedBy(12.dp)</span>
+<span class="nc" id="L205">                    ) {</span>
+<span class="nc bnc" id="L206" title="All 2 branches missed.">                        if (availableCircles.isEmpty()) {</span>
+<span class="nc" id="L207">                            item {</span>
+<span class="nc bnc" id="L208" title="All 6 branches missed.">                                Box(</span>
+<span class="nc" id="L209">                                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L210">                                    contentAlignment = Alignment.Center</span>
+                                ) {
+<span class="nc" id="L212">                                    Column(</span>
+<span class="nc" id="L213">                                        horizontalAlignment = Alignment.CenterHorizontally,</span>
+<span class="nc" id="L214">                                        verticalArrangement = Arrangement.spacedBy(16.dp)</span>
+                                    ) {
+<span class="nc" id="L216">                                        Icon(</span>
+<span class="nc" id="L217">                                            Icons.Default.Search,</span>
+<span class="nc" id="L218">                                            contentDescription = null,</span>
+<span class="nc" id="L219">                                            modifier = Modifier.size(64.dp),</span>
+<span class="nc" id="L220">                                            tint = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                                        )
+<span class="nc" id="L222">                                        Text(</span>
+<span class="nc" id="L223">                                            text = &quot;No public circles available&quot;,</span>
+<span class="nc" id="L224">                                            fontSize = 16.sp,</span>
+<span class="nc" id="L225">                                            color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                                        )
+<span class="nc" id="L227">                                        Button(onClick = { showCreateCircleDialog = true }) {</span>
+<span class="nc bnc" id="L228" title="All 8 branches missed.">                                            Text(&quot;Create First Circle&quot;)</span>
+<span class="nc" id="L229">                                        }</span>
+<span class="nc" id="L230">                                    }</span>
+<span class="nc" id="L231">                                }</span>
+<span class="nc" id="L232">                            }</span>
+                        } else {
+<span class="nc" id="L234">                            items(availableCircles) { circle -&gt;</span>
+                                Card(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                                ) {
+<span class="nc bnc" id="L239" title="All 6 branches missed.">                                    Column(</span>
+<span class="nc" id="L240">                                        modifier = Modifier.padding(16.dp)</span>
+                                    ) {
+<span class="nc" id="L242">                                        Row(</span>
+<span class="nc" id="L243">                                            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L244">                                            horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L245">                                            verticalAlignment = Alignment.CenterVertically</span>
+                                        ) {
+<span class="nc" id="L247">                                            Column(modifier = Modifier.weight(1f)) {</span>
+<span class="nc" id="L248">                                                Text(</span>
+<span class="nc" id="L249">                                                    text = circle.name,</span>
+<span class="nc" id="L250">                                                    fontSize = 18.sp,</span>
+<span class="nc" id="L251">                                                    fontWeight = FontWeight.Bold</span>
+                                                )
+<span class="nc bnc" id="L253" title="All 2 branches missed.">                                                if (circle.topic != null) {</span>
+<span class="nc" id="L254">                                                    Text(</span>
+<span class="nc" id="L255">                                                        text = circle.topic,</span>
+<span class="nc" id="L256">                                                        fontSize = 12.sp,</span>
+<span class="nc" id="L257">                                                        color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                                                    )
+                                                }
+<span class="nc" id="L260">                                            }</span>
+<span class="nc" id="L261">                                        }</span>
+<span class="nc" id="L262">                                        Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L263">                                        Text(</span>
+<span class="nc" id="L264">                                            text = circle.description,</span>
+<span class="nc" id="L265">                                            fontSize = 14.sp,</span>
+<span class="nc" id="L266">                                            color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                                        )
+<span class="nc" id="L268">                                        Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L269">                                        Row(</span>
+<span class="nc" id="L270">                                            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L271">                                            horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L272">                                            verticalAlignment = Alignment.CenterVertically</span>
+                                        ) {
+<span class="nc" id="L274">                                            Text(</span>
+<span class="nc" id="L275">                                                text = &quot;${circle.memberCount} members&quot;,</span>
+<span class="nc" id="L276">                                                fontSize = 12.sp,</span>
+<span class="nc" id="L277">                                                color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                                            )
+<span class="nc" id="L279">                                            val isMember = userCircles.any { it.id == circle.id }</span>
+<span class="nc bnc" id="L280" title="All 2 branches missed.">                                            if (isMember) {</span>
+<span class="nc" id="L281">                                                TextButton(onClick = {</span>
+<span class="nc" id="L282">                                                    useCase.leaveSupportCircle(circle.id, userId)</span>
+<span class="nc" id="L283">                                                    userCircles = useCase.getUserSupportCircles(userId)</span>
+<span class="nc" id="L284">                                                    availableCircles = useCase.getAvailableCircles()</span>
+<span class="nc" id="L285">                                                }) {</span>
+<span class="nc bnc" id="L286" title="All 8 branches missed.">                                                    Text(&quot;Leave&quot;)</span>
+<span class="nc" id="L287">                                                }</span>
+<span class="nc" id="L288">                                            } else {</span>
+<span class="nc" id="L289">                                                Button(onClick = {</span>
+<span class="nc" id="L290">                                                    useCase.joinSupportCircle(circle.id, userId)</span>
+<span class="nc" id="L291">                                                    userCircles = useCase.getUserSupportCircles(userId)</span>
+<span class="nc" id="L292">                                                    availableCircles = useCase.getAvailableCircles()</span>
+<span class="nc" id="L293">                                                }) {</span>
+<span class="nc bnc" id="L294" title="All 8 branches missed.">                                                    Text(&quot;Join&quot;)</span>
+<span class="nc" id="L295">                                                }</span>
+                                            }
+<span class="nc" id="L297">                                        }</span>
+<span class="nc" id="L298">                                    }</span>
+<span class="nc" id="L299">                                }</span>
+                            }
+                        }
+<span class="nc" id="L302">                    }</span>
+                }
+<span class="nc" id="L304">            }</span>
+<span class="nc" id="L305">        }</span>
+<span class="nc" id="L306">    }</span>
+    
+    // Circle Detail Dialog
+<span class="nc bnc" id="L309" title="All 2 branches missed.">    if (selectedCircle != null) {</span>
+<span class="nc" id="L310">        AlertDialog(</span>
+<span class="nc" id="L311">            onDismissRequest = { selectedCircle = null },</span>
+<span class="nc bnc" id="L312" title="All 8 branches missed.">            title = { Text(selectedCircle!!.name) },</span>
+<span class="nc" id="L313">            text = {</span>
+<span class="nc bnc" id="L314" title="All 6 branches missed.">                Column(</span>
+<span class="nc" id="L315">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L316">                    verticalArrangement = Arrangement.spacedBy(12.dp)</span>
+                ) {
+<span class="nc" id="L318">                    Text(</span>
+<span class="nc" id="L319">                        text = selectedCircle!!.description,</span>
+<span class="nc" id="L320">                        fontSize = 14.sp</span>
+                    )
+                    
+<span class="nc" id="L323">                    Divider()</span>
+                    
+<span class="nc" id="L325">                    Text(</span>
+<span class="nc" id="L326">                        text = &quot;Posts&quot;,</span>
+<span class="nc" id="L327">                        fontSize = 16.sp,</span>
+<span class="nc" id="L328">                        fontWeight = FontWeight.Bold</span>
+                    )
+                    
+<span class="nc bnc" id="L331" title="All 2 branches missed.">                    if (circlePosts.isEmpty()) {</span>
+<span class="nc" id="L332">                        Text(</span>
+<span class="nc" id="L333">                            text = &quot;No posts yet. Be the first to post!&quot;,</span>
+<span class="nc" id="L334">                            fontSize = 12.sp,</span>
+<span class="nc" id="L335">                            color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                        )
+<span class="nc" id="L337">                    } else {</span>
+<span class="nc" id="L338">                        LazyColumn(</span>
+<span class="nc" id="L339">                            modifier = Modifier.heightIn(max = 300.dp),</span>
+<span class="nc" id="L340">                            verticalArrangement = Arrangement.spacedBy(8.dp)</span>
+<span class="nc" id="L341">                        ) {</span>
+<span class="nc" id="L342">                            items(circlePosts) { post -&gt;</span>
+                                Card(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                                    )
+                                ) {
+<span class="nc bnc" id="L349" title="All 6 branches missed.">                                    Column(</span>
+<span class="nc" id="L350">                                        modifier = Modifier.padding(12.dp)</span>
+                                    ) {
+<span class="nc" id="L352">                                        Text(</span>
+<span class="nc" id="L353">                                            text = post.content,</span>
+<span class="nc" id="L354">                                            fontSize = 14.sp</span>
+                                        )
+<span class="nc" id="L356">                                        Spacer(modifier = Modifier.height(4.dp))</span>
+<span class="nc" id="L357">                                        Row(</span>
+<span class="nc" id="L358">                                            horizontalArrangement = Arrangement.spacedBy(12.dp)</span>
+                                        ) {
+<span class="nc" id="L360">                                            Text(</span>
+<span class="nc" id="L361">                                                text = &quot;${post.likeCount} likes&quot;,</span>
+<span class="nc" id="L362">                                                fontSize = 12.sp,</span>
+<span class="nc" id="L363">                                                color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                                            )
+<span class="nc" id="L365">                                            Text(</span>
+<span class="nc" id="L366">                                                text = &quot;${post.commentCount} comments&quot;,</span>
+<span class="nc" id="L367">                                                fontSize = 12.sp,</span>
+<span class="nc" id="L368">                                                color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                                            )
+<span class="nc" id="L370">                                        }</span>
+<span class="nc" id="L371">                                    }</span>
+<span class="nc" id="L372">                                }</span>
+                            }
+<span class="nc" id="L374">                        }</span>
+                    }
+                    
+<span class="nc" id="L377">                    Button(</span>
+<span class="nc" id="L378">                        onClick = { showPostDialog = true },</span>
+<span class="nc" id="L379">                        modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L380">                    ) {</span>
+<span class="nc bnc" id="L381" title="All 8 branches missed.">                        Text(&quot;Create Post&quot;)</span>
+<span class="nc" id="L382">                    }</span>
+<span class="nc" id="L383">                }</span>
+<span class="nc" id="L384">            },</span>
+<span class="nc" id="L385">            confirmButton = {</span>
+<span class="nc bnc" id="L386" title="All 8 branches missed.">                TextButton(onClick = { selectedCircle = null }) {</span>
+<span class="nc bnc" id="L387" title="All 8 branches missed.">                    Text(&quot;Close&quot;)</span>
+<span class="nc" id="L388">                }</span>
+<span class="nc" id="L389">            }</span>
+        )
+    }
+    
+    // Create Circle Dialog
+<span class="nc bnc" id="L394" title="All 2 branches missed.">    if (showCreateCircleDialog) {</span>
+<span class="nc" id="L395">        AlertDialog(</span>
+<span class="nc" id="L396">            onDismissRequest = { showCreateCircleDialog = false },</span>
+<span class="nc bnc" id="L397" title="All 8 branches missed.">            title = { Text(&quot;Create Support Circle&quot;) },</span>
+<span class="nc" id="L398">            text = {</span>
+<span class="nc bnc" id="L399" title="All 6 branches missed.">                Column(</span>
+<span class="nc" id="L400">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L401">                    verticalArrangement = Arrangement.spacedBy(12.dp)</span>
+                ) {
+<span class="nc" id="L403">                    OutlinedTextField(</span>
+<span class="nc" id="L404">                        value = circleName,</span>
+<span class="nc" id="L405">                        onValueChange = { circleName = it },</span>
+<span class="nc bnc" id="L406" title="All 8 branches missed.">                        label = { Text(&quot;Circle Name&quot;) },</span>
+<span class="nc" id="L407">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L408">                        singleLine = true</span>
+                    )
+<span class="nc" id="L410">                    OutlinedTextField(</span>
+<span class="nc" id="L411">                        value = circleDescription,</span>
+<span class="nc" id="L412">                        onValueChange = { circleDescription = it },</span>
+<span class="nc bnc" id="L413" title="All 8 branches missed.">                        label = { Text(&quot;Description&quot;) },</span>
+<span class="nc" id="L414">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L415">                        minLines = 3</span>
+                    )
+<span class="nc" id="L417">                    OutlinedTextField(</span>
+<span class="nc" id="L418">                        value = circleTopic,</span>
+<span class="nc" id="L419">                        onValueChange = { circleTopic = it },</span>
+<span class="nc bnc" id="L420" title="All 8 branches missed.">                        label = { Text(&quot;Topic (Optional)&quot;) },</span>
+<span class="nc" id="L421">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L422">                        singleLine = true</span>
+                    )
+<span class="nc" id="L424">                    Row(</span>
+<span class="nc" id="L425">                        verticalAlignment = Alignment.CenterVertically</span>
+                    ) {
+<span class="nc" id="L427">                        Checkbox(</span>
+<span class="nc" id="L428">                            checked = isPrivateCircle,</span>
+<span class="nc" id="L429">                            onCheckedChange = { isPrivateCircle = it }</span>
+                        )
+<span class="nc" id="L431">                        Text(</span>
+<span class="nc" id="L432">                            text = &quot;Private Circle (Invite Only)&quot;,</span>
+<span class="nc bnc" id="L433" title="All 2 branches missed.">                            modifier = Modifier.clickable { isPrivateCircle = !isPrivateCircle }</span>
+                        )
+<span class="nc" id="L435">                    }</span>
+<span class="nc" id="L436">                }</span>
+<span class="nc" id="L437">            },</span>
+<span class="nc" id="L438">            confirmButton = {</span>
+<span class="nc bnc" id="L439" title="All 8 branches missed.">                Button(</span>
+<span class="nc" id="L440">                    onClick = {</span>
+<span class="nc bnc" id="L441" title="All 8 branches missed.">                        if (circleName.isNotBlank() &amp;&amp; circleDescription.isNotBlank()) {</span>
+<span class="nc" id="L442">                            val newCircle = useCase.createSupportCircle(</span>
+<span class="nc" id="L443">                                creatorId = userId,</span>
+<span class="nc" id="L444">                                name = circleName,</span>
+<span class="nc" id="L445">                                description = circleDescription,</span>
+<span class="nc bnc" id="L446" title="All 4 branches missed.">                                topic = if (circleTopic.isNotBlank()) circleTopic else null,</span>
+<span class="nc" id="L447">                                isPrivate = isPrivateCircle</span>
+                            )
+<span class="nc" id="L449">                            userCircles = useCase.getUserSupportCircles(userId)</span>
+<span class="nc" id="L450">                            availableCircles = useCase.getAvailableCircles()</span>
+<span class="nc" id="L451">                            circleName = &quot;&quot;</span>
+<span class="nc" id="L452">                            circleDescription = &quot;&quot;</span>
+<span class="nc" id="L453">                            circleTopic = &quot;&quot;</span>
+<span class="nc" id="L454">                            isPrivateCircle = false</span>
+<span class="nc" id="L455">                            showCreateCircleDialog = false</span>
+                        }
+<span class="nc" id="L457">                    },</span>
+<span class="nc bnc" id="L458" title="All 8 branches missed.">                    enabled = circleName.isNotBlank() &amp;&amp; circleDescription.isNotBlank()</span>
+<span class="nc" id="L459">                ) {</span>
+<span class="nc bnc" id="L460" title="All 8 branches missed.">                    Text(&quot;Create&quot;)</span>
+<span class="nc" id="L461">                }</span>
+<span class="nc" id="L462">            },</span>
+<span class="nc" id="L463">            dismissButton = {</span>
+<span class="nc bnc" id="L464" title="All 8 branches missed.">                TextButton(onClick = { showCreateCircleDialog = false }) {</span>
+<span class="nc bnc" id="L465" title="All 8 branches missed.">                    Text(&quot;Cancel&quot;)</span>
+<span class="nc" id="L466">                }</span>
+<span class="nc" id="L467">            }</span>
+        )
+    }
+    
+    // Create Post Dialog
+<span class="nc bnc" id="L472" title="All 4 branches missed.">    if (showPostDialog &amp;&amp; selectedCircle != null) {</span>
+<span class="nc bnc" id="L473" title="All 2 branches missed.">        AlertDialog(</span>
+<span class="nc" id="L474">            onDismissRequest = { showPostDialog = false },</span>
+<span class="nc bnc" id="L475" title="All 8 branches missed.">            title = { Text(&quot;Create Post&quot;) },</span>
+<span class="nc" id="L476">            text = {</span>
+<span class="nc bnc" id="L477" title="All 6 branches missed.">                Column(</span>
+<span class="nc" id="L478">                    modifier = Modifier.fillMaxWidth()</span>
+                ) {
+<span class="nc" id="L480">                    OutlinedTextField(</span>
+<span class="nc" id="L481">                        value = newPostContent,</span>
+<span class="nc" id="L482">                        onValueChange = { newPostContent = it },</span>
+<span class="nc bnc" id="L483" title="All 8 branches missed.">                        label = { Text(&quot;What's on your mind?&quot;) },</span>
+<span class="nc" id="L484">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L485">                        minLines = 4</span>
+                    )
+<span class="nc" id="L487">                }</span>
+<span class="nc" id="L488">            },</span>
+<span class="nc" id="L489">            confirmButton = {</span>
+<span class="nc bnc" id="L490" title="All 8 branches missed.">                Button(</span>
+<span class="nc" id="L491">                    onClick = {</span>
+<span class="nc bnc" id="L492" title="All 6 branches missed.">                        if (newPostContent.isNotBlank() &amp;&amp; selectedCircle != null) {</span>
+<span class="nc" id="L493">                            try {</span>
+<span class="nc" id="L494">                                useCase.createPost(</span>
+<span class="nc" id="L495">                                    circleId = selectedCircle!!.id,</span>
+<span class="nc" id="L496">                                    userId = userId,</span>
+<span class="nc" id="L497">                                    content = newPostContent,</span>
+<span class="nc" id="L498">                                    isAnonymous = false</span>
+                                )
+<span class="nc" id="L500">                                circlePosts = useCase.getCirclePosts(selectedCircle!!.id)</span>
+<span class="nc" id="L501">                                newPostContent = &quot;&quot;</span>
+<span class="nc" id="L502">                                showPostDialog = false</span>
+<span class="nc" id="L503">                            } catch (e: Exception) {</span>
+                                // Handle error
+                            }
+                        }
+<span class="nc" id="L507">                    },</span>
+<span class="nc bnc" id="L508" title="All 2 branches missed.">                    enabled = newPostContent.isNotBlank()</span>
+<span class="nc" id="L509">                ) {</span>
+<span class="nc bnc" id="L510" title="All 8 branches missed.">                    Text(&quot;Post&quot;)</span>
+<span class="nc" id="L511">                }</span>
+<span class="nc" id="L512">            },</span>
+<span class="nc" id="L513">            dismissButton = {</span>
+<span class="nc bnc" id="L514" title="All 8 branches missed.">                TextButton(onClick = { showPostDialog = false }) {</span>
+<span class="nc bnc" id="L515" title="All 8 branches missed.">                    Text(&quot;Cancel&quot;)</span>
+<span class="nc" id="L516">                }</span>
+<span class="nc" id="L517">            }</span>
+        )
+    }
+<span class="nc bnc" id="L520" title="All 2 branches missed.">}</span>
+
+
+
+
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

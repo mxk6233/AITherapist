@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 1: 7-Day Forecast Generation - Validates Core UC26 Functionality" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-07T08:20:33" hostname="Mohammads-MacBook-Pro.local" time="0.002">
+  <properties/>
+  <testcase name="UC26-REQ-2: System MUST identify weekly cyclical patterns (weekday vs weekend mood differences)" classname="com.serenityai.test.usecases.MoodForecastingUseCaseTests$ForecastGenerationTests" time="0.0"/>
+  <testcase name="UC26-REQ-1: System MUST generate a complete 7-day mood forecast with daily predictions" classname="com.serenityai.test.usecases.MoodForecastingUseCaseTests$ForecastGenerationTests" time="0.001"/>
+  <testcase name="UC26-REQ-3: System MUST provide confidence scores for each mood prediction" classname="com.serenityai.test.usecases.MoodForecastingUseCaseTests$ForecastGenerationTests" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

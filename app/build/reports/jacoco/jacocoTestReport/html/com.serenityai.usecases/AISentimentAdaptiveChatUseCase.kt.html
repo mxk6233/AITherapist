@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AISentimentAdaptiveChatUseCase.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.usecases</a> &gt; <span class="el_source">AISentimentAdaptiveChatUseCase.kt</span></div><h1>AISentimentAdaptiveChatUseCase.kt</h1><pre class="source lang-java linenums">package com.serenityai.usecases
+
+import com.serenityai.data.models.*
+import java.util.Date
+
+/** UC29: AI sentiment adaptive chat system that analyzes user sentiment and adapts responses accordingly. */
+<span class="nc" id="L7">class AISentimentAdaptiveChatUseCase {</span>
+    
+<span class="nc" id="L9">    private val conversationHistory = mutableMapOf&lt;String, MutableList&lt;ChatMessage&gt;&gt;()</span>
+<span class="nc" id="L10">    private val sentimentHistory = mutableMapOf&lt;String, MutableList&lt;SentimentAnalysis&gt;&gt;()</span>
+    
+    /** Analyzes sentiment from user message. */
+    fun analyzeSentiment(message: String): SentimentAnalysis {
+<span class="nc" id="L14">        val lowerMessage = message.lowercase()</span>
+<span class="nc" id="L15">        val positiveWords = listOf(&quot;great&quot;, &quot;good&quot;, &quot;happy&quot;, &quot;excited&quot;, &quot;wonderful&quot;, &quot;amazing&quot;, &quot;love&quot;, &quot;thankful&quot;, &quot;grateful&quot;, &quot;better&quot;, &quot;improving&quot;)</span>
+<span class="nc" id="L16">        val negativeWords = listOf(&quot;bad&quot;, &quot;terrible&quot;, &quot;awful&quot;, &quot;hate&quot;, &quot;sad&quot;, &quot;depressed&quot;, &quot;anxious&quot;, &quot;worried&quot;, &quot;stressed&quot;, &quot;frustrated&quot;, &quot;angry&quot;, &quot;hopeless&quot;)</span>
+<span class="nc" id="L17">        val veryNegativeWords = listOf(&quot;suicide&quot;, &quot;kill&quot;, &quot;end&quot;, &quot;worthless&quot;, &quot;useless&quot;, &quot;despair&quot;, &quot;hopeless&quot;)</span>
+        
+<span class="nc" id="L19">        val positiveCount = positiveWords.count { lowerMessage.contains(it) }</span>
+<span class="nc" id="L20">        val negativeCount = negativeWords.count { lowerMessage.contains(it) }</span>
+<span class="nc" id="L21">        val veryNegativeCount = veryNegativeWords.count { lowerMessage.contains(it) }</span>
+        
+<span class="nc" id="L23">        val sentimentType = when {</span>
+<span class="nc bnc" id="L24" title="All 2 branches missed.">            veryNegativeCount &gt; 0 -&gt; SentimentType.VERY_NEGATIVE</span>
+<span class="nc bnc" id="L25" title="All 4 branches missed.">            negativeCount &gt; positiveCount &amp;&amp; negativeCount &gt; 2 -&gt; SentimentType.NEGATIVE</span>
+<span class="nc bnc" id="L26" title="All 4 branches missed.">            positiveCount &gt; negativeCount &amp;&amp; positiveCount &gt; 2 -&gt; SentimentType.POSITIVE</span>
+<span class="nc bnc" id="L27" title="All 2 branches missed.">            positiveCount &gt; 3 -&gt; SentimentType.VERY_POSITIVE</span>
+<span class="nc bnc" id="L28" title="All 2 branches missed.">            negativeCount &gt; 0 -&gt; SentimentType.NEGATIVE</span>
+<span class="nc bnc" id="L29" title="All 2 branches missed.">            positiveCount &gt; 0 -&gt; SentimentType.POSITIVE</span>
+<span class="nc" id="L30">            else -&gt; SentimentType.NEUTRAL</span>
+        }
+        
+<span class="nc bnc" id="L33" title="All 3 branches missed.">        val confidence = when (sentimentType) {</span>
+<span class="nc" id="L34">            SentimentType.VERY_POSITIVE, SentimentType.VERY_NEGATIVE -&gt; 0.9f</span>
+<span class="nc" id="L35">            SentimentType.POSITIVE, SentimentType.NEGATIVE -&gt; 0.75f</span>
+<span class="nc" id="L36">            SentimentType.NEUTRAL -&gt; 0.5f</span>
+        }
+        
+<span class="nc" id="L39">        return SentimentAnalysis(</span>
+<span class="nc" id="L40">            type = sentimentType,</span>
+<span class="nc" id="L41">            confidence = confidence,</span>
+<span class="nc" id="L42">            keywords = extractKeywords(message),</span>
+<span class="nc" id="L43">            intensity = calculateIntensity(message, sentimentType),</span>
+<span class="nc" id="L44">            detectedAt = Date()</span>
+        )
+    }
+    
+    /** Detects emotional intensity from message. */
+    fun detectEmotionalIntensity(message: String): Float {
+<span class="nc" id="L50">        val sentiment = analyzeSentiment(message)</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        val exclamationCount = message.count { it == '!' }</span>
+<span class="nc" id="L52">        val capsRatio = message.count { it.isUpperCase() }.toFloat() / message.length.coerceAtLeast(1)</span>
+        
+<span class="nc bnc" id="L54" title="All 3 branches missed.">        return when (sentiment.type) {</span>
+<span class="nc" id="L55">            SentimentType.VERY_POSITIVE, SentimentType.VERY_NEGATIVE -&gt; 0.9f + (exclamationCount * 0.05f).coerceAtMost(0.1f)</span>
+<span class="nc" id="L56">            SentimentType.POSITIVE, SentimentType.NEGATIVE -&gt; 0.7f + (capsRatio * 0.2f).coerceAtMost(0.2f)</span>
+<span class="nc" id="L57">            SentimentType.NEUTRAL -&gt; 0.5f</span>
+        }
+    }
+    
+    /** Generates adaptive response based on sentiment. */
+    fun generateAdaptiveResponse(message: String, sentiment: SentimentAnalysis): AITherapistResponse {
+<span class="nc bnc" id="L63" title="All 5 branches missed.">        val responseMessage = when (sentiment.type) {</span>
+<span class="nc" id="L64">            SentimentType.VERY_POSITIVE -&gt; generatePositiveResponse(message)</span>
+<span class="nc" id="L65">            SentimentType.POSITIVE -&gt; generateSupportiveResponse(message)</span>
+<span class="nc" id="L66">            SentimentType.NEUTRAL -&gt; generateNeutralResponse(message)</span>
+<span class="nc" id="L67">            SentimentType.NEGATIVE -&gt; generateEmpatheticResponse(message)</span>
+<span class="nc" id="L68">            SentimentType.VERY_NEGATIVE -&gt; generateCrisisResponse(message)</span>
+        }
+        
+<span class="nc" id="L71">        return AITherapistResponse(</span>
+<span class="nc" id="L72">            id = &quot;response_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L73">            message = responseMessage,</span>
+<span class="nc" id="L74">            type = determineResponseType(sentiment),</span>
+<span class="nc" id="L75">            moodAnalysis = MoodAnalysis(</span>
+<span class="nc" id="L76">                detectedMood = sentiment.type.name,</span>
+<span class="nc" id="L77">                confidence = sentiment.confidence,</span>
+<span class="nc" id="L78">                sentiment = sentiment.type,</span>
+<span class="nc" id="L79">                keywords = sentiment.keywords</span>
+            )
+        )
+    }
+    
+    /** Builds conversation context from history. */
+    fun buildConversationContext(userId: String, history: List&lt;ChatMessage&gt;): ConversationContext {
+<span class="nc" id="L86">        val recentMessages = history.takeLast(10)</span>
+<span class="nc" id="L87">        val sentiments = recentMessages.map { analyzeSentiment(it.text) }</span>
+<span class="nc" id="L88">        val averageSentiment = calculateAverageSentiment(sentiments)</span>
+        
+<span class="nc" id="L90">        return ConversationContext(</span>
+<span class="nc" id="L91">            userId = userId,</span>
+<span class="nc" id="L92">            recentMessages = recentMessages,</span>
+<span class="nc" id="L93">            sentimentTrend = detectSentimentTrend(sentiments),</span>
+<span class="nc" id="L94">            averageSentiment = averageSentiment,</span>
+<span class="nc" id="L95">            emotionalPatterns = detectEmotionalPatterns(sentiments)</span>
+        )
+    }
+    
+    /** Generates contextual response using conversation history. */
+    fun generateContextualResponse(userId: String, currentMessage: String, history: List&lt;ChatMessage&gt;): AITherapistResponse {
+<span class="nc" id="L101">        val context = buildConversationContext(userId, history)</span>
+<span class="nc" id="L102">        val currentSentiment = analyzeSentiment(currentMessage)</span>
+        
+<span class="nc" id="L104">        val response = when {</span>
+<span class="nc bnc" id="L105" title="All 4 branches missed.">            context.sentimentTrend == SentimentTrend.DECLINING &amp;&amp; currentSentiment.type == SentimentType.NEGATIVE -&gt; </span>
+<span class="nc" id="L106">                &quot;I notice you've been feeling down lately. Let's work through this together. What's been weighing on you?&quot;</span>
+<span class="nc bnc" id="L107" title="All 4 branches missed.">            context.sentimentTrend == SentimentTrend.IMPROVING &amp;&amp; currentSentiment.type == SentimentType.POSITIVE -&gt; </span>
+<span class="nc" id="L108">                &quot;It's wonderful to see you're feeling better! What's been helping you feel more positive?&quot;</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">            currentSentiment.type == SentimentType.VERY_NEGATIVE -&gt; </span>
+<span class="nc" id="L110">                generateCrisisResponse(currentMessage)</span>
+<span class="nc" id="L111">            else -&gt; generateAdaptiveResponse(currentMessage, currentSentiment).message</span>
+        }
+        
+<span class="nc" id="L114">        return AITherapistResponse(</span>
+<span class="nc" id="L115">            id = &quot;response_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L116">            message = response,</span>
+<span class="nc" id="L117">            type = determineResponseType(currentSentiment),</span>
+<span class="nc" id="L118">            moodAnalysis = MoodAnalysis(</span>
+<span class="nc" id="L119">                detectedMood = currentSentiment.type.name,</span>
+<span class="nc" id="L120">                confidence = currentSentiment.confidence,</span>
+<span class="nc" id="L121">                sentiment = currentSentiment.type</span>
+            )
+        )
+    }
+    
+    /** Detects conversation patterns. */
+    fun detectConversationPatterns(userId: String, history: List&lt;ChatMessage&gt;): List&lt;ConversationPattern&gt; {
+<span class="nc" id="L128">        val patterns = mutableListOf&lt;ConversationPattern&gt;()</span>
+<span class="nc" id="L129">        val sentiments = history.map { analyzeSentiment(it.text) }</span>
+        
+<span class="nc bnc" id="L131" title="All 4 branches missed.">        if (sentiments.count { it.type == SentimentType.NEGATIVE } &gt; sentiments.size * 0.6) {</span>
+<span class="nc" id="L132">            patterns.add(ConversationPattern.NEGATIVE_TREND)</span>
+        }
+<span class="nc bnc" id="L134" title="All 4 branches missed.">        if (sentiments.count { it.intensity &gt; 0.8f } &gt; sentiments.size * 0.4) {</span>
+<span class="nc" id="L135">            patterns.add(ConversationPattern.HIGH_INTENSITY)</span>
+        }
+<span class="nc bnc" id="L137" title="All 4 branches missed.">        if (sentiments.any { it.type == SentimentType.VERY_NEGATIVE }) {</span>
+<span class="nc" id="L138">            patterns.add(ConversationPattern.CRISIS_INDICATORS)</span>
+        }
+        
+<span class="nc" id="L141">        return patterns</span>
+    }
+    
+    /** Detects emotional triggers in message. */
+    fun detectEmotionalTriggers(message: String): List&lt;String&gt; {
+<span class="nc" id="L146">        val triggers = mutableListOf&lt;String&gt;()</span>
+<span class="nc" id="L147">        val lowerMessage = message.lowercase()</span>
+        
+<span class="nc" id="L149">        val triggerKeywords = mapOf(</span>
+<span class="nc" id="L150">            &quot;work&quot; to &quot;work_stress&quot;,</span>
+<span class="nc" id="L151">            &quot;family&quot; to &quot;family_issues&quot;,</span>
+<span class="nc" id="L152">            &quot;relationship&quot; to &quot;relationship_problems&quot;,</span>
+<span class="nc" id="L153">            &quot;money&quot; to &quot;financial_stress&quot;,</span>
+<span class="nc" id="L154">            &quot;health&quot; to &quot;health_concerns&quot;,</span>
+<span class="nc" id="L155">            &quot;lonely&quot; to &quot;loneliness&quot;,</span>
+<span class="nc" id="L156">            &quot;anxious&quot; to &quot;anxiety&quot;,</span>
+<span class="nc" id="L157">            &quot;depressed&quot; to &quot;depression&quot;</span>
+        )
+        
+<span class="nc" id="L160">        triggerKeywords.forEach { (keyword, trigger) -&gt;</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">            if (lowerMessage.contains(keyword)) {</span>
+<span class="nc" id="L162">                triggers.add(trigger)</span>
+            }
+<span class="nc" id="L164">        }</span>
+        
+<span class="nc" id="L166">        return triggers</span>
+    }
+    
+    /** Identifies emotional needs from message. */
+    fun identifyEmotionalNeeds(message: String): List&lt;EmotionalNeed&gt; {
+<span class="nc" id="L171">        val needs = mutableListOf&lt;EmotionalNeed&gt;()</span>
+<span class="nc" id="L172">        val sentiment = analyzeSentiment(message)</span>
+<span class="nc" id="L173">        val triggers = detectEmotionalTriggers(message)</span>
+        
+<span class="nc bnc" id="L175" title="All 3 branches missed.">        when (sentiment.type) {</span>
+            SentimentType.VERY_NEGATIVE, SentimentType.NEGATIVE -&gt; {
+<span class="nc" id="L177">                needs.add(EmotionalNeed.SUPPORT)</span>
+<span class="nc" id="L178">                needs.add(EmotionalNeed.VALIDATION)</span>
+<span class="nc bnc" id="L179" title="All 4 branches missed.">                if (triggers.isNotEmpty()) {</span>
+<span class="nc" id="L180">                    needs.add(EmotionalNeed.PROBLEM_SOLVING)</span>
+                }
+            }
+            SentimentType.POSITIVE, SentimentType.VERY_POSITIVE -&gt; {
+<span class="nc" id="L184">                needs.add(EmotionalNeed.ENCOURAGEMENT)</span>
+            }
+            SentimentType.NEUTRAL -&gt; {
+<span class="nc" id="L187">                needs.add(EmotionalNeed.ENGAGEMENT)</span>
+            }
+        }
+        
+<span class="nc" id="L191">        return needs</span>
+    }
+    
+    /** Provides emotional validation. */
+    fun provideEmotionalValidation(message: String): String {
+<span class="nc" id="L196">        val sentiment = analyzeSentiment(message)</span>
+<span class="nc bnc" id="L197" title="All 3 branches missed.">        return when (sentiment.type) {</span>
+            SentimentType.NEGATIVE, SentimentType.VERY_NEGATIVE -&gt; 
+<span class="nc" id="L199">                &quot;I hear you, and your feelings are completely valid. It's okay to feel this way.&quot;</span>
+            SentimentType.POSITIVE, SentimentType.VERY_POSITIVE -&gt; 
+<span class="nc" id="L201">                &quot;I'm so glad you're feeling positive! That's wonderful to hear.&quot;</span>
+            SentimentType.NEUTRAL -&gt; 
+<span class="nc" id="L203">                &quot;Thank you for sharing. I'm here to listen and support you.&quot;</span>
+        }
+    }
+    
+    /** Suggests emotional regulation techniques. */
+    fun suggestEmotionalRegulationTechniques(message: String): List&lt;String&gt; {
+<span class="nc" id="L209">        val sentiment = analyzeSentiment(message)</span>
+<span class="nc" id="L210">        val intensity = detectEmotionalIntensity(message)</span>
+        
+<span class="nc" id="L212">        return when {</span>
+<span class="nc bnc" id="L213" title="All 4 branches missed.">            intensity &gt; 0.8f &amp;&amp; sentiment.type in listOf(SentimentType.NEGATIVE, SentimentType.VERY_NEGATIVE) -&gt; </span>
+<span class="nc" id="L214">                listOf(&quot;Deep breathing exercise&quot;, &quot;Progressive muscle relaxation&quot;, &quot;Grounding technique: 5-4-3-2-1&quot;)</span>
+<span class="nc bnc" id="L215" title="All 2 branches missed.">            sentiment.type == SentimentType.NEGATIVE -&gt; </span>
+<span class="nc" id="L216">                listOf(&quot;Mindful breathing&quot;, &quot;Journaling&quot;, &quot;Gentle movement&quot;)</span>
+            else -&gt; 
+<span class="nc" id="L218">                listOf(&quot;Mindfulness meditation&quot;, &quot;Gratitude practice&quot;)</span>
+        }
+    }
+    
+    /** Personalizes response based on user profile. */
+    fun personalizeResponse(userId: String, message: String, userProfile: UserProfile?): AITherapistResponse {
+<span class="nc" id="L224">        val sentiment = analyzeSentiment(message)</span>
+<span class="nc" id="L225">        val baseResponse = generateAdaptiveResponse(message, sentiment)</span>
+        
+<span class="nc bnc" id="L227" title="All 4 branches missed.">        val personalizedMessage = userProfile?.let { profile -&gt;</span>
+<span class="nc bnc" id="L228" title="All 2 branches missed.">            when (profile.preferences?.language) {</span>
+<span class="nc bnc" id="L229" title="All 2 branches missed.">                &quot;es&quot; -&gt; &quot;Hola, ${baseResponse.message}&quot;</span>
+<span class="nc" id="L230">                else -&gt; baseResponse.message</span>
+<span class="nc" id="L231">            }</span>
+<span class="nc" id="L232">        } ?: baseResponse.message</span>
+        
+<span class="nc" id="L234">        return baseResponse.copy(message = personalizedMessage)</span>
+    }
+    
+    /** Adapts to emotional patterns. */
+    fun adaptToEmotionalPatterns(userId: String, message: String, emotionalHistory: List&lt;SentimentAnalysis&gt;): AITherapistResponse {
+<span class="nc" id="L239">        val currentSentiment = analyzeSentiment(message)</span>
+<span class="nc" id="L240">        val trend = detectSentimentTrend(emotionalHistory)</span>
+        
+<span class="nc" id="L242">        val response = when {</span>
+<span class="nc bnc" id="L243" title="All 4 branches missed.">            trend == SentimentTrend.DECLINING &amp;&amp; currentSentiment.type == SentimentType.NEGATIVE -&gt; </span>
+<span class="nc" id="L244">                &quot;I've noticed you've been struggling more lately. Let's take this step by step. What's been the hardest part?&quot;</span>
+<span class="nc bnc" id="L245" title="All 2 branches missed.">            trend == SentimentTrend.IMPROVING -&gt; </span>
+<span class="nc" id="L246">                &quot;I'm seeing positive changes in how you're feeling. That's really encouraging!&quot;</span>
+<span class="nc" id="L247">            else -&gt; generateAdaptiveResponse(message, currentSentiment).message</span>
+        }
+        
+<span class="nc" id="L250">        return AITherapistResponse(</span>
+<span class="nc" id="L251">            id = &quot;response_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L252">            message = response,</span>
+<span class="nc" id="L253">            type = determineResponseType(currentSentiment)</span>
+        )
+    }
+    
+    /** Adapts to user preferences. */
+    fun adaptToUserPreferences(userId: String, message: String, preferences: Map&lt;String, Any&gt;): AITherapistResponse {
+<span class="nc" id="L259">        val sentiment = analyzeSentiment(message)</span>
+<span class="nc" id="L260">        val baseResponse = generateAdaptiveResponse(message, sentiment)</span>
+        
+<span class="nc bnc" id="L262" title="All 4 branches missed.">        val responseStyle = preferences[&quot;responseStyle&quot;] as? String ?: &quot;empathetic&quot;</span>
+<span class="nc" id="L263">        val adaptedMessage = when (responseStyle) {</span>
+<span class="nc bnc" id="L264" title="All 2 branches missed.">            &quot;direct&quot; -&gt; baseResponse.message.replace(&quot;I understand&quot;, &quot;Here's what I think&quot;)</span>
+<span class="nc bnc" id="L265" title="All 2 branches missed.">            &quot;gentle&quot; -&gt; baseResponse.message.replace(&quot;.&quot;, &quot;.&quot;)</span>
+<span class="nc" id="L266">            else -&gt; baseResponse.message</span>
+        }
+        
+<span class="nc" id="L269">        return baseResponse.copy(message = adaptedMessage)</span>
+    }
+    
+    /** Detects crisis indicators. */
+    fun detectCrisisIndicators(message: String): List&lt;CrisisIndicator&gt; {
+<span class="nc" id="L274">        val indicators = mutableListOf&lt;CrisisIndicator&gt;()</span>
+<span class="nc" id="L275">        val lowerMessage = message.lowercase()</span>
+<span class="nc" id="L276">        val sentiment = analyzeSentiment(message)</span>
+        
+<span class="nc" id="L278">        val crisisKeywords = listOf(&quot;suicide&quot;, &quot;kill myself&quot;, &quot;end it all&quot;, &quot;no point&quot;, &quot;worthless&quot;, &quot;hopeless&quot;, &quot;can't go on&quot;)</span>
+<span class="nc bnc" id="L279" title="All 2 branches missed.">        if (crisisKeywords.any { lowerMessage.contains(it) }) {</span>
+<span class="nc" id="L280">            indicators.add(CrisisIndicator.SUICIDAL_IDEATION)</span>
+        }
+        
+<span class="nc bnc" id="L283" title="All 4 branches missed.">        if (sentiment.type == SentimentType.VERY_NEGATIVE &amp;&amp; sentiment.intensity &gt; 0.9f) {</span>
+<span class="nc" id="L284">            indicators.add(CrisisIndicator.SEVERE_DISTRESS)</span>
+        }
+        
+<span class="nc" id="L287">        return indicators</span>
+    }
+    
+    /** Escalates crisis situation. */
+    fun escalateCrisisSituation(message: String, indicators: List&lt;CrisisIndicator&gt;): CrisisEscalation {
+<span class="nc" id="L292">        val hasSuicidalIdeation = indicators.contains(CrisisIndicator.SUICIDAL_IDEATION)</span>
+<span class="nc" id="L293">        val severity = when {</span>
+<span class="nc bnc" id="L294" title="All 2 branches missed.">            hasSuicidalIdeation -&gt; CrisisSeverity.CRITICAL</span>
+<span class="nc bnc" id="L295" title="All 4 branches missed.">            indicators.isNotEmpty() -&gt; CrisisSeverity.HIGH</span>
+<span class="nc" id="L296">            else -&gt; CrisisSeverity.MEDIUM</span>
+        }
+        
+<span class="nc" id="L299">        return CrisisEscalation(</span>
+<span class="nc" id="L300">            severity = severity,</span>
+<span class="nc" id="L301">            indicators = indicators,</span>
+<span class="nc bnc" id="L302" title="All 4 branches missed.">            immediateActions = when (severity) {</span>
+<span class="nc" id="L303">                CrisisSeverity.CRITICAL -&gt; listOf(&quot;Contact crisis hotline&quot;, &quot;Reach out to emergency contacts&quot;, &quot;Seek immediate professional help&quot;)</span>
+<span class="nc" id="L304">                CrisisSeverity.HIGH -&gt; listOf(&quot;Use coping strategies&quot;, &quot;Contact support network&quot;, &quot;Consider professional support&quot;)</span>
+<span class="nc" id="L305">                CrisisSeverity.MEDIUM -&gt; listOf(&quot;Practice self-care&quot;, &quot;Use grounding techniques&quot;)</span>
+<span class="nc" id="L306">                CrisisSeverity.LOW -&gt; listOf(&quot;Practice self-care&quot;, &quot;Use coping strategies&quot;)</span>
+            },
+<span class="nc" id="L308">            resources = getCrisisResources(severity)</span>
+        )
+    }
+    
+    /** Generates crisis response. */
+    fun generateCrisisResponse(message: String): String {
+<span class="nc" id="L314">        val indicators = detectCrisisIndicators(message)</span>
+<span class="nc" id="L315">        return when {</span>
+<span class="nc bnc" id="L316" title="All 2 branches missed.">            indicators.contains(CrisisIndicator.SUICIDAL_IDEATION) -&gt; </span>
+<span class="nc" id="L317">                &quot;I'm very concerned about what you've shared. Your life has value and there are people who care about you. Please reach out to a crisis hotline or emergency services immediately. You don't have to go through this alone.&quot;</span>
+<span class="nc bnc" id="L318" title="All 4 branches missed.">            indicators.isNotEmpty() -&gt; </span>
+<span class="nc" id="L319">                &quot;I hear that you're going through a very difficult time. Let's work through this together. Would you like to talk about what's making things so hard right now?&quot;</span>
+            else -&gt; 
+<span class="nc" id="L321">                &quot;I'm here for you. Let's take this one step at a time. What's on your mind?&quot;</span>
+        }
+    }
+    
+    /** Provides actionable advice. */
+    fun provideActionableAdvice(message: String): List&lt;String&gt; {
+<span class="nc" id="L327">        val sentiment = analyzeSentiment(message)</span>
+<span class="nc" id="L328">        val needs = identifyEmotionalNeeds(message)</span>
+        
+<span class="nc" id="L330">        return when {</span>
+<span class="nc bnc" id="L331" title="All 2 branches missed.">            needs.contains(EmotionalNeed.PROBLEM_SOLVING) -&gt; </span>
+<span class="nc" id="L332">                listOf(&quot;Break down the problem into smaller steps&quot;, &quot;Identify what you can control&quot;, &quot;Consider different perspectives&quot;)</span>
+<span class="nc bnc" id="L333" title="All 2 branches missed.">            needs.contains(EmotionalNeed.SUPPORT) -&gt; </span>
+<span class="nc" id="L334">                listOf(&quot;Reach out to trusted friends or family&quot;, &quot;Consider joining a support group&quot;, &quot;Connect with a mental health professional&quot;)</span>
+<span class="nc bnc" id="L335" title="All 2 branches missed.">            sentiment.type == SentimentType.NEGATIVE -&gt; </span>
+<span class="nc" id="L336">                listOf(&quot;Practice self-compassion&quot;, &quot;Engage in activities you enjoy&quot;, &quot;Focus on small positive moments&quot;)</span>
+            else -&gt; 
+<span class="nc" id="L338">                listOf(&quot;Continue your positive practices&quot;, &quot;Share your progress with others&quot;, &quot;Set small achievable goals&quot;)</span>
+        }
+    }
+    
+    // Helper methods
+    private fun extractKeywords(message: String): List&lt;String&gt; {
+<span class="nc bnc" id="L344" title="All 2 branches missed.">        val words = message.lowercase().split(&quot; &quot;).filter { it.length &gt; 4 }</span>
+<span class="nc" id="L345">        return words.take(5)</span>
+    }
+    
+    private fun calculateIntensity(message: String, sentiment: SentimentType): Float {
+<span class="nc bnc" id="L349" title="All 2 branches missed.">        val exclamationCount = message.count { it == '!' }</span>
+<span class="nc" id="L350">        val capsRatio = message.count { it.isUpperCase() }.toFloat() / message.length.coerceAtLeast(1)</span>
+<span class="nc bnc" id="L351" title="All 3 branches missed.">        return when (sentiment) {</span>
+<span class="nc" id="L352">            SentimentType.VERY_POSITIVE, SentimentType.VERY_NEGATIVE -&gt; 0.9f + (exclamationCount * 0.05f).coerceAtMost(0.1f)</span>
+<span class="nc" id="L353">            SentimentType.POSITIVE, SentimentType.NEGATIVE -&gt; 0.7f + (capsRatio * 0.2f).coerceAtMost(0.2f)</span>
+<span class="nc" id="L354">            SentimentType.NEUTRAL -&gt; 0.5f</span>
+        }
+    }
+    
+    private fun generatePositiveResponse(message: String): String {
+<span class="nc" id="L359">        return &quot;That's wonderful to hear! I'm so glad you're feeling positive. What's been contributing to these good feelings?&quot;</span>
+    }
+    
+    private fun generateSupportiveResponse(message: String): String {
+<span class="nc" id="L363">        return &quot;I'm glad you're sharing this with me. It sounds like you're in a good place. What would you like to explore today?&quot;</span>
+    }
+    
+    private fun generateNeutralResponse(message: String): String {
+<span class="nc" id="L367">        return &quot;Thank you for sharing. I'm here to listen and support you. What's on your mind today?&quot;</span>
+    }
+    
+    private fun generateEmpatheticResponse(message: String): String {
+<span class="nc" id="L371">        return &quot;I hear you, and I want you to know that your feelings are valid. It sounds like you're going through a difficult time. Would you like to talk more about what's bothering you?&quot;</span>
+    }
+    
+    private fun determineResponseType(sentiment: SentimentAnalysis): ResponseType {
+<span class="nc bnc" id="L375" title="All 4 branches missed.">        return when (sentiment.type) {</span>
+<span class="nc" id="L376">            SentimentType.VERY_NEGATIVE -&gt; ResponseType.CRISIS_SUPPORT</span>
+<span class="nc" id="L377">            SentimentType.NEGATIVE -&gt; ResponseType.THERAPEUTIC</span>
+<span class="nc" id="L378">            SentimentType.POSITIVE, SentimentType.VERY_POSITIVE -&gt; ResponseType.CELEBRATION</span>
+<span class="nc" id="L379">            SentimentType.NEUTRAL -&gt; ResponseType.GENERAL</span>
+        }
+    }
+    
+    private fun calculateAverageSentiment(sentiments: List&lt;SentimentAnalysis&gt;): SentimentType {
+<span class="nc bnc" id="L384" title="All 2 branches missed.">        if (sentiments.isEmpty()) return SentimentType.NEUTRAL</span>
+        
+<span class="nc" id="L386">        val scores = sentiments.map { </span>
+<span class="nc bnc" id="L387" title="All 5 branches missed.">            when (it.type) {</span>
+<span class="nc" id="L388">                SentimentType.VERY_POSITIVE -&gt; 2</span>
+<span class="nc" id="L389">                SentimentType.POSITIVE -&gt; 1</span>
+<span class="nc" id="L390">                SentimentType.NEUTRAL -&gt; 0</span>
+<span class="nc" id="L391">                SentimentType.NEGATIVE -&gt; -1</span>
+<span class="nc" id="L392">                SentimentType.VERY_NEGATIVE -&gt; -2</span>
+<span class="nc" id="L393">            }</span>
+        }
+        
+<span class="nc" id="L396">        val average = scores.average()</span>
+<span class="nc" id="L397">        return when {</span>
+<span class="nc bnc" id="L398" title="All 2 branches missed.">            average &gt;= 1.5 -&gt; SentimentType.VERY_POSITIVE</span>
+<span class="nc bnc" id="L399" title="All 2 branches missed.">            average &gt;= 0.5 -&gt; SentimentType.POSITIVE</span>
+<span class="nc bnc" id="L400" title="All 2 branches missed.">            average &lt;= -1.5 -&gt; SentimentType.VERY_NEGATIVE</span>
+<span class="nc bnc" id="L401" title="All 2 branches missed.">            average &lt;= -0.5 -&gt; SentimentType.NEGATIVE</span>
+<span class="nc" id="L402">            else -&gt; SentimentType.NEUTRAL</span>
+        }
+    }
+    
+    private fun detectSentimentTrend(sentiments: List&lt;SentimentAnalysis&gt;): SentimentTrend {
+<span class="nc bnc" id="L407" title="All 2 branches missed.">        if (sentiments.size &lt; 2) return SentimentTrend.STABLE</span>
+        
+<span class="nc" id="L409">        val recent = sentiments.takeLast(3)</span>
+<span class="nc" id="L410">        val earlier = sentiments.dropLast(3).takeLast(3)</span>
+        
+<span class="nc bnc" id="L412" title="All 2 branches missed.">        if (earlier.isEmpty()) return SentimentTrend.STABLE</span>
+        
+<span class="nc" id="L414">        val recentAvg = recent.map { </span>
+<span class="nc bnc" id="L415" title="All 5 branches missed.">            when (it.type) {</span>
+<span class="nc" id="L416">                SentimentType.VERY_POSITIVE -&gt; 2</span>
+<span class="nc" id="L417">                SentimentType.POSITIVE -&gt; 1</span>
+<span class="nc" id="L418">                SentimentType.NEUTRAL -&gt; 0</span>
+<span class="nc" id="L419">                SentimentType.NEGATIVE -&gt; -1</span>
+<span class="nc" id="L420">                SentimentType.VERY_NEGATIVE -&gt; -2</span>
+<span class="nc" id="L421">            }</span>
+<span class="nc" id="L422">        }.average()</span>
+        
+<span class="nc" id="L424">        val earlierAvg = earlier.map {</span>
+<span class="nc bnc" id="L425" title="All 5 branches missed.">            when (it.type) {</span>
+<span class="nc" id="L426">                SentimentType.VERY_POSITIVE -&gt; 2</span>
+<span class="nc" id="L427">                SentimentType.POSITIVE -&gt; 1</span>
+<span class="nc" id="L428">                SentimentType.NEUTRAL -&gt; 0</span>
+<span class="nc" id="L429">                SentimentType.NEGATIVE -&gt; -1</span>
+<span class="nc" id="L430">                SentimentType.VERY_NEGATIVE -&gt; -2</span>
+<span class="nc" id="L431">            }</span>
+<span class="nc" id="L432">        }.average()</span>
+        
+<span class="nc" id="L434">        return when {</span>
+<span class="nc bnc" id="L435" title="All 2 branches missed.">            recentAvg &gt; earlierAvg + 0.5 -&gt; SentimentTrend.IMPROVING</span>
+<span class="nc bnc" id="L436" title="All 2 branches missed.">            recentAvg &lt; earlierAvg - 0.5 -&gt; SentimentTrend.DECLINING</span>
+<span class="nc" id="L437">            else -&gt; SentimentTrend.STABLE</span>
+        }
+    }
+    
+    private fun detectEmotionalPatterns(sentiments: List&lt;SentimentAnalysis&gt;): List&lt;String&gt; {
+<span class="nc" id="L442">        val patterns = mutableListOf&lt;String&gt;()</span>
+<span class="nc bnc" id="L443" title="All 4 branches missed.">        if (sentiments.count { it.type == SentimentType.NEGATIVE } &gt; sentiments.size * 0.6) {</span>
+<span class="nc" id="L444">            patterns.add(&quot;persistent_negative&quot;)</span>
+        }
+<span class="nc bnc" id="L446" title="All 4 branches missed.">        if (sentiments.any { it.intensity &gt; 0.8f }) {</span>
+<span class="nc" id="L447">            patterns.add(&quot;high_intensity&quot;)</span>
+        }
+<span class="nc" id="L449">        return patterns</span>
+    }
+    
+    private fun getCrisisResources(severity: CrisisSeverity): List&lt;String&gt; {
+<span class="nc bnc" id="L453" title="All 4 branches missed.">        return when (severity) {</span>
+<span class="nc" id="L454">            CrisisSeverity.CRITICAL -&gt; listOf(</span>
+<span class="nc" id="L455">                &quot;National Suicide Prevention Lifeline: 988&quot;,</span>
+<span class="nc" id="L456">                &quot;Crisis Text Line: Text HOME to 741741&quot;,</span>
+<span class="nc" id="L457">                &quot;Emergency Services: 911&quot;</span>
+            )
+<span class="nc" id="L459">            CrisisSeverity.HIGH -&gt; listOf(</span>
+<span class="nc" id="L460">                &quot;Crisis support hotline&quot;,</span>
+<span class="nc" id="L461">                &quot;Mental health professional directory&quot;,</span>
+<span class="nc" id="L462">                &quot;Support group resources&quot;</span>
+            )
+<span class="nc" id="L464">            CrisisSeverity.MEDIUM -&gt; listOf(</span>
+<span class="nc" id="L465">                &quot;Self-help resources&quot;,</span>
+<span class="nc" id="L466">                &quot;Coping strategies guide&quot;,</span>
+<span class="nc" id="L467">                &quot;Community support options&quot;</span>
+            )
+<span class="nc" id="L469">            CrisisSeverity.LOW -&gt; listOf(</span>
+<span class="nc" id="L470">                &quot;Self-help resources&quot;,</span>
+<span class="nc" id="L471">                &quot;Coping strategies guide&quot;</span>
+            )
+        }
+    }
+}
+
+/** Data class for sentiment analysis results. */
+<span class="nc" id="L478">data class SentimentAnalysis(</span>
+<span class="nc" id="L479">    val type: SentimentType,</span>
+<span class="nc" id="L480">    val confidence: Float,</span>
+<span class="nc" id="L481">    val keywords: List&lt;String&gt;,</span>
+<span class="nc" id="L482">    val intensity: Float,</span>
+<span class="nc" id="L483">    val detectedAt: Date</span>
+)
+
+/** Data class for conversation context. */
+<span class="nc" id="L487">data class ConversationContext(</span>
+<span class="nc" id="L488">    val userId: String,</span>
+<span class="nc" id="L489">    val recentMessages: List&lt;ChatMessage&gt;,</span>
+<span class="nc" id="L490">    val sentimentTrend: SentimentTrend,</span>
+<span class="nc" id="L491">    val averageSentiment: SentimentType,</span>
+<span class="nc" id="L492">    val emotionalPatterns: List&lt;String&gt;</span>
+)
+
+/** Enum for sentiment trends. */
+enum class SentimentTrend {
+<span class="nc" id="L497">    IMPROVING, DECLINING, STABLE, VOLATILE</span>
+<span class="nc" id="L498">}</span>
+
+/** Enum for conversation patterns. */
+enum class ConversationPattern {
+<span class="nc" id="L502">    NEGATIVE_TREND, HIGH_INTENSITY, CRISIS_INDICATORS, POSITIVE_MOMENTUM</span>
+<span class="nc" id="L503">}</span>
+
+/** Enum for emotional needs. */
+enum class EmotionalNeed {
+<span class="nc" id="L507">    SUPPORT, VALIDATION, PROBLEM_SOLVING, ENCOURAGEMENT, ENGAGEMENT, CRISIS_INTERVENTION</span>
+<span class="nc" id="L508">}</span>
+
+/** Enum for crisis indicators. */
+enum class CrisisIndicator {
+<span class="nc" id="L512">    SUICIDAL_IDEATION, SEVERE_DISTRESS, SELF_HARM_RISK, ISOLATION, SUBSTANCE_ABUSE</span>
+<span class="nc" id="L513">}</span>
+
+/** Data class for crisis escalation. */
+<span class="nc" id="L516">data class CrisisEscalation(</span>
+<span class="nc" id="L517">    val severity: CrisisSeverity,</span>
+<span class="nc" id="L518">    val indicators: List&lt;CrisisIndicator&gt;,</span>
+<span class="nc" id="L519">    val immediateActions: List&lt;String&gt;,</span>
+<span class="nc" id="L520">    val resources: List&lt;String&gt;</span>
+)
+
+/** Enum for crisis severity. */
+enum class CrisisSeverity {
+<span class="nc" id="L525">    LOW, MEDIUM, HIGH, CRITICAL</span>
+<span class="nc" id="L526">}</span>
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

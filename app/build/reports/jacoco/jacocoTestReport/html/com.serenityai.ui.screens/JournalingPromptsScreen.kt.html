@@ -1,0 +1,625 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JournalingPromptsScreen.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.screens</a> &gt; <span class="el_source">JournalingPromptsScreen.kt</span></div><h1>JournalingPromptsScreen.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.screens
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import java.text.SimpleDateFormat
+import java.util.*
+
+import com.serenityai.usecases.JournalingPromptsUseCase
+import com.serenityai.data.models.*
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun JournalingPromptsScreen(
+    onNavigateBack: () -&gt; Unit,
+    onStartJournaling: (String) -&gt; Unit
+<span class="nc bnc" id="L33" title="All 14 branches missed.">) {</span>
+<span class="nc" id="L34">    val useCase = remember { JournalingPromptsUseCase() }</span>
+<span class="nc" id="L35">    var selectedCategory by remember { mutableStateOf(&quot;All&quot;) }</span>
+<span class="nc" id="L36">    var selectedMood by remember { mutableStateOf(&quot;All&quot;) }</span>
+<span class="nc" id="L37">    var showCustomPromptDialog by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L38">    var customPrompt by remember { mutableStateOf(&quot;&quot;) }</span>
+    
+    // Sample data - in production would come from repositories
+<span class="nc" id="L41">    val sampleMoodEntries = remember { generateSampleMoodEntries() }</span>
+<span class="nc" id="L42">    val sampleJournalHistory = remember { emptyList&lt;com.serenityai.data.models.JournalEntry&gt;() }</span>
+    
+<span class="nc" id="L44">    val categories = listOf(&quot;All&quot;, &quot;Reflection&quot;, &quot;Gratitude&quot;, &quot;Growth&quot;, &quot;Relationships&quot;, &quot;Goals&quot;, &quot;Challenges&quot;)</span>
+<span class="nc" id="L45">    val moods = listOf(&quot;All&quot;, &quot;Happy&quot;, &quot;Sad&quot;, &quot;Anxious&quot;, &quot;Grateful&quot;, &quot;Motivated&quot;, &quot;Stressed&quot;)</span>
+    
+    // Generate personalized prompts
+<span class="nc" id="L48">    val promptRecommendation = remember {</span>
+<span class="nc" id="L49">        useCase.getRecommendedPrompts(</span>
+<span class="nc" id="L50">            userId = &quot;user-123&quot;,</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">            currentMood = sampleMoodEntries.lastOrNull()?.mood,</span>
+<span class="nc" id="L52">            recentMoodEntries = sampleMoodEntries.takeLast(7),</span>
+<span class="nc" id="L53">            journalingHistory = sampleJournalHistory</span>
+<span class="nc" id="L54">        )</span>
+    }
+    
+    // Get all prompts
+<span class="nc" id="L58">    val allPrompts = remember {</span>
+<span class="nc" id="L59">        useCase.generatePersonalizedPrompts(</span>
+<span class="nc" id="L60">            request = PromptGenerationRequest(</span>
+<span class="nc" id="L61">                userId = &quot;user-123&quot;,</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">                currentMood = sampleMoodEntries.lastOrNull()?.mood,</span>
+<span class="nc" id="L63">                moodTags = extractMoodTagsFromMoodEntries(sampleMoodEntries)</span>
+            ),
+<span class="nc" id="L65">            recentMoodEntries = sampleMoodEntries.takeLast(7),</span>
+<span class="nc" id="L66">            journalingHistory = sampleJournalHistory</span>
+<span class="nc" id="L67">        )</span>
+    }
+    
+    // Convert to UI model
+<span class="nc" id="L71">    val aiPrompts = allPrompts.map { prompt -&gt;</span>
+<span class="nc" id="L72">        JournalPrompt(</span>
+<span class="nc" id="L73">            id = prompt.id,</span>
+<span class="nc" id="L74">            title = prompt.title,</span>
+<span class="nc" id="L75">            prompt = prompt.prompt,</span>
+<span class="nc" id="L76">            category = prompt.category.name.replace(&quot;_&quot;, &quot; &quot;),</span>
+<span class="nc bnc" id="L77" title="All 4 branches missed.">            moodTags = prompt.moodTags.map { it.name.lowercase().replaceFirstChar { it.uppercase() } },</span>
+<span class="nc bnc" id="L78" title="All 4 branches missed.">            difficulty = prompt.difficulty.name.replaceFirstChar { it.uppercase() },</span>
+<span class="nc" id="L79">            estimatedTime = &quot;${prompt.estimatedTime} minutes&quot;,</span>
+<span class="nc" id="L80">            isAIGenerated = prompt.isAIGenerated,</span>
+<span class="nc" id="L81">            timesUsed = prompt.timesUsed</span>
+<span class="nc" id="L82">        )</span>
+    }
+    
+    // Filter prompts
+<span class="nc" id="L86">    val filteredPrompts = useCase.filterPrompts(</span>
+<span class="nc" id="L87">        prompts = allPrompts,</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        category = if (selectedCategory == &quot;All&quot;) null else parseCategory(selectedCategory),</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        moodTags = if (selectedMood == &quot;All&quot;) emptyList() else listOf(parseMoodTag(selectedMood))</span>
+<span class="nc" id="L90">    ).map { prompt -&gt;</span>
+<span class="nc" id="L91">        JournalPrompt(</span>
+<span class="nc" id="L92">            id = prompt.id,</span>
+<span class="nc" id="L93">            title = prompt.title,</span>
+<span class="nc" id="L94">            prompt = prompt.prompt,</span>
+<span class="nc" id="L95">            category = prompt.category.name.replace(&quot;_&quot;, &quot; &quot;),</span>
+<span class="nc bnc" id="L96" title="All 4 branches missed.">            moodTags = prompt.moodTags.map { it.name.lowercase().replaceFirstChar { it.uppercase() } },</span>
+<span class="nc bnc" id="L97" title="All 4 branches missed.">            difficulty = prompt.difficulty.name.replaceFirstChar { it.uppercase() },</span>
+<span class="nc" id="L98">            estimatedTime = &quot;${prompt.estimatedTime} minutes&quot;,</span>
+<span class="nc" id="L99">            isAIGenerated = prompt.isAIGenerated,</span>
+<span class="nc" id="L100">            timesUsed = prompt.timesUsed</span>
+<span class="nc" id="L101">        )</span>
+    }
+    
+<span class="nc" id="L104">    Scaffold(</span>
+<span class="nc" id="L105">        topBar = {</span>
+<span class="nc bnc" id="L106" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L107" title="All 8 branches missed.">                title = { Text(&quot;AI Journaling Prompts&quot;) },</span>
+<span class="nc" id="L108">                navigationIcon = {</span>
+<span class="nc bnc" id="L109" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L110" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L111">                    }</span>
+<span class="nc" id="L112">                },</span>
+<span class="nc" id="L113">                actions = {</span>
+<span class="nc bnc" id="L114" title="All 8 branches missed.">                    IconButton(onClick = { showCustomPromptDialog = true }) {</span>
+<span class="nc bnc" id="L115" title="All 8 branches missed.">                        Icon(Icons.Default.Add, contentDescription = &quot;Custom Prompt&quot;)</span>
+<span class="nc" id="L116">                    }</span>
+<span class="nc" id="L117">                }</span>
+<span class="nc" id="L118">            )</span>
+<span class="nc" id="L119">        }</span>
+<span class="nc" id="L120">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L121" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L122">            modifier = Modifier</span>
+<span class="nc" id="L123">                .fillMaxSize()</span>
+<span class="nc" id="L124">                .padding(paddingValues)</span>
+<span class="nc" id="L125">                .padding(16.dp)</span>
+        ) {
+            // AI Status and Personalization
+<span class="nc" id="L128">            Card(</span>
+<span class="nc" id="L129">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L130">                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L131">            ) {</span>
+<span class="nc bnc" id="L132" title="All 6 branches missed.">                Column(</span>
+<span class="nc" id="L133">                    modifier = Modifier.padding(16.dp)</span>
+                ) {
+<span class="nc" id="L135">                    Row(</span>
+<span class="nc" id="L136">                        verticalAlignment = Alignment.CenterVertically</span>
+                    ) {
+<span class="nc" id="L138">                        Icon(</span>
+<span class="nc" id="L139">                            Icons.Default.Psychology,</span>
+<span class="nc" id="L140">                            contentDescription = null,</span>
+<span class="nc" id="L141">                            tint = MaterialTheme.colorScheme.primary</span>
+                        )
+<span class="nc" id="L143">                        Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L144">                        Text(</span>
+<span class="nc" id="L145">                            text = &quot;AI-Powered Prompts&quot;,</span>
+<span class="nc" id="L146">                            style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L147">                            fontWeight = FontWeight.Bold</span>
+                        )
+<span class="nc" id="L149">                    }</span>
+                    
+<span class="nc" id="L151">                    Spacer(modifier = Modifier.height(8.dp))</span>
+                    
+<span class="nc" id="L153">                    Text(</span>
+<span class="nc" id="L154">                        text = &quot;Prompts are personalized based on your mood patterns, writing history, and preferences&quot;,</span>
+<span class="nc" id="L155">                        style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L156">                        color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                    )
+                    
+<span class="nc" id="L159">                    Spacer(modifier = Modifier.height(8.dp))</span>
+                    
+<span class="nc" id="L161">                    Row(</span>
+<span class="nc" id="L162">                        verticalAlignment = Alignment.CenterVertically</span>
+                    ) {
+<span class="nc" id="L164">                        Icon(</span>
+<span class="nc" id="L165">                            Icons.Default.TrendingUp,</span>
+<span class="nc" id="L166">                            contentDescription = null,</span>
+<span class="nc" id="L167">                            modifier = Modifier.size(16.dp),</span>
+<span class="nc" id="L168">                            tint = Color(0xFF4CAF50)</span>
+                        )
+<span class="nc" id="L170">                        Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L171">                        Text(</span>
+<span class="nc" id="L172">                            text = &quot;Personalization: ${(promptRecommendation.personalizationScore * 100).toInt()}% accuracy&quot;,</span>
+<span class="nc" id="L173">                            style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L174">                            color = Color(0xFF4CAF50)</span>
+                        )
+<span class="nc" id="L176">                    }</span>
+<span class="nc" id="L177">                }</span>
+<span class="nc" id="L178">            }</span>
+            
+<span class="nc" id="L180">            Spacer(modifier = Modifier.height(16.dp))</span>
+            
+            // Filter Section
+<span class="nc" id="L183">            Card(</span>
+<span class="nc" id="L184">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L185">                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L186">            ) {</span>
+<span class="nc bnc" id="L187" title="All 6 branches missed.">                Column(</span>
+<span class="nc" id="L188">                    modifier = Modifier.padding(16.dp)</span>
+                ) {
+<span class="nc" id="L190">                    Text(</span>
+<span class="nc" id="L191">                        text = &quot;Filter Prompts&quot;,</span>
+<span class="nc" id="L192">                        style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L193">                        fontWeight = FontWeight.Bold</span>
+                    )
+                    
+<span class="nc" id="L196">                    Spacer(modifier = Modifier.height(12.dp))</span>
+                    
+<span class="nc" id="L198">                    Text(</span>
+<span class="nc" id="L199">                        text = &quot;Category:&quot;,</span>
+<span class="nc" id="L200">                        style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L201">                        fontWeight = FontWeight.Medium</span>
+                    )
+                    
+<span class="nc" id="L204">                    Spacer(modifier = Modifier.height(8.dp))</span>
+                    
+<span class="nc" id="L206">                    LazyRow(</span>
+<span class="nc" id="L207">                        horizontalArrangement = Arrangement.spacedBy(8.dp)</span>
+<span class="nc" id="L208">                    ) {</span>
+<span class="nc" id="L209">                        items(categories) { category -&gt;</span>
+                            FilterChip(
+<span class="nc" id="L211">                                onClick = { selectedCategory = category },</span>
+<span class="nc bnc" id="L212" title="All 8 branches missed.">                                label = { Text(category) },</span>
+                                selected = selectedCategory == category
+                            )
+                        }
+<span class="nc" id="L216">                    }</span>
+                    
+<span class="nc" id="L218">                    Spacer(modifier = Modifier.height(12.dp))</span>
+                    
+<span class="nc" id="L220">                    Text(</span>
+<span class="nc" id="L221">                        text = &quot;Mood:&quot;,</span>
+<span class="nc" id="L222">                        style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L223">                        fontWeight = FontWeight.Medium</span>
+                    )
+                    
+<span class="nc" id="L226">                    Spacer(modifier = Modifier.height(8.dp))</span>
+                    
+<span class="nc" id="L228">                    LazyRow(</span>
+<span class="nc" id="L229">                        horizontalArrangement = Arrangement.spacedBy(8.dp)</span>
+<span class="nc" id="L230">                    ) {</span>
+<span class="nc" id="L231">                        items(moods) { mood -&gt;</span>
+                            FilterChip(
+<span class="nc" id="L233">                                onClick = { selectedMood = mood },</span>
+<span class="nc bnc" id="L234" title="All 8 branches missed.">                                label = { Text(mood) },</span>
+                                selected = selectedMood == mood
+                            )
+                        }
+<span class="nc" id="L238">                    }</span>
+<span class="nc" id="L239">                }</span>
+<span class="nc" id="L240">            }</span>
+            
+<span class="nc" id="L242">            Spacer(modifier = Modifier.height(16.dp))</span>
+            
+            // Personalized Recommendations
+<span class="nc" id="L245">            Card(</span>
+<span class="nc" id="L246">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L247">                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L248">            ) {</span>
+<span class="nc bnc" id="L249" title="All 6 branches missed.">                Column(</span>
+<span class="nc" id="L250">                    modifier = Modifier.padding(16.dp)</span>
+                ) {
+<span class="nc" id="L252">                    Row(</span>
+<span class="nc" id="L253">                        verticalAlignment = Alignment.CenterVertically</span>
+                    ) {
+<span class="nc" id="L255">                        Icon(</span>
+<span class="nc" id="L256">                            Icons.Default.Recommend,</span>
+<span class="nc" id="L257">                            contentDescription = null,</span>
+<span class="nc" id="L258">                            tint = MaterialTheme.colorScheme.primary</span>
+                        )
+<span class="nc" id="L260">                        Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L261">                        Text(</span>
+<span class="nc" id="L262">                            text = &quot;Recommended for You&quot;,</span>
+<span class="nc" id="L263">                            style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L264">                            fontWeight = FontWeight.Bold</span>
+                        )
+<span class="nc" id="L266">                    }</span>
+                    
+<span class="nc" id="L268">                    Spacer(modifier = Modifier.height(12.dp))</span>
+                    
+<span class="nc" id="L270">                    Text(</span>
+<span class="nc" id="L271">                        text = &quot;Based on your recent mood and journaling patterns&quot;,</span>
+<span class="nc" id="L272">                        style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L273">                        color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                    )
+                    
+<span class="nc" id="L276">                    Spacer(modifier = Modifier.height(8.dp))</span>
+                    
+<span class="nc" id="L278">                    LazyRow(</span>
+<span class="nc" id="L279">                        horizontalArrangement = Arrangement.spacedBy(8.dp)</span>
+<span class="nc" id="L280">                    ) {</span>
+<span class="nc" id="L281">                        items(promptRecommendation.recommendedPrompts.take(3).map { prompt -&gt;</span>
+<span class="nc" id="L282">                            JournalPrompt(</span>
+<span class="nc" id="L283">                                id = prompt.id,</span>
+<span class="nc" id="L284">                                title = prompt.title,</span>
+<span class="nc" id="L285">                                prompt = prompt.prompt,</span>
+<span class="nc" id="L286">                                category = prompt.category.name.replace(&quot;_&quot;, &quot; &quot;),</span>
+<span class="nc bnc" id="L287" title="All 4 branches missed.">                                moodTags = prompt.moodTags.map { it.name.lowercase().replaceFirstChar { it.uppercase() } },</span>
+<span class="nc bnc" id="L288" title="All 4 branches missed.">                                difficulty = prompt.difficulty.name.replaceFirstChar { it.uppercase() },</span>
+<span class="nc" id="L289">                                estimatedTime = &quot;${prompt.estimatedTime} minutes&quot;,</span>
+<span class="nc" id="L290">                                isAIGenerated = prompt.isAIGenerated,</span>
+<span class="nc" id="L291">                                timesUsed = prompt.timesUsed</span>
+<span class="nc" id="L292">                            )</span>
+                        }) { prompt -&gt;
+                            RecommendationCard(
+                                prompt = prompt,
+<span class="nc" id="L296">                                onClick = { onStartJournaling(prompt.id) }</span>
+                            )
+                        }
+<span class="nc" id="L299">                    }</span>
+<span class="nc" id="L300">                }</span>
+<span class="nc" id="L301">            }</span>
+            
+<span class="nc" id="L303">            Spacer(modifier = Modifier.height(16.dp))</span>
+            
+            // Prompt Library
+<span class="nc" id="L306">            Text(</span>
+<span class="nc" id="L307">                text = &quot;Prompt Library (${filteredPrompts.size})&quot;,</span>
+<span class="nc" id="L308">                style = MaterialTheme.typography.headlineSmall,</span>
+<span class="nc" id="L309">                fontWeight = FontWeight.Bold</span>
+            )
+            
+<span class="nc" id="L312">            Spacer(modifier = Modifier.height(8.dp))</span>
+            
+<span class="nc" id="L314">            LazyColumn(</span>
+<span class="nc" id="L315">                verticalArrangement = Arrangement.spacedBy(12.dp)</span>
+<span class="nc" id="L316">            ) {</span>
+<span class="nc" id="L317">                items(filteredPrompts) { prompt -&gt;</span>
+                    PromptCard(
+                        prompt = prompt,
+<span class="nc" id="L320">                        onClick = { onStartJournaling(prompt.id) }</span>
+                    )
+                }
+<span class="nc" id="L323">            }</span>
+<span class="nc" id="L324">        }</span>
+<span class="nc" id="L325">    }</span>
+    
+    // Custom Prompt Dialog
+<span class="nc bnc" id="L328" title="All 2 branches missed.">    if (showCustomPromptDialog) {</span>
+<span class="nc bnc" id="L329" title="All 2 branches missed.">        AlertDialog(</span>
+<span class="nc" id="L330">            onDismissRequest = { showCustomPromptDialog = false },</span>
+<span class="nc bnc" id="L331" title="All 8 branches missed.">            title = { Text(&quot;Generate Custom Prompt&quot;) },</span>
+<span class="nc" id="L332">            text = {</span>
+<span class="nc bnc" id="L333" title="All 6 branches missed.">                Column {</span>
+<span class="nc" id="L334">                    Text(&quot;Describe what you'd like to write about:&quot;)</span>
+<span class="nc" id="L335">                    Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L336">                    OutlinedTextField(</span>
+<span class="nc" id="L337">                        value = customPrompt,</span>
+<span class="nc" id="L338">                        onValueChange = { customPrompt = it },</span>
+<span class="nc bnc" id="L339" title="All 8 branches missed.">                        label = { Text(&quot;Topic or theme&quot;) },</span>
+<span class="nc" id="L340">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L341">                        maxLines = 3</span>
+                    )
+<span class="nc" id="L343">                }</span>
+<span class="nc" id="L344">            },</span>
+<span class="nc" id="L345">            confirmButton = {</span>
+<span class="nc bnc" id="L346" title="All 8 branches missed.">                TextButton(</span>
+<span class="nc" id="L347">                    onClick = { </span>
+<span class="nc" id="L348">                        showCustomPromptDialog = false</span>
+<span class="nc" id="L349">                        customPrompt = &quot;&quot;</span>
+<span class="nc" id="L350">                    }</span>
+<span class="nc" id="L351">                ) {</span>
+<span class="nc bnc" id="L352" title="All 8 branches missed.">                    Text(&quot;Generate&quot;)</span>
+<span class="nc" id="L353">                }</span>
+<span class="nc" id="L354">            },</span>
+<span class="nc" id="L355">            dismissButton = {</span>
+<span class="nc bnc" id="L356" title="All 8 branches missed.">                TextButton(onClick = { showCustomPromptDialog = false }) {</span>
+<span class="nc bnc" id="L357" title="All 8 branches missed.">                    Text(&quot;Cancel&quot;)</span>
+<span class="nc" id="L358">                }</span>
+<span class="nc" id="L359">            }</span>
+        )
+    }
+<span class="nc bnc" id="L362" title="All 2 branches missed.">}</span>
+
+@Composable
+fun RecommendationCard(
+    prompt: JournalPrompt,
+    onClick: () -&gt; Unit
+<span class="nc bnc" id="L368" title="All 14 branches missed.">) {</span>
+<span class="nc bnc" id="L369" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L370">        modifier = Modifier</span>
+<span class="nc" id="L371">            .width(250.dp)</span>
+<span class="nc bnc" id="L372" title="All 2 branches missed.">            .clickable { onClick() },</span>
+<span class="nc" id="L373">        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)</span>
+<span class="nc" id="L374">    ) {</span>
+<span class="nc bnc" id="L375" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L376">            modifier = Modifier.padding(12.dp)</span>
+        ) {
+<span class="nc" id="L378">            Row(</span>
+<span class="nc" id="L379">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L380">                horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L381">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L383">                Text(</span>
+<span class="nc" id="L384">                    text = prompt.title,</span>
+<span class="nc" id="L385">                    style = MaterialTheme.typography.titleSmall,</span>
+<span class="nc" id="L386">                    fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L387">                    modifier = Modifier.weight(1f)</span>
+                )
+                
+<span class="nc" id="L390">                Icon(</span>
+<span class="nc" id="L391">                    Icons.Default.Psychology,</span>
+<span class="nc" id="L392">                    contentDescription = &quot;AI Generated&quot;,</span>
+<span class="nc" id="L393">                    modifier = Modifier.size(16.dp),</span>
+<span class="nc" id="L394">                    tint = MaterialTheme.colorScheme.primary</span>
+                )
+<span class="nc" id="L396">            }</span>
+            
+<span class="nc" id="L398">            Spacer(modifier = Modifier.height(8.dp))</span>
+            
+<span class="nc" id="L400">            Text(</span>
+<span class="nc" id="L401">                text = prompt.prompt,</span>
+<span class="nc" id="L402">                style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L403">                color = MaterialTheme.colorScheme.onSurfaceVariant,</span>
+<span class="nc" id="L404">                maxLines = 3</span>
+            )
+            
+<span class="nc" id="L407">            Spacer(modifier = Modifier.height(8.dp))</span>
+            
+<span class="nc" id="L409">            Row(</span>
+<span class="nc" id="L410">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L411">                horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L412">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L414">                Text(</span>
+<span class="nc" id="L415">                    text = prompt.estimatedTime,</span>
+<span class="nc" id="L416">                    style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L417">                    color = MaterialTheme.colorScheme.primary</span>
+                )
+                
+<span class="nc" id="L420">                DifficultyChip(difficulty = prompt.difficulty)</span>
+<span class="nc" id="L421">            }</span>
+<span class="nc" id="L422">        }</span>
+<span class="nc" id="L423">    }</span>
+<span class="nc bnc" id="L424" title="All 2 branches missed.">}</span>
+
+@Composable
+fun PromptCard(
+    prompt: JournalPrompt,
+    onClick: () -&gt; Unit
+<span class="nc bnc" id="L430" title="All 14 branches missed.">) {</span>
+<span class="nc bnc" id="L431" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L432">        modifier = Modifier</span>
+<span class="nc" id="L433">            .fillMaxWidth()</span>
+<span class="nc bnc" id="L434" title="All 2 branches missed.">            .clickable { onClick() },</span>
+<span class="nc" id="L435">        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)</span>
+<span class="nc" id="L436">    ) {</span>
+<span class="nc bnc" id="L437" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L438">            modifier = Modifier.padding(16.dp)</span>
+        ) {
+<span class="nc" id="L440">            Row(</span>
+<span class="nc" id="L441">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L442">                horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L443">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L445">                Text(</span>
+<span class="nc" id="L446">                    text = prompt.title,</span>
+<span class="nc" id="L447">                    style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L448">                    fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L449">                    modifier = Modifier.weight(1f)</span>
+                )
+                
+<span class="nc bnc" id="L452" title="All 2 branches missed.">                if (prompt.isAIGenerated) {</span>
+<span class="nc" id="L453">                    Icon(</span>
+<span class="nc" id="L454">                        Icons.Default.Psychology,</span>
+<span class="nc" id="L455">                        contentDescription = &quot;AI Generated&quot;,</span>
+<span class="nc" id="L456">                        modifier = Modifier.size(20.dp),</span>
+<span class="nc" id="L457">                        tint = MaterialTheme.colorScheme.primary</span>
+                    )
+                }
+<span class="nc" id="L460">            }</span>
+            
+<span class="nc" id="L462">            Spacer(modifier = Modifier.height(8.dp))</span>
+            
+<span class="nc" id="L464">            Text(</span>
+<span class="nc" id="L465">                text = prompt.prompt,</span>
+<span class="nc" id="L466">                style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L467">                color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+            )
+            
+<span class="nc" id="L470">            Spacer(modifier = Modifier.height(12.dp))</span>
+            
+<span class="nc" id="L472">            Row(</span>
+<span class="nc" id="L473">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L474">                horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L475">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L477">                Row(</span>
+<span class="nc" id="L478">                    verticalAlignment = Alignment.CenterVertically</span>
+                ) {
+<span class="nc" id="L480">                    Icon(</span>
+<span class="nc" id="L481">                        Icons.Default.Timer,</span>
+<span class="nc" id="L482">                        contentDescription = null,</span>
+<span class="nc" id="L483">                        modifier = Modifier.size(16.dp),</span>
+<span class="nc" id="L484">                        tint = MaterialTheme.colorScheme.primary</span>
+                    )
+<span class="nc" id="L486">                    Spacer(modifier = Modifier.width(4.dp))</span>
+<span class="nc" id="L487">                    Text(</span>
+<span class="nc" id="L488">                        text = prompt.estimatedTime,</span>
+<span class="nc" id="L489">                        style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L490">                        color = MaterialTheme.colorScheme.primary</span>
+                    )
+<span class="nc" id="L492">                }</span>
+                
+<span class="nc" id="L494">                DifficultyChip(difficulty = prompt.difficulty)</span>
+                
+<span class="nc bnc" id="L496" title="All 2 branches missed.">                if (prompt.timesUsed &gt; 0) {</span>
+<span class="nc" id="L497">                    Text(</span>
+<span class="nc" id="L498">                        text = &quot;${prompt.timesUsed}x used&quot;,</span>
+<span class="nc" id="L499">                        style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L500">                        color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                    )
+                }
+<span class="nc" id="L503">            }</span>
+            
+<span class="nc" id="L505">            Spacer(modifier = Modifier.height(8.dp))</span>
+            
+<span class="nc" id="L507">            Row(</span>
+<span class="nc" id="L508">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L509">                horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L510">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L512">                LazyRow(</span>
+<span class="nc" id="L513">                    horizontalArrangement = Arrangement.spacedBy(4.dp)</span>
+<span class="nc" id="L514">                ) {</span>
+<span class="nc bnc" id="L515" title="All 2 branches missed.">                    items(prompt.moodTags.filter { it != &quot;All&quot; }) { mood -&gt;</span>
+                        MoodTag(mood = mood)
+                    }
+<span class="nc" id="L518">                }</span>
+                
+<span class="nc" id="L520">                CategoryChip(category = prompt.category)</span>
+<span class="nc" id="L521">            }</span>
+<span class="nc" id="L522">        }</span>
+<span class="nc" id="L523">    }</span>
+<span class="nc bnc" id="L524" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L527" title="All 10 branches missed.">fun CategoryChip(category: String) {</span>
+<span class="nc" id="L528">    Box(</span>
+<span class="nc" id="L529">        modifier = Modifier</span>
+<span class="nc" id="L530">            .clip(RoundedCornerShape(8.dp))</span>
+<span class="nc" id="L531">            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))</span>
+<span class="nc" id="L532">            .padding(horizontal = 8.dp, vertical = 4.dp)</span>
+    ) {
+<span class="nc" id="L534">        Text(</span>
+<span class="nc" id="L535">            text = category,</span>
+<span class="nc" id="L536">            style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L537">            color = MaterialTheme.colorScheme.primary,</span>
+<span class="nc" id="L538">            fontWeight = FontWeight.Medium</span>
+        )
+<span class="nc" id="L540">    }</span>
+<span class="nc bnc" id="L541" title="All 2 branches missed.">}</span>
+
+// Data class for UI - keeping for backward compatibility
+// Main data model is in com.serenityai.data.models.JournalingPrompt
+<span class="nc" id="L545">data class JournalPrompt(</span>
+<span class="nc" id="L546">    val id: String,</span>
+<span class="nc" id="L547">    val title: String,</span>
+<span class="nc" id="L548">    val prompt: String,</span>
+<span class="nc" id="L549">    val category: String,</span>
+<span class="nc" id="L550">    val moodTags: List&lt;String&gt;,</span>
+<span class="nc" id="L551">    val difficulty: String,</span>
+<span class="nc" id="L552">    val estimatedTime: String,</span>
+<span class="nc" id="L553">    val isAIGenerated: Boolean,</span>
+<span class="nc" id="L554">    val timesUsed: Int</span>
+)
+
+// Helper functions
+private fun generateSampleMoodEntries(): List&lt;com.serenityai.data.models.MoodEntry&gt; {
+<span class="nc" id="L559">    val entries = mutableListOf&lt;com.serenityai.data.models.MoodEntry&gt;()</span>
+<span class="nc" id="L560">    val calendar = Calendar.getInstance()</span>
+    
+<span class="nc bnc" id="L562" title="All 2 branches missed.">    repeat(7) { dayOffset -&gt;</span>
+<span class="nc" id="L563">        calendar.time = Date(System.currentTimeMillis() - (7 - dayOffset) * 86400000L)</span>
+<span class="nc" id="L564">        entries.add(</span>
+<span class="nc" id="L565">            com.serenityai.data.models.MoodEntry(</span>
+<span class="nc" id="L566">                id = &quot;mood-$dayOffset&quot;,</span>
+<span class="nc" id="L567">                userId = &quot;user-123&quot;,</span>
+<span class="nc" id="L568">                date = calendar.time,</span>
+<span class="nc" id="L569">                mood = (3 + Math.random() * 4).toInt().coerceIn(1, 10),</span>
+<span class="nc" id="L570">                energy = 5,</span>
+<span class="nc" id="L571">                stress = 5,</span>
+<span class="nc" id="L572">                anxiety = 5,</span>
+<span class="nc" id="L573">                sleep = 6</span>
+            )
+        )
+<span class="nc" id="L576">    }</span>
+    
+<span class="nc" id="L578">    return entries</span>
+}
+
+private fun extractMoodTagsFromMoodEntries(entries: List&lt;com.serenityai.data.models.MoodEntry&gt;): List&lt;MoodTag&gt; {
+<span class="nc bnc" id="L582" title="All 2 branches missed.">    if (entries.isEmpty()) return emptyList()</span>
+<span class="nc" id="L583">    val averageMood = entries.map { it.mood.toDouble() }.average().toInt()</span>
+<span class="nc" id="L584">    return listOf(determineMoodTagFromValue(averageMood))</span>
+}
+
+private fun determineMoodTagFromValue(mood: Int): MoodTag {
+<span class="nc" id="L588">    return when {</span>
+<span class="nc bnc" id="L589" title="All 2 branches missed.">        mood &gt;= 8 -&gt; MoodTag.HAPPY</span>
+<span class="nc bnc" id="L590" title="All 2 branches missed.">        mood &gt;= 7 -&gt; MoodTag.GRATEFUL</span>
+<span class="nc bnc" id="L591" title="All 2 branches missed.">        mood &gt;= 6 -&gt; MoodTag.CALM</span>
+<span class="nc bnc" id="L592" title="All 2 branches missed.">        mood &gt;= 5 -&gt; MoodTag.MOTIVATED</span>
+<span class="nc bnc" id="L593" title="All 2 branches missed.">        mood &gt;= 4 -&gt; MoodTag.STRESSED</span>
+<span class="nc bnc" id="L594" title="All 2 branches missed.">        mood &gt;= 3 -&gt; MoodTag.SAD</span>
+<span class="nc bnc" id="L595" title="All 2 branches missed.">        mood &gt;= 2 -&gt; MoodTag.ANXIOUS</span>
+<span class="nc" id="L596">        else -&gt; MoodTag.OVERWHELMED</span>
+    }
+}
+
+private fun parseCategory(category: String): PromptCategory? {
+<span class="nc bnc" id="L601" title="All 7 branches missed.">    return when (category.lowercase()) {</span>
+<span class="nc" id="L602">        &quot;reflection&quot; -&gt; PromptCategory.REFLECTION</span>
+<span class="nc" id="L603">        &quot;gratitude&quot; -&gt; PromptCategory.GRATITUDE</span>
+<span class="nc" id="L604">        &quot;growth&quot; -&gt; PromptCategory.GROWTH</span>
+<span class="nc" id="L605">        &quot;relationships&quot; -&gt; PromptCategory.RELATIONSHIPS</span>
+<span class="nc" id="L606">        &quot;goals&quot; -&gt; PromptCategory.GOALS</span>
+<span class="nc" id="L607">        &quot;challenges&quot; -&gt; PromptCategory.CHALLENGES</span>
+<span class="nc" id="L608">        else -&gt; null</span>
+    }
+}
+
+private fun parseMoodTag(mood: String): MoodTag {
+<span class="nc bnc" id="L613" title="All 9 branches missed.">    return when (mood.lowercase()) {</span>
+<span class="nc" id="L614">        &quot;happy&quot; -&gt; MoodTag.HAPPY</span>
+<span class="nc" id="L615">        &quot;sad&quot; -&gt; MoodTag.SAD</span>
+<span class="nc" id="L616">        &quot;anxious&quot; -&gt; MoodTag.ANXIOUS</span>
+<span class="nc" id="L617">        &quot;grateful&quot; -&gt; MoodTag.GRATEFUL</span>
+<span class="nc" id="L618">        &quot;motivated&quot; -&gt; MoodTag.MOTIVATED</span>
+<span class="nc" id="L619">        &quot;stressed&quot; -&gt; MoodTag.STRESSED</span>
+<span class="nc" id="L620">        &quot;calm&quot; -&gt; MoodTag.CALM</span>
+<span class="nc" id="L621">        &quot;overwhelmed&quot; -&gt; MoodTag.OVERWHELMED</span>
+<span class="nc" id="L622">        else -&gt; MoodTag.ALL</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

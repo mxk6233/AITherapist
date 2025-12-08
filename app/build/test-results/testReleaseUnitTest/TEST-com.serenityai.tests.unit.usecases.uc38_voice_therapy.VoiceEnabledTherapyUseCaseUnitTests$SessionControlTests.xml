@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 2: Session Controls - Validates Secondary UC38 Functionality" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:07" hostname="Mohammads-MacBook-Pro.local" time="0.105">
+  <properties/>
+  <testcase name="UC38-REQ-5: System MUST end voice sessions and track duration" classname="com.serenityai.tests.unit.usecases.uc38_voice_therapy.VoiceEnabledTherapyUseCaseUnitTests$SessionControlTests" time="0.103"/>
+  <testcase name="UC38-REQ-4: System MUST pause and resume voice sessions" classname="com.serenityai.tests.unit.usecases.uc38_voice_therapy.VoiceEnabledTherapyUseCaseUnitTests$SessionControlTests" time="0.0"/>
+  <testcase name="UC38-REQ-6: System MUST validate session operations" classname="com.serenityai.tests.unit.usecases.uc38_voice_therapy.VoiceEnabledTherapyUseCaseUnitTests$SessionControlTests" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

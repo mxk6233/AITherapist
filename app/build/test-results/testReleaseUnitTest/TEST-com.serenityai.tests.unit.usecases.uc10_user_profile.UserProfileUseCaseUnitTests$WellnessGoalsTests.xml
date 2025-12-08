@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 2: Wellness Goals Management - Validates Secondary UC10 Functionality" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:07" hostname="Mohammads-MacBook-Pro.local" time="0.002">
+  <properties/>
+  <testcase name="UC10-REQ-5: System MUST create wellness goals" classname="com.serenityai.tests.unit.usecases.uc10_user_profile.UserProfileUseCaseUnitTests$WellnessGoalsTests" time="0.001"/>
+  <testcase name="UC10-REQ-6: System MUST update goal progress" classname="com.serenityai.tests.unit.usecases.uc10_user_profile.UserProfileUseCaseUnitTests$WellnessGoalsTests" time="0.0"/>
+  <testcase name="UC10-REQ-7: System MUST retrieve user's wellness goals" classname="com.serenityai.tests.unit.usecases.uc10_user_profile.UserProfileUseCaseUnitTests$WellnessGoalsTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 3: Feedback and Support History - Validates Advanced UC25 Functionality" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-07T08:20:33" hostname="Mohammads-MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="UC25-REQ-9: System MUST retrieve user's support ticket history" classname="com.serenityai.tests.unit.usecases.uc25_user_support.UserSupportUseCaseUnitTests$FeedbackAndHistoryTests" time="0.0"/>
+  <testcase name="UC25-REQ-7: System MUST accept and track user feedback" classname="com.serenityai.tests.unit.usecases.uc25_user_support.UserSupportUseCaseUnitTests$FeedbackAndHistoryTests" time="0.0"/>
+  <testcase name="UC25-REQ-8: System MUST validate feedback input" classname="com.serenityai.tests.unit.usecases.uc25_user_support.UserSupportUseCaseUnitTests$FeedbackAndHistoryTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

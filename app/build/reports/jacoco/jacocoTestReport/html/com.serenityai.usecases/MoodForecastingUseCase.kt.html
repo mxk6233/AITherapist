@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MoodForecastingUseCase.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.usecases</a> &gt; <span class="el_source">MoodForecastingUseCase.kt</span></div><h1>MoodForecastingUseCase.kt</h1><pre class="source lang-java linenums">package com.serenityai.usecases
+
+import com.serenityai.data.models.*
+import java.util.Calendar
+import java.util.Date
+
+/**
+ * UC26: AI-Powered Mood Forecasting - Use Case
+ * 
+ * Use Case Goal: Enable users to receive predictive mood analytics so they can proactively 
+ * plan self-care activities and interventions before mood declines occur.
+ * 
+ * Responsibilities:
+ * - Generate 7-day mood forecasts based on historical patterns
+ * - Identify cyclical patterns (weekly, seasonal)
+ * - Provide confidence scores for predictions
+ * - Trigger proactive intervention recommendations
+ * - Personalize forecasts based on user patterns
+ */
+<span class="nc" id="L20">class MoodForecastingUseCase {</span>
+    
+    /**
+     * Generates a complete 7-day mood forecast
+     * 
+     * @param historicalMoodData Historical mood entries (ideally 30+ days)
+     * @return MoodForecast with 7 days of predictions
+     */
+    fun generate7DayForecast(historicalMoodData: List&lt;MoodEntry&gt;): MoodForecast {
+<span class="nc bnc" id="L29" title="All 4 branches missed.">        require(historicalMoodData.isNotEmpty()) { &quot;Historical data required for forecasting&quot; }</span>
+        
+        // Generate forecast for next 7 days
+<span class="nc" id="L32">        val forecastDays = (0..6).map { dayOffset -&gt;</span>
+<span class="nc" id="L33">            val date = getDateForDayOffset(dayOffset)</span>
+<span class="nc" id="L34">            val predictedMood = predictMoodForDay(historicalMoodData, dayOffset)</span>
+<span class="nc" id="L35">            val note = generateForecastNote(predictedMood, dayOffset)</span>
+<span class="nc" id="L36">            val confidence = calculateConfidence(historicalMoodData.size, dayOffset)</span>
+<span class="nc" id="L37">            val factors = identifyForecastFactors(historicalMoodData, dayOffset)</span>
+            
+<span class="nc" id="L39">            ForecastDay(</span>
+<span class="nc" id="L40">                day = getDayName(dayOffset),</span>
+<span class="nc" id="L41">                date = date,</span>
+<span class="nc" id="L42">                predictedMood = predictedMood,</span>
+<span class="nc" id="L43">                note = note,</span>
+<span class="nc" id="L44">                confidence = confidence,</span>
+<span class="nc" id="L45">                factors = factors</span>
+<span class="nc" id="L46">            )</span>
+        }
+        
+        // Calculate statistics
+<span class="nc" id="L50">        val averagePredictedMood = forecastDays.map { it.predictedMood }.average().toFloat()</span>
+<span class="nc" id="L51">        val peakDay = forecastDays.maxByOrNull { it.predictedMood }</span>
+<span class="nc" id="L52">        val lowestDay = forecastDays.minByOrNull { it.predictedMood }</span>
+<span class="nc" id="L53">        val overallTrend = calculateTrend(forecastDays)</span>
+<span class="nc" id="L54">        val riskLevel = calculateRiskLevel(forecastDays)</span>
+<span class="nc" id="L55">        val recommendations = generateRecommendations(forecastDays, riskLevel)</span>
+        
+        // Identify patterns
+<span class="nc" id="L58">        val predictions = identifyPatterns(historicalMoodData, forecastDays)</span>
+        
+<span class="nc" id="L60">        return MoodForecast(</span>
+<span class="nc" id="L61">            id = System.currentTimeMillis().toString(),</span>
+<span class="nc bnc" id="L62" title="All 4 branches missed.">            userId = historicalMoodData.firstOrNull()?.userId ?: &quot;&quot;,</span>
+<span class="nc" id="L63">            generatedAt = Date(),</span>
+<span class="nc" id="L64">            forecastDays = forecastDays,</span>
+<span class="nc" id="L65">            predictions = predictions,</span>
+<span class="nc" id="L66">            averagePredictedMood = averagePredictedMood,</span>
+<span class="nc" id="L67">            peakDay = peakDay,</span>
+<span class="nc" id="L68">            lowestDay = lowestDay,</span>
+<span class="nc" id="L69">            overallTrend = overallTrend,</span>
+<span class="nc" id="L70">            riskLevel = riskLevel,</span>
+<span class="nc" id="L71">            recommendations = recommendations</span>
+        )
+    }
+    
+    /**
+     * Identifies weekly cyclical patterns (weekday vs weekend)
+     * 
+     * @param historicalData Historical mood entries
+     * @return WeeklyPattern with weekday/weekend analysis
+     */
+    fun identifyWeeklyPatterns(historicalData: List&lt;MoodEntry&gt;): WeeklyPattern {
+<span class="nc bnc" id="L82" title="All 4 branches missed.">        require(historicalData.isNotEmpty()) { &quot;Historical data required for pattern analysis&quot; }</span>
+        
+<span class="nc" id="L84">        val weekdayMoods = historicalData.filter { entry -&gt;</span>
+<span class="nc" id="L85">            val calendar = Calendar.getInstance().apply { time = entry.date }</span>
+<span class="nc" id="L86">            val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)</span>
+<span class="nc bnc" id="L87" title="All 4 branches missed.">            dayOfWeek != Calendar.SATURDAY &amp;&amp; dayOfWeek != Calendar.SUNDAY</span>
+<span class="nc" id="L88">        }.map { it.mood.toFloat() }</span>
+        
+<span class="nc" id="L90">        val weekendMoods = historicalData.filter { entry -&gt;</span>
+<span class="nc" id="L91">            val calendar = Calendar.getInstance().apply { time = entry.date }</span>
+<span class="nc" id="L92">            val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)</span>
+<span class="nc bnc" id="L93" title="All 4 branches missed.">            dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY</span>
+<span class="nc" id="L94">        }.map { it.mood.toFloat() }</span>
+        
+<span class="nc bnc" id="L96" title="All 4 branches missed.">        val weekdayAverage = if (weekdayMoods.isNotEmpty()) weekdayMoods.average().toFloat() else 3.5f</span>
+<span class="nc bnc" id="L97" title="All 4 branches missed.">        val weekendAverage = if (weekendMoods.isNotEmpty()) weekendMoods.average().toFloat() else 3.5f</span>
+<span class="nc" id="L98">        val weekendBoost = weekendAverage - weekdayAverage</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        val patternStrength = if (weekdayAverage &gt; 0) (weekendBoost / weekdayAverage).toFloat() else 0f</span>
+<span class="nc" id="L100">        val confidence = calculatePatternConfidence(weekdayMoods.size, weekendMoods.size)</span>
+        
+<span class="nc" id="L102">        return WeeklyPattern(</span>
+<span class="nc" id="L103">            weekdayAverage = weekdayAverage,</span>
+<span class="nc" id="L104">            weekendAverage = weekendAverage,</span>
+<span class="nc" id="L105">            weekendBoost = weekendBoost,</span>
+<span class="nc" id="L106">            patternStrength = patternStrength * 100f, // Convert to percentage</span>
+<span class="nc" id="L107">            confidence = confidence</span>
+        )
+    }
+    
+    /**
+     * Provides confidence scores for predictions
+     * 
+     * @param historicalDataSize Number of historical data points
+     * @param dayOffset Days into future (0 = today, 6 = 6 days ahead)
+     * @return Confidence score (0-100%)
+     */
+    fun calculateConfidence(historicalDataSize: Int, dayOffset: Int): Float {
+        // More historical data = higher confidence
+        // Farther into future = lower confidence
+<span class="nc" id="L121">        val dataConfidence = when {</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">            historicalDataSize &gt;= 60 -&gt; 100f</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">            historicalDataSize &gt;= 30 -&gt; 90f</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">            historicalDataSize &gt;= 14 -&gt; 75f</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">            historicalDataSize &gt;= 7 -&gt; 60f</span>
+<span class="nc" id="L126">            else -&gt; 50f</span>
+        }
+        
+<span class="nc" id="L129">        val timeDecay = when {</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">            dayOffset &lt;= 1 -&gt; 1.0f</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">            dayOffset &lt;= 3 -&gt; 0.9f</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">            dayOffset &lt;= 5 -&gt; 0.8f</span>
+<span class="nc" id="L133">            else -&gt; 0.7f</span>
+        }
+        
+<span class="nc" id="L136">        return (dataConfidence * timeDecay).coerceIn(0f, 100f)</span>
+    }
+    
+    /**
+     * Triggers proactive intervention recommendations when low mood is predicted
+     * 
+     * @param forecastDays List of forecast days
+     * @return List of intervention recommendations
+     */
+    fun triggerProactiveInterventions(forecastDays: List&lt;ForecastDay&gt;): List&lt;String&gt; {
+<span class="nc" id="L146">        val lowMoodThreshold = 3.0f</span>
+<span class="nc" id="L147">        val criticalThreshold = 2.5f</span>
+        
+<span class="nc bnc" id="L149" title="All 2 branches missed.">        val lowMoodDays = forecastDays.filter { it.predictedMood &lt; lowMoodThreshold }</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        val criticalDays = forecastDays.filter { it.predictedMood &lt; criticalThreshold }</span>
+        
+<span class="nc bnc" id="L152" title="All 4 branches missed.">        if (criticalDays.isNotEmpty()) {</span>
+<span class="nc" id="L153">            return listOf(</span>
+<span class="nc" id="L154">                &quot;Immediate: Breathing exercises available now&quot;,</span>
+<span class="nc" id="L155">                &quot;Scheduled: Morning meditation for ${criticalDays.first().day}&quot;,</span>
+<span class="nc" id="L156">                &quot;Planned: Contact support network before mood decline&quot;,</span>
+<span class="nc" id="L157">                &quot;Optional: Schedule professional check-in if available&quot;</span>
+            )
+        }
+        
+<span class="nc bnc" id="L161" title="All 4 branches missed.">        if (lowMoodDays.isNotEmpty()) {</span>
+<span class="nc" id="L162">            return listOf(</span>
+<span class="nc" id="L163">                &quot;Breathing exercises to stabilize mood&quot;,</span>
+<span class="nc" id="L164">                &quot;Light physical activity planned&quot;,</span>
+<span class="nc" id="L165">                &quot;Positive social interactions scheduled&quot;,</span>
+<span class="nc" id="L166">                &quot;Relaxation techniques practiced&quot;</span>
+            )
+        }
+        
+<span class="nc" id="L170">        return emptyList()</span>
+    }
+    
+    // Private helper methods
+    
+    private fun predictMoodForDay(historicalData: List&lt;MoodEntry&gt;, dayOffset: Int): Float {
+        // Simple prediction algorithm - in production would use ML model
+<span class="nc" id="L177">        val historicalAverage = historicalData.map { it.mood.toFloat() }.average().toFloat()</span>
+        
+        // Apply weekly pattern
+<span class="nc" id="L180">        val calendar = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, dayOffset) }</span>
+<span class="nc" id="L181">        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)</span>
+<span class="nc bnc" id="L182" title="All 4 branches missed.">        val isWeekend = dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY</span>
+        
+        // Weekend boost effect (if pattern exists)
+<span class="nc" id="L185">        val weeklyPattern = identifyWeeklyPatterns(historicalData)</span>
+<span class="nc bnc" id="L186" title="All 4 branches missed.">        val adjustment = if (isWeekend &amp;&amp; weeklyPattern.patternStrength &gt;= 15f) {</span>
+<span class="nc" id="L187">            weeklyPattern.weekendBoost * 0.5f // Moderate effect</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">        } else if (!isWeekend) {</span>
+<span class="nc" id="L189">            -weeklyPattern.weekendBoost * 0.3f // Slight weekday decline</span>
+        } else {
+<span class="nc" id="L191">            0f</span>
+        }
+        
+        // Add slight random variation for realism
+<span class="nc" id="L195">        val variation = (Math.random() * 0.4 - 0.2).toFloat()</span>
+        
+<span class="nc" id="L197">        return (historicalAverage + adjustment + variation).coerceIn(1.0f, 5.0f)</span>
+    }
+    
+    private fun generateForecastNote(predictedMood: Float, dayOffset: Int): String {
+<span class="nc" id="L201">        return when {</span>
+<span class="nc bnc" id="L202" title="All 5 branches missed.">            predictedMood &gt;= 4.5f -&gt; when (dayOffset) {</span>
+<span class="nc" id="L203">                0 -&gt; &quot;Excellent mood expected - perfect day for important activities&quot;</span>
+<span class="nc" id="L204">                6 -&gt; &quot;Weekend peak predicted - plan social activities&quot;</span>
+<span class="nc" id="L205">                else -&gt; &quot;Peak mood expected - optimal day for social activities&quot;</span>
+            }
+<span class="nc bnc" id="L207" title="All 2 branches missed.">            predictedMood &gt;= 4.0f -&gt; &quot;Stable positive mood - continue current practices&quot;</span>
+<span class="nc bnc" id="L208" title="All 2 branches missed.">            predictedMood &gt;= 3.5f -&gt; &quot;Mild improvement expected - maintain self-care routines&quot;</span>
+<span class="nc bnc" id="L209" title="All 2 branches missed.">            predictedMood &gt;= 3.0f -&gt; &quot;Stable mood expected - no significant changes predicted&quot;</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">            predictedMood &gt;= 2.5f -&gt; &quot;Slight decline expected - consider planning self-care activities&quot;</span>
+<span class="nc" id="L211">            else -&gt; &quot;LOW MOOD PREDICTED - proactive interventions recommended&quot;</span>
+        }
+    }
+    
+    private fun calculateTrend(forecastDays: List&lt;ForecastDay&gt;): ForecastTrend {
+<span class="nc" id="L216">        val moods = forecastDays.map { it.predictedMood }</span>
+<span class="nc" id="L217">        val firstHalf = moods.take(moods.size / 2).average()</span>
+<span class="nc" id="L218">        val secondHalf = moods.drop(moods.size / 2).average()</span>
+        
+<span class="nc" id="L220">        val difference = secondHalf - firstHalf</span>
+<span class="nc" id="L221">        return when {</span>
+<span class="nc bnc" id="L222" title="All 2 branches missed.">            difference &gt; 0.3f -&gt; ForecastTrend.IMPROVING</span>
+<span class="nc bnc" id="L223" title="All 2 branches missed.">            difference &lt; -0.3f -&gt; ForecastTrend.DECLINING</span>
+<span class="nc bnc" id="L224" title="All 2 branches missed.">            moods.maxOrNull()!! - moods.minOrNull()!! &gt; 1.0f -&gt; ForecastTrend.VOLATILE</span>
+<span class="nc" id="L225">            else -&gt; ForecastTrend.STABLE</span>
+        }
+    }
+    
+    private fun calculateRiskLevel(forecastDays: List&lt;ForecastDay&gt;): RiskLevel {
+<span class="nc bnc" id="L230" title="All 2 branches missed.">        val lowMoodDays = forecastDays.count { it.predictedMood &lt; 3.0f }</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">        val criticalDays = forecastDays.count { it.predictedMood &lt; 2.5f }</span>
+        
+<span class="nc" id="L233">        return when {</span>
+<span class="nc bnc" id="L234" title="All 2 branches missed.">            criticalDays &gt;= 2 -&gt; RiskLevel.CRITICAL</span>
+<span class="nc bnc" id="L235" title="All 4 branches missed.">            criticalDays &gt;= 1 || lowMoodDays &gt;= 3 -&gt; RiskLevel.HIGH</span>
+<span class="nc bnc" id="L236" title="All 2 branches missed.">            lowMoodDays &gt;= 1 -&gt; RiskLevel.MEDIUM</span>
+<span class="nc" id="L237">            else -&gt; RiskLevel.LOW</span>
+        }
+    }
+    
+    private fun generateRecommendations(forecastDays: List&lt;ForecastDay&gt;, riskLevel: RiskLevel): List&lt;String&gt; {
+<span class="nc" id="L242">        val recommendations = mutableListOf&lt;String&gt;()</span>
+        
+<span class="nc bnc" id="L244" title="All 4 branches missed.">        when (riskLevel) {</span>
+            RiskLevel.CRITICAL -&gt; {
+<span class="nc" id="L246">                recommendations.add(&quot;CRITICAL: Multiple low mood days predicted - schedule immediate support&quot;)</span>
+<span class="nc" id="L247">                recommendations.add(&quot;Plan intensive self-care activities before predicted decline&quot;)</span>
+<span class="nc" id="L248">                recommendations.add(&quot;Consider reaching out to support network proactively&quot;)</span>
+            }
+            RiskLevel.HIGH -&gt; {
+<span class="nc" id="L251">                recommendations.add(&quot;Plan self-care activities before mood decline&quot;)</span>
+<span class="nc" id="L252">                recommendations.add(&quot;Schedule preferred activities during higher mood days&quot;)</span>
+            }
+            RiskLevel.MEDIUM -&gt; {
+<span class="nc" id="L255">                recommendations.add(&quot;Monitor mood closely and plan self-care activities&quot;)</span>
+            }
+            RiskLevel.LOW -&gt; {
+<span class="nc" id="L258">                recommendations.add(&quot;Forecast shows stable mood - continue current practices&quot;)</span>
+            }
+        }
+        
+        // Add specific day recommendations
+<span class="nc" id="L263">        forecastDays.forEach { day -&gt;</span>
+<span class="nc" id="L264">            when {</span>
+<span class="nc bnc" id="L265" title="All 2 branches missed.">                day.predictedMood &gt;= 4.5f -&gt; recommendations.add(&quot;${day.day}: Peak mood - optimal for social activities&quot;)</span>
+<span class="nc bnc" id="L266" title="All 2 branches missed.">                day.predictedMood &lt; 3.0f -&gt; recommendations.add(&quot;${day.day}: Low mood predicted - plan self-care&quot;)</span>
+            }
+<span class="nc" id="L268">        }</span>
+        
+<span class="nc" id="L270">        return recommendations.distinct()</span>
+    }
+    
+    private fun identifyPatterns(historicalData: List&lt;MoodEntry&gt;, forecastDays: List&lt;ForecastDay&gt;): List&lt;MoodPrediction&gt; {
+<span class="nc" id="L274">        val predictions = mutableListOf&lt;MoodPrediction&gt;()</span>
+        
+        // Identify weekend boost pattern
+<span class="nc" id="L277">        val weeklyPattern = identifyWeeklyPatterns(historicalData)</span>
+<span class="nc bnc" id="L278" title="All 4 branches missed.">        if (weeklyPattern.patternStrength &gt;= 15f &amp;&amp; weeklyPattern.weekendBoost &gt; 0) {</span>
+<span class="nc" id="L279">            predictions.add(</span>
+<span class="nc" id="L280">                MoodPrediction(</span>
+<span class="nc" id="L281">                    title = &quot;Weekend Boost&quot;,</span>
+<span class="nc" id="L282">                    description = &quot;Mood typically improves on weekends by ${String.format(&quot;%.1f&quot;, weeklyPattern.weekendBoost)} points&quot;,</span>
+<span class="nc" id="L283">                    confidence = weeklyPattern.confidence,</span>
+<span class="nc" id="L284">                    patternType = PatternType.WEEKEND_BOOST</span>
+                )
+            )
+        }
+        
+        // Identify midweek dip
+<span class="nc" id="L290">        val weekdayForecasts = forecastDays.filter { </span>
+<span class="nc bnc" id="L291" title="All 6 branches missed.">            !it.day.contains(&quot;Sat&quot;) &amp;&amp; !it.day.contains(&quot;Sun&quot;) &amp;&amp; it.day != &quot;Today&quot;</span>
+        }
+<span class="nc bnc" id="L293" title="All 4 branches missed.">        if (weekdayForecasts.isNotEmpty()) {</span>
+<span class="nc" id="L294">            val midweekMood = weekdayForecasts.map { it.predictedMood }.average()</span>
+<span class="nc" id="L295">            val weekendMood = forecastDays.filter { </span>
+<span class="nc bnc" id="L296" title="All 4 branches missed.">                it.day.contains(&quot;Sat&quot;) || it.day.contains(&quot;Sun&quot;) </span>
+<span class="nc" id="L297">            }.map { it.predictedMood }.average()</span>
+            
+<span class="nc bnc" id="L299" title="All 2 branches missed.">            if (midweekMood &lt; weekendMood - 0.3f) {</span>
+<span class="nc" id="L300">                predictions.add(</span>
+<span class="nc" id="L301">                    MoodPrediction(</span>
+<span class="nc" id="L302">                        title = &quot;Midweek Dip&quot;,</span>
+<span class="nc" id="L303">                        description = &quot;Slight decline on weekdays - common stress pattern&quot;,</span>
+<span class="nc" id="L304">                        confidence = 70f,</span>
+<span class="nc" id="L305">                        patternType = PatternType.MIDWEEK_DIP</span>
+                    )
+                )
+            }
+        }
+        
+        // Identify exercise impact (if historical data suggests it)
+        // In production, would analyze correlation with exercise entries
+        
+<span class="nc" id="L314">        return predictions</span>
+    }
+    
+    private fun identifyForecastFactors(historicalData: List&lt;MoodEntry&gt;, dayOffset: Int): List&lt;ForecastFactor&gt; {
+<span class="nc" id="L318">        val factors = mutableListOf&lt;ForecastFactor&gt;()</span>
+        
+        // Weekend factor
+<span class="nc" id="L321">        val calendar = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, dayOffset) }</span>
+<span class="nc bnc" id="L322" title="All 2 branches missed.">        if (calendar.get(Calendar.DAY_OF_WEEK) in listOf(Calendar.SATURDAY, Calendar.SUNDAY)) {</span>
+<span class="nc" id="L323">            factors.add(ForecastFactor(&quot;Weekend Effect&quot;, 0.3f, 75f))</span>
+        }
+        
+        // Historical trend factor
+<span class="nc bnc" id="L327" title="All 2 branches missed.">        if (historicalData.size &gt;= 7) {</span>
+<span class="nc" id="L328">            factors.add(ForecastFactor(&quot;Historical Trend&quot;, 0.2f, 80f))</span>
+        }
+        
+<span class="nc" id="L331">        return factors</span>
+    }
+    
+    private fun calculatePatternConfidence(weekdayCount: Int, weekendCount: Int): Float {
+<span class="nc" id="L335">        val totalSamples = weekdayCount + weekendCount</span>
+<span class="nc" id="L336">        return when {</span>
+<span class="nc bnc" id="L337" title="All 6 branches missed.">            totalSamples &gt;= 20 &amp;&amp; weekdayCount &gt;= 10 &amp;&amp; weekendCount &gt;= 5 -&gt; 90f</span>
+<span class="nc bnc" id="L338" title="All 6 branches missed.">            totalSamples &gt;= 10 &amp;&amp; weekdayCount &gt;= 5 &amp;&amp; weekendCount &gt;= 2 -&gt; 75f</span>
+<span class="nc bnc" id="L339" title="All 2 branches missed.">            totalSamples &gt;= 5 -&gt; 60f</span>
+<span class="nc" id="L340">            else -&gt; 50f</span>
+        }
+    }
+    
+    private fun getDateForDayOffset(dayOffset: Int): Date {
+<span class="nc" id="L345">        val calendar = Calendar.getInstance()</span>
+<span class="nc" id="L346">        calendar.add(Calendar.DAY_OF_YEAR, dayOffset)</span>
+<span class="nc" id="L347">        return calendar.time</span>
+    }
+    
+    private fun getDayName(dayOffset: Int): String {
+<span class="nc" id="L351">        val calendar = Calendar.getInstance()</span>
+<span class="nc" id="L352">        calendar.add(Calendar.DAY_OF_YEAR, dayOffset)</span>
+<span class="nc bnc" id="L353" title="All 3 branches missed.">        return when (dayOffset) {</span>
+<span class="nc" id="L354">            0 -&gt; &quot;Today&quot;</span>
+<span class="nc" id="L355">            1 -&gt; &quot;Tomorrow&quot;</span>
+            else -&gt; {
+<span class="nc" id="L357">                val dayNames = arrayOf(&quot;Sun&quot;, &quot;Mon&quot;, &quot;Tue&quot;, &quot;Wed&quot;, &quot;Thu&quot;, &quot;Fri&quot;, &quot;Sat&quot;)</span>
+<span class="nc" id="L358">                dayNames[calendar.get(Calendar.DAY_OF_WEEK) - 1]</span>
+            }
+        }
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

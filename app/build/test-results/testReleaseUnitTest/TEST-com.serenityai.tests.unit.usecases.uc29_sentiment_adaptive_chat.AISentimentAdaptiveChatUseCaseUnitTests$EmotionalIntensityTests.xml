@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 2: Emotional Intensity Detection" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:07" hostname="Mohammads-MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="UC29-REQ-6: System MUST detect low emotional intensity" classname="com.serenityai.tests.unit.usecases.uc29_sentiment_adaptive_chat.AISentimentAdaptiveChatUseCaseUnitTests$EmotionalIntensityTests" time="0.0"/>
+  <testcase name="UC29-REQ-5: System MUST detect high emotional intensity" classname="com.serenityai.tests.unit.usecases.uc29_sentiment_adaptive_chat.AISentimentAdaptiveChatUseCaseUnitTests$EmotionalIntensityTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

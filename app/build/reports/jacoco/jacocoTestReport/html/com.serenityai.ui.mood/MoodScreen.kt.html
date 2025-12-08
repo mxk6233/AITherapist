@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MoodScreen.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.mood</a> &gt; <span class="el_source">MoodScreen.kt</span></div><h1>MoodScreen.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.mood
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.serenityai.data.models.MoodEntry
+import com.serenityai.utils.Helpers
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MoodScreen(
+    moodEntries: List&lt;MoodEntry&gt;,
+    onSaveMood: (Int) -&gt; Unit,
+<span class="nc bnc" id="L19" title="All 2 branches missed.">    isLoading: Boolean = false</span>
+<span class="nc bnc" id="L20" title="All 24 branches missed.">) {</span>
+<span class="nc" id="L21">    var selectedMood by remember { mutableStateOf(5) }</span>
+
+<span class="nc" id="L23">    Column(</span>
+<span class="nc" id="L24">        modifier = Modifier</span>
+<span class="nc" id="L25">            .fillMaxSize()</span>
+<span class="nc" id="L26">            .padding(16.dp)</span>
+    ) {
+<span class="nc" id="L28">        Text(</span>
+<span class="nc" id="L29">            text = &quot;How are you feeling today?&quot;,</span>
+<span class="nc" id="L30">            style = MaterialTheme.typography.headlineMedium</span>
+        )
+        
+<span class="nc" id="L33">        Spacer(modifier = Modifier.height(32.dp))</span>
+        
+        // Mood selector
+<span class="nc" id="L36">        MoodSelector(</span>
+<span class="nc" id="L37">            selectedMood = selectedMood,</span>
+<span class="nc" id="L38">            onMoodSelected = { selectedMood = it }</span>
+        )
+        
+<span class="nc" id="L41">        Spacer(modifier = Modifier.height(32.dp))</span>
+        
+        // Save button
+<span class="nc" id="L44">        Button(</span>
+<span class="nc" id="L45">            onClick = { onSaveMood(selectedMood) },</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">            enabled = !isLoading,</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">            modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L48">        ) {</span>
+<span class="nc bnc" id="L49" title="All 8 branches missed.">            if (isLoading) {</span>
+<span class="nc" id="L50">                CircularProgressIndicator(modifier = Modifier.size(16.dp))</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">            } else {</span>
+<span class="nc" id="L52">                Text(&quot;Save Mood&quot;)</span>
+<span class="nc" id="L53">            }</span>
+<span class="nc" id="L54">        }</span>
+        
+<span class="nc" id="L56">        Spacer(modifier = Modifier.height(32.dp))</span>
+        
+        // Recent mood entries
+<span class="nc bnc" id="L59" title="All 4 branches missed.">        if (moodEntries.isNotEmpty()) {</span>
+<span class="nc" id="L60">            Text(</span>
+<span class="nc" id="L61">                text = &quot;Recent Moods&quot;,</span>
+<span class="nc" id="L62">                style = MaterialTheme.typography.titleMedium</span>
+            )
+            
+<span class="nc" id="L65">            Spacer(modifier = Modifier.height(16.dp))</span>
+            
+<span class="nc" id="L67">            LazyRow(</span>
+<span class="nc" id="L68">                horizontalArrangement = Arrangement.spacedBy(8.dp)</span>
+<span class="nc" id="L69">            ) {</span>
+<span class="nc" id="L70">                items(moodEntries.takeLast(7)) { entry -&gt;</span>
+                    MoodEntryCard(entry = entry)
+                }
+<span class="nc" id="L73">            }</span>
+        }
+<span class="nc" id="L75">    }</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">}</span>
+
+@Composable
+fun MoodSelector(
+    selectedMood: Int,
+    onMoodSelected: (Int) -&gt; Unit
+<span class="nc bnc" id="L82" title="All 14 branches missed.">) {</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">    LazyRow(</span>
+<span class="nc bnc" id="L84" title="All 4 branches missed.">        horizontalArrangement = Arrangement.spacedBy(8.dp),</span>
+<span class="nc" id="L85">        modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L86">    ) {</span>
+<span class="nc" id="L87">        items((1..10).toList()) { mood -&gt;</span>
+            MoodButton(
+                mood = mood,
+                isSelected = mood == selectedMood,
+<span class="nc" id="L91">                onClick = { onMoodSelected(mood) }</span>
+            )
+        }
+<span class="nc" id="L94">    }</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MoodButton(
+    mood: Int,
+    isSelected: Boolean,
+    onClick: () -&gt; Unit
+<span class="nc bnc" id="L103" title="All 18 branches missed.">) {</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L105">        onClick = onClick,</span>
+<span class="nc" id="L106">        colors = CardDefaults.cardColors(</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">            containerColor = if (isSelected) {</span>
+<span class="nc" id="L108">                MaterialTheme.colorScheme.primary</span>
+<span class="nc" id="L109">            } else {</span>
+<span class="nc" id="L110">                MaterialTheme.colorScheme.surfaceVariant</span>
+            }
+        )
+<span class="nc" id="L113">    ) {</span>
+<span class="nc bnc" id="L114" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L115">            modifier = Modifier.padding(16.dp),</span>
+<span class="nc" id="L116">            horizontalAlignment = Alignment.CenterHorizontally</span>
+        ) {
+<span class="nc" id="L118">            Text(</span>
+<span class="nc" id="L119">                text = Helpers.getMoodEmoji(mood),</span>
+<span class="nc" id="L120">                style = MaterialTheme.typography.headlineMedium</span>
+            )
+<span class="nc" id="L122">            Text(</span>
+<span class="nc" id="L123">                text = mood.toString(),</span>
+<span class="nc" id="L124">                style = MaterialTheme.typography.bodyMedium</span>
+            )
+<span class="nc" id="L126">        }</span>
+<span class="nc" id="L127">    }</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L131" title="All 10 branches missed.">fun MoodEntryCard(entry: MoodEntry) {</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L133">        modifier = Modifier.width(80.dp)</span>
+<span class="nc" id="L134">    ) {</span>
+<span class="nc bnc" id="L135" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L136">            modifier = Modifier.padding(8.dp),</span>
+<span class="nc" id="L137">            horizontalAlignment = Alignment.CenterHorizontally</span>
+        ) {
+<span class="nc" id="L139">            Text(</span>
+<span class="nc" id="L140">                text = Helpers.getMoodEmoji(entry.mood),</span>
+<span class="nc" id="L141">                style = MaterialTheme.typography.headlineSmall</span>
+            )
+<span class="nc" id="L143">            Text(</span>
+<span class="nc" id="L144">                text = entry.mood.toString(),</span>
+<span class="nc" id="L145">                style = MaterialTheme.typography.bodySmall</span>
+            )
+<span class="nc" id="L147">        }</span>
+<span class="nc" id="L148">    }</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">}</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,914 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AppPreferencesScreen.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.screens</a> &gt; <span class="el_source">AppPreferencesScreen.kt</span></div><h1>AppPreferencesScreen.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.screens
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+// Data classes for app preferences
+<span class="nc" id="L20">data class AppPreferences(</span>
+<span class="nc" id="L21">    val theme: AppTheme,</span>
+<span class="nc" id="L22">    val language: AppLanguage,</span>
+<span class="nc" id="L23">    val notifications: NotificationSettings,</span>
+<span class="nc" id="L24">    val privacy: PrivacySettings,</span>
+<span class="nc" id="L25">    val dataUsage: DataUsageSettings,</span>
+<span class="nc" id="L26">    val backup: BackupSettings,</span>
+<span class="nc" id="L27">    val security: SecuritySettings</span>
+)
+
+<span class="nc" id="L30">enum class AppTheme(val displayName: String) {</span>
+<span class="nc" id="L31">    SYSTEM(&quot;System Default&quot;),</span>
+<span class="nc" id="L32">    LIGHT(&quot;Light&quot;),</span>
+<span class="nc" id="L33">    DARK(&quot;Dark&quot;),</span>
+<span class="nc" id="L34">    AUTO(&quot;Auto (Based on Time)&quot;)</span>
+<span class="nc" id="L35">}</span>
+
+<span class="nc" id="L37">enum class AppLanguage(val displayName: String, val code: String) {</span>
+<span class="nc" id="L38">    ENGLISH(&quot;English&quot;, &quot;en&quot;),</span>
+<span class="nc" id="L39">    SPANISH(&quot;Español&quot;, &quot;es&quot;),</span>
+<span class="nc" id="L40">    FRENCH(&quot;Français&quot;, &quot;fr&quot;),</span>
+<span class="nc" id="L41">    GERMAN(&quot;Deutsch&quot;, &quot;de&quot;),</span>
+<span class="nc" id="L42">    CHINESE(&quot;中文&quot;, &quot;zh&quot;),</span>
+<span class="nc" id="L43">    JAPANESE(&quot;日本語&quot;, &quot;ja&quot;),</span>
+<span class="nc" id="L44">    ARABIC(&quot;العربية&quot;, &quot;ar&quot;),</span>
+<span class="nc" id="L45">    HINDI(&quot;हिन्दी&quot;, &quot;hi&quot;)</span>
+<span class="nc" id="L46">}</span>
+
+<span class="nc" id="L48">data class NotificationSettings(</span>
+<span class="nc" id="L49">    val pushNotifications: Boolean,</span>
+<span class="nc" id="L50">    val emailNotifications: Boolean,</span>
+<span class="nc" id="L51">    val reminderNotifications: Boolean,</span>
+<span class="nc" id="L52">    val crisisAlerts: Boolean,</span>
+<span class="nc" id="L53">    val moodReminders: Boolean,</span>
+<span class="nc" id="L54">    val sessionReminders: Boolean,</span>
+<span class="nc" id="L55">    val quietHours: Boolean,</span>
+<span class="nc" id="L56">    val quietStartTime: String = &quot;22:00&quot;,</span>
+<span class="nc" id="L57">    val quietEndTime: String = &quot;08:00&quot;</span>
+<span class="nc" id="L58">)</span>
+
+<span class="nc" id="L60">data class PrivacySettings(</span>
+<span class="nc" id="L61">    val dataCollection: Boolean,</span>
+<span class="nc" id="L62">    val analytics: Boolean,</span>
+<span class="nc" id="L63">    val crashReports: Boolean,</span>
+<span class="nc" id="L64">    val personalizedAds: Boolean,</span>
+<span class="nc" id="L65">    val shareDataWithTherapists: Boolean,</span>
+<span class="nc" id="L66">    val anonymousMode: Boolean</span>
+)
+
+<span class="nc" id="L69">data class DataUsageSettings(</span>
+<span class="nc" id="L70">    val autoSync: Boolean,</span>
+<span class="nc" id="L71">    val wifiOnlySync: Boolean,</span>
+<span class="nc" id="L72">    val imageQuality: ImageQuality,</span>
+<span class="nc" id="L73">    val cacheSize: CacheSize,</span>
+<span class="nc" id="L74">    val autoDeleteOldData: Boolean,</span>
+<span class="nc" id="L75">    val dataRetentionDays: Int = 30</span>
+<span class="nc" id="L76">)</span>
+
+<span class="nc" id="L78">enum class ImageQuality(val displayName: String) {</span>
+<span class="nc" id="L79">    LOW(&quot;Low (Faster)&quot;),</span>
+<span class="nc" id="L80">    MEDIUM(&quot;Medium&quot;),</span>
+<span class="nc" id="L81">    HIGH(&quot;High (Slower)&quot;)</span>
+<span class="nc" id="L82">}</span>
+
+<span class="nc" id="L84">enum class CacheSize(val displayName: String, val maxSizeMB: Int) {</span>
+<span class="nc" id="L85">    SMALL(&quot;Small (100 MB)&quot;, 100),</span>
+<span class="nc" id="L86">    MEDIUM(&quot;Medium (500 MB)&quot;, 500),</span>
+<span class="nc" id="L87">    LARGE(&quot;Large (1 GB)&quot;, 1000),</span>
+<span class="nc" id="L88">    UNLIMITED(&quot;Unlimited&quot;, -1)</span>
+<span class="nc" id="L89">}</span>
+
+<span class="nc" id="L91">data class BackupSettings(</span>
+<span class="nc" id="L92">    val autoBackup: Boolean,</span>
+<span class="nc" id="L93">    val backupFrequency: BackupFrequency,</span>
+<span class="nc" id="L94">    val cloudBackup: Boolean,</span>
+<span class="nc" id="L95">    val localBackup: Boolean,</span>
+<span class="nc" id="L96">    val encryptBackups: Boolean</span>
+)
+
+<span class="nc" id="L99">enum class BackupFrequency(val displayName: String) {</span>
+<span class="nc" id="L100">    DAILY(&quot;Daily&quot;),</span>
+<span class="nc" id="L101">    WEEKLY(&quot;Weekly&quot;),</span>
+<span class="nc" id="L102">    MONTHLY(&quot;Monthly&quot;),</span>
+<span class="nc" id="L103">    MANUAL(&quot;Manual Only&quot;)</span>
+<span class="nc" id="L104">}</span>
+
+<span class="nc" id="L106">data class SecuritySettings(</span>
+<span class="nc" id="L107">    val biometricAuth: Boolean,</span>
+<span class="nc" id="L108">    val pinProtection: Boolean,</span>
+<span class="nc" id="L109">    val sessionTimeout: SessionTimeout,</span>
+<span class="nc" id="L110">    val secureStorage: Boolean,</span>
+<span class="nc" id="L111">    val twoFactorAuth: Boolean</span>
+)
+
+<span class="nc" id="L114">enum class SessionTimeout(val displayName: String, val minutes: Int) {</span>
+<span class="nc" id="L115">    IMMEDIATE(&quot;Immediate&quot;, 0),</span>
+<span class="nc" id="L116">    FIVE_MINUTES(&quot;5 Minutes&quot;, 5),</span>
+<span class="nc" id="L117">    FIFTEEN_MINUTES(&quot;15 Minutes&quot;, 15),</span>
+<span class="nc" id="L118">    THIRTY_MINUTES(&quot;30 Minutes&quot;, 30),</span>
+<span class="nc" id="L119">    ONE_HOUR(&quot;1 Hour&quot;, 60),</span>
+<span class="nc" id="L120">    NEVER(&quot;Never&quot;, -1)</span>
+<span class="nc" id="L121">}</span>
+
+// Wrapper function for backward compatibility
+@Composable
+<span class="nc bnc" id="L125" title="All 10 branches missed.">fun AppPreferencesScreen(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">    AppPreferencesScreenDetailed(onNavigateBack = onNavigateBack)</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L131" title="All 10 branches missed.">fun AppPreferencesScreenDetailed(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc" id="L132">    var currentSection by remember { mutableStateOf(&quot;General&quot;) }</span>
+<span class="nc" id="L133">    var showResetDialog by remember { mutableStateOf(false) }</span>
+    
+<span class="nc" id="L135">    val sections = listOf(</span>
+<span class="nc" id="L136">        &quot;General&quot;,</span>
+<span class="nc" id="L137">        &quot;Notifications&quot;, </span>
+<span class="nc" id="L138">        &quot;Privacy&quot;,</span>
+<span class="nc" id="L139">        &quot;Data Usage&quot;,</span>
+<span class="nc" id="L140">        &quot;Backup&quot;,</span>
+<span class="nc" id="L141">        &quot;Security&quot;</span>
+    )
+
+<span class="nc" id="L144">    Scaffold(</span>
+<span class="nc" id="L145">        topBar = {</span>
+<span class="nc bnc" id="L146" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L147" title="All 8 branches missed.">                title = { Text(&quot;App Preferences&quot;) },</span>
+<span class="nc" id="L148">                navigationIcon = {</span>
+<span class="nc bnc" id="L149" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L150" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L151">                    }</span>
+<span class="nc" id="L152">                },</span>
+<span class="nc" id="L153">                actions = {</span>
+<span class="nc bnc" id="L154" title="All 8 branches missed.">                    IconButton(onClick = { showResetDialog = true }) {</span>
+<span class="nc bnc" id="L155" title="All 8 branches missed.">                        Icon(Icons.Default.Restore, contentDescription = &quot;Reset to defaults&quot;)</span>
+<span class="nc" id="L156">                    }</span>
+<span class="nc" id="L157">                },</span>
+<span class="nc" id="L158">                colors = TopAppBarDefaults.topAppBarColors(</span>
+<span class="nc" id="L159">                    containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+                )
+<span class="nc" id="L161">            )</span>
+<span class="nc" id="L162">        }</span>
+<span class="nc" id="L163">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L164" title="All 6 branches missed.">        Row(</span>
+<span class="nc" id="L165">            modifier = Modifier</span>
+<span class="nc" id="L166">                .fillMaxSize()</span>
+<span class="nc" id="L167">                .padding(paddingValues)</span>
+        ) {
+            // Side navigation
+<span class="nc" id="L170">            LazyColumn(</span>
+<span class="nc" id="L171">                modifier = Modifier</span>
+<span class="nc" id="L172">                    .width(200.dp)</span>
+<span class="nc" id="L173">                    .padding(16.dp),</span>
+<span class="nc" id="L174">                verticalArrangement = Arrangement.spacedBy(4.dp)</span>
+<span class="nc" id="L175">            ) {</span>
+<span class="nc" id="L176">                items(sections) { section -&gt;</span>
+                    PreferenceSectionItem(
+                        title = section,
+                        isSelected = currentSection == section,
+<span class="nc" id="L180">                        onClick = { currentSection = section }</span>
+                    )
+                }
+<span class="nc" id="L183">            }</span>
+            
+            // Content area
+<span class="nc" id="L186">            LazyColumn(</span>
+<span class="nc" id="L187">                modifier = Modifier</span>
+<span class="nc" id="L188">                    .weight(1f)</span>
+<span class="nc" id="L189">                    .padding(16.dp),</span>
+<span class="nc" id="L190">                verticalArrangement = Arrangement.spacedBy(16.dp)</span>
+<span class="nc" id="L191">            ) {</span>
+<span class="nc bnc" id="L192" title="All 7 branches missed.">                when (currentSection) {</span>
+<span class="nc bnc" id="L193" title="All 8 branches missed.">                    &quot;General&quot; -&gt; item { GeneralPreferences() }</span>
+<span class="nc bnc" id="L194" title="All 8 branches missed.">                    &quot;Notifications&quot; -&gt; item { NotificationPreferences() }</span>
+<span class="nc bnc" id="L195" title="All 8 branches missed.">                    &quot;Privacy&quot; -&gt; item { PrivacyPreferences() }</span>
+<span class="nc bnc" id="L196" title="All 8 branches missed.">                    &quot;Data Usage&quot; -&gt; item { DataUsagePreferences() }</span>
+<span class="nc bnc" id="L197" title="All 8 branches missed.">                    &quot;Backup&quot; -&gt; item { BackupPreferences() }</span>
+<span class="nc bnc" id="L198" title="All 8 branches missed.">                    &quot;Security&quot; -&gt; item { SecurityPreferences() }</span>
+                }
+<span class="nc" id="L200">            }</span>
+<span class="nc" id="L201">        }</span>
+<span class="nc" id="L202">    }</span>
+    
+<span class="nc bnc" id="L204" title="All 2 branches missed.">    if (showResetDialog) {</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">        AlertDialog(</span>
+<span class="nc" id="L206">            onDismissRequest = { showResetDialog = false },</span>
+<span class="nc bnc" id="L207" title="All 8 branches missed.">            title = { Text(&quot;Reset Preferences&quot;) },</span>
+<span class="nc bnc" id="L208" title="All 8 branches missed.">            text = { Text(&quot;Are you sure you want to reset all preferences to their default values? This action cannot be undone.&quot;) },</span>
+<span class="nc" id="L209">            confirmButton = {</span>
+<span class="nc bnc" id="L210" title="All 8 branches missed.">                TextButton(</span>
+<span class="nc" id="L211">                    onClick = { </span>
+<span class="nc" id="L212">                        showResetDialog = false</span>
+                        // Reset preferences logic here
+<span class="nc" id="L214">                    }</span>
+<span class="nc" id="L215">                ) {</span>
+<span class="nc bnc" id="L216" title="All 8 branches missed.">                    Text(&quot;Reset&quot;)</span>
+<span class="nc" id="L217">                }</span>
+<span class="nc" id="L218">            },</span>
+<span class="nc" id="L219">            dismissButton = {</span>
+<span class="nc bnc" id="L220" title="All 8 branches missed.">                TextButton(onClick = { showResetDialog = false }) {</span>
+<span class="nc bnc" id="L221" title="All 8 branches missed.">                    Text(&quot;Cancel&quot;)</span>
+<span class="nc" id="L222">                }</span>
+<span class="nc" id="L223">            }</span>
+        )
+    }
+<span class="nc bnc" id="L226" title="All 2 branches missed.">}</span>
+
+@Composable
+fun PreferenceSectionItem(
+    title: String,
+    isSelected: Boolean,
+    onClick: () -&gt; Unit
+<span class="nc bnc" id="L233" title="All 18 branches missed.">) {</span>
+<span class="nc bnc" id="L234" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L235">        onClick = onClick,</span>
+<span class="nc" id="L236">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L237">        colors = CardDefaults.cardColors(</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">            containerColor = if (isSelected) </span>
+<span class="nc" id="L239">                MaterialTheme.colorScheme.primaryContainer </span>
+<span class="nc" id="L240">            else MaterialTheme.colorScheme.surface</span>
+        )
+<span class="nc" id="L242">    ) {</span>
+<span class="nc bnc" id="L243" title="All 8 branches missed.">        Text(</span>
+<span class="nc" id="L244">            text = title,</span>
+<span class="nc" id="L245">            fontSize = 14.sp,</span>
+<span class="nc bnc" id="L246" title="All 2 branches missed.">            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,</span>
+<span class="nc" id="L247">            modifier = Modifier.padding(12.dp)</span>
+<span class="nc" id="L248">        )</span>
+<span class="nc" id="L249">    }</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L253" title="All 6 branches missed.">fun GeneralPreferences() {</span>
+<span class="nc" id="L254">    var theme by remember { mutableStateOf(AppTheme.SYSTEM) }</span>
+<span class="nc" id="L255">    var language by remember { mutableStateOf(AppLanguage.ENGLISH) }</span>
+    
+<span class="nc" id="L257">    Column {</span>
+<span class="nc" id="L258">        Text(</span>
+<span class="nc" id="L259">            text = &quot;General Settings&quot;,</span>
+<span class="nc" id="L260">            fontSize = 20.sp,</span>
+<span class="nc" id="L261">            fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L262">            modifier = Modifier.padding(bottom = 16.dp)</span>
+        )
+        
+        // Theme Selection
+<span class="nc" id="L266">        PreferenceGroup(</span>
+<span class="nc" id="L267">            title = &quot;Appearance&quot;,</span>
+<span class="nc" id="L268">            icon = Icons.Default.Palette</span>
+<span class="nc" id="L269">        ) {</span>
+<span class="nc bnc" id="L270" title="All 8 branches missed.">            ThemeSelector(</span>
+<span class="nc" id="L271">                selectedTheme = theme,</span>
+<span class="nc" id="L272">                onThemeSelected = { theme = it }</span>
+<span class="nc" id="L273">            )</span>
+<span class="nc" id="L274">        }</span>
+        
+<span class="nc" id="L276">        Spacer(modifier = Modifier.height(16.dp))</span>
+        
+        // Language Selection
+<span class="nc" id="L279">        PreferenceGroup(</span>
+<span class="nc" id="L280">            title = &quot;Language&quot;,</span>
+<span class="nc" id="L281">            icon = Icons.Default.Language</span>
+<span class="nc" id="L282">        ) {</span>
+<span class="nc bnc" id="L283" title="All 8 branches missed.">            LanguageSelector(</span>
+<span class="nc" id="L284">                selectedLanguage = language,</span>
+<span class="nc" id="L285">                onLanguageSelected = { language = it }</span>
+<span class="nc" id="L286">            )</span>
+<span class="nc" id="L287">        }</span>
+<span class="nc" id="L288">    }</span>
+<span class="nc bnc" id="L289" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L292" title="All 6 branches missed.">fun NotificationPreferences() {</span>
+<span class="nc" id="L293">    var pushNotifications by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L294">    var emailNotifications by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L295">    var reminderNotifications by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L296">    var crisisAlerts by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L297">    var moodReminders by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L298">    var sessionReminders by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L299">    var quietHours by remember { mutableStateOf(false) }</span>
+    
+<span class="nc" id="L301">    Column {</span>
+<span class="nc" id="L302">        Text(</span>
+<span class="nc" id="L303">            text = &quot;Notification Settings&quot;,</span>
+<span class="nc" id="L304">            fontSize = 20.sp,</span>
+<span class="nc" id="L305">            fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L306">            modifier = Modifier.padding(bottom = 16.dp)</span>
+        )
+        
+<span class="nc" id="L309">        PreferenceGroup(</span>
+<span class="nc" id="L310">            title = &quot;Notification Types&quot;,</span>
+<span class="nc" id="L311">            icon = Icons.Default.Notifications</span>
+<span class="nc" id="L312">        ) {</span>
+<span class="nc bnc" id="L313" title="All 6 branches missed.">            PreferenceToggle(</span>
+<span class="nc" id="L314">                title = &quot;Push Notifications&quot;,</span>
+<span class="nc" id="L315">                description = &quot;Receive notifications on your device&quot;,</span>
+<span class="nc" id="L316">                checked = pushNotifications,</span>
+<span class="nc" id="L317">                onCheckedChange = { pushNotifications = it }</span>
+            )
+            
+<span class="nc" id="L320">            PreferenceToggle(</span>
+<span class="nc" id="L321">                title = &quot;Email Notifications&quot;,</span>
+<span class="nc" id="L322">                description = &quot;Receive notifications via email&quot;,</span>
+<span class="nc" id="L323">                checked = emailNotifications,</span>
+<span class="nc" id="L324">                onCheckedChange = { emailNotifications = it }</span>
+            )
+            
+<span class="nc" id="L327">            PreferenceToggle(</span>
+<span class="nc" id="L328">                title = &quot;Reminder Notifications&quot;,</span>
+<span class="nc" id="L329">                description = &quot;Get reminded about scheduled activities&quot;,</span>
+<span class="nc" id="L330">                checked = reminderNotifications,</span>
+<span class="nc" id="L331">                onCheckedChange = { reminderNotifications = it }</span>
+            )
+            
+<span class="nc" id="L334">            PreferenceToggle(</span>
+<span class="nc" id="L335">                title = &quot;Crisis Alerts&quot;,</span>
+<span class="nc" id="L336">                description = &quot;Emergency notifications for crisis situations&quot;,</span>
+<span class="nc" id="L337">                checked = crisisAlerts,</span>
+<span class="nc" id="L338">                onCheckedChange = { crisisAlerts = it }</span>
+            )
+            
+<span class="nc" id="L341">            PreferenceToggle(</span>
+<span class="nc" id="L342">                title = &quot;Mood Reminders&quot;,</span>
+<span class="nc" id="L343">                description = &quot;Daily reminders to log your mood&quot;,</span>
+<span class="nc" id="L344">                checked = moodReminders,</span>
+<span class="nc" id="L345">                onCheckedChange = { moodReminders = it }</span>
+            )
+            
+<span class="nc bnc" id="L348" title="All 2 branches missed.">            PreferenceToggle(</span>
+<span class="nc" id="L349">                title = &quot;Session Reminders&quot;,</span>
+<span class="nc" id="L350">                description = &quot;Reminders for therapy sessions&quot;,</span>
+<span class="nc" id="L351">                checked = sessionReminders,</span>
+<span class="nc" id="L352">                onCheckedChange = { sessionReminders = it }</span>
+<span class="nc" id="L353">            )</span>
+<span class="nc" id="L354">        }</span>
+        
+<span class="nc" id="L356">        Spacer(modifier = Modifier.height(16.dp))</span>
+        
+<span class="nc" id="L358">        PreferenceGroup(</span>
+<span class="nc" id="L359">            title = &quot;Quiet Hours&quot;,</span>
+<span class="nc" id="L360">            icon = Icons.Default.Bedtime</span>
+<span class="nc" id="L361">        ) {</span>
+<span class="nc bnc" id="L362" title="All 8 branches missed.">            PreferenceToggle(</span>
+<span class="nc" id="L363">                title = &quot;Enable Quiet Hours&quot;,</span>
+<span class="nc" id="L364">                description = &quot;Pause notifications during specified hours&quot;,</span>
+<span class="nc" id="L365">                checked = quietHours,</span>
+<span class="nc" id="L366">                onCheckedChange = { quietHours = it }</span>
+<span class="nc" id="L367">            )</span>
+<span class="nc" id="L368">        }</span>
+<span class="nc" id="L369">    }</span>
+<span class="nc bnc" id="L370" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L373" title="All 6 branches missed.">fun PrivacyPreferences() {</span>
+<span class="nc" id="L374">    var dataCollection by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L375">    var analytics by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L376">    var crashReports by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L377">    var personalizedAds by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L378">    var shareDataWithTherapists by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L379">    var anonymousMode by remember { mutableStateOf(false) }</span>
+    
+<span class="nc" id="L381">    Column {</span>
+<span class="nc" id="L382">        Text(</span>
+<span class="nc" id="L383">            text = &quot;Privacy Settings&quot;,</span>
+<span class="nc" id="L384">            fontSize = 20.sp,</span>
+<span class="nc" id="L385">            fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L386">            modifier = Modifier.padding(bottom = 16.dp)</span>
+        )
+        
+<span class="nc" id="L389">        PreferenceGroup(</span>
+<span class="nc" id="L390">            title = &quot;Data Collection&quot;,</span>
+<span class="nc" id="L391">            icon = Icons.Default.Security</span>
+<span class="nc" id="L392">        ) {</span>
+<span class="nc bnc" id="L393" title="All 6 branches missed.">            PreferenceToggle(</span>
+<span class="nc" id="L394">                title = &quot;Allow Data Collection&quot;,</span>
+<span class="nc" id="L395">                description = &quot;Help improve the app by sharing anonymous usage data&quot;,</span>
+<span class="nc" id="L396">                checked = dataCollection,</span>
+<span class="nc" id="L397">                onCheckedChange = { dataCollection = it }</span>
+            )
+            
+<span class="nc" id="L400">            PreferenceToggle(</span>
+<span class="nc" id="L401">                title = &quot;Analytics&quot;,</span>
+<span class="nc" id="L402">                description = &quot;Share app usage analytics for improvements&quot;,</span>
+<span class="nc" id="L403">                checked = analytics,</span>
+<span class="nc" id="L404">                onCheckedChange = { analytics = it }</span>
+            )
+            
+<span class="nc" id="L407">            PreferenceToggle(</span>
+<span class="nc" id="L408">                title = &quot;Crash Reports&quot;,</span>
+<span class="nc" id="L409">                description = &quot;Automatically send crash reports to help fix bugs&quot;,</span>
+<span class="nc" id="L410">                checked = crashReports,</span>
+<span class="nc" id="L411">                onCheckedChange = { crashReports = it }</span>
+            )
+            
+<span class="nc" id="L414">            PreferenceToggle(</span>
+<span class="nc" id="L415">                title = &quot;Personalized Ads&quot;,</span>
+<span class="nc" id="L416">                description = &quot;Show ads based on your interests&quot;,</span>
+<span class="nc" id="L417">                checked = personalizedAds,</span>
+<span class="nc" id="L418">                onCheckedChange = { personalizedAds = it }</span>
+            )
+            
+<span class="nc" id="L421">            PreferenceToggle(</span>
+<span class="nc" id="L422">                title = &quot;Share with Therapists&quot;,</span>
+<span class="nc" id="L423">                description = &quot;Allow your therapist to view your progress data&quot;,</span>
+<span class="nc" id="L424">                checked = shareDataWithTherapists,</span>
+<span class="nc" id="L425">                onCheckedChange = { shareDataWithTherapists = it }</span>
+            )
+            
+<span class="nc bnc" id="L428" title="All 2 branches missed.">            PreferenceToggle(</span>
+<span class="nc" id="L429">                title = &quot;Anonymous Mode&quot;,</span>
+<span class="nc" id="L430">                description = &quot;Use the app without creating an account&quot;,</span>
+<span class="nc" id="L431">                checked = anonymousMode,</span>
+<span class="nc" id="L432">                onCheckedChange = { anonymousMode = it }</span>
+<span class="nc" id="L433">            )</span>
+<span class="nc" id="L434">        }</span>
+<span class="nc" id="L435">    }</span>
+<span class="nc bnc" id="L436" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L439" title="All 6 branches missed.">fun DataUsagePreferences() {</span>
+<span class="nc" id="L440">    var autoSync by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L441">    var wifiOnlySync by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L442">    var imageQuality by remember { mutableStateOf(ImageQuality.MEDIUM) }</span>
+<span class="nc" id="L443">    var cacheSize by remember { mutableStateOf(CacheSize.MEDIUM) }</span>
+<span class="nc" id="L444">    var autoDeleteOldData by remember { mutableStateOf(true) }</span>
+    
+<span class="nc" id="L446">    Column {</span>
+<span class="nc" id="L447">        Text(</span>
+<span class="nc" id="L448">            text = &quot;Data Usage Settings&quot;,</span>
+<span class="nc" id="L449">            fontSize = 20.sp,</span>
+<span class="nc" id="L450">            fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L451">            modifier = Modifier.padding(bottom = 16.dp)</span>
+        )
+        
+<span class="nc" id="L454">        PreferenceGroup(</span>
+<span class="nc" id="L455">            title = &quot;Sync Settings&quot;,</span>
+<span class="nc" id="L456">            icon = Icons.Default.Sync</span>
+<span class="nc" id="L457">        ) {</span>
+<span class="nc bnc" id="L458" title="All 6 branches missed.">            PreferenceToggle(</span>
+<span class="nc" id="L459">                title = &quot;Auto Sync&quot;,</span>
+<span class="nc" id="L460">                description = &quot;Automatically sync data across devices&quot;,</span>
+<span class="nc" id="L461">                checked = autoSync,</span>
+<span class="nc" id="L462">                onCheckedChange = { autoSync = it }</span>
+            )
+            
+<span class="nc bnc" id="L465" title="All 2 branches missed.">            PreferenceToggle(</span>
+<span class="nc" id="L466">                title = &quot;WiFi Only Sync&quot;,</span>
+<span class="nc" id="L467">                description = &quot;Only sync when connected to WiFi&quot;,</span>
+<span class="nc" id="L468">                checked = wifiOnlySync,</span>
+<span class="nc" id="L469">                onCheckedChange = { wifiOnlySync = it }</span>
+<span class="nc" id="L470">            )</span>
+<span class="nc" id="L471">        }</span>
+        
+<span class="nc" id="L473">        Spacer(modifier = Modifier.height(16.dp))</span>
+        
+<span class="nc" id="L475">        PreferenceGroup(</span>
+<span class="nc" id="L476">            title = &quot;Storage Settings&quot;,</span>
+<span class="nc" id="L477">            icon = Icons.Default.Storage</span>
+<span class="nc" id="L478">        ) {</span>
+<span class="nc bnc" id="L479" title="All 6 branches missed.">            PreferenceSetting(</span>
+<span class="nc" id="L480">                title = &quot;Image Quality&quot;,</span>
+<span class="nc" id="L481">                description = &quot;Quality of images stored in the app&quot;</span>
+<span class="nc" id="L482">            ) {</span>
+<span class="nc bnc" id="L483" title="All 8 branches missed.">                ImageQualitySelector(</span>
+<span class="nc" id="L484">                    selectedQuality = imageQuality,</span>
+<span class="nc" id="L485">                    onQualitySelected = { imageQuality = it }</span>
+<span class="nc" id="L486">                )</span>
+<span class="nc" id="L487">            }</span>
+            
+<span class="nc" id="L489">            PreferenceSetting(</span>
+<span class="nc" id="L490">                title = &quot;Cache Size&quot;,</span>
+<span class="nc" id="L491">                description = &quot;Maximum amount of data to store locally&quot;</span>
+<span class="nc" id="L492">            ) {</span>
+<span class="nc bnc" id="L493" title="All 8 branches missed.">                CacheSizeSelector(</span>
+<span class="nc" id="L494">                    selectedSize = cacheSize,</span>
+<span class="nc" id="L495">                    onSizeSelected = { cacheSize = it }</span>
+<span class="nc" id="L496">                )</span>
+<span class="nc" id="L497">            }</span>
+            
+<span class="nc bnc" id="L499" title="All 2 branches missed.">            PreferenceToggle(</span>
+<span class="nc" id="L500">                title = &quot;Auto Delete Old Data&quot;,</span>
+<span class="nc" id="L501">                description = &quot;Automatically remove data older than 30 days&quot;,</span>
+<span class="nc" id="L502">                checked = autoDeleteOldData,</span>
+<span class="nc" id="L503">                onCheckedChange = { autoDeleteOldData = it }</span>
+<span class="nc" id="L504">            )</span>
+<span class="nc" id="L505">        }</span>
+<span class="nc" id="L506">    }</span>
+<span class="nc bnc" id="L507" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L510" title="All 6 branches missed.">fun BackupPreferences() {</span>
+<span class="nc" id="L511">    var autoBackup by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L512">    var backupFrequency by remember { mutableStateOf(BackupFrequency.WEEKLY) }</span>
+<span class="nc" id="L513">    var cloudBackup by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L514">    var localBackup by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L515">    var encryptBackups by remember { mutableStateOf(true) }</span>
+    
+<span class="nc" id="L517">    Column {</span>
+<span class="nc" id="L518">        Text(</span>
+<span class="nc" id="L519">            text = &quot;Backup Settings&quot;,</span>
+<span class="nc" id="L520">            fontSize = 20.sp,</span>
+<span class="nc" id="L521">            fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L522">            modifier = Modifier.padding(bottom = 16.dp)</span>
+        )
+        
+<span class="nc" id="L525">        PreferenceGroup(</span>
+<span class="nc" id="L526">            title = &quot;Backup Options&quot;,</span>
+<span class="nc" id="L527">            icon = Icons.Default.Backup</span>
+<span class="nc" id="L528">        ) {</span>
+<span class="nc bnc" id="L529" title="All 6 branches missed.">            PreferenceToggle(</span>
+<span class="nc" id="L530">                title = &quot;Auto Backup&quot;,</span>
+<span class="nc" id="L531">                description = &quot;Automatically backup your data&quot;,</span>
+<span class="nc" id="L532">                checked = autoBackup,</span>
+<span class="nc" id="L533">                onCheckedChange = { autoBackup = it }</span>
+            )
+            
+<span class="nc" id="L536">            PreferenceSetting(</span>
+<span class="nc" id="L537">                title = &quot;Backup Frequency&quot;,</span>
+<span class="nc" id="L538">                description = &quot;How often to create backups&quot;</span>
+<span class="nc" id="L539">            ) {</span>
+<span class="nc bnc" id="L540" title="All 8 branches missed.">                BackupFrequencySelector(</span>
+<span class="nc" id="L541">                    selectedFrequency = backupFrequency,</span>
+<span class="nc" id="L542">                    onFrequencySelected = { backupFrequency = it }</span>
+<span class="nc" id="L543">                )</span>
+<span class="nc" id="L544">            }</span>
+            
+<span class="nc" id="L546">            PreferenceToggle(</span>
+<span class="nc" id="L547">                title = &quot;Cloud Backup&quot;,</span>
+<span class="nc" id="L548">                description = &quot;Store backups in the cloud&quot;,</span>
+<span class="nc" id="L549">                checked = cloudBackup,</span>
+<span class="nc" id="L550">                onCheckedChange = { cloudBackup = it }</span>
+            )
+            
+<span class="nc" id="L553">            PreferenceToggle(</span>
+<span class="nc" id="L554">                title = &quot;Local Backup&quot;,</span>
+<span class="nc" id="L555">                description = &quot;Create local backups on your device&quot;,</span>
+<span class="nc" id="L556">                checked = localBackup,</span>
+<span class="nc" id="L557">                onCheckedChange = { localBackup = it }</span>
+            )
+            
+<span class="nc bnc" id="L560" title="All 2 branches missed.">            PreferenceToggle(</span>
+<span class="nc" id="L561">                title = &quot;Encrypt Backups&quot;,</span>
+<span class="nc" id="L562">                description = &quot;Encrypt backup files for security&quot;,</span>
+<span class="nc" id="L563">                checked = encryptBackups,</span>
+<span class="nc" id="L564">                onCheckedChange = { encryptBackups = it }</span>
+<span class="nc" id="L565">            )</span>
+<span class="nc" id="L566">        }</span>
+<span class="nc" id="L567">    }</span>
+<span class="nc bnc" id="L568" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L571" title="All 6 branches missed.">fun SecurityPreferences() {</span>
+<span class="nc" id="L572">    var biometricAuth by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L573">    var pinProtection by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L574">    var sessionTimeout by remember { mutableStateOf(SessionTimeout.FIFTEEN_MINUTES) }</span>
+<span class="nc" id="L575">    var secureStorage by remember { mutableStateOf(true) }</span>
+<span class="nc" id="L576">    var twoFactorAuth by remember { mutableStateOf(false) }</span>
+    
+<span class="nc" id="L578">    Column {</span>
+<span class="nc" id="L579">        Text(</span>
+<span class="nc" id="L580">            text = &quot;Security Settings&quot;,</span>
+<span class="nc" id="L581">            fontSize = 20.sp,</span>
+<span class="nc" id="L582">            fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L583">            modifier = Modifier.padding(bottom = 16.dp)</span>
+        )
+        
+<span class="nc" id="L586">        PreferenceGroup(</span>
+<span class="nc" id="L587">            title = &quot;Authentication&quot;,</span>
+<span class="nc" id="L588">            icon = Icons.Default.Lock</span>
+<span class="nc" id="L589">        ) {</span>
+<span class="nc bnc" id="L590" title="All 6 branches missed.">            PreferenceToggle(</span>
+<span class="nc" id="L591">                title = &quot;Biometric Authentication&quot;,</span>
+<span class="nc" id="L592">                description = &quot;Use fingerprint or face recognition&quot;,</span>
+<span class="nc" id="L593">                checked = biometricAuth,</span>
+<span class="nc" id="L594">                onCheckedChange = { biometricAuth = it }</span>
+            )
+            
+<span class="nc" id="L597">            PreferenceToggle(</span>
+<span class="nc" id="L598">                title = &quot;PIN Protection&quot;,</span>
+<span class="nc" id="L599">                description = &quot;Require PIN to access the app&quot;,</span>
+<span class="nc" id="L600">                checked = pinProtection,</span>
+<span class="nc" id="L601">                onCheckedChange = { pinProtection = it }</span>
+            )
+            
+<span class="nc bnc" id="L604" title="All 2 branches missed.">            PreferenceToggle(</span>
+<span class="nc" id="L605">                title = &quot;Two-Factor Authentication&quot;,</span>
+<span class="nc" id="L606">                description = &quot;Add extra security with 2FA&quot;,</span>
+<span class="nc" id="L607">                checked = twoFactorAuth,</span>
+<span class="nc" id="L608">                onCheckedChange = { twoFactorAuth = it }</span>
+<span class="nc" id="L609">            )</span>
+<span class="nc" id="L610">        }</span>
+        
+<span class="nc" id="L612">        Spacer(modifier = Modifier.height(16.dp))</span>
+        
+<span class="nc" id="L614">        PreferenceGroup(</span>
+<span class="nc" id="L615">            title = &quot;Session Management&quot;,</span>
+<span class="nc" id="L616">            icon = Icons.Default.Timer</span>
+<span class="nc" id="L617">        ) {</span>
+<span class="nc bnc" id="L618" title="All 6 branches missed.">            PreferenceSetting(</span>
+<span class="nc" id="L619">                title = &quot;Session Timeout&quot;,</span>
+<span class="nc" id="L620">                description = &quot;Automatically lock the app after inactivity&quot;</span>
+<span class="nc" id="L621">            ) {</span>
+<span class="nc bnc" id="L622" title="All 8 branches missed.">                SessionTimeoutSelector(</span>
+<span class="nc" id="L623">                    selectedTimeout = sessionTimeout,</span>
+<span class="nc" id="L624">                    onTimeoutSelected = { sessionTimeout = it }</span>
+<span class="nc" id="L625">                )</span>
+<span class="nc" id="L626">            }</span>
+            
+<span class="nc bnc" id="L628" title="All 2 branches missed.">            PreferenceToggle(</span>
+<span class="nc" id="L629">                title = &quot;Secure Storage&quot;,</span>
+<span class="nc" id="L630">                description = &quot;Encrypt sensitive data on device&quot;,</span>
+<span class="nc" id="L631">                checked = secureStorage,</span>
+<span class="nc" id="L632">                onCheckedChange = { secureStorage = it }</span>
+<span class="nc" id="L633">            )</span>
+<span class="nc" id="L634">        }</span>
+<span class="nc" id="L635">    }</span>
+<span class="nc bnc" id="L636" title="All 2 branches missed.">}</span>
+
+@Composable
+fun PreferenceGroup(
+    title: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    content: @Composable () -&gt; Unit
+<span class="nc bnc" id="L643" title="All 18 branches missed.">) {</span>
+<span class="nc bnc" id="L644" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L645">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L646">        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)</span>
+<span class="nc" id="L647">    ) {</span>
+<span class="nc bnc" id="L648" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L649">            modifier = Modifier.padding(16.dp)</span>
+        ) {
+<span class="nc" id="L651">            Row(</span>
+<span class="nc" id="L652">                verticalAlignment = Alignment.CenterVertically,</span>
+<span class="nc" id="L653">                modifier = Modifier.padding(bottom = 12.dp)</span>
+            ) {
+<span class="nc" id="L655">                Icon(</span>
+<span class="nc" id="L656">                    icon,</span>
+<span class="nc" id="L657">                    contentDescription = null,</span>
+<span class="nc" id="L658">                    tint = MaterialTheme.colorScheme.primary,</span>
+<span class="nc" id="L659">                    modifier = Modifier.size(20.dp)</span>
+                )
+<span class="nc" id="L661">                Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L662">                Text(</span>
+<span class="nc" id="L663">                    text = title,</span>
+<span class="nc" id="L664">                    fontSize = 16.sp,</span>
+<span class="nc" id="L665">                    fontWeight = FontWeight.Bold</span>
+                )
+<span class="nc" id="L667">            }</span>
+<span class="nc" id="L668">            content()</span>
+<span class="nc" id="L669">        }</span>
+<span class="nc" id="L670">    }</span>
+<span class="nc bnc" id="L671" title="All 2 branches missed.">}</span>
+
+@Composable
+fun PreferenceToggle(
+    title: String,
+    description: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -&gt; Unit
+<span class="nc bnc" id="L679" title="All 22 branches missed.">) {</span>
+<span class="nc" id="L680">    Row(</span>
+<span class="nc" id="L681">        modifier = Modifier</span>
+<span class="nc" id="L682">            .fillMaxWidth()</span>
+<span class="nc" id="L683">            .padding(vertical = 8.dp),</span>
+<span class="nc" id="L684">        verticalAlignment = Alignment.CenterVertically</span>
+    ) {
+<span class="nc" id="L686">        Column(modifier = Modifier.weight(1f)) {</span>
+<span class="nc" id="L687">            Text(</span>
+<span class="nc" id="L688">                text = title,</span>
+<span class="nc" id="L689">                fontSize = 14.sp,</span>
+<span class="nc" id="L690">                fontWeight = FontWeight.Medium</span>
+            )
+<span class="nc" id="L692">            Text(</span>
+<span class="nc" id="L693">                text = description,</span>
+<span class="nc" id="L694">                fontSize = 12.sp,</span>
+<span class="nc" id="L695">                color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+            )
+<span class="nc" id="L697">        }</span>
+<span class="nc" id="L698">        Switch(</span>
+<span class="nc" id="L699">            checked = checked,</span>
+<span class="nc" id="L700">            onCheckedChange = onCheckedChange</span>
+        )
+<span class="nc" id="L702">    }</span>
+<span class="nc bnc" id="L703" title="All 2 branches missed.">}</span>
+
+@Composable
+fun PreferenceSetting(
+    title: String,
+    description: String,
+    content: @Composable () -&gt; Unit
+<span class="nc bnc" id="L710" title="All 18 branches missed.">) {</span>
+<span class="nc" id="L711">    Column(</span>
+<span class="nc" id="L712">        modifier = Modifier.padding(vertical = 8.dp)</span>
+    ) {
+<span class="nc" id="L714">        Text(</span>
+<span class="nc" id="L715">            text = title,</span>
+<span class="nc" id="L716">            fontSize = 14.sp,</span>
+<span class="nc" id="L717">            fontWeight = FontWeight.Medium</span>
+        )
+<span class="nc" id="L719">        Text(</span>
+<span class="nc" id="L720">            text = description,</span>
+<span class="nc" id="L721">            fontSize = 12.sp,</span>
+<span class="nc" id="L722">            color = MaterialTheme.colorScheme.onSurfaceVariant,</span>
+<span class="nc" id="L723">            modifier = Modifier.padding(bottom = 8.dp)</span>
+        )
+<span class="nc" id="L725">        content()</span>
+<span class="nc" id="L726">    }</span>
+<span class="nc bnc" id="L727" title="All 2 branches missed.">}</span>
+
+@Composable
+fun ThemeSelector(
+    selectedTheme: AppTheme,
+    onThemeSelected: (AppTheme) -&gt; Unit
+<span class="nc bnc" id="L733" title="All 14 branches missed.">) {</span>
+<span class="nc" id="L734">    Column {</span>
+<span class="nc" id="L735">        AppTheme.values().forEach { theme -&gt;</span>
+<span class="nc" id="L736">            Row(</span>
+<span class="nc" id="L737">                modifier = Modifier</span>
+<span class="nc" id="L738">                    .fillMaxWidth()</span>
+<span class="nc bnc" id="L739" title="All 2 branches missed.">                    .selectable(</span>
+<span class="nc bnc" id="L740" title="All 2 branches missed.">                        selected = selectedTheme == theme,</span>
+<span class="nc" id="L741">                        onClick = { onThemeSelected(theme) }</span>
+                    )
+<span class="nc" id="L743">                    .padding(vertical = 4.dp),</span>
+<span class="nc" id="L744">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L746">                RadioButton(</span>
+<span class="nc bnc" id="L747" title="All 4 branches missed.">                    selected = selectedTheme == theme,</span>
+<span class="nc" id="L748">                    onClick = { onThemeSelected(theme) }</span>
+                )
+<span class="nc" id="L750">                Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L751">                Text(</span>
+<span class="nc" id="L752">                    text = theme.displayName,</span>
+<span class="nc" id="L753">                    fontSize = 14.sp</span>
+                )
+<span class="nc" id="L755">            }</span>
+<span class="nc" id="L756">        }</span>
+<span class="nc" id="L757">    }</span>
+<span class="nc bnc" id="L758" title="All 2 branches missed.">}</span>
+
+@Composable
+fun LanguageSelector(
+    selectedLanguage: AppLanguage,
+    onLanguageSelected: (AppLanguage) -&gt; Unit
+<span class="nc bnc" id="L764" title="All 14 branches missed.">) {</span>
+<span class="nc" id="L765">    Column {</span>
+<span class="nc" id="L766">        AppLanguage.values().forEach { language -&gt;</span>
+<span class="nc" id="L767">            Row(</span>
+<span class="nc" id="L768">                modifier = Modifier</span>
+<span class="nc" id="L769">                    .fillMaxWidth()</span>
+<span class="nc bnc" id="L770" title="All 2 branches missed.">                    .selectable(</span>
+<span class="nc bnc" id="L771" title="All 2 branches missed.">                        selected = selectedLanguage == language,</span>
+<span class="nc" id="L772">                        onClick = { onLanguageSelected(language) }</span>
+                    )
+<span class="nc" id="L774">                    .padding(vertical = 4.dp),</span>
+<span class="nc" id="L775">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L777">                RadioButton(</span>
+<span class="nc bnc" id="L778" title="All 4 branches missed.">                    selected = selectedLanguage == language,</span>
+<span class="nc" id="L779">                    onClick = { onLanguageSelected(language) }</span>
+                )
+<span class="nc" id="L781">                Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L782">                Text(</span>
+<span class="nc" id="L783">                    text = language.displayName,</span>
+<span class="nc" id="L784">                    fontSize = 14.sp</span>
+                )
+<span class="nc" id="L786">            }</span>
+<span class="nc" id="L787">        }</span>
+<span class="nc" id="L788">    }</span>
+<span class="nc bnc" id="L789" title="All 2 branches missed.">}</span>
+
+@Composable
+fun ImageQualitySelector(
+    selectedQuality: ImageQuality,
+    onQualitySelected: (ImageQuality) -&gt; Unit
+<span class="nc bnc" id="L795" title="All 14 branches missed.">) {</span>
+<span class="nc" id="L796">    Column {</span>
+<span class="nc" id="L797">        ImageQuality.values().forEach { quality -&gt;</span>
+<span class="nc" id="L798">            Row(</span>
+<span class="nc" id="L799">                modifier = Modifier</span>
+<span class="nc" id="L800">                    .fillMaxWidth()</span>
+<span class="nc bnc" id="L801" title="All 2 branches missed.">                    .selectable(</span>
+<span class="nc bnc" id="L802" title="All 2 branches missed.">                        selected = selectedQuality == quality,</span>
+<span class="nc" id="L803">                        onClick = { onQualitySelected(quality) }</span>
+                    )
+<span class="nc" id="L805">                    .padding(vertical = 4.dp),</span>
+<span class="nc" id="L806">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L808">                RadioButton(</span>
+<span class="nc bnc" id="L809" title="All 4 branches missed.">                    selected = selectedQuality == quality,</span>
+<span class="nc" id="L810">                    onClick = { onQualitySelected(quality) }</span>
+                )
+<span class="nc" id="L812">                Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L813">                Text(</span>
+<span class="nc" id="L814">                    text = quality.displayName,</span>
+<span class="nc" id="L815">                    fontSize = 14.sp</span>
+                )
+<span class="nc" id="L817">            }</span>
+<span class="nc" id="L818">        }</span>
+<span class="nc" id="L819">    }</span>
+<span class="nc bnc" id="L820" title="All 2 branches missed.">}</span>
+
+@Composable
+fun CacheSizeSelector(
+    selectedSize: CacheSize,
+    onSizeSelected: (CacheSize) -&gt; Unit
+<span class="nc bnc" id="L826" title="All 14 branches missed.">) {</span>
+<span class="nc" id="L827">    Column {</span>
+<span class="nc" id="L828">        CacheSize.values().forEach { size -&gt;</span>
+<span class="nc" id="L829">            Row(</span>
+<span class="nc" id="L830">                modifier = Modifier</span>
+<span class="nc" id="L831">                    .fillMaxWidth()</span>
+<span class="nc bnc" id="L832" title="All 2 branches missed.">                    .selectable(</span>
+<span class="nc bnc" id="L833" title="All 2 branches missed.">                        selected = selectedSize == size,</span>
+<span class="nc" id="L834">                        onClick = { onSizeSelected(size) }</span>
+                    )
+<span class="nc" id="L836">                    .padding(vertical = 4.dp),</span>
+<span class="nc" id="L837">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L839">                RadioButton(</span>
+<span class="nc bnc" id="L840" title="All 4 branches missed.">                    selected = selectedSize == size,</span>
+<span class="nc" id="L841">                    onClick = { onSizeSelected(size) }</span>
+                )
+<span class="nc" id="L843">                Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L844">                Text(</span>
+<span class="nc" id="L845">                    text = size.displayName,</span>
+<span class="nc" id="L846">                    fontSize = 14.sp</span>
+                )
+<span class="nc" id="L848">            }</span>
+<span class="nc" id="L849">        }</span>
+<span class="nc" id="L850">    }</span>
+<span class="nc bnc" id="L851" title="All 2 branches missed.">}</span>
+
+@Composable
+fun BackupFrequencySelector(
+    selectedFrequency: BackupFrequency,
+    onFrequencySelected: (BackupFrequency) -&gt; Unit
+<span class="nc bnc" id="L857" title="All 14 branches missed.">) {</span>
+<span class="nc" id="L858">    Column {</span>
+<span class="nc" id="L859">        BackupFrequency.values().forEach { frequency -&gt;</span>
+<span class="nc" id="L860">            Row(</span>
+<span class="nc" id="L861">                modifier = Modifier</span>
+<span class="nc" id="L862">                    .fillMaxWidth()</span>
+<span class="nc bnc" id="L863" title="All 2 branches missed.">                    .selectable(</span>
+<span class="nc bnc" id="L864" title="All 2 branches missed.">                        selected = selectedFrequency == frequency,</span>
+<span class="nc" id="L865">                        onClick = { onFrequencySelected(frequency) }</span>
+                    )
+<span class="nc" id="L867">                    .padding(vertical = 4.dp),</span>
+<span class="nc" id="L868">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L870">                RadioButton(</span>
+<span class="nc bnc" id="L871" title="All 4 branches missed.">                    selected = selectedFrequency == frequency,</span>
+<span class="nc" id="L872">                    onClick = { onFrequencySelected(frequency) }</span>
+                )
+<span class="nc" id="L874">                Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L875">                Text(</span>
+<span class="nc" id="L876">                    text = frequency.displayName,</span>
+<span class="nc" id="L877">                    fontSize = 14.sp</span>
+                )
+<span class="nc" id="L879">            }</span>
+<span class="nc" id="L880">        }</span>
+<span class="nc" id="L881">    }</span>
+<span class="nc bnc" id="L882" title="All 2 branches missed.">}</span>
+
+@Composable
+fun SessionTimeoutSelector(
+    selectedTimeout: SessionTimeout,
+    onTimeoutSelected: (SessionTimeout) -&gt; Unit
+<span class="nc bnc" id="L888" title="All 14 branches missed.">) {</span>
+<span class="nc" id="L889">    Column {</span>
+<span class="nc" id="L890">        SessionTimeout.values().forEach { timeout -&gt;</span>
+<span class="nc" id="L891">            Row(</span>
+<span class="nc" id="L892">                modifier = Modifier</span>
+<span class="nc" id="L893">                    .fillMaxWidth()</span>
+<span class="nc bnc" id="L894" title="All 2 branches missed.">                    .selectable(</span>
+<span class="nc bnc" id="L895" title="All 2 branches missed.">                        selected = selectedTimeout == timeout,</span>
+<span class="nc" id="L896">                        onClick = { onTimeoutSelected(timeout) }</span>
+                    )
+<span class="nc" id="L898">                    .padding(vertical = 4.dp),</span>
+<span class="nc" id="L899">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L901">                RadioButton(</span>
+<span class="nc bnc" id="L902" title="All 4 branches missed.">                    selected = selectedTimeout == timeout,</span>
+<span class="nc" id="L903">                    onClick = { onTimeoutSelected(timeout) }</span>
+                )
+<span class="nc" id="L905">                Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L906">                Text(</span>
+<span class="nc" id="L907">                    text = timeout.displayName,</span>
+<span class="nc" id="L908">                    fontSize = 14.sp</span>
+                )
+<span class="nc" id="L910">            }</span>
+<span class="nc" id="L911">        }</span>
+<span class="nc" id="L912">    }</span>
+<span class="nc bnc" id="L913" title="All 2 branches missed.">}</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

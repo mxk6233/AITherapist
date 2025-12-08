@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AIChatSessionScreen.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.screens</a> &gt; <span class="el_source">AIChatSessionScreen.kt</span></div><h1>AIChatSessionScreen.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.screens
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
+import androidx.compose.material3.ExperimentalMaterial3Api
+
+@OptIn(ExperimentalMaterial3Api::class)
+<span class="nc" id="L21">data class ChatMessage(</span>
+<span class="nc" id="L22">    val id: String,</span>
+<span class="nc" id="L23">    val text: String,</span>
+<span class="nc" id="L24">    val isFromUser: Boolean,</span>
+<span class="nc" id="L25">    val timestamp: Long = System.currentTimeMillis()</span>
+<span class="nc" id="L26">)</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AIChatSessionScreen(
+    onNavigateBack: () -&gt; Unit
+<span class="nc bnc" id="L32" title="All 10 branches missed.">) {</span>
+<span class="nc" id="L33">    var messageText by remember { mutableStateOf(&quot;&quot;) }</span>
+<span class="nc" id="L34">    var messages by remember { mutableStateOf&lt;List&lt;ChatMessage&gt;&gt;(emptyList()) }</span>
+<span class="nc" id="L35">    var isLoading by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L36">    var pendingResponse by remember { mutableStateOf&lt;String?&gt;(null) }</span>
+<span class="nc" id="L37">    val listState = rememberLazyListState()</span>
+    
+    // Handle AI response with LaunchedEffect
+<span class="nc" id="L40">    LaunchedEffect(pendingResponse) {</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        pendingResponse?.let { userMessage -&gt;</span>
+<span class="nc" id="L42">            delay(1500)</span>
+<span class="nc" id="L43">            val aiResponse = ChatMessage(</span>
+<span class="nc" id="L44">                id = (System.currentTimeMillis() + 1).toString(),</span>
+<span class="nc" id="L45">                text = generateAIResponse(userMessage),</span>
+<span class="nc" id="L46">                isFromUser = false</span>
+            )
+<span class="nc" id="L48">            messages = messages + aiResponse</span>
+<span class="nc" id="L49">            isLoading = false</span>
+<span class="nc" id="L50">            pendingResponse = null</span>
+<span class="nc" id="L51">        }</span>
+<span class="nc" id="L52">    }</span>
+    
+    // Initial welcome message
+<span class="nc bnc" id="L55" title="All 2 branches missed.">    LaunchedEffect(Unit) {</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (messages.isEmpty()) {</span>
+<span class="nc" id="L57">            messages = listOf(</span>
+<span class="nc" id="L58">                ChatMessage(</span>
+<span class="nc" id="L59">                    id = &quot;welcome&quot;,</span>
+<span class="nc" id="L60">                    text = &quot;Hello! I'm your AI therapist. I'm here to listen and help you work through your thoughts and feelings. What's on your mind today?&quot;,</span>
+<span class="nc" id="L61">                    isFromUser = false</span>
+                )
+            )
+        }
+<span class="nc" id="L65">    }</span>
+    
+<span class="nc" id="L67">    Column(</span>
+<span class="nc" id="L68">        modifier = Modifier.fillMaxSize()</span>
+    ) {
+        // Header
+<span class="nc" id="L71">        TopAppBar(</span>
+<span class="nc bnc" id="L72" title="All 8 branches missed.">            title = { Text(&quot;AI Chat Session&quot;) },</span>
+<span class="nc" id="L73">            navigationIcon = {</span>
+<span class="nc bnc" id="L74" title="All 8 branches missed.">                IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L75" title="All 8 branches missed.">                    Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L76">                }</span>
+<span class="nc" id="L77">            },</span>
+<span class="nc" id="L78">            actions = {</span>
+<span class="nc bnc" id="L79" title="All 6 branches missed.">                IconButton(onClick = { /* Voice input */ }) {</span>
+<span class="nc bnc" id="L80" title="All 8 branches missed.">                    Icon(Icons.Default.Mic, contentDescription = &quot;Voice Input&quot;)</span>
+<span class="nc" id="L81">                }</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">                IconButton(onClick = { /* Settings */ }) {</span>
+<span class="nc bnc" id="L83" title="All 8 branches missed.">                    Icon(Icons.Default.MoreVert, contentDescription = &quot;More&quot;)</span>
+<span class="nc" id="L84">                }</span>
+<span class="nc" id="L85">            }</span>
+        )
+        
+        // Messages List
+<span class="nc" id="L89">        LazyColumn(</span>
+<span class="nc" id="L90">            state = listState,</span>
+<span class="nc" id="L91">            modifier = Modifier.weight(1f),</span>
+<span class="nc" id="L92">            contentPadding = PaddingValues(16.dp),</span>
+<span class="nc" id="L93">            verticalArrangement = Arrangement.spacedBy(8.dp)</span>
+<span class="nc" id="L94">        ) {</span>
+<span class="nc" id="L95">            items(messages) { message -&gt;</span>
+                ChatMessageBubble(message = message)
+            }
+            
+<span class="nc bnc" id="L99" title="All 2 branches missed.">            if (isLoading) {</span>
+<span class="nc" id="L100">                item {</span>
+<span class="nc bnc" id="L101" title="All 6 branches missed.">                    Row(</span>
+<span class="nc" id="L102">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L103">                        horizontalArrangement = Arrangement.Start</span>
+                    ) {
+<span class="nc" id="L105">                        Card(</span>
+<span class="nc" id="L106">                            colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L107">                                containerColor = MaterialTheme.colorScheme.surfaceVariant</span>
+                            )
+<span class="nc" id="L109">                        ) {</span>
+<span class="nc bnc" id="L110" title="All 6 branches missed.">                            Row(</span>
+<span class="nc" id="L111">                                modifier = Modifier.padding(16.dp),</span>
+<span class="nc" id="L112">                                verticalAlignment = Alignment.CenterVertically</span>
+                            ) {
+<span class="nc" id="L114">                                CircularProgressIndicator(</span>
+<span class="nc" id="L115">                                    modifier = Modifier.size(20.dp),</span>
+<span class="nc" id="L116">                                    strokeWidth = 2.dp</span>
+                                )
+<span class="nc" id="L118">                                Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L119">                                Text(&quot;AI is typing...&quot;)</span>
+<span class="nc" id="L120">                            }</span>
+<span class="nc" id="L121">                        }</span>
+<span class="nc" id="L122">                    }</span>
+<span class="nc" id="L123">                }</span>
+            }
+<span class="nc" id="L125">        }</span>
+        
+        // Input Section
+<span class="nc" id="L128">        Card(</span>
+<span class="nc" id="L129">            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L130">            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)</span>
+<span class="nc" id="L131">        ) {</span>
+<span class="nc bnc" id="L132" title="All 6 branches missed.">            Row(</span>
+<span class="nc" id="L133">                modifier = Modifier.padding(16.dp),</span>
+<span class="nc" id="L134">                verticalAlignment = Alignment.Bottom</span>
+            ) {
+<span class="nc" id="L136">                OutlinedTextField(</span>
+<span class="nc" id="L137">                    value = messageText,</span>
+<span class="nc" id="L138">                    onValueChange = { messageText = it },</span>
+<span class="nc bnc" id="L139" title="All 8 branches missed.">                    placeholder = { Text(&quot;Type your message...&quot;) },</span>
+<span class="nc" id="L140">                    modifier = Modifier.weight(1f),</span>
+<span class="nc" id="L141">                    maxLines = 3,</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">                    enabled = !isLoading</span>
+                )
+                
+<span class="nc" id="L145">                Spacer(modifier = Modifier.width(8.dp))</span>
+                
+<span class="nc" id="L147">                FloatingActionButton(</span>
+<span class="nc" id="L148">                    onClick = {</span>
+<span class="nc bnc" id="L149" title="All 6 branches missed.">                        if (messageText.isNotBlank() &amp;&amp; !isLoading) {</span>
+<span class="nc" id="L150">                            val userMessage = ChatMessage(</span>
+<span class="nc" id="L151">                                id = System.currentTimeMillis().toString(),</span>
+<span class="nc" id="L152">                                text = messageText,</span>
+<span class="nc" id="L153">                                isFromUser = true</span>
+                            )
+<span class="nc" id="L155">                            messages = messages + userMessage</span>
+<span class="nc" id="L156">                            messageText = &quot;&quot;</span>
+<span class="nc" id="L157">                            isLoading = true</span>
+<span class="nc" id="L158">                            pendingResponse = userMessage.text</span>
+                        }
+<span class="nc" id="L160">                    },</span>
+<span class="nc" id="L161">                    modifier = Modifier.size(48.dp)</span>
+<span class="nc" id="L162">                ) {</span>
+<span class="nc bnc" id="L163" title="All 8 branches missed.">                    Icon(</span>
+<span class="nc" id="L164">                        Icons.Default.Send,</span>
+<span class="nc" id="L165">                        contentDescription = &quot;Send&quot;,</span>
+<span class="nc" id="L166">                        modifier = Modifier.size(24.dp)</span>
+<span class="nc" id="L167">                    )</span>
+<span class="nc" id="L168">                }</span>
+<span class="nc" id="L169">            }</span>
+<span class="nc" id="L170">        }</span>
+<span class="nc" id="L171">    }</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L175" title="All 10 branches missed.">fun ChatMessageBubble(message: ChatMessage) {</span>
+<span class="nc" id="L176">    Row(</span>
+<span class="nc" id="L177">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc bnc" id="L178" title="All 2 branches missed.">        horizontalArrangement = if (message.isFromUser) Arrangement.End else Arrangement.Start</span>
+    ) {
+<span class="nc" id="L180">        Card(</span>
+<span class="nc" id="L181">            colors = CardDefaults.cardColors(</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">                containerColor = if (message.isFromUser) </span>
+<span class="nc" id="L183">                    MaterialTheme.colorScheme.primary </span>
+                else 
+<span class="nc" id="L185">                    MaterialTheme.colorScheme.surfaceVariant</span>
+            ),
+<span class="nc" id="L187">            modifier = Modifier.widthIn(max = 280.dp)</span>
+<span class="nc" id="L188">        ) {</span>
+<span class="nc bnc" id="L189" title="All 6 branches missed.">            Column(</span>
+<span class="nc" id="L190">                modifier = Modifier.padding(12.dp)</span>
+            ) {
+<span class="nc" id="L192">                Text(</span>
+<span class="nc" id="L193">                    text = message.text,</span>
+<span class="nc bnc" id="L194" title="All 2 branches missed.">                    color = if (message.isFromUser) </span>
+<span class="nc" id="L195">                        MaterialTheme.colorScheme.onPrimary </span>
+                    else 
+<span class="nc" id="L197">                        MaterialTheme.colorScheme.onSurfaceVariant,</span>
+<span class="nc" id="L198">                    fontSize = 14.sp</span>
+                )
+<span class="nc" id="L200">                Spacer(modifier = Modifier.height(4.dp))</span>
+<span class="nc" id="L201">                Text(</span>
+<span class="nc" id="L202">                    text = formatTime(message.timestamp),</span>
+<span class="nc" id="L203">                    fontSize = 10.sp,</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">                    color = if (message.isFromUser) </span>
+<span class="nc" id="L205">                        MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f)</span>
+                    else 
+<span class="nc" id="L207">                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)</span>
+                )
+<span class="nc" id="L209">            }</span>
+<span class="nc" id="L210">        }</span>
+<span class="nc" id="L211">    }</span>
+<span class="nc bnc" id="L212" title="All 2 branches missed.">}</span>
+
+fun generateAIResponse(userMessage: String): String {
+<span class="nc" id="L215">    val responses = listOf(</span>
+<span class="nc" id="L216">        &quot;I understand how you're feeling. Can you tell me more about what's been on your mind?&quot;,</span>
+<span class="nc" id="L217">        &quot;That sounds challenging. It's important to acknowledge these feelings. What do you think might help you feel better?&quot;,</span>
+<span class="nc" id="L218">        &quot;Thank you for sharing that with me. How long have you been experiencing this?&quot;,</span>
+<span class="nc" id="L219">        &quot;I hear you. It takes courage to talk about these things. What would you like to focus on today?&quot;,</span>
+<span class="nc" id="L220">        &quot;That's a valid concern. Let's explore this together. What's your biggest worry about this situation?&quot;,</span>
+<span class="nc" id="L221">        &quot;I appreciate you being open with me. How does this make you feel physically?&quot;,</span>
+<span class="nc" id="L222">        &quot;It sounds like you're going through a lot right now. What support do you have in your life?&quot;,</span>
+<span class="nc" id="L223">        &quot;I can sense this is important to you. What would you like to achieve from our conversation today?&quot;</span>
+    )
+<span class="nc" id="L225">    return responses.random()</span>
+}
+
+fun formatTime(timestamp: Long): String {
+<span class="nc" id="L229">    val time = java.text.SimpleDateFormat(&quot;HH:mm&quot;, java.util.Locale.getDefault())</span>
+<span class="nc" id="L230">    return time.format(java.util.Date(timestamp))</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

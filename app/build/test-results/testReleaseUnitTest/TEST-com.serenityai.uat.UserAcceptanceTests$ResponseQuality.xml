@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="User Story: Response Quality" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:08" hostname="Mohammads-MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="As a user, I want the AI to maintain a professional and supportive tone" classname="com.serenityai.uat.UserAcceptanceTests$ResponseQuality" time="0.0"/>
+  <testcase name="As a user, I want the AI to provide helpful and relevant responses" classname="com.serenityai.uat.UserAcceptanceTests$ResponseQuality" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

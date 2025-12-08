@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.serenityai.app-mergeDebugResources-66:/values-v16/values-v16.xml",
+            "map": [
+                {
+                    "source": "/Users/mohammadabbaskazmi/.gradle/caches/8.11.1/transforms/5c72e808197916494a030aa9737e5a6f/transformed/core-1.12.0/res/values-v16/values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "65",
+                        "endOffsets": "116"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 2: Preference Management and Validation" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:07" hostname="Mohammads-MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="UC13-REQ-3: System MUST validate preference values" classname="com.serenityai.tests.unit.usecases.uc13_preferences.AppPreferencesUseCaseUnitTests$PreferenceManagementTests" time="0.0"/>
+  <testcase name="UC13-REQ-1: System MUST allow users to modify application preferences" classname="com.serenityai.tests.unit.usecases.uc13_preferences.AppPreferencesUseCaseUnitTests$PreferenceManagementTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

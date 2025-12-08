@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApplicationFeedbackUseCase.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.usecases</a> &gt; <span class="el_source">ApplicationFeedbackUseCase.kt</span></div><h1>ApplicationFeedbackUseCase.kt</h1><pre class="source lang-java linenums">package com.serenityai.usecases
+
+import com.serenityai.data.models.*
+import java.util.Date
+
+// FeedbackType, FeedbackStatus, and FeedbackSubmission are defined in UserSupportUseCase.kt
+// as top-level types in this package, so they're accessible without import
+
+/** UC11: Application feedback submission system for users to submit feedback, bug reports, feature requests, and ratings. */
+<span class="nc" id="L10">class ApplicationFeedbackUseCase {</span>
+    
+<span class="nc" id="L12">    private val feedbackSubmissions = mutableMapOf&lt;String, FeedbackSubmission&gt;()</span>
+<span class="nc" id="L13">    private val feedbackAnalytics = mutableMapOf&lt;String, FeedbackAnalytics&gt;()</span>
+    
+    /** Submits application feedback. */
+<span class="nc" id="L16">    fun submitFeedback(</span>
+        userId: String,
+        feedbackType: FeedbackType,
+        message: String,
+<span class="nc" id="L20">        rating: Int? = null,</span>
+<span class="nc" id="L21">        category: String? = null,</span>
+<span class="nc" id="L22">        attachments: List&lt;String&gt; = emptyList()</span>
+    ): FeedbackSubmission {
+<span class="nc bnc" id="L24" title="All 4 branches missed.">        require(message.isNotBlank()) { &quot;Feedback message cannot be empty&quot; }</span>
+<span class="nc bnc" id="L25" title="All 6 branches missed.">        require(rating == null || rating in 1..5) { &quot;Rating must be between 1 and 5&quot; }</span>
+        
+<span class="nc" id="L27">        val feedback = FeedbackSubmission(</span>
+<span class="nc" id="L28">            id = &quot;feedback_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L29">            userId = userId,</span>
+<span class="nc" id="L30">            feedbackType = feedbackType,</span>
+<span class="nc" id="L31">            message = message,</span>
+<span class="nc" id="L32">            rating = rating,</span>
+<span class="nc" id="L33">            category = category,</span>
+<span class="nc" id="L34">            attachments = attachments,</span>
+<span class="nc" id="L35">            submittedAt = Date(),</span>
+<span class="nc" id="L36">            status = FeedbackStatus.RECEIVED</span>
+        )
+        
+<span class="nc" id="L39">        feedbackSubmissions[feedback.id] = feedback</span>
+<span class="nc" id="L40">        updateAnalytics(userId, feedback)</span>
+        
+<span class="nc" id="L42">        return feedback</span>
+    }
+    
+    /** Gets feedback submissions for a user. */
+    fun getUserFeedback(userId: String): List&lt;FeedbackSubmission&gt; {
+<span class="nc" id="L47">        return feedbackSubmissions.values.filter { it.userId == userId }</span>
+<span class="nc" id="L48">            .sortedByDescending { it.submittedAt }</span>
+    }
+    
+    /** Gets feedback by ID. */
+    fun getFeedback(feedbackId: String): FeedbackSubmission? {
+<span class="nc" id="L53">        return feedbackSubmissions[feedbackId]</span>
+    }
+    
+    /** Gets all feedback submissions. */
+<span class="nc" id="L57">    fun getAllFeedback(feedbackType: FeedbackType? = null, status: FeedbackStatus? = null): List&lt;FeedbackSubmission&gt; {</span>
+<span class="nc" id="L58">        return feedbackSubmissions.values</span>
+<span class="nc bnc" id="L59" title="All 4 branches missed.">            .filter { feedbackType == null || it.feedbackType == feedbackType }</span>
+<span class="nc bnc" id="L60" title="All 4 branches missed.">            .filter { status == null || it.status == status }</span>
+<span class="nc" id="L61">            .sortedByDescending { it.submittedAt }</span>
+    }
+    
+    /** Updates feedback status. */
+<span class="nc" id="L65">    fun updateFeedbackStatus(feedbackId: String, status: FeedbackStatus, adminNotes: String? = null): FeedbackSubmission? {</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        val feedback = feedbackSubmissions[feedbackId] ?: return null</span>
+        
+<span class="nc" id="L68">        val updated = feedback.copy(</span>
+<span class="nc" id="L69">            status = status,</span>
+<span class="nc" id="L70">            adminNotes = adminNotes,</span>
+<span class="nc" id="L71">            updatedAt = Date()</span>
+        )
+        
+<span class="nc" id="L74">        feedbackSubmissions[feedbackId] = updated</span>
+<span class="nc" id="L75">        return updated</span>
+    }
+    
+    /** Gets feedback analytics. */
+<span class="nc" id="L79">    fun getFeedbackAnalytics(userId: String? = null): FeedbackAnalytics {</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        val relevantFeedback = if (userId != null) {</span>
+<span class="nc" id="L81">            feedbackSubmissions.values.filter { it.userId == userId }</span>
+        } else {
+<span class="nc" id="L83">            feedbackSubmissions.values</span>
+        }
+        
+<span class="nc" id="L86">        val totalFeedback = relevantFeedback.size</span>
+<span class="nc" id="L87">        val byType = relevantFeedback.groupBy { it.feedbackType }.mapValues { it.value.size }</span>
+<span class="nc" id="L88">        val byStatus = relevantFeedback.groupBy { it.status }.mapValues { it.value.size }</span>
+<span class="nc" id="L89">        val averageRating = relevantFeedback.mapNotNull { it.rating }.average().let { </span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">            if (it.isNaN()) null else it.toFloat()</span>
+        }
+        
+<span class="nc" id="L93">        return FeedbackAnalytics(</span>
+<span class="nc" id="L94">            totalFeedback = totalFeedback,</span>
+<span class="nc" id="L95">            feedbackByType = byType,</span>
+<span class="nc" id="L96">            feedbackByStatus = byStatus,</span>
+<span class="nc" id="L97">            averageRating = averageRating,</span>
+<span class="nc" id="L98">            recentFeedback = relevantFeedback.take(10)</span>
+        )
+    }
+    
+    /** Searches feedback by keyword. */
+    fun searchFeedback(query: String): List&lt;FeedbackSubmission&gt; {
+<span class="nc" id="L104">        val lowerQuery = query.lowercase()</span>
+<span class="nc" id="L105">        return feedbackSubmissions.values.filter {</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">            it.message.lowercase().contains(lowerQuery) ||</span>
+<span class="nc bnc" id="L107" title="All 8 branches missed.">            it.category?.lowercase()?.contains(lowerQuery) == true</span>
+<span class="nc" id="L108">        }.sortedByDescending { it.submittedAt }</span>
+    }
+    
+    /** Gets feedback by category. */
+    fun getFeedbackByCategory(category: String): List&lt;FeedbackSubmission&gt; {
+<span class="nc" id="L113">        return feedbackSubmissions.values</span>
+<span class="nc" id="L114">            .filter { it.category == category }</span>
+<span class="nc" id="L115">            .sortedByDescending { it.submittedAt }</span>
+    }
+    
+    /** Gets feedback statistics. */
+    fun getFeedbackStatistics(): FeedbackStatistics {
+<span class="nc" id="L120">        val allFeedback = feedbackSubmissions.values</span>
+<span class="nc" id="L121">        val total = allFeedback.size</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        val bugReports = allFeedback.count { it.feedbackType == FeedbackType.BUG }</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        val featureRequests = allFeedback.count { it.feedbackType == FeedbackType.FEATURE }</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        val complaints = allFeedback.count { it.feedbackType == FeedbackType.COMPLAINT }</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">        val compliments = allFeedback.count { it.feedbackType == FeedbackType.COMPLIMENT }</span>
+<span class="nc" id="L126">        val averageRating = allFeedback.mapNotNull { it.rating }.average().let {</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">            if (it.isNaN()) null else it.toFloat()</span>
+        }
+        
+<span class="nc" id="L130">        return FeedbackStatistics(</span>
+<span class="nc" id="L131">            totalSubmissions = total,</span>
+<span class="nc" id="L132">            bugReports = bugReports,</span>
+<span class="nc" id="L133">            featureRequests = featureRequests,</span>
+<span class="nc" id="L134">            complaints = complaints,</span>
+<span class="nc" id="L135">            compliments = compliments,</span>
+<span class="nc" id="L136">            averageRating = averageRating,</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">            pendingReview = allFeedback.count { it.status == FeedbackStatus.RECEIVED },</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">            implemented = allFeedback.count { it.status == FeedbackStatus.IMPLEMENTED }</span>
+        )
+    }
+    
+    /** Marks feedback as implemented. */
+<span class="nc" id="L143">    fun markAsImplemented(feedbackId: String, implementationNotes: String? = null): FeedbackSubmission? {</span>
+<span class="nc" id="L144">        return updateFeedbackStatus(feedbackId, FeedbackStatus.IMPLEMENTED, implementationNotes)</span>
+    }
+    
+    /** Marks feedback as declined. */
+<span class="nc" id="L148">    fun markAsDeclined(feedbackId: String, declineReason: String? = null): FeedbackSubmission? {</span>
+<span class="nc" id="L149">        return updateFeedbackStatus(feedbackId, FeedbackStatus.DECLINED, declineReason)</span>
+    }
+    
+    /** Gets pending feedback for review. */
+    fun getPendingFeedback(): List&lt;FeedbackSubmission&gt; {
+<span class="nc" id="L154">        return feedbackSubmissions.values</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">            .filter { it.status == FeedbackStatus.RECEIVED }</span>
+<span class="nc" id="L156">            .sortedBy { it.submittedAt }</span>
+    }
+    
+    /** Gets top feedback by rating. */
+<span class="nc" id="L160">    fun getTopRatedFeedback(limit: Int = 10): List&lt;FeedbackSubmission&gt; {</span>
+<span class="nc" id="L161">        return feedbackSubmissions.values</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">            .filter { it.rating != null }</span>
+<span class="nc" id="L163">            .sortedByDescending { it.rating }</span>
+<span class="nc" id="L164">            .take(limit)</span>
+    }
+    
+    /** Gets feedback trends over time. */
+<span class="nc" id="L168">    fun getFeedbackTrends(days: Int = 30): FeedbackTrends {</span>
+<span class="nc" id="L169">        val cutoffDate = Date(System.currentTimeMillis() - (days * 24 * 60 * 60 * 1000L))</span>
+<span class="nc" id="L170">        val recentFeedback = feedbackSubmissions.values.filter { it.submittedAt.after(cutoffDate) }</span>
+        
+<span class="nc" id="L172">        val dailyCounts = recentFeedback.groupBy {</span>
+<span class="nc" id="L173">            it.submittedAt.toString().substring(0, 10)</span>
+<span class="nc" id="L174">        }.mapValues { it.value.size }</span>
+        
+<span class="nc" id="L176">        return FeedbackTrends(</span>
+<span class="nc" id="L177">            periodDays = days,</span>
+<span class="nc" id="L178">            totalFeedback = recentFeedback.size,</span>
+<span class="nc" id="L179">            dailyCounts = dailyCounts,</span>
+<span class="nc" id="L180">            typeDistribution = recentFeedback.groupBy { it.feedbackType }.mapValues { it.value.size },</span>
+<span class="nc" id="L181">            averageRating = recentFeedback.mapNotNull { it.rating }.average().let {</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">                if (it.isNaN()) null else it.toFloat()</span>
+            }
+        )
+    }
+    
+    // Helper methods
+    private fun updateAnalytics(userId: String, feedback: FeedbackSubmission) {
+<span class="nc" id="L189">        val analytics = feedbackAnalytics.getOrPut(userId) {</span>
+<span class="nc" id="L190">            FeedbackAnalytics(</span>
+<span class="nc" id="L191">                totalFeedback = 0,</span>
+<span class="nc" id="L192">                feedbackByType = emptyMap(),</span>
+<span class="nc" id="L193">                feedbackByStatus = emptyMap(),</span>
+<span class="nc" id="L194">                averageRating = null,</span>
+<span class="nc" id="L195">                recentFeedback = emptyList()</span>
+<span class="nc" id="L196">            )</span>
+        }
+        
+<span class="nc" id="L199">        val updatedFeedback = getUserFeedback(userId)</span>
+<span class="nc" id="L200">        feedbackAnalytics[userId] = getFeedbackAnalytics(userId)</span>
+<span class="nc" id="L201">    }</span>
+}
+
+/** Data class for feedback analytics. */
+<span class="nc" id="L205">data class FeedbackAnalytics(</span>
+<span class="nc" id="L206">    val totalFeedback: Int,</span>
+<span class="nc" id="L207">    val feedbackByType: Map&lt;FeedbackType, Int&gt;,</span>
+<span class="nc" id="L208">    val feedbackByStatus: Map&lt;FeedbackStatus, Int&gt;,</span>
+<span class="nc" id="L209">    val averageRating: Float?,</span>
+<span class="nc" id="L210">    val recentFeedback: List&lt;FeedbackSubmission&gt;</span>
+)
+
+/** Data class for feedback statistics. */
+<span class="nc" id="L214">data class FeedbackStatistics(</span>
+<span class="nc" id="L215">    val totalSubmissions: Int,</span>
+<span class="nc" id="L216">    val bugReports: Int,</span>
+<span class="nc" id="L217">    val featureRequests: Int,</span>
+<span class="nc" id="L218">    val complaints: Int,</span>
+<span class="nc" id="L219">    val compliments: Int,</span>
+<span class="nc" id="L220">    val averageRating: Float?,</span>
+<span class="nc" id="L221">    val pendingReview: Int,</span>
+<span class="nc" id="L222">    val implemented: Int</span>
+)
+
+/** Data class for feedback trends. */
+<span class="nc" id="L226">data class FeedbackTrends(</span>
+<span class="nc" id="L227">    val periodDays: Int,</span>
+<span class="nc" id="L228">    val totalFeedback: Int,</span>
+<span class="nc" id="L229">    val dailyCounts: Map&lt;String, Int&gt;,</span>
+<span class="nc" id="L230">    val typeDistribution: Map&lt;FeedbackType, Int&gt;,</span>
+<span class="nc" id="L231">    val averageRating: Float?</span>
+)
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

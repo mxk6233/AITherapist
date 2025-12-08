@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DisclaimerScreen.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.disclaimer</a> &gt; <span class="el_source">DisclaimerScreen.kt</span></div><h1>DisclaimerScreen.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.disclaimer
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+
+@Composable
+fun DisclaimerScreen(
+    onAccept: () -&gt; Unit,
+    onDecline: () -&gt; Unit
+<span class="nc bnc" id="L18" title="All 14 branches missed.">) {</span>
+<span class="nc" id="L19">    var isAccepted by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L20">    var currentSection by remember { mutableStateOf(0) }</span>
+<span class="nc" id="L21">    val totalSections = 6</span>
+    
+    // Debug logging
+<span class="nc bnc" id="L24" title="All 2 branches missed.">    LaunchedEffect(currentSection) {</span>
+<span class="nc" id="L25">        println(&quot;Disclaimer: Current section changed to $currentSection&quot;)</span>
+<span class="nc" id="L26">    }</span>
+    
+<span class="nc" id="L28">    Column(</span>
+<span class="nc" id="L29">        modifier = Modifier</span>
+<span class="nc" id="L30">            .fillMaxSize()</span>
+<span class="nc" id="L31">            .padding(horizontal = 16.dp, vertical = 8.dp),</span>
+<span class="nc" id="L32">        horizontalAlignment = Alignment.CenterHorizontally</span>
+    ) {
+        // Header
+<span class="nc" id="L35">        Card(</span>
+<span class="nc" id="L36">            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L37">            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),</span>
+<span class="nc" id="L38">            colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L39">                containerColor = MaterialTheme.colorScheme.errorContainer</span>
+            )
+<span class="nc" id="L41">        ) {</span>
+<span class="nc bnc" id="L42" title="All 6 branches missed.">            Column(</span>
+<span class="nc" id="L43">                modifier = Modifier.padding(12.dp),</span>
+<span class="nc" id="L44">                horizontalAlignment = Alignment.CenterHorizontally</span>
+            ) {
+<span class="nc" id="L46">                Text(</span>
+<span class="nc" id="L47">                    text = &quot;⚠️ Important Disclaimer&quot;,</span>
+<span class="nc" id="L48">                    style = MaterialTheme.typography.headlineSmall,</span>
+<span class="nc" id="L49">                    fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L50">                    color = MaterialTheme.colorScheme.onErrorContainer,</span>
+<span class="nc" id="L51">                    textAlign = TextAlign.Center</span>
+                )
+                
+<span class="nc" id="L54">                Spacer(modifier = Modifier.height(4.dp))</span>
+                
+<span class="nc" id="L56">                Text(</span>
+<span class="nc" id="L57">                    text = &quot;Section ${currentSection + 1} of $totalSections&quot;,</span>
+<span class="nc" id="L58">                    style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L59">                    color = MaterialTheme.colorScheme.onErrorContainer</span>
+                )
+<span class="nc" id="L61">            }</span>
+<span class="nc" id="L62">        }</span>
+        
+<span class="nc" id="L64">        Spacer(modifier = Modifier.height(8.dp))</span>
+        
+        // Progress indicator
+<span class="nc" id="L67">        LinearProgressIndicator(</span>
+<span class="nc" id="L68">            progress = (currentSection + 1).toFloat() / totalSections.toFloat(),</span>
+<span class="nc" id="L69">            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L70">            color = MaterialTheme.colorScheme.primary</span>
+        )
+        
+<span class="nc" id="L73">        Spacer(modifier = Modifier.height(8.dp))</span>
+        
+        // Disclaimer content with scrolling
+<span class="nc" id="L76">        Card(</span>
+<span class="nc" id="L77">            modifier = Modifier</span>
+<span class="nc" id="L78">                .fillMaxWidth()</span>
+<span class="nc" id="L79">                .weight(1f)</span>
+<span class="nc" id="L80">                .verticalScroll(rememberScrollState()),</span>
+<span class="nc" id="L81">            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)</span>
+<span class="nc" id="L82">        ) {</span>
+<span class="nc bnc" id="L83" title="All 6 branches missed.">            Column(</span>
+<span class="nc" id="L84">                modifier = Modifier.padding(12.dp)</span>
+            ) {
+<span class="nc" id="L86">                Text(</span>
+<span class="nc" id="L87">                    text = &quot;AI Therapist Disclaimer&quot;,</span>
+<span class="nc" id="L88">                    style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L89">                    fontWeight = FontWeight.Bold</span>
+                )
+                
+<span class="nc" id="L92">                Spacer(modifier = Modifier.height(8.dp))</span>
+                
+<span class="nc" id="L94">                Text(</span>
+<span class="nc" id="L95">                    text = &quot;Please read and understand the following before using this application:&quot;,</span>
+<span class="nc" id="L96">                    style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L97">                    fontWeight = FontWeight.Medium</span>
+                )
+                
+<span class="nc" id="L100">                Spacer(modifier = Modifier.height(12.dp))</span>
+                
+<span class="nc bnc" id="L102" title="All 7 branches missed.">                when (currentSection) {</span>
+<span class="nc" id="L103">                    0 -&gt; DisclaimerSection(</span>
+<span class="nc" id="L104">                        title = &quot;1. Not a Replacement for Professional Care&quot;,</span>
+<span class="nc" id="L105">                        content = &quot;This AI therapist is designed to provide general mental health support and guidance. It is NOT a replacement for professional medical advice, diagnosis, or treatment from qualified healthcare providers.\n\nThis means:\n• The AI cannot diagnose mental health conditions\n• It cannot provide personalized medical treatment\n• Always consult healthcare professionals for serious concerns\n• Use this as a supplement, not a replacement for professional care&quot;</span>
+                    )
+<span class="nc" id="L107">                    1 -&gt; DisclaimerSection(</span>
+<span class="nc" id="L108">                        title = &quot;2. Emergency Situations&quot;,</span>
+<span class="nc" id="L109">                        content = &quot;If you are experiencing a mental health emergency, having thoughts of self-harm, or are in immediate danger, please:\n\n**Immediate Actions:**\n• Call emergency services (911) immediately\n• Contact the National Suicide Prevention Lifeline at 988\n• Go to your nearest emergency room\n• Text HOME to 741741 for Crisis Text Line\n\n**Remember:** This AI cannot provide emergency support. Always seek immediate professional help in crisis situations.&quot;</span>
+                    )
+<span class="nc" id="L111">                    2 -&gt; DisclaimerSection(</span>
+<span class="nc" id="L112">                        title = &quot;3. Privacy and Data&quot;,</span>
+<span class="nc" id="L113">                        content = &quot;Your conversations may be stored for improving the service. While we take privacy seriously, please avoid sharing highly sensitive personal information that you wouldn't want stored.\n\n**Data Usage:**\n• Conversations may be analyzed to improve AI responses\n• Personal information should be kept minimal\n• We follow privacy best practices\n• You can request data deletion if needed\n\n**Recommendation:** Avoid sharing full names, addresses, or other identifying information.&quot;</span>
+                    )
+<span class="nc" id="L115">                    3 -&gt; DisclaimerSection(</span>
+<span class="nc" id="L116">                        title = &quot;4. Limitations&quot;,</span>
+<span class="nc" id="L117">                        content = &quot;This AI cannot provide personalized medical advice, diagnose mental health conditions, or replace human therapeutic relationships. Responses are generated based on general therapeutic principles.\n\n**What the AI CAN do:**\n• Provide general mental health information\n• Offer coping strategies and techniques\n• Listen and provide emotional support\n• Suggest when to seek professional help\n\n**What the AI CANNOT do:**\n• Diagnose mental health conditions\n• Provide personalized treatment plans\n• Replace human therapeutic relationships\n• Handle emergency situations&quot;</span>
+                    )
+<span class="nc" id="L119">                    4 -&gt; DisclaimerSection(</span>
+<span class="nc" id="L120">                        title = &quot;5. User Responsibility&quot;,</span>
+<span class="nc" id="L121">                        content = &quot;You are responsible for your own mental health decisions. If you feel the AI's responses are not helpful or appropriate, please seek professional help.\n\n**Your Responsibilities:**\n• Use the AI as a tool, not a sole source of help\n• Seek professional help when needed\n• Trust your instincts about your mental health\n• Don't rely solely on AI for serious concerns\n\n**When to Seek Professional Help:**\n• Persistent feelings of hopelessness\n• Thoughts of self-harm\n• Severe anxiety or depression\n• Any mental health crisis&quot;</span>
+                    )
+<span class="nc" id="L123">                    5 -&gt; DisclaimerSection(</span>
+<span class="nc" id="L124">                        title = &quot;6. Age Restrictions&quot;,</span>
+<span class="nc" id="L125">                        content = &quot;This application is intended for users 18 years and older. If you are under 18, please seek guidance from a parent, guardian, or appropriate adult.\n\n**Age Requirements:**\n• Must be 18+ to use this application\n• Designed for adult mental health support\n• Parental guidance recommended for younger users\n\n**For Younger Users:**\n• Ask a parent or guardian for permission\n• Consider age-appropriate mental health resources\n• Seek guidance from school counselors or trusted adults&quot;</span>
+                    )
+<span class="nc" id="L127">                }</span>
+<span class="nc" id="L128">            }</span>
+<span class="nc" id="L129">        }</span>
+        
+<span class="nc" id="L131">        Spacer(modifier = Modifier.height(8.dp))</span>
+        
+        // Navigation buttons
+<span class="nc" id="L134">        Row(</span>
+<span class="nc" id="L135">            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L136">            horizontalArrangement = Arrangement.spacedBy(8.dp)</span>
+        ) {
+            // Previous button
+<span class="nc bnc" id="L139" title="All 2 branches missed.">            if (currentSection &gt; 0) {</span>
+<span class="nc" id="L140">                OutlinedButton(</span>
+<span class="nc" id="L141">                    onClick = { </span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">                        if (currentSection &gt; 0) {</span>
+<span class="nc" id="L143">                            currentSection--</span>
+                        }
+<span class="nc" id="L145">                    },</span>
+<span class="nc" id="L146">                    modifier = Modifier.weight(1f),</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">                    enabled = currentSection &gt; 0</span>
+<span class="nc" id="L148">                ) {</span>
+<span class="nc bnc" id="L149" title="All 8 branches missed.">                    Text(&quot;Previous&quot;)</span>
+<span class="nc" id="L150">                }</span>
+<span class="nc" id="L151">            } else {</span>
+<span class="nc" id="L152">                Spacer(modifier = Modifier.weight(1f))</span>
+            }
+            
+            // Next button
+<span class="nc" id="L156">            Button(</span>
+<span class="nc" id="L157">                onClick = { </span>
+<span class="nc" id="L158">                    println(&quot;Next button clicked! Current: $currentSection, Total: $totalSections&quot;)</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">                    if (currentSection &lt; totalSections - 1) {</span>
+<span class="nc" id="L160">                        currentSection++</span>
+<span class="nc" id="L161">                        println(&quot;Section incremented to: $currentSection&quot;)</span>
+                    }
+<span class="nc" id="L163">                },</span>
+<span class="nc" id="L164">                modifier = Modifier.weight(1f),</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">                enabled = currentSection &lt; totalSections - 1</span>
+<span class="nc" id="L166">            ) {</span>
+<span class="nc bnc" id="L167" title="All 8 branches missed.">                Text(&quot;Next&quot;)</span>
+<span class="nc" id="L168">            }</span>
+<span class="nc" id="L169">        }</span>
+        
+        // Acceptance checkbox (only show on last section)
+<span class="nc bnc" id="L172" title="All 2 branches missed.">        if (currentSection == totalSections - 1) {</span>
+<span class="nc" id="L173">            Spacer(modifier = Modifier.height(8.dp))</span>
+            
+<span class="nc" id="L175">            Card(</span>
+<span class="nc" id="L176">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L177">                colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L178">                    containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+                )
+<span class="nc" id="L180">            ) {</span>
+<span class="nc bnc" id="L181" title="All 6 branches missed.">                Column(</span>
+<span class="nc" id="L182">                    modifier = Modifier.padding(12.dp)</span>
+                ) {
+<span class="nc" id="L184">                    Row(</span>
+<span class="nc" id="L185">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L186">                        verticalAlignment = Alignment.CenterVertically</span>
+                    ) {
+<span class="nc" id="L188">                        Checkbox(</span>
+<span class="nc" id="L189">                            checked = isAccepted,</span>
+<span class="nc" id="L190">                            onCheckedChange = { isAccepted = it }</span>
+                        )
+<span class="nc" id="L192">                        Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L193">                        Text(</span>
+<span class="nc" id="L194">                            text = &quot;I have read and understand all sections of the disclaimer above&quot;,</span>
+<span class="nc" id="L195">                            style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L196">                            modifier = Modifier.weight(1f)</span>
+                        )
+<span class="nc" id="L198">                    }</span>
+                    
+<span class="nc" id="L200">                    Spacer(modifier = Modifier.height(8.dp))</span>
+                    
+                    // Final action buttons
+<span class="nc" id="L203">                    Row(</span>
+<span class="nc" id="L204">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L205">                        horizontalArrangement = Arrangement.spacedBy(8.dp)</span>
+                    ) {
+<span class="nc" id="L207">                        OutlinedButton(</span>
+<span class="nc" id="L208">                            onClick = onDecline,</span>
+<span class="nc" id="L209">                            modifier = Modifier.weight(1f)</span>
+<span class="nc" id="L210">                        ) {</span>
+<span class="nc bnc" id="L211" title="All 8 branches missed.">                            Text(&quot;Decline&quot;)</span>
+<span class="nc" id="L212">                        }</span>
+                        
+<span class="nc" id="L214">                        Button(</span>
+<span class="nc" id="L215">                            onClick = onAccept,</span>
+<span class="nc" id="L216">                            enabled = isAccepted,</span>
+<span class="nc" id="L217">                            modifier = Modifier.weight(1f)</span>
+<span class="nc" id="L218">                        ) {</span>
+<span class="nc bnc" id="L219" title="All 8 branches missed.">                            Text(&quot;Accept &amp; Continue&quot;)</span>
+<span class="nc" id="L220">                        }</span>
+<span class="nc" id="L221">                    }</span>
+<span class="nc" id="L222">                }</span>
+<span class="nc" id="L223">            }</span>
+        }
+<span class="nc" id="L225">    }</span>
+<span class="nc bnc" id="L226" title="All 2 branches missed.">}</span>
+
+@Composable
+private fun DisclaimerSection(
+    title: String,
+    content: String
+<span class="nc bnc" id="L232" title="All 14 branches missed.">) {</span>
+<span class="nc" id="L233">    Column {</span>
+<span class="nc" id="L234">        Text(</span>
+<span class="nc" id="L235">            text = title,</span>
+<span class="nc" id="L236">            style = MaterialTheme.typography.titleSmall,</span>
+<span class="nc" id="L237">            fontWeight = FontWeight.SemiBold,</span>
+<span class="nc" id="L238">            color = MaterialTheme.colorScheme.primary</span>
+        )
+        
+<span class="nc" id="L241">        Spacer(modifier = Modifier.height(6.dp))</span>
+        
+<span class="nc" id="L243">        Text(</span>
+<span class="nc" id="L244">            text = content,</span>
+<span class="nc" id="L245">            style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L246">            lineHeight = MaterialTheme.typography.bodySmall.lineHeight * 1.3</span>
+        )
+        
+<span class="nc" id="L249">        Spacer(modifier = Modifier.height(12.dp))</span>
+<span class="nc" id="L250">    }</span>
+<span class="nc bnc" id="L251" title="All 2 branches missed.">}</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

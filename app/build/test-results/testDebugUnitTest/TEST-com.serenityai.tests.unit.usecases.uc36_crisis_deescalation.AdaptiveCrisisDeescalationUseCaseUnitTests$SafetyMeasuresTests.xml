@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 5: Safety Measures" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-12-07T08:20:33" hostname="Mohammads-MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="UC36-REQ-13: System MUST provide safety measures for high crisis" classname="com.serenityai.tests.unit.usecases.uc36_crisis_deescalation.AdaptiveCrisisDeescalationUseCaseUnitTests$SafetyMeasuresTests" time="0.001"/>
+  <testcase name="UC36-REQ-12: System MUST provide immediate safety measures for critical crisis" classname="com.serenityai.tests.unit.usecases.uc36_crisis_deescalation.AdaptiveCrisisDeescalationUseCaseUnitTests$SafetyMeasuresTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

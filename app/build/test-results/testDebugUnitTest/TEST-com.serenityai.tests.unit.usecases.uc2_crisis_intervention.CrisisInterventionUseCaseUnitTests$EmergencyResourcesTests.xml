@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 3: Emergency Resources and Safety Planning" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-12-07T08:20:33" hostname="Mohammads-MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="UC2-REQ-4: System MUST maintain safety plan and emergency contacts" classname="com.serenityai.tests.unit.usecases.uc2_crisis_intervention.CrisisInterventionUseCaseUnitTests$EmergencyResourcesTests" time="0.0"/>
+  <testcase name="UC2-REQ-3: System MUST display emergency resources and hotlines" classname="com.serenityai.tests.unit.usecases.uc2_crisis_intervention.CrisisInterventionUseCaseUnitTests$EmergencyResourcesTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

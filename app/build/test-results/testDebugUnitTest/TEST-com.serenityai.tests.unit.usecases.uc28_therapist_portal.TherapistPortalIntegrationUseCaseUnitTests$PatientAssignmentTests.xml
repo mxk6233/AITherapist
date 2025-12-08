@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 1: Patient Assignment - Validates Core UC28 Functionality" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-07T08:20:33" hostname="Mohammads-MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="UC28-REQ-3: System MUST retrieve therapist's patients" classname="com.serenityai.tests.unit.usecases.uc28_therapist_portal.TherapistPortalIntegrationUseCaseUnitTests$PatientAssignmentTests" time="0.0"/>
+  <testcase name="UC28-REQ-2: System MUST prevent duplicate assignments" classname="com.serenityai.tests.unit.usecases.uc28_therapist_portal.TherapistPortalIntegrationUseCaseUnitTests$PatientAssignmentTests" time="0.0"/>
+  <testcase name="UC28-REQ-1: System MUST assign patient to therapist" classname="com.serenityai.tests.unit.usecases.uc28_therapist_portal.TherapistPortalIntegrationUseCaseUnitTests$PatientAssignmentTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReligiousSupportScreen.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.screens</a> &gt; <span class="el_source">ReligiousSupportScreen.kt</span></div><h1>ReligiousSupportScreen.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.screens
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.serenityai.usecases.*
+import java.util.Date
+
+/** UC40: Religious Support by Person's Religion - UI Screen */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L25" title="All 10 branches missed.">fun ReligiousSupportScreen(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc" id="L26">    val useCase = remember { ReligiousSupportUseCase() }</span>
+<span class="nc" id="L27">    val userId = &quot;user123&quot; // In production, get from auth</span>
+    
+<span class="nc" id="L29">    var selectedReligion by remember { mutableStateOf&lt;Religion?&gt;(null) }</span>
+<span class="nc" id="L30">    var showReligionSelector by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L31">    var currentGuidance by remember { mutableStateOf&lt;SpiritualGuidance?&gt;(null) }</span>
+<span class="nc" id="L32">    var prayerRequestText by remember { mutableStateOf(&quot;&quot;) }</span>
+<span class="nc" id="L33">    var showPrayerRequestDialog by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L34">    var dailyReflection by remember { mutableStateOf&lt;String?&gt;(null) }</span>
+<span class="nc" id="L35">    var currentQuote by remember { mutableStateOf&lt;String?&gt;(null) }</span>
+<span class="nc" id="L36">    var resources by remember { mutableStateOf&lt;List&lt;ReligiousResource&gt;&gt;(emptyList()) }</span>
+<span class="nc" id="L37">    var prayerRequests by remember { mutableStateOf&lt;List&lt;PrayerRequest&gt;&gt;(emptyList()) }</span>
+    
+    // Load user's religious preference
+<span class="nc bnc" id="L40" title="All 2 branches missed.">    LaunchedEffect(Unit) {</span>
+<span class="nc" id="L41">        selectedReligion = useCase.getReligiousPreference(userId)</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        if (selectedReligion != null) {</span>
+<span class="nc" id="L43">            resources = useCase.getReligiousResources(userId)</span>
+<span class="nc" id="L44">            prayerRequests = useCase.getPrayerRequests(userId)</span>
+<span class="nc" id="L45">            try {</span>
+<span class="nc" id="L46">                dailyReflection = useCase.getDailyReflection(userId)</span>
+<span class="nc" id="L47">                currentQuote = useCase.getReligiousQuote(userId)</span>
+<span class="nc" id="L48">            } catch (e: Exception) {</span>
+                // User hasn't set preference yet
+            }
+        }
+<span class="nc" id="L52">    }</span>
+    
+<span class="nc" id="L54">    Scaffold(</span>
+<span class="nc" id="L55">        topBar = {</span>
+<span class="nc bnc" id="L56" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L57" title="All 8 branches missed.">                title = { Text(&quot;Religious Support&quot;) },</span>
+<span class="nc" id="L58">                navigationIcon = {</span>
+<span class="nc bnc" id="L59" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L60" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L61">                    }</span>
+<span class="nc" id="L62">                },</span>
+<span class="nc" id="L63">                colors = TopAppBarDefaults.topAppBarColors(</span>
+<span class="nc" id="L64">                    containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+                )
+<span class="nc" id="L66">            )</span>
+<span class="nc" id="L67">        }</span>
+<span class="nc" id="L68">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L69" title="All 8 branches missed.">        LazyColumn(</span>
+<span class="nc" id="L70">            modifier = Modifier</span>
+<span class="nc" id="L71">                .fillMaxSize()</span>
+<span class="nc" id="L72">                .padding(paddingValues)</span>
+<span class="nc" id="L73">                .padding(16.dp),</span>
+<span class="nc" id="L74">            verticalArrangement = Arrangement.spacedBy(16.dp)</span>
+<span class="nc" id="L75">        ) {</span>
+            // Religion Selection
+<span class="nc" id="L77">            item {</span>
+<span class="nc bnc" id="L78" title="All 8 branches missed.">                Card(</span>
+<span class="nc" id="L79">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L80">                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L81">                ) {</span>
+<span class="nc bnc" id="L82" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L83">                        modifier = Modifier.padding(16.dp)</span>
+                    ) {
+<span class="nc" id="L85">                        Text(</span>
+<span class="nc" id="L86">                            text = &quot;Your Religious Preference&quot;,</span>
+<span class="nc" id="L87">                            fontSize = 18.sp,</span>
+<span class="nc" id="L88">                            fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L89">                            modifier = Modifier.padding(bottom = 8.dp)</span>
+                        )
+<span class="nc bnc" id="L91" title="All 2 branches missed.">                        if (selectedReligion == null) {</span>
+<span class="nc" id="L92">                            Text(</span>
+<span class="nc" id="L93">                                text = &quot;Please select your religion to receive personalized spiritual support&quot;,</span>
+<span class="nc" id="L94">                                fontSize = 14.sp,</span>
+<span class="nc" id="L95">                                color = MaterialTheme.colorScheme.onSurfaceVariant,</span>
+<span class="nc" id="L96">                                modifier = Modifier.padding(bottom = 12.dp)</span>
+                            )
+<span class="nc" id="L98">                            Button(</span>
+<span class="nc" id="L99">                                onClick = { showReligionSelector = true },</span>
+<span class="nc" id="L100">                                modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L101">                            ) {</span>
+<span class="nc bnc" id="L102" title="All 8 branches missed.">                                Text(&quot;Select Religion&quot;)</span>
+<span class="nc" id="L103">                            }</span>
+<span class="nc" id="L104">                        } else {</span>
+<span class="nc" id="L105">                            Row(</span>
+<span class="nc" id="L106">                                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L107">                                horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L108">                                verticalAlignment = Alignment.CenterVertically</span>
+                            ) {
+<span class="nc" id="L110">                                Text(</span>
+<span class="nc" id="L111">                                    text = selectedReligion!!.name,</span>
+<span class="nc" id="L112">                                    fontSize = 16.sp,</span>
+<span class="nc" id="L113">                                    fontWeight = FontWeight.Medium</span>
+                                )
+<span class="nc" id="L115">                                TextButton(onClick = { showReligionSelector = true }) {</span>
+<span class="nc bnc" id="L116" title="All 8 branches missed.">                                    Text(&quot;Change&quot;)</span>
+<span class="nc" id="L117">                                }</span>
+<span class="nc" id="L118">                            }</span>
+                        }
+<span class="nc" id="L120">                    }</span>
+<span class="nc" id="L121">                }</span>
+<span class="nc" id="L122">            }</span>
+            
+            // Daily Reflection
+<span class="nc bnc" id="L125" title="All 4 branches missed.">            if (selectedReligion != null &amp;&amp; dailyReflection != null) {</span>
+<span class="nc" id="L126">                item {</span>
+<span class="nc bnc" id="L127" title="All 8 branches missed.">                    Card(</span>
+<span class="nc" id="L128">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L129">                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),</span>
+<span class="nc" id="L130">                        colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L131">                            containerColor = MaterialTheme.colorScheme.secondaryContainer</span>
+                        )
+<span class="nc" id="L133">                    ) {</span>
+<span class="nc bnc" id="L134" title="All 6 branches missed.">                        Column(</span>
+<span class="nc" id="L135">                            modifier = Modifier.padding(16.dp)</span>
+                        ) {
+<span class="nc" id="L137">                            Row(</span>
+<span class="nc" id="L138">                                verticalAlignment = Alignment.CenterVertically,</span>
+<span class="nc" id="L139">                                modifier = Modifier.padding(bottom = 8.dp)</span>
+                            ) {
+<span class="nc" id="L141">                                Icon(</span>
+<span class="nc" id="L142">                                    Icons.Default.Lightbulb,</span>
+<span class="nc" id="L143">                                    contentDescription = null,</span>
+<span class="nc" id="L144">                                    tint = MaterialTheme.colorScheme.primary</span>
+                                )
+<span class="nc" id="L146">                                Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L147">                                Text(</span>
+<span class="nc" id="L148">                                    text = &quot;Daily Reflection&quot;,</span>
+<span class="nc" id="L149">                                    fontSize = 18.sp,</span>
+<span class="nc" id="L150">                                    fontWeight = FontWeight.Bold</span>
+                                )
+<span class="nc" id="L152">                            }</span>
+<span class="nc" id="L153">                            Text(</span>
+<span class="nc" id="L154">                                text = dailyReflection!!,</span>
+<span class="nc" id="L155">                                fontSize = 14.sp,</span>
+<span class="nc" id="L156">                                lineHeight = 20.sp</span>
+                            )
+<span class="nc" id="L158">                        }</span>
+<span class="nc" id="L159">                    }</span>
+<span class="nc" id="L160">                }</span>
+            }
+            
+            // Religious Quote
+<span class="nc bnc" id="L164" title="All 4 branches missed.">            if (selectedReligion != null &amp;&amp; currentQuote != null) {</span>
+<span class="nc" id="L165">                item {</span>
+<span class="nc bnc" id="L166" title="All 8 branches missed.">                    Card(</span>
+<span class="nc" id="L167">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L168">                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L169">                    ) {</span>
+<span class="nc bnc" id="L170" title="All 6 branches missed.">                        Column(</span>
+<span class="nc" id="L171">                            modifier = Modifier.padding(16.dp)</span>
+                        ) {
+<span class="nc" id="L173">                            Row(</span>
+<span class="nc" id="L174">                                verticalAlignment = Alignment.CenterVertically,</span>
+<span class="nc" id="L175">                                modifier = Modifier.padding(bottom = 8.dp)</span>
+                            ) {
+<span class="nc" id="L177">                                Icon(</span>
+<span class="nc" id="L178">                                    Icons.Default.FormatQuote,</span>
+<span class="nc" id="L179">                                    contentDescription = null,</span>
+<span class="nc" id="L180">                                    tint = MaterialTheme.colorScheme.primary</span>
+                                )
+<span class="nc" id="L182">                                Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L183">                                Text(</span>
+<span class="nc" id="L184">                                    text = &quot;Inspirational Quote&quot;,</span>
+<span class="nc" id="L185">                                    fontSize = 18.sp,</span>
+<span class="nc" id="L186">                                    fontWeight = FontWeight.Bold</span>
+                                )
+<span class="nc" id="L188">                            }</span>
+<span class="nc" id="L189">                            Text(</span>
+<span class="nc" id="L190">                                text = currentQuote!!,</span>
+<span class="nc" id="L191">                                fontSize = 14.sp,</span>
+<span class="nc" id="L192">                                fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,</span>
+<span class="nc" id="L193">                                lineHeight = 20.sp</span>
+                            )
+<span class="nc" id="L195">                            Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L196">                            TextButton(</span>
+<span class="nc" id="L197">                                onClick = {</span>
+<span class="nc" id="L198">                                    currentQuote = useCase.getReligiousQuote(userId)</span>
+<span class="nc" id="L199">                                }</span>
+<span class="nc" id="L200">                            ) {</span>
+<span class="nc bnc" id="L201" title="All 8 branches missed.">                                Text(&quot;Get Another Quote&quot;)</span>
+<span class="nc" id="L202">                            }</span>
+<span class="nc" id="L203">                        }</span>
+<span class="nc" id="L204">                    }</span>
+<span class="nc" id="L205">                }</span>
+            }
+            
+            // Spiritual Guidance
+<span class="nc bnc" id="L209" title="All 2 branches missed.">            if (selectedReligion != null) {</span>
+<span class="nc" id="L210">                item {</span>
+<span class="nc bnc" id="L211" title="All 8 branches missed.">                    Card(</span>
+<span class="nc" id="L212">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L213">                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L214">                    ) {</span>
+<span class="nc bnc" id="L215" title="All 6 branches missed.">                        Column(</span>
+<span class="nc" id="L216">                            modifier = Modifier.padding(16.dp)</span>
+                        ) {
+<span class="nc" id="L218">                            Text(</span>
+<span class="nc" id="L219">                                text = &quot;Spiritual Guidance&quot;,</span>
+<span class="nc" id="L220">                                fontSize = 18.sp,</span>
+<span class="nc" id="L221">                                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L222">                                modifier = Modifier.padding(bottom = 12.dp)</span>
+                            )
+<span class="nc" id="L224">                            var guidanceContext by remember { mutableStateOf(&quot;&quot;) }</span>
+<span class="nc" id="L225">                            OutlinedTextField(</span>
+<span class="nc" id="L226">                                value = guidanceContext,</span>
+<span class="nc" id="L227">                                onValueChange = { guidanceContext = it },</span>
+<span class="nc bnc" id="L228" title="All 8 branches missed.">                                label = { Text(&quot;What do you need guidance on?&quot;) },</span>
+<span class="nc bnc" id="L229" title="All 8 branches missed.">                                placeholder = { Text(&quot;e.g., anxiety, stress, relationships&quot;) },</span>
+<span class="nc" id="L230">                                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L231">                                singleLine = true</span>
+                            )
+<span class="nc" id="L233">                            Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L234">                            Button(</span>
+<span class="nc" id="L235">                                onClick = {</span>
+<span class="nc bnc" id="L236" title="All 4 branches missed.">                                    if (guidanceContext.isNotBlank()) {</span>
+<span class="nc" id="L237">                                        try {</span>
+<span class="nc" id="L238">                                            currentGuidance = useCase.provideSpiritualGuidance(userId, guidanceContext)</span>
+<span class="nc" id="L239">                                            guidanceContext = &quot;&quot;</span>
+<span class="nc" id="L240">                                        } catch (e: Exception) {</span>
+                                            // Handle error
+                                        }
+                                    }
+<span class="nc" id="L244">                                },</span>
+<span class="nc" id="L245">                                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc bnc" id="L246" title="All 2 branches missed.">                                enabled = guidanceContext.isNotBlank()</span>
+<span class="nc" id="L247">                            ) {</span>
+<span class="nc bnc" id="L248" title="All 8 branches missed.">                                Text(&quot;Get Guidance&quot;)</span>
+<span class="nc" id="L249">                            }</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">                            if (currentGuidance != null) {</span>
+<span class="nc" id="L251">                                Spacer(modifier = Modifier.height(12.dp))</span>
+<span class="nc" id="L252">                                Card(</span>
+<span class="nc" id="L253">                                    colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L254">                                        containerColor = MaterialTheme.colorScheme.surfaceVariant</span>
+                                    )
+<span class="nc" id="L256">                                ) {</span>
+<span class="nc bnc" id="L257" title="All 8 branches missed.">                                    Text(</span>
+<span class="nc" id="L258">                                        text = currentGuidance!!.guidance,</span>
+<span class="nc" id="L259">                                        modifier = Modifier.padding(12.dp),</span>
+<span class="nc" id="L260">                                        fontSize = 14.sp,</span>
+<span class="nc" id="L261">                                        lineHeight = 20.sp</span>
+<span class="nc" id="L262">                                    )</span>
+<span class="nc" id="L263">                                }</span>
+                            }
+<span class="nc" id="L265">                        }</span>
+<span class="nc" id="L266">                    }</span>
+<span class="nc" id="L267">                }</span>
+            }
+            
+            // Religious Resources
+<span class="nc bnc" id="L271" title="All 6 branches missed.">            if (selectedReligion != null &amp;&amp; resources.isNotEmpty()) {</span>
+<span class="nc" id="L272">                item {</span>
+<span class="nc bnc" id="L273" title="All 8 branches missed.">                    Text(</span>
+<span class="nc" id="L274">                        text = &quot;Religious Resources&quot;,</span>
+<span class="nc" id="L275">                        fontSize = 20.sp,</span>
+<span class="nc" id="L276">                        fontWeight = FontWeight.Bold</span>
+<span class="nc" id="L277">                    )</span>
+<span class="nc" id="L278">                }</span>
+<span class="nc" id="L279">                items(resources) { resource -&gt;</span>
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    ) {
+<span class="nc bnc" id="L284" title="All 6 branches missed.">                        Row(</span>
+<span class="nc" id="L285">                            modifier = Modifier.padding(16.dp),</span>
+<span class="nc" id="L286">                            verticalAlignment = Alignment.CenterVertically</span>
+                        ) {
+<span class="nc" id="L288">                            Icon(</span>
+<span class="nc" id="L289">                                Icons.Default.Book,</span>
+<span class="nc" id="L290">                                contentDescription = null,</span>
+<span class="nc" id="L291">                                modifier = Modifier.size(32.dp),</span>
+<span class="nc" id="L292">                                tint = MaterialTheme.colorScheme.primary</span>
+                            )
+<span class="nc" id="L294">                            Spacer(modifier = Modifier.width(12.dp))</span>
+<span class="nc" id="L295">                            Column(modifier = Modifier.weight(1f)) {</span>
+<span class="nc" id="L296">                                Text(</span>
+<span class="nc" id="L297">                                    text = resource.title,</span>
+<span class="nc" id="L298">                                    fontSize = 16.sp,</span>
+<span class="nc" id="L299">                                    fontWeight = FontWeight.Medium</span>
+                                )
+<span class="nc" id="L301">                                Text(</span>
+<span class="nc" id="L302">                                    text = resource.description,</span>
+<span class="nc" id="L303">                                    fontSize = 12.sp,</span>
+<span class="nc" id="L304">                                    color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                                )
+<span class="nc" id="L306">                            }</span>
+<span class="nc" id="L307">                        }</span>
+<span class="nc" id="L308">                    }</span>
+                }
+            }
+            
+            // Prayer Requests
+<span class="nc bnc" id="L313" title="All 2 branches missed.">            if (selectedReligion != null) {</span>
+<span class="nc" id="L314">                item {</span>
+<span class="nc bnc" id="L315" title="All 6 branches missed.">                    Row(</span>
+<span class="nc" id="L316">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L317">                        horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L318">                        verticalAlignment = Alignment.CenterVertically</span>
+                    ) {
+<span class="nc" id="L320">                        Text(</span>
+<span class="nc" id="L321">                            text = &quot;Prayer Requests&quot;,</span>
+<span class="nc" id="L322">                            fontSize = 20.sp,</span>
+<span class="nc" id="L323">                            fontWeight = FontWeight.Bold</span>
+                        )
+<span class="nc" id="L325">                        FloatingActionButton(</span>
+<span class="nc" id="L326">                            onClick = { showPrayerRequestDialog = true },</span>
+<span class="nc" id="L327">                            modifier = Modifier.size(40.dp)</span>
+<span class="nc" id="L328">                        ) {</span>
+<span class="nc bnc" id="L329" title="All 8 branches missed.">                            Icon(Icons.Default.Add, contentDescription = &quot;Add Prayer Request&quot;)</span>
+<span class="nc" id="L330">                        }</span>
+<span class="nc" id="L331">                    }</span>
+<span class="nc" id="L332">                }</span>
+<span class="nc" id="L333">                items(prayerRequests) { request -&gt;</span>
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    ) {
+<span class="nc bnc" id="L338" title="All 6 branches missed.">                        Column(</span>
+<span class="nc" id="L339">                            modifier = Modifier.padding(16.dp)</span>
+                        ) {
+<span class="nc" id="L341">                            Text(</span>
+<span class="nc" id="L342">                                text = request.request,</span>
+<span class="nc" id="L343">                                fontSize = 14.sp,</span>
+<span class="nc" id="L344">                                modifier = Modifier.padding(bottom = 4.dp)</span>
+                            )
+<span class="nc" id="L346">                            Text(</span>
+<span class="nc" id="L347">                                text = &quot;Status: ${request.status.name}&quot;,</span>
+<span class="nc" id="L348">                                fontSize = 12.sp,</span>
+<span class="nc" id="L349">                                color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                            )
+<span class="nc" id="L351">                        }</span>
+<span class="nc" id="L352">                    }</span>
+                }
+            }
+<span class="nc" id="L355">        }</span>
+<span class="nc" id="L356">    }</span>
+    
+    // Religion Selection Dialog
+<span class="nc bnc" id="L359" title="All 2 branches missed.">    if (showReligionSelector) {</span>
+<span class="nc" id="L360">        AlertDialog(</span>
+<span class="nc" id="L361">            onDismissRequest = { showReligionSelector = false },</span>
+<span class="nc bnc" id="L362" title="All 8 branches missed.">            title = { Text(&quot;Select Your Religion&quot;) },</span>
+<span class="nc" id="L363">            text = {</span>
+<span class="nc bnc" id="L364" title="All 6 branches missed.">                Column {</span>
+<span class="nc bnc" id="L365" title="All 2 branches missed.">                    Religion.values().filter { it != Religion.NONE }.forEach { religion -&gt;</span>
+<span class="nc" id="L366">                        Row(</span>
+<span class="nc" id="L367">                            modifier = Modifier</span>
+<span class="nc" id="L368">                                .fillMaxWidth()</span>
+<span class="nc" id="L369">                                .padding(vertical = 8.dp)</span>
+<span class="nc" id="L370">                                .clickable {</span>
+<span class="nc" id="L371">                                    selectedReligion = religion</span>
+<span class="nc" id="L372">                                    useCase.setReligiousPreference(userId, religion)</span>
+<span class="nc" id="L373">                                    resources = useCase.getReligiousResources(userId)</span>
+<span class="nc" id="L374">                                    try {</span>
+<span class="nc" id="L375">                                        dailyReflection = useCase.getDailyReflection(userId)</span>
+<span class="nc" id="L376">                                        currentQuote = useCase.getReligiousQuote(userId)</span>
+<span class="nc" id="L377">                                    } catch (e: Exception) {</span>
+                                        // Handle error
+                                    }
+<span class="nc" id="L380">                                    showReligionSelector = false</span>
+<span class="nc" id="L381">                                },</span>
+<span class="nc" id="L382">                            verticalAlignment = Alignment.CenterVertically</span>
+                        ) {
+<span class="nc" id="L384">                            RadioButton(</span>
+<span class="nc bnc" id="L385" title="All 2 branches missed.">                                selected = selectedReligion == religion,</span>
+<span class="nc" id="L386">                                onClick = {</span>
+<span class="nc" id="L387">                                    selectedReligion = religion</span>
+<span class="nc" id="L388">                                    useCase.setReligiousPreference(userId, religion)</span>
+<span class="nc" id="L389">                                    resources = useCase.getReligiousResources(userId)</span>
+<span class="nc" id="L390">                                    try {</span>
+<span class="nc" id="L391">                                        dailyReflection = useCase.getDailyReflection(userId)</span>
+<span class="nc" id="L392">                                        currentQuote = useCase.getReligiousQuote(userId)</span>
+<span class="nc" id="L393">                                    } catch (e: Exception) {</span>
+                                        // Handle error
+                                    }
+<span class="nc" id="L396">                                    showReligionSelector = false</span>
+<span class="nc" id="L397">                                }</span>
+                            )
+<span class="nc" id="L399">                            Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L400">                            Text(</span>
+<span class="nc" id="L401">                                text = religion.name.replace(&quot;_&quot;, &quot; &quot;),</span>
+<span class="nc" id="L402">                                modifier = Modifier.weight(1f)</span>
+                            )
+<span class="nc" id="L404">                        }</span>
+<span class="nc" id="L405">                    }</span>
+<span class="nc" id="L406">                }</span>
+<span class="nc" id="L407">            },</span>
+<span class="nc" id="L408">            confirmButton = {</span>
+<span class="nc bnc" id="L409" title="All 8 branches missed.">                TextButton(onClick = { showReligionSelector = false }) {</span>
+<span class="nc bnc" id="L410" title="All 8 branches missed.">                    Text(&quot;Close&quot;)</span>
+<span class="nc" id="L411">                }</span>
+<span class="nc" id="L412">            }</span>
+        )
+    }
+    
+    // Prayer Request Dialog
+<span class="nc bnc" id="L417" title="All 2 branches missed.">    if (showPrayerRequestDialog) {</span>
+<span class="nc bnc" id="L418" title="All 2 branches missed.">        AlertDialog(</span>
+<span class="nc" id="L419">            onDismissRequest = { showPrayerRequestDialog = false },</span>
+<span class="nc bnc" id="L420" title="All 8 branches missed.">            title = { Text(&quot;Submit Prayer Request&quot;) },</span>
+<span class="nc" id="L421">            text = {</span>
+<span class="nc bnc" id="L422" title="All 6 branches missed.">                Column {</span>
+<span class="nc" id="L423">                    OutlinedTextField(</span>
+<span class="nc" id="L424">                        value = prayerRequestText,</span>
+<span class="nc" id="L425">                        onValueChange = { prayerRequestText = it },</span>
+<span class="nc bnc" id="L426" title="All 8 branches missed.">                        label = { Text(&quot;Your Prayer Request&quot;) },</span>
+<span class="nc bnc" id="L427" title="All 8 branches missed.">                        placeholder = { Text(&quot;Enter your prayer request...&quot;) },</span>
+<span class="nc" id="L428">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L429">                        minLines = 3,</span>
+<span class="nc" id="L430">                        maxLines = 5</span>
+                    )
+<span class="nc" id="L432">                }</span>
+<span class="nc" id="L433">            },</span>
+<span class="nc" id="L434">            confirmButton = {</span>
+<span class="nc bnc" id="L435" title="All 8 branches missed.">                Button(</span>
+<span class="nc" id="L436">                    onClick = {</span>
+<span class="nc bnc" id="L437" title="All 6 branches missed.">                        if (prayerRequestText.isNotBlank() &amp;&amp; selectedReligion != null) {</span>
+<span class="nc" id="L438">                            try {</span>
+<span class="nc" id="L439">                                useCase.submitPrayerRequest(userId, prayerRequestText, isPrivate = true)</span>
+<span class="nc" id="L440">                                prayerRequests = useCase.getPrayerRequests(userId)</span>
+<span class="nc" id="L441">                                prayerRequestText = &quot;&quot;</span>
+<span class="nc" id="L442">                                showPrayerRequestDialog = false</span>
+<span class="nc" id="L443">                            } catch (e: Exception) {</span>
+                                // Handle error
+                            }
+                        }
+<span class="nc" id="L447">                    },</span>
+<span class="nc bnc" id="L448" title="All 2 branches missed.">                    enabled = prayerRequestText.isNotBlank()</span>
+<span class="nc" id="L449">                ) {</span>
+<span class="nc bnc" id="L450" title="All 8 branches missed.">                    Text(&quot;Submit&quot;)</span>
+<span class="nc" id="L451">                }</span>
+<span class="nc" id="L452">            },</span>
+<span class="nc" id="L453">            dismissButton = {</span>
+<span class="nc bnc" id="L454" title="All 8 branches missed.">                TextButton(onClick = { showPrayerRequestDialog = false }) {</span>
+<span class="nc bnc" id="L455" title="All 8 branches missed.">                    Text(&quot;Cancel&quot;)</span>
+<span class="nc" id="L456">                }</span>
+<span class="nc" id="L457">            }</span>
+        )
+    }
+<span class="nc bnc" id="L460" title="All 2 branches missed.">}</span>
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

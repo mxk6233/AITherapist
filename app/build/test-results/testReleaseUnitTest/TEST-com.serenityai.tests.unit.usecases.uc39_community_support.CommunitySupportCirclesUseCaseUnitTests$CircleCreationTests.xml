@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 1: Circle Creation - Validates Core UC39 Functionality" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:07" hostname="Mohammads-MacBook-Pro.local" time="0.003">
+  <properties/>
+  <testcase name="UC39-REQ-1: System MUST create support circles" classname="com.serenityai.tests.unit.usecases.uc39_community_support.CommunitySupportCirclesUseCaseUnitTests$CircleCreationTests" time="0.002"/>
+  <testcase name="UC39-REQ-2: System MUST validate circle creation input" classname="com.serenityai.tests.unit.usecases.uc39_community_support.CommunitySupportCirclesUseCaseUnitTests$CircleCreationTests" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

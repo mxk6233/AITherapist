@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="User Story: Daily Support" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:08" hostname="Mohammads-MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="As a user, I want to get help with specific mental health topics" classname="com.serenityai.tests.usecases.uc35_relapse_prevention.uat.UserAcceptanceTests$DailySupport" time="0.0"/>
+  <testcase name="As a user, I want to get daily emotional support" classname="com.serenityai.tests.usecases.uc35_relapse_prevention.uat.UserAcceptanceTests$DailySupport" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

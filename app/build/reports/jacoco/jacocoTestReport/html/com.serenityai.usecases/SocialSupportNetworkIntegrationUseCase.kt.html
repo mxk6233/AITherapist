@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SocialSupportNetworkIntegrationUseCase.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.usecases</a> &gt; <span class="el_source">SocialSupportNetworkIntegrationUseCase.kt</span></div><h1>SocialSupportNetworkIntegrationUseCase.kt</h1><pre class="source lang-java linenums">package com.serenityai.usecases
+
+import com.serenityai.data.models.*
+import java.util.Date
+
+/** UC31: Social support network integration enabling users to connect with friends, join support groups, and share progress with privacy controls. */
+<span class="nc" id="L7">class SocialSupportNetworkIntegrationUseCase {</span>
+    
+<span class="nc" id="L9">    private val friendships = mutableMapOf&lt;String, MutableSet&lt;String&gt;&gt;() // userId -&gt; friendIds</span>
+<span class="nc" id="L10">    private val friendRequests = mutableMapOf&lt;String, MutableSet&lt;String&gt;&gt;() // userId -&gt; pending request senderIds</span>
+<span class="nc" id="L11">    private val supportGroups = mutableMapOf&lt;String, SupportGroup&gt;() // groupId -&gt; group</span>
+<span class="nc" id="L12">    private val groupMemberships = mutableMapOf&lt;String, MutableSet&lt;String&gt;&gt;() // userId -&gt; groupIds</span>
+<span class="nc" id="L13">    private val groupMembers = mutableMapOf&lt;String, MutableSet&lt;String&gt;&gt;() // groupId -&gt; userIds</span>
+<span class="nc" id="L14">    private val sharedProgress = mutableMapOf&lt;String, MutableList&lt;SharedProgress&gt;&gt;() // userId -&gt; shared progress entries</span>
+<span class="nc" id="L15">    private val encouragementMessages = mutableMapOf&lt;String, MutableList&lt;EncouragementMessage&gt;&gt;() // userId -&gt; messages</span>
+    
+    /**
+     * Sends a friend request
+     * 
+     * @param fromUserId Sender user ID
+     * @param toUserId Recipient user ID
+     * @return True if request sent successfully
+     */
+    fun sendFriendRequest(fromUserId: String, toUserId: String): Boolean {
+<span class="nc bnc" id="L25" title="All 4 branches missed.">        require(fromUserId != toUserId) { &quot;Cannot send friend request to yourself&quot; }</span>
+        
+        // Check if already friends
+<span class="nc bnc" id="L28" title="All 6 branches missed.">        if (friendships[fromUserId]?.contains(toUserId) == true) {</span>
+<span class="nc" id="L29">            return false</span>
+        }
+        
+        // Check if request already exists
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        val pendingRequests = friendRequests[toUserId] ?: mutableSetOf()</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">        if (pendingRequests.contains(fromUserId)) {</span>
+<span class="nc" id="L35">            return false</span>
+        }
+        
+<span class="nc" id="L38">        pendingRequests.add(fromUserId)</span>
+<span class="nc" id="L39">        friendRequests[toUserId] = pendingRequests</span>
+        
+<span class="nc" id="L41">        return true</span>
+    }
+    
+    /**
+     * Accepts a friend request
+     * 
+     * @param userId User ID accepting the request
+     * @param fromUserId Sender user ID
+     * @return True if request accepted successfully
+     */
+    fun acceptFriendRequest(userId: String, fromUserId: String): Boolean {
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        val pendingRequests = friendRequests[userId] ?: return false</span>
+        
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        if (!pendingRequests.contains(fromUserId)) {</span>
+<span class="nc" id="L55">            return false</span>
+        }
+        
+        // Remove from pending requests
+<span class="nc" id="L59">        pendingRequests.remove(fromUserId)</span>
+<span class="nc" id="L60">        friendRequests[userId] = pendingRequests</span>
+        
+        // Add to friendships (bidirectional)
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        val userFriends = friendships[userId] ?: mutableSetOf()</span>
+<span class="nc" id="L64">        userFriends.add(fromUserId)</span>
+<span class="nc" id="L65">        friendships[userId] = userFriends</span>
+        
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        val fromUserFriends = friendships[fromUserId] ?: mutableSetOf()</span>
+<span class="nc" id="L68">        fromUserFriends.add(userId)</span>
+<span class="nc" id="L69">        friendships[fromUserId] = fromUserFriends</span>
+        
+<span class="nc" id="L71">        return true</span>
+    }
+    
+    /**
+     * Removes a friend
+     * 
+     * @param userId User ID
+     * @param friendId Friend ID to remove
+     * @return True if friend removed successfully
+     */
+    fun removeFriend(userId: String, friendId: String): Boolean {
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        friendships[userId]?.remove(friendId)</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        friendships[friendId]?.remove(userId)</span>
+<span class="nc" id="L84">        return true</span>
+    }
+    
+    /**
+     * Gets user's friends
+     * 
+     * @param userId User ID
+     * @return List of friend user IDs
+     */
+    fun getFriends(userId: String): List&lt;String&gt; {
+<span class="nc bnc" id="L94" title="All 4 branches missed.">        return friendships[userId]?.toList() ?: emptyList()</span>
+    }
+    
+    /**
+     * Gets pending friend requests for a user
+     * 
+     * @param userId User ID
+     * @return List of user IDs who sent friend requests
+     */
+    fun getPendingFriendRequests(userId: String): List&lt;String&gt; {
+<span class="nc bnc" id="L104" title="All 4 branches missed.">        return friendRequests[userId]?.toList() ?: emptyList()</span>
+    }
+    
+    /**
+     * Creates a support group
+     * 
+     * @param creatorId Creator user ID
+     * @param name Group name
+     * @param description Group description
+     * @param isPrivate Whether group is private
+     * @return SupportGroup object
+     */
+<span class="nc" id="L116">    fun createSupportGroup(</span>
+        creatorId: String,
+        name: String,
+        description: String,
+<span class="nc" id="L120">        isPrivate: Boolean = false</span>
+    ): SupportGroup {
+<span class="nc bnc" id="L122" title="All 4 branches missed.">        require(name.isNotBlank()) { &quot;Group name cannot be empty&quot; }</span>
+<span class="nc bnc" id="L123" title="All 4 branches missed.">        require(description.isNotBlank()) { &quot;Group description cannot be empty&quot; }</span>
+        
+<span class="nc" id="L125">        val group = SupportGroup(</span>
+<span class="nc" id="L126">            id = &quot;group_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L127">            name = name,</span>
+<span class="nc" id="L128">            description = description,</span>
+<span class="nc" id="L129">            creatorId = creatorId,</span>
+<span class="nc" id="L130">            isPrivate = isPrivate,</span>
+<span class="nc" id="L131">            createdAt = Date(),</span>
+<span class="nc" id="L132">            memberCount = 1</span>
+        )
+        
+<span class="nc" id="L135">        supportGroups[group.id] = group</span>
+        
+        // Add creator as member
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        val userGroups = groupMemberships[creatorId] ?: mutableSetOf()</span>
+<span class="nc" id="L139">        userGroups.add(group.id)</span>
+<span class="nc" id="L140">        groupMemberships[creatorId] = userGroups</span>
+        
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        val groupMembersSet = groupMembers[group.id] ?: mutableSetOf()</span>
+<span class="nc" id="L143">        groupMembersSet.add(creatorId)</span>
+<span class="nc" id="L144">        groupMembers[group.id] = groupMembersSet</span>
+        
+<span class="nc" id="L146">        return group</span>
+    }
+    
+    /**
+     * Joins a support group
+     * 
+     * @param userId User ID
+     * @param groupId Group ID
+     * @return True if joined successfully
+     */
+    fun joinSupportGroup(userId: String, groupId: String): Boolean {
+<span class="nc bnc" id="L157" title="All 2 branches missed.">        val group = supportGroups[groupId] ?: return false</span>
+        
+        // Check if already a member
+<span class="nc bnc" id="L160" title="All 6 branches missed.">        if (groupMembers[groupId]?.contains(userId) == true) {</span>
+<span class="nc" id="L161">            return false</span>
+        }
+        
+        // Add to group memberships
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        val userGroups = groupMemberships[userId] ?: mutableSetOf()</span>
+<span class="nc" id="L166">        userGroups.add(groupId)</span>
+<span class="nc" id="L167">        groupMemberships[userId] = userGroups</span>
+        
+        // Add to group members
+<span class="nc bnc" id="L170" title="All 2 branches missed.">        val groupMembersSet = groupMembers[groupId] ?: mutableSetOf()</span>
+<span class="nc" id="L171">        groupMembersSet.add(userId)</span>
+<span class="nc" id="L172">        groupMembers[groupId] = groupMembersSet</span>
+        
+        // Update member count
+<span class="nc" id="L175">        val updatedGroup = group.copy(memberCount = groupMembersSet.size)</span>
+<span class="nc" id="L176">        supportGroups[groupId] = updatedGroup</span>
+        
+<span class="nc" id="L178">        return true</span>
+    }
+    
+    /**
+     * Leaves a support group
+     * 
+     * @param userId User ID
+     * @param groupId Group ID
+     * @return True if left successfully
+     */
+    fun leaveSupportGroup(userId: String, groupId: String): Boolean {
+<span class="nc bnc" id="L189" title="All 2 branches missed.">        groupMemberships[userId]?.remove(groupId)</span>
+<span class="nc bnc" id="L190" title="All 2 branches missed.">        groupMembers[groupId]?.remove(userId)</span>
+        
+        // Update member count
+<span class="nc bnc" id="L193" title="All 2 branches missed.">        val group = supportGroups[groupId] ?: return false</span>
+<span class="nc bnc" id="L194" title="All 2 branches missed.">        val updatedGroup = group.copy(memberCount = groupMembers[groupId]?.size ?: 0)</span>
+<span class="nc" id="L195">        supportGroups[groupId] = updatedGroup</span>
+        
+<span class="nc" id="L197">        return true</span>
+    }
+    
+    /**
+     * Gets user's support groups
+     * 
+     * @param userId User ID
+     * @return List of SupportGroup objects
+     */
+    fun getUserSupportGroups(userId: String): List&lt;SupportGroup&gt; {
+<span class="nc bnc" id="L207" title="All 2 branches missed.">        val groupIds = groupMemberships[userId] ?: return emptyList()</span>
+<span class="nc" id="L208">        return groupIds.mapNotNull { supportGroups[it] }</span>
+    }
+    
+    /**
+     * Shares progress with friends
+     * 
+     * @param userId User ID
+     * @param progressMessage Progress message
+     * @param shareWithFriends Whether to share with all friends
+     * @param friendIds Specific friend IDs to share with (if not sharing with all)
+     * @return SharedProgress object
+     */
+<span class="nc" id="L220">    fun shareProgress(</span>
+        userId: String,
+        progressMessage: String,
+<span class="nc" id="L223">        shareWithFriends: Boolean = true,</span>
+<span class="nc" id="L224">        friendIds: List&lt;String&gt;? = null</span>
+    ): SharedProgress {
+<span class="nc bnc" id="L226" title="All 4 branches missed.">        require(progressMessage.isNotBlank()) { &quot;Progress message cannot be empty&quot; }</span>
+        
+<span class="nc" id="L228">        val shared = SharedProgress(</span>
+<span class="nc" id="L229">            id = &quot;share_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L230">            userId = userId,</span>
+<span class="nc" id="L231">            message = progressMessage,</span>
+<span class="nc" id="L232">            sharedAt = Date(),</span>
+<span class="nc" id="L233">            shareWithFriends = shareWithFriends,</span>
+<span class="nc bnc" id="L234" title="All 2 branches missed.">            specificFriendIds = friendIds ?: emptyList()</span>
+        )
+        
+<span class="nc bnc" id="L237" title="All 2 branches missed.">        val shares = sharedProgress[userId] ?: mutableListOf()</span>
+<span class="nc" id="L238">        shares.add(shared)</span>
+<span class="nc" id="L239">        sharedProgress[userId] = shares</span>
+        
+<span class="nc" id="L241">        return shared</span>
+    }
+    
+    /**
+     * Sends an encouragement message
+     * 
+     * @param fromUserId Sender user ID
+     * @param toUserId Recipient user ID
+     * @param message Encouragement message
+     * @return EncouragementMessage object
+     */
+    fun sendEncouragement(
+        fromUserId: String,
+        toUserId: String,
+        message: String
+    ): EncouragementMessage {
+<span class="nc bnc" id="L257" title="All 4 branches missed.">        require(message.isNotBlank()) { &quot;Message cannot be empty&quot; }</span>
+        
+        // Verify they are friends
+<span class="nc bnc" id="L260" title="All 6 branches missed.">        if (friendships[fromUserId]?.contains(toUserId) != true) {</span>
+<span class="nc" id="L261">            throw IllegalArgumentException(&quot;Can only send encouragement to friends&quot;)</span>
+        }
+        
+<span class="nc" id="L264">        val encouragement = EncouragementMessage(</span>
+<span class="nc" id="L265">            id = &quot;encourage_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L266">            fromUserId = fromUserId,</span>
+<span class="nc" id="L267">            toUserId = toUserId,</span>
+<span class="nc" id="L268">            message = message,</span>
+<span class="nc" id="L269">            sentAt = Date()</span>
+        )
+        
+<span class="nc bnc" id="L272" title="All 2 branches missed.">        val messages = encouragementMessages[toUserId] ?: mutableListOf()</span>
+<span class="nc" id="L273">        messages.add(encouragement)</span>
+<span class="nc" id="L274">        encouragementMessages[toUserId] = messages</span>
+        
+<span class="nc" id="L276">        return encouragement</span>
+    }
+    
+    /**
+     * Gets encouragement messages for a user
+     * 
+     * @param userId User ID
+     * @return List of EncouragementMessage objects
+     */
+    fun getEncouragementMessages(userId: String): List&lt;EncouragementMessage&gt; {
+<span class="nc bnc" id="L286" title="All 2 branches missed.">        return encouragementMessages[userId] ?: emptyList()</span>
+    }
+}
+
+/**
+ * Data class for support group
+ */
+<span class="nc" id="L293">data class SupportGroup(</span>
+<span class="nc" id="L294">    val id: String,</span>
+<span class="nc" id="L295">    val name: String,</span>
+<span class="nc" id="L296">    val description: String,</span>
+<span class="nc" id="L297">    val creatorId: String,</span>
+<span class="nc" id="L298">    val isPrivate: Boolean,</span>
+<span class="nc" id="L299">    val createdAt: Date,</span>
+<span class="nc" id="L300">    val memberCount: Int</span>
+)
+
+/**
+ * Data class for shared progress
+ */
+<span class="nc" id="L306">data class SharedProgress(</span>
+<span class="nc" id="L307">    val id: String,</span>
+<span class="nc" id="L308">    val userId: String,</span>
+<span class="nc" id="L309">    val message: String,</span>
+<span class="nc" id="L310">    val sharedAt: Date,</span>
+<span class="nc" id="L311">    val shareWithFriends: Boolean,</span>
+<span class="nc" id="L312">    val specificFriendIds: List&lt;String&gt;</span>
+)
+
+/**
+ * Data class for encouragement message
+ */
+<span class="nc" id="L318">data class EncouragementMessage(</span>
+<span class="nc" id="L319">    val id: String,</span>
+<span class="nc" id="L320">    val fromUserId: String,</span>
+<span class="nc" id="L321">    val toUserId: String,</span>
+<span class="nc" id="L322">    val message: String,</span>
+<span class="nc" id="L323">    val sentAt: Date</span>
+)
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

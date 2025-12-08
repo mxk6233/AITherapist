@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SystemHealthUseCase.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.usecases</a> &gt; <span class="el_source">SystemHealthUseCase.kt</span></div><h1>SystemHealthUseCase.kt</h1><pre class="source lang-java linenums">package com.serenityai.usecases
+
+import com.serenityai.data.models.*
+import java.util.Date
+
+/**
+ * UC22: Monitor System Health - Use Case
+ * 
+ * Use Case Goal: Monitor and maintain system health metrics including performance, 
+ * resource usage, and service availability.
+ * 
+ * Responsibilities:
+ * - Monitor application performance metrics
+ * - Track resource usage (memory, CPU)
+ * - Detect service availability issues
+ * - Generate health reports
+ * - Alert on critical health issues
+ */
+<span class="nc" id="L19">class SystemHealthUseCase {</span>
+    
+    /**
+     * Collects current system health metrics
+     * 
+     * @return SystemHealthMetrics with current system state
+     */
+    fun collectHealthMetrics(): SystemHealthMetrics {
+        // In a real implementation, this would collect actual system metrics
+        // For now, returns simulated metrics
+<span class="nc" id="L29">        return SystemHealthMetrics(</span>
+<span class="nc" id="L30">            id = System.currentTimeMillis().toString(),</span>
+<span class="nc" id="L31">            timestamp = Date(),</span>
+<span class="nc" id="L32">            cpuUsage = getCpuUsage(),</span>
+<span class="nc" id="L33">            memoryUsage = getMemoryUsage(),</span>
+<span class="nc" id="L34">            responseTime = getAverageResponseTime(),</span>
+<span class="nc" id="L35">            errorRate = getErrorRate(),</span>
+<span class="nc" id="L36">            activeUsers = getActiveUserCount(),</span>
+<span class="nc" id="L37">            apiCallsPerMinute = getApiCallsPerMinute()</span>
+        )
+    }
+    
+    /**
+     * Monitors application performance metrics
+     * 
+     * @return Performance metrics including response time and throughput
+     */
+    fun monitorPerformanceMetrics(): SystemHealthMetrics {
+<span class="nc" id="L47">        return collectHealthMetrics()</span>
+    }
+    
+    /**
+     * Tracks resource usage (memory and CPU)
+     * 
+     * @return SystemHealthMetrics with resource usage data
+     */
+    fun trackResourceUsage(): SystemHealthMetrics {
+<span class="nc" id="L56">        val metrics = collectHealthMetrics()</span>
+        // Validate resource usage
+<span class="nc bnc" id="L58" title="All 6 branches missed.">        require(metrics.cpuUsage in 0.0..100.0) { &quot;CPU usage must be between 0-100%&quot; }</span>
+<span class="nc bnc" id="L59" title="All 6 branches missed.">        require(metrics.memoryUsage in 0.0..100.0) { &quot;Memory usage must be between 0-100%&quot; }</span>
+<span class="nc" id="L60">        return metrics</span>
+    }
+    
+    /**
+     * Detects service availability issues
+     * 
+     * @param services List of services to check
+     * @return List of ServiceStatus objects
+     */
+    fun detectServiceAvailabilityIssues(services: List&lt;String&gt;): List&lt;ServiceStatus&gt; {
+<span class="nc" id="L70">        return services.map { serviceName -&gt;</span>
+<span class="nc" id="L71">            val isAvailable = checkServiceAvailability(serviceName)</span>
+<span class="nc" id="L72">            ServiceStatus(</span>
+<span class="nc" id="L73">                serviceName = serviceName,</span>
+<span class="nc" id="L74">                isAvailable = isAvailable,</span>
+<span class="nc" id="L75">                lastChecked = Date(),</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">                responseTime = if (isAvailable) measureServiceResponseTime(serviceName) else 0L,</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">                errorCount = if (isAvailable) 0 else getServiceErrorCount(serviceName)</span>
+<span class="nc" id="L78">            )</span>
+        }
+    }
+    
+    /**
+     * Generates a comprehensive health report
+     * 
+     * @return HealthReport with overall status and details
+     */
+    fun generateHealthReport(): HealthReport {
+<span class="nc" id="L88">        val metrics = collectHealthMetrics()</span>
+<span class="nc" id="L89">        val services = listOf(&quot;API&quot;, &quot;Database&quot;, &quot;ExternalService&quot;, &quot;Cache&quot;, &quot;NotificationService&quot;)</span>
+<span class="nc" id="L90">        val serviceStatuses = detectServiceAvailabilityIssues(services)</span>
+        
+<span class="nc" id="L92">        val overallStatus = calculateOverallHealthStatus(metrics, serviceStatuses)</span>
+<span class="nc" id="L93">        val criticalIssues = identifyCriticalIssues(metrics, serviceStatuses)</span>
+<span class="nc" id="L94">        val recommendations = generateRecommendations(metrics, serviceStatuses, criticalIssues)</span>
+        
+<span class="nc" id="L96">        return HealthReport(</span>
+<span class="nc" id="L97">            id = System.currentTimeMillis().toString(),</span>
+<span class="nc" id="L98">            generatedAt = Date(),</span>
+<span class="nc" id="L99">            overallStatus = overallStatus,</span>
+<span class="nc" id="L100">            performanceMetrics = metrics,</span>
+<span class="nc" id="L101">            serviceStatuses = serviceStatuses,</span>
+<span class="nc" id="L102">            criticalIssues = criticalIssues,</span>
+<span class="nc" id="L103">            recommendations = recommendations</span>
+        )
+    }
+    
+    /**
+     * Alerts on critical health issues
+     * 
+     * @param healthReport Current health report
+     * @return List of HealthAlert objects for critical issues
+     */
+    fun alertOnCriticalHealthIssues(healthReport: HealthReport): List&lt;HealthAlert&gt; {
+<span class="nc" id="L114">        return healthReport.criticalIssues</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">            .filter { it.severity == IssueSeverity.CRITICAL }</span>
+<span class="nc" id="L116">            .map { issue -&gt;</span>
+<span class="nc" id="L117">                HealthAlert(</span>
+<span class="nc" id="L118">                    id = System.currentTimeMillis().toString(),</span>
+<span class="nc" id="L119">                    issueId = issue.id,</span>
+<span class="nc" id="L120">                    message = &quot;Critical health issue detected: ${issue.description}&quot;,</span>
+<span class="nc" id="L121">                    severity = issue.severity,</span>
+<span class="nc" id="L122">                    createdAt = Date(),</span>
+<span class="nc" id="L123">                    acknowledged = false</span>
+<span class="nc" id="L124">                )</span>
+            }
+    }
+    
+    /**
+     * Calculates overall health status based on metrics and service status
+     */
+    private fun calculateOverallHealthStatus(
+        metrics: SystemHealthMetrics,
+        services: List&lt;ServiceStatus&gt;
+    ): HealthStatus {
+        // Check for critical conditions
+<span class="nc bnc" id="L136" title="All 4 branches missed.">        if (metrics.cpuUsage &gt; 95.0 || metrics.memoryUsage &gt; 95.0) {</span>
+<span class="nc" id="L137">            return HealthStatus.CRITICAL</span>
+        }
+        
+<span class="nc bnc" id="L140" title="All 4 branches missed.">        if (services.any { !it.isAvailable }) {</span>
+<span class="nc" id="L141">            return HealthStatus.CRITICAL</span>
+        }
+        
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        if (metrics.errorRate &gt; 5.0) {</span>
+<span class="nc" id="L145">            return HealthStatus.CRITICAL</span>
+        }
+        
+        // Check for warning conditions
+<span class="nc bnc" id="L149" title="All 4 branches missed.">        if (metrics.cpuUsage &gt; 80.0 || metrics.memoryUsage &gt; 80.0) {</span>
+<span class="nc" id="L150">            return HealthStatus.WARNING</span>
+        }
+        
+<span class="nc bnc" id="L153" title="All 2 branches missed.">        if (metrics.errorRate &gt; 1.0) {</span>
+<span class="nc" id="L154">            return HealthStatus.WARNING</span>
+        }
+        
+<span class="nc bnc" id="L157" title="All 2 branches missed.">        if (metrics.responseTime &gt; 500L) {</span>
+<span class="nc" id="L158">            return HealthStatus.WARNING</span>
+        }
+        
+<span class="nc" id="L161">        return HealthStatus.HEALTHY</span>
+    }
+    
+    /**
+     * Identifies critical issues from metrics and service status
+     */
+    private fun identifyCriticalIssues(
+        metrics: SystemHealthMetrics,
+        services: List&lt;ServiceStatus&gt;
+    ): List&lt;HealthIssue&gt; {
+<span class="nc" id="L171">        val issues = mutableListOf&lt;HealthIssue&gt;()</span>
+        
+        // Check CPU usage
+<span class="nc bnc" id="L174" title="All 2 branches missed.">        if (metrics.cpuUsage &gt; 90.0) {</span>
+<span class="nc" id="L175">            issues.add(</span>
+<span class="nc" id="L176">                HealthIssue(</span>
+<span class="nc" id="L177">                    id = &quot;cpu-${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L178">                    type = IssueType.RESOURCE_EXHAUSTION,</span>
+<span class="nc" id="L179">                    severity = IssueSeverity.CRITICAL,</span>
+<span class="nc" id="L180">                    description = &quot;CPU usage is critically high: ${metrics.cpuUsage}%&quot;,</span>
+<span class="nc" id="L181">                    detectedAt = Date()</span>
+                )
+            )
+        }
+        
+        // Check memory usage
+<span class="nc bnc" id="L187" title="All 2 branches missed.">        if (metrics.memoryUsage &gt; 90.0) {</span>
+<span class="nc" id="L188">            issues.add(</span>
+<span class="nc" id="L189">                HealthIssue(</span>
+<span class="nc" id="L190">                    id = &quot;memory-${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L191">                    type = IssueType.RESOURCE_EXHAUSTION,</span>
+<span class="nc" id="L192">                    severity = IssueSeverity.CRITICAL,</span>
+<span class="nc" id="L193">                    description = &quot;Memory usage is critically high: ${metrics.memoryUsage}%&quot;,</span>
+<span class="nc" id="L194">                    detectedAt = Date()</span>
+                )
+            )
+        }
+        
+        // Check error rate
+<span class="nc bnc" id="L200" title="All 2 branches missed.">        if (metrics.errorRate &gt; 5.0) {</span>
+<span class="nc" id="L201">            issues.add(</span>
+<span class="nc" id="L202">                HealthIssue(</span>
+<span class="nc" id="L203">                    id = &quot;errors-${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L204">                    type = IssueType.HIGH_ERROR_RATE,</span>
+<span class="nc" id="L205">                    severity = IssueSeverity.CRITICAL,</span>
+<span class="nc" id="L206">                    description = &quot;Error rate is critically high: ${metrics.errorRate}%&quot;,</span>
+<span class="nc" id="L207">                    detectedAt = Date()</span>
+                )
+            )
+        }
+        
+        // Check unavailable services
+<span class="nc bnc" id="L213" title="All 2 branches missed.">        services.filter { !it.isAvailable }.forEach { service -&gt;</span>
+<span class="nc" id="L214">            issues.add(</span>
+<span class="nc" id="L215">                HealthIssue(</span>
+<span class="nc" id="L216">                    id = &quot;service-${service.serviceName}-${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L217">                    type = IssueType.SERVICE_UNAVAILABLE,</span>
+<span class="nc" id="L218">                    severity = IssueSeverity.CRITICAL,</span>
+<span class="nc" id="L219">                    description = &quot;Service ${service.serviceName} is unavailable&quot;,</span>
+<span class="nc" id="L220">                    detectedAt = Date(),</span>
+<span class="nc" id="L221">                    affectedServices = listOf(service.serviceName)</span>
+                )
+            )
+<span class="nc" id="L224">        }</span>
+        
+<span class="nc" id="L226">        return issues</span>
+    }
+    
+    /**
+     * Generates recommendations based on health status
+     */
+    private fun generateRecommendations(
+        metrics: SystemHealthMetrics,
+        services: List&lt;ServiceStatus&gt;,
+        issues: List&lt;HealthIssue&gt;
+    ): List&lt;String&gt; {
+<span class="nc" id="L237">        val recommendations = mutableListOf&lt;String&gt;()</span>
+        
+<span class="nc bnc" id="L239" title="All 2 branches missed.">        if (metrics.cpuUsage &gt; 80.0) {</span>
+<span class="nc" id="L240">            recommendations.add(&quot;Consider scaling up CPU resources or optimizing CPU-intensive operations&quot;)</span>
+        }
+        
+<span class="nc bnc" id="L243" title="All 2 branches missed.">        if (metrics.memoryUsage &gt; 80.0) {</span>
+<span class="nc" id="L244">            recommendations.add(&quot;Consider increasing memory allocation or investigating memory leaks&quot;)</span>
+        }
+        
+<span class="nc bnc" id="L247" title="All 2 branches missed.">        if (metrics.errorRate &gt; 1.0) {</span>
+<span class="nc" id="L248">            recommendations.add(&quot;Review error logs and investigate root causes of errors&quot;)</span>
+        }
+        
+<span class="nc bnc" id="L251" title="All 2 branches missed.">        if (metrics.responseTime &gt; 300L) {</span>
+<span class="nc" id="L252">            recommendations.add(&quot;Optimize response time by reviewing slow queries and API calls&quot;)</span>
+        }
+        
+<span class="nc bnc" id="L255" title="All 2 branches missed.">        services.filter { !it.isAvailable }.forEach { service -&gt;</span>
+<span class="nc" id="L256">            recommendations.add(&quot;Investigate and restore service: ${service.serviceName}&quot;)</span>
+<span class="nc" id="L257">        }</span>
+        
+<span class="nc bnc" id="L259" title="All 2 branches missed.">        if (recommendations.isEmpty()) {</span>
+<span class="nc" id="L260">            recommendations.add(&quot;System is healthy. Continue monitoring.&quot;)</span>
+        }
+        
+<span class="nc" id="L263">        return recommendations</span>
+    }
+    
+    // Simulated metric collection methods
+    // In a real implementation, these would use actual system monitoring APIs
+<span class="nc" id="L268">    private fun getCpuUsage(): Double = (Math.random() * 50 + 20).coerceIn(0.0, 100.0)</span>
+<span class="nc" id="L269">    private fun getMemoryUsage(): Double = (Math.random() * 40 + 30).coerceIn(0.0, 100.0)</span>
+<span class="nc" id="L270">    private fun getAverageResponseTime(): Long = (Math.random() * 200 + 100).toLong()</span>
+<span class="nc" id="L271">    private fun getErrorRate(): Double = (Math.random() * 0.5).coerceIn(0.0, 100.0)</span>
+<span class="nc" id="L272">    private fun getActiveUserCount(): Int = (Math.random() * 1000 + 500).toInt()</span>
+<span class="nc" id="L273">    private fun getApiCallsPerMinute(): Int = (Math.random() * 500 + 200).toInt()</span>
+    
+    private fun checkServiceAvailability(serviceName: String): Boolean {
+        // In real implementation, would check actual service health
+<span class="nc bnc" id="L277" title="All 2 branches missed.">        return Math.random() &gt; 0.1 // 90% availability simulation</span>
+    }
+    
+    private fun measureServiceResponseTime(serviceName: String): Long {
+<span class="nc" id="L281">        return (Math.random() * 150 + 50).toLong()</span>
+    }
+    
+    private fun getServiceErrorCount(serviceName: String): Int {
+<span class="nc bnc" id="L285" title="All 2 branches missed.">        return if (checkServiceAvailability(serviceName)) 0 else (Math.random() * 10).toInt()</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

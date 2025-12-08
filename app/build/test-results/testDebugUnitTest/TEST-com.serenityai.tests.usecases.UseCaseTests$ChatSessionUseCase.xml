@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="AI Chat Session Use Case" tests="8" skipped="0" failures="0" errors="0" timestamp="2025-12-07T08:20:33" hostname="Mohammads-MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="Should generate AI response for depression" classname="com.serenityai.tests.usecases.UseCaseTests$ChatSessionUseCase" time="0.0"/>
+  <testcase name="Should generate AI response for stress" classname="com.serenityai.tests.usecases.UseCaseTests$ChatSessionUseCase" time="0.001"/>
+  <testcase name="Should handle very long message" classname="com.serenityai.tests.usecases.UseCaseTests$ChatSessionUseCase" time="0.0"/>
+  <testcase name="Should handle special characters in message" classname="com.serenityai.tests.usecases.UseCaseTests$ChatSessionUseCase" time="0.0"/>
+  <testcase name="Should handle empty message" classname="com.serenityai.tests.usecases.UseCaseTests$ChatSessionUseCase" time="0.0"/>
+  <testcase name="Should generate AI response for general conversation" classname="com.serenityai.tests.usecases.UseCaseTests$ChatSessionUseCase" time="0.0"/>
+  <testcase name="Should generate AI response for anxiety" classname="com.serenityai.tests.usecases.UseCaseTests$ChatSessionUseCase" time="0.0"/>
+  <testcase name="Should generate AI response for relationship issues" classname="com.serenityai.tests.usecases.UseCaseTests$ChatSessionUseCase" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

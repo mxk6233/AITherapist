@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserSupportUseCase.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.usecases</a> &gt; <span class="el_source">UserSupportUseCase.kt</span></div><h1>UserSupportUseCase.kt</h1><pre class="source lang-java linenums">package com.serenityai.usecases
+
+import com.serenityai.data.models.*
+import java.util.Date
+
+/** UC25: AI-powered user support system providing assistance through in-app help, FAQ, support tickets, and contextual assistance. */
+<span class="nc" id="L7">class UserSupportUseCase {</span>
+    
+    /**
+     * Creates a new support ticket
+     * 
+     * @param userId User ID
+     * @param subject Ticket subject
+     * @param description Detailed description of the issue
+     * @param category Support category (technical, feature, billing, etc.)
+     * @param priority Priority level (low, medium, high, urgent)
+     * @return SupportTicket object
+     */
+<span class="nc" id="L19">    fun createSupportTicket(</span>
+        userId: String,
+        subject: String,
+        description: String,
+<span class="nc" id="L23">        category: SupportCategory = SupportCategory.GENERAL,</span>
+<span class="nc" id="L24">        priority: SupportPriority = SupportPriority.MEDIUM</span>
+    ): SupportTicket {
+<span class="nc bnc" id="L26" title="All 4 branches missed.">        require(subject.isNotBlank()) { &quot;Subject cannot be empty&quot; }</span>
+<span class="nc bnc" id="L27" title="All 4 branches missed.">        require(description.isNotBlank()) { &quot;Description cannot be empty&quot; }</span>
+        
+<span class="nc" id="L29">        return SupportTicket(</span>
+<span class="nc" id="L30">            id = &quot;ticket_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L31">            userId = userId,</span>
+<span class="nc" id="L32">            subject = subject,</span>
+<span class="nc" id="L33">            description = description,</span>
+<span class="nc" id="L34">            category = category,</span>
+<span class="nc" id="L35">            priority = priority,</span>
+<span class="nc" id="L36">            status = TicketStatus.OPEN,</span>
+<span class="nc" id="L37">            createdAt = Date(),</span>
+<span class="nc" id="L38">            updatedAt = Date(),</span>
+<span class="nc" id="L39">            responses = emptyList()</span>
+        )
+    }
+    
+    /**
+     * Gets user's support ticket history
+     * 
+     * @param userId User ID
+     * @param status Filter by status (optional)
+     * @return List of SupportTicket objects
+     */
+<span class="nc" id="L50">    fun getSupportTickets(</span>
+        userId: String,
+<span class="nc" id="L52">        status: TicketStatus? = null</span>
+    ): List&lt;SupportTicket&gt; {
+        // In production, would fetch from database
+<span class="nc" id="L55">        return emptyList()</span>
+    }
+    
+    /**
+     * Gets FAQ entries based on search query
+     * 
+     * @param query Search query (optional)
+     * @param category Filter by category (optional)
+     * @return List of FAQEntry objects
+     */
+<span class="nc" id="L65">    fun getFAQEntries(</span>
+<span class="nc" id="L66">        query: String? = null,</span>
+<span class="nc" id="L67">        category: String? = null</span>
+    ): List&lt;FAQEntry&gt; {
+<span class="nc" id="L69">        val allFAQs = generateFAQEntries()</span>
+        
+        // Filter by query
+<span class="nc bnc" id="L72" title="All 6 branches missed.">        val filteredByQuery = if (query != null &amp;&amp; query.isNotBlank()) {</span>
+<span class="nc" id="L73">            val lowerQuery = query.lowercase()</span>
+<span class="nc" id="L74">            allFAQs.filter { faq -&gt;</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">                faq.question.lowercase().contains(lowerQuery) ||</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">                faq.answer.lowercase().contains(lowerQuery) ||</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">                faq.tags.any { it.lowercase().contains(lowerQuery) }</span>
+            }
+        } else {
+<span class="nc" id="L80">            allFAQs</span>
+        }
+        
+        // Filter by category
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        return if (category != null) {</span>
+<span class="nc" id="L85">            filteredByQuery.filter { it.category.equals(category, ignoreCase = true) }</span>
+        } else {
+<span class="nc" id="L87">            filteredByQuery</span>
+        }
+    }
+    
+    /**
+     * Gets contextual help based on current screen/feature
+     * 
+     * @param context Context identifier (screen name, feature name, etc.)
+     * @return HelpContent object with relevant information
+     */
+    fun getContextualHelp(context: String): HelpContent {
+<span class="nc" id="L98">        val helpContents = generateHelpContents()</span>
+        
+<span class="nc bnc" id="L100" title="All 6 branches missed.">        return helpContents.find { it.context.equals(context, ignoreCase = true) }</span>
+<span class="nc" id="L101">            ?: HelpContent(</span>
+<span class="nc" id="L102">                context = context,</span>
+<span class="nc" id="L103">                title = &quot;General Help&quot;,</span>
+<span class="nc" id="L104">                content = &quot;For assistance with this feature, please refer to our FAQ or contact support.&quot;,</span>
+<span class="nc" id="L105">                links = emptyList()</span>
+            )
+    }
+    
+    /**
+     * Submits feedback about the application
+     * 
+     * @param userId User ID
+     * @param feedbackType Type of feedback (bug, feature, general)
+     * @param message Feedback message
+     * @param rating Optional rating (1-5)
+     * @return FeedbackSubmission object
+     */
+<span class="nc" id="L118">    fun submitFeedback(</span>
+        userId: String,
+        feedbackType: FeedbackType,
+        message: String,
+<span class="nc" id="L122">        rating: Int? = null</span>
+    ): FeedbackSubmission {
+<span class="nc bnc" id="L124" title="All 4 branches missed.">        require(message.isNotBlank()) { &quot;Feedback message cannot be empty&quot; }</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">        if (rating != null) {</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">            require(rating in 1..5) { &quot;Rating must be between 1 and 5&quot; }</span>
+        }
+        
+<span class="nc" id="L129">        return FeedbackSubmission(</span>
+<span class="nc" id="L130">            id = &quot;feedback_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L131">            userId = userId,</span>
+<span class="nc" id="L132">            feedbackType = feedbackType,</span>
+<span class="nc" id="L133">            message = message,</span>
+<span class="nc" id="L134">            rating = rating,</span>
+<span class="nc" id="L135">            submittedAt = Date(),</span>
+<span class="nc" id="L136">            status = FeedbackStatus.RECEIVED</span>
+        )
+    }
+    
+    /**
+     * Gets available support categories
+     * 
+     * @return List of support category names
+     */
+    fun getSupportCategories(): List&lt;String&gt; {
+<span class="nc" id="L146">        return SupportCategory.values().map { it.name.replace(&quot;_&quot;, &quot; &quot;) }</span>
+    }
+    
+    /**
+     * Adds a response to a support ticket
+     * 
+     * @param ticketId Ticket ID
+     * @param response Response message
+     * @param isFromUser Whether response is from user (true) or support team (false)
+     * @return Updated SupportTicket object
+     */
+    fun addTicketResponse(
+        ticketId: String,
+        response: String,
+        isFromUser: Boolean
+    ): SupportTicket {
+<span class="nc bnc" id="L162" title="All 4 branches missed.">        require(response.isNotBlank()) { &quot;Response cannot be empty&quot; }</span>
+        
+        // In production, would fetch ticket, add response, and update
+<span class="nc" id="L165">        val ticket = SupportTicket(</span>
+<span class="nc" id="L166">            id = ticketId,</span>
+<span class="nc" id="L167">            userId = &quot;user123&quot;,</span>
+<span class="nc" id="L168">            subject = &quot;Sample Ticket&quot;,</span>
+<span class="nc" id="L169">            description = &quot;Sample description&quot;,</span>
+<span class="nc" id="L170">            category = SupportCategory.GENERAL,</span>
+<span class="nc" id="L171">            priority = SupportPriority.MEDIUM,</span>
+<span class="nc" id="L172">            status = TicketStatus.OPEN,</span>
+<span class="nc" id="L173">            createdAt = Date(),</span>
+<span class="nc" id="L174">            updatedAt = Date(),</span>
+<span class="nc" id="L175">            responses = listOf(</span>
+<span class="nc" id="L176">                TicketResponse(</span>
+<span class="nc" id="L177">                    id = &quot;response_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L178">                    message = response,</span>
+<span class="nc" id="L179">                    isFromUser = isFromUser,</span>
+<span class="nc" id="L180">                    createdAt = Date()</span>
+                )
+            )
+        )
+        
+<span class="nc" id="L185">        return ticket</span>
+    }
+    
+    // Private helper methods
+    
+    /**
+     * Generates the canonical FAQ entries leveraged for mocks, previews, and offline testing.
+     *
+     * @return Collection of `FAQEntry` items representing common support questions.
+     */
+    private fun generateFAQEntries(): List&lt;FAQEntry&gt; {
+<span class="nc" id="L196">        return listOf(</span>
+<span class="nc" id="L197">            FAQEntry(</span>
+<span class="nc" id="L198">                id = &quot;faq_001&quot;,</span>
+<span class="nc" id="L199">                question = &quot;How do I log my mood?&quot;,</span>
+<span class="nc" id="L200">                answer = &quot;Navigate to the Mood screen and select your current mood level (1-5). You can add notes and tags to provide more context.&quot;,</span>
+<span class="nc" id="L201">                category = &quot;Getting Started&quot;,</span>
+<span class="nc" id="L202">                tags = listOf(&quot;mood&quot;, &quot;logging&quot;, &quot;basics&quot;),</span>
+<span class="nc" id="L203">                helpfulCount = 245,</span>
+<span class="nc" id="L204">                createdAt = Date()</span>
+            ),
+<span class="nc" id="L206">            FAQEntry(</span>
+<span class="nc" id="L207">                id = &quot;faq_002&quot;,</span>
+<span class="nc" id="L208">                question = &quot;How does the AI therapist work?&quot;,</span>
+<span class="nc" id="L209">                answer = &quot;Our AI therapist uses advanced natural language processing to provide supportive, empathetic responses. It's designed to complement professional therapy, not replace it.&quot;,</span>
+<span class="nc" id="L210">                category = &quot;AI Features&quot;,</span>
+<span class="nc" id="L211">                tags = listOf(&quot;AI&quot;, &quot;chat&quot;, &quot;therapy&quot;),</span>
+<span class="nc" id="L212">                helpfulCount = 189,</span>
+<span class="nc" id="L213">                createdAt = Date()</span>
+            ),
+<span class="nc" id="L215">            FAQEntry(</span>
+<span class="nc" id="L216">                id = &quot;faq_003&quot;,</span>
+<span class="nc" id="L217">                question = &quot;Can I export my data?&quot;,</span>
+<span class="nc" id="L218">                answer = &quot;Yes, you can export your mood data, chat history, and journal entries from the Settings screen. Data is exported in JSON format.&quot;,</span>
+<span class="nc" id="L219">                category = &quot;Data &amp; Privacy&quot;,</span>
+<span class="nc" id="L220">                tags = listOf(&quot;export&quot;, &quot;data&quot;, &quot;privacy&quot;),</span>
+<span class="nc" id="L221">                helpfulCount = 156,</span>
+<span class="nc" id="L222">                createdAt = Date()</span>
+            ),
+<span class="nc" id="L224">            FAQEntry(</span>
+<span class="nc" id="L225">                id = &quot;faq_004&quot;,</span>
+<span class="nc" id="L226">                question = &quot;What should I do in a crisis?&quot;,</span>
+<span class="nc" id="L227">                answer = &quot;If you're experiencing a crisis, please contact emergency services immediately. The app includes crisis intervention features, but these are not a substitute for professional emergency care.&quot;,</span>
+<span class="nc" id="L228">                category = &quot;Safety&quot;,</span>
+<span class="nc" id="L229">                tags = listOf(&quot;crisis&quot;, &quot;emergency&quot;, &quot;safety&quot;),</span>
+<span class="nc" id="L230">                helpfulCount = 312,</span>
+<span class="nc" id="L231">                createdAt = Date()</span>
+            ),
+<span class="nc" id="L233">            FAQEntry(</span>
+<span class="nc" id="L234">                id = &quot;faq_005&quot;,</span>
+<span class="nc" id="L235">                question = &quot;How do I reset my password?&quot;,</span>
+<span class="nc" id="L236">                answer = &quot;Go to the Login screen and tap 'Forgot Password'. You'll receive an email with instructions to reset your password.&quot;,</span>
+<span class="nc" id="L237">                category = &quot;Account&quot;,</span>
+<span class="nc" id="L238">                tags = listOf(&quot;password&quot;, &quot;account&quot;, &quot;login&quot;),</span>
+<span class="nc" id="L239">                helpfulCount = 203,</span>
+<span class="nc" id="L240">                createdAt = Date()</span>
+            )
+        )
+    }
+    
+    /**
+     * Creates contextual help snippets used to surface just-in-time guidance across the app.
+     *
+     * @return List of `HelpContent` definitions keyed by experience context identifiers.
+     */
+    private fun generateHelpContents(): List&lt;HelpContent&gt; {
+<span class="nc" id="L251">        return listOf(</span>
+<span class="nc" id="L252">            HelpContent(</span>
+<span class="nc" id="L253">                context = &quot;mood_logging&quot;,</span>
+<span class="nc" id="L254">                title = &quot;Mood Logging Help&quot;,</span>
+<span class="nc" id="L255">                content = &quot;Log your mood daily to track patterns over time. Select a mood level and optionally add notes about what's affecting your mood.&quot;,</span>
+<span class="nc" id="L256">                links = listOf(&quot;FAQ: How do I log my mood?&quot;, &quot;Video Tutorial: Mood Tracking&quot;)</span>
+            ),
+<span class="nc" id="L258">            HelpContent(</span>
+<span class="nc" id="L259">                context = &quot;ai_chat&quot;,</span>
+<span class="nc" id="L260">                title = &quot;AI Chat Help&quot;,</span>
+<span class="nc" id="L261">                content = &quot;Chat with our AI therapist for immediate support. Be specific about your feelings and concerns for the best responses.&quot;,</span>
+<span class="nc" id="L262">                links = listOf(&quot;FAQ: How does the AI therapist work?&quot;, &quot;Best Practices: Chat Tips&quot;)</span>
+            ),
+<span class="nc" id="L264">            HelpContent(</span>
+<span class="nc" id="L265">                context = &quot;exercises&quot;,</span>
+<span class="nc" id="L266">                title = &quot;Coping Exercises Help&quot;,</span>
+<span class="nc" id="L267">                content = &quot;Access evidence-based coping exercises tailored to your needs. Complete exercises regularly for best results.&quot;,</span>
+<span class="nc" id="L268">                links = listOf(&quot;Exercise Library&quot;, &quot;FAQ: Using Exercises&quot;)</span>
+            )
+        )
+    }
+}
+
+/**
+ * Data class for support tickets
+ */
+<span class="nc" id="L277">data class SupportTicket(</span>
+<span class="nc" id="L278">    val id: String,</span>
+<span class="nc" id="L279">    val userId: String,</span>
+<span class="nc" id="L280">    val subject: String,</span>
+<span class="nc" id="L281">    val description: String,</span>
+<span class="nc" id="L282">    val category: SupportCategory,</span>
+<span class="nc" id="L283">    val priority: SupportPriority,</span>
+<span class="nc" id="L284">    val status: TicketStatus,</span>
+<span class="nc" id="L285">    val createdAt: Date,</span>
+<span class="nc" id="L286">    val updatedAt: Date,</span>
+<span class="nc" id="L287">    val responses: List&lt;TicketResponse&gt;</span>
+)
+
+/**
+ * Data class for ticket responses
+ */
+<span class="nc" id="L293">data class TicketResponse(</span>
+<span class="nc" id="L294">    val id: String,</span>
+<span class="nc" id="L295">    val message: String,</span>
+<span class="nc" id="L296">    val isFromUser: Boolean,</span>
+<span class="nc" id="L297">    val createdAt: Date</span>
+)
+
+/**
+ * Data class for FAQ entries
+ */
+<span class="nc" id="L303">data class FAQEntry(</span>
+<span class="nc" id="L304">    val id: String,</span>
+<span class="nc" id="L305">    val question: String,</span>
+<span class="nc" id="L306">    val answer: String,</span>
+<span class="nc" id="L307">    val category: String,</span>
+<span class="nc" id="L308">    val tags: List&lt;String&gt;,</span>
+<span class="nc" id="L309">    val helpfulCount: Int,</span>
+<span class="nc" id="L310">    val createdAt: Date</span>
+)
+
+/**
+ * Data class for help content
+ */
+<span class="nc" id="L316">data class HelpContent(</span>
+<span class="nc" id="L317">    val context: String,</span>
+<span class="nc" id="L318">    val title: String,</span>
+<span class="nc" id="L319">    val content: String,</span>
+<span class="nc" id="L320">    val links: List&lt;String&gt;</span>
+)
+
+/**
+ * Data class for feedback submissions
+ */
+<span class="nc" id="L326">data class FeedbackSubmission(</span>
+<span class="nc" id="L327">    val id: String,</span>
+<span class="nc" id="L328">    val userId: String,</span>
+<span class="nc" id="L329">    val feedbackType: FeedbackType,</span>
+<span class="nc" id="L330">    val message: String,</span>
+<span class="nc" id="L331">    val rating: Int?,</span>
+<span class="nc" id="L332">    val category: String? = null,</span>
+<span class="nc" id="L333">    val attachments: List&lt;String&gt; = emptyList(),</span>
+<span class="nc" id="L334">    val adminNotes: String? = null,</span>
+<span class="nc" id="L335">    val submittedAt: Date,</span>
+<span class="nc" id="L336">    val updatedAt: Date? = null,</span>
+<span class="nc" id="L337">    val status: FeedbackStatus</span>
+<span class="nc" id="L338">)</span>
+
+/**
+ * Support category enum
+ */
+enum class SupportCategory {
+<span class="nc" id="L344">    GENERAL, TECHNICAL, FEATURE, BILLING, ACCOUNT, SAFETY</span>
+<span class="nc" id="L345">}</span>
+
+/**
+ * Support priority enum
+ */
+enum class SupportPriority {
+<span class="nc" id="L351">    LOW, MEDIUM, HIGH, URGENT</span>
+<span class="nc" id="L352">}</span>
+
+/**
+ * Ticket status enum
+ */
+enum class TicketStatus {
+<span class="nc" id="L358">    OPEN, IN_PROGRESS, RESOLVED, CLOSED</span>
+<span class="nc" id="L359">}</span>
+
+/**
+ * Feedback type enum
+ */
+enum class FeedbackType {
+<span class="nc" id="L365">    BUG, FEATURE, GENERAL, COMPLIMENT, COMPLAINT</span>
+<span class="nc" id="L366">}</span>
+
+/**
+ * Feedback status enum
+ */
+enum class FeedbackStatus {
+<span class="nc" id="L372">    RECEIVED, REVIEWED, IMPLEMENTED, DECLINED</span>
+<span class="nc" id="L373">}</span>
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

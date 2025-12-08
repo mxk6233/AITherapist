@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RelapsePreventionUseCase.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.usecases</a> &gt; <span class="el_source">RelapsePreventionUseCase.kt</span></div><h1>RelapsePreventionUseCase.kt</h1><pre class="source lang-java linenums">package com.serenityai.usecases
+
+import com.serenityai.data.models.*
+import java.util.Date
+
+/**
+ * UC35: Relapse Prevention Alerts - Use Case
+ * 
+ * Use Case Goal: Detect relapse risk factors early and trigger proactive interventions
+ * to prevent mental health relapses.
+ * 
+ * Responsibilities:
+ * - Assess risk factors from mood, sleep, stress, and social data
+ * - Calculate overall risk level
+ * - Detect early warning signs and patterns
+ * - Trigger interventions when risk is high
+ * - Maintain safety plans with emergency contacts
+ */
+<span class="nc" id="L19">class RelapsePreventionUseCase {</span>
+    
+    /**
+     * Assesses risk factors and calculates overall risk level
+     * 
+     * @param moodEntries Recent mood entries for pattern analysis
+     * @param sleepData Recent sleep patterns (hours per night)
+     * @param stressLevels Recent stress levels (1-10 scale)
+     * @return RiskAssessment with overall risk level and indicators
+     */
+<span class="nc" id="L29">    fun assessRiskLevel(</span>
+        moodEntries: List&lt;MoodEntry&gt;,
+<span class="nc" id="L31">        sleepData: List&lt;SleepData&gt; = emptyList(),</span>
+<span class="nc" id="L32">        stressLevels: List&lt;StressData&gt; = emptyList()</span>
+    ): RiskAssessment {
+<span class="nc" id="L34">        val riskIndicators = mutableListOf&lt;RiskIndicator&gt;()</span>
+        
+        // Assess mood patterns
+<span class="nc bnc" id="L37" title="All 4 branches missed.">        if (moodEntries.isNotEmpty()) {</span>
+<span class="nc" id="L38">            val moodRisk = assessMoodRisk(moodEntries)</span>
+<span class="nc" id="L39">            riskIndicators.add(moodRisk)</span>
+        }
+        
+        // Assess sleep patterns
+<span class="nc bnc" id="L43" title="All 4 branches missed.">        if (sleepData.isNotEmpty()) {</span>
+<span class="nc" id="L44">            val sleepRisk = assessSleepRisk(sleepData)</span>
+<span class="nc" id="L45">            riskIndicators.add(sleepRisk)</span>
+        }
+        
+        // Assess stress levels
+<span class="nc bnc" id="L49" title="All 4 branches missed.">        if (stressLevels.isNotEmpty()) {</span>
+<span class="nc" id="L50">            val stressRisk = assessStressRisk(stressLevels)</span>
+<span class="nc" id="L51">            riskIndicators.add(stressRisk)</span>
+        }
+        
+        // Assess social support (from mood entries - assuming low social activity correlates with isolation)
+<span class="nc" id="L55">        val socialRisk = assessSocialSupportRisk(moodEntries)</span>
+<span class="nc" id="L56">        riskIndicators.add(socialRisk)</span>
+        
+        // Assess trigger exposure (simplified - would check against user's known triggers)
+<span class="nc" id="L59">        val triggerRisk = assessTriggerExposureRisk()</span>
+<span class="nc" id="L60">        riskIndicators.add(triggerRisk)</span>
+        
+        // Calculate overall risk level
+<span class="nc" id="L63">        val overallRiskLevel = calculateOverallRiskLevel(riskIndicators)</span>
+        
+        // Detect early warnings
+<span class="nc" id="L66">        val earlyWarnings = detectEarlyWarnings(riskIndicators, moodEntries)</span>
+        
+        // Generate recommendations
+<span class="nc" id="L69">        val recommendations = generateRecommendations(overallRiskLevel, riskIndicators)</span>
+        
+        // Determine if intervention should be triggered
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        val interventionTriggered = when (overallRiskLevel) {</span>
+<span class="nc" id="L73">            RiskLevel.HIGH, RiskLevel.CRITICAL -&gt; true</span>
+<span class="nc" id="L74">            RiskLevel.LOW, RiskLevel.MEDIUM -&gt; false</span>
+        }
+        
+<span class="nc" id="L77">        return RiskAssessment(</span>
+<span class="nc" id="L78">            id = System.currentTimeMillis().toString(),</span>
+<span class="nc bnc" id="L79" title="All 4 branches missed.">            userId = moodEntries.firstOrNull()?.userId ?: &quot;&quot;,</span>
+<span class="nc" id="L80">            assessedAt = Date(),</span>
+<span class="nc" id="L81">            overallRiskLevel = overallRiskLevel,</span>
+<span class="nc" id="L82">            riskIndicators = riskIndicators,</span>
+<span class="nc" id="L83">            earlyWarnings = earlyWarnings,</span>
+<span class="nc" id="L84">            recommendations = recommendations,</span>
+<span class="nc" id="L85">            interventionTriggered = interventionTriggered</span>
+        )
+    }
+    
+    /**
+     * Detects early warning signs from risk indicators and patterns
+     * 
+     * @param riskIndicators Current risk indicators
+     * @param moodEntries Recent mood data for pattern analysis
+     * @return List of EarlyWarning objects
+     */
+    fun detectEarlyWarnings(
+        riskIndicators: List&lt;RiskIndicator&gt;,
+        moodEntries: List&lt;MoodEntry&gt;
+    ): List&lt;EarlyWarning&gt; {
+<span class="nc" id="L100">        val warnings = mutableListOf&lt;EarlyWarning&gt;()</span>
+        
+        // Check for sleep disruption patterns
+<span class="nc bnc" id="L103" title="All 6 branches missed.">        val sleepRisk = riskIndicators.find { it.category == RiskCategory.SLEEP }</span>
+<span class="nc bnc" id="L104" title="All 4 branches missed.">        if (sleepRisk != null &amp;&amp; sleepRisk.riskLevel &gt;= 70) {</span>
+<span class="nc" id="L105">            warnings.add(</span>
+<span class="nc" id="L106">                EarlyWarning(</span>
+<span class="nc" id="L107">                    title = &quot;Sleep Disruption&quot;,</span>
+<span class="nc" id="L108">                    description = &quot;Irregular sleep patterns detected - ${sleepRisk.description}&quot;,</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">                    severity = if (sleepRisk.riskLevel &gt;= 85) com.serenityai.data.models.WarningSeverity.HIGH else com.serenityai.data.models.WarningSeverity.MEDIUM,</span>
+<span class="nc" id="L110">                    recommendedAction = &quot;Schedule sleep hygiene activities and maintain consistent bedtime&quot;,</span>
+<span class="nc" id="L111">                    category = RiskCategory.SLEEP,</span>
+<span class="nc" id="L112">                    relatedRiskIndicators = listOf(sleepRisk.id)</span>
+                )
+            )
+        }
+        
+        // Check for social isolation
+<span class="nc bnc" id="L118" title="All 6 branches missed.">        val socialRisk = riskIndicators.find { it.category == RiskCategory.SOCIAL_SUPPORT }</span>
+<span class="nc bnc" id="L119" title="All 4 branches missed.">        if (socialRisk != null &amp;&amp; socialRisk.riskLevel &gt;= 60) {</span>
+<span class="nc" id="L120">            warnings.add(</span>
+<span class="nc" id="L121">                EarlyWarning(</span>
+<span class="nc" id="L122">                    title = &quot;Social Isolation&quot;,</span>
+<span class="nc" id="L123">                    description = &quot;Decreased social activity detected - ${socialRisk.description}&quot;,</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">                    severity = if (socialRisk.riskLevel &gt;= 80) com.serenityai.data.models.WarningSeverity.HIGH else com.serenityai.data.models.WarningSeverity.MEDIUM,</span>
+<span class="nc" id="L125">                    recommendedAction = &quot;Plan social interactions and connect with support network&quot;,</span>
+<span class="nc" id="L126">                    category = RiskCategory.SOCIAL_SUPPORT,</span>
+<span class="nc" id="L127">                    relatedRiskIndicators = listOf(socialRisk.id)</span>
+                )
+            )
+        }
+        
+        // Check for stress accumulation
+<span class="nc bnc" id="L133" title="All 6 branches missed.">        val stressRisk = riskIndicators.find { it.category == RiskCategory.STRESS }</span>
+<span class="nc bnc" id="L134" title="All 4 branches missed.">        if (stressRisk != null &amp;&amp; stressRisk.riskLevel &gt;= 65) {</span>
+<span class="nc" id="L135">            warnings.add(</span>
+<span class="nc" id="L136">                EarlyWarning(</span>
+<span class="nc" id="L137">                    title = &quot;Stress Accumulation&quot;,</span>
+<span class="nc" id="L138">                    description = &quot;Elevated stress levels detected - ${stressRisk.description}&quot;,</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">                    severity = if (stressRisk.riskLevel &gt;= 80) com.serenityai.data.models.WarningSeverity.HIGH else com.serenityai.data.models.WarningSeverity.MEDIUM,</span>
+<span class="nc" id="L140">                    recommendedAction = &quot;Practice stress management techniques and reduce stressors&quot;,</span>
+<span class="nc" id="L141">                    category = RiskCategory.STRESS,</span>
+<span class="nc" id="L142">                    relatedRiskIndicators = listOf(stressRisk.id)</span>
+                )
+            )
+        }
+        
+        // Check for mood decline patterns
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        if (moodEntries.size &gt;= 3) {</span>
+<span class="nc" id="L149">            val recentMoods = moodEntries.takeLast(3).map { it.mood.toFloat() }</span>
+<span class="nc" id="L150">            val moodTrend = recentMoods.last() - recentMoods.first()</span>
+<span class="nc bnc" id="L151" title="All 4 branches missed.">            if (moodTrend &lt; -1.0f &amp;&amp; recentMoods.last() &lt;= 3) {</span>
+<span class="nc" id="L152">                warnings.add(</span>
+<span class="nc" id="L153">                    EarlyWarning(</span>
+<span class="nc" id="L154">                        title = &quot;Mood Decline&quot;,</span>
+<span class="nc" id="L155">                        description = &quot;Significant mood decline detected over recent days&quot;,</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">                        severity = if (recentMoods.last() &lt;= 2) com.serenityai.data.models.WarningSeverity.HIGH else com.serenityai.data.models.WarningSeverity.MEDIUM,</span>
+<span class="nc" id="L157">                        recommendedAction = &quot;Engage in coping strategies and contact support network&quot;,</span>
+<span class="nc" id="L158">                        category = RiskCategory.MOOD_PATTERNS,</span>
+<span class="nc" id="L159">                        relatedRiskIndicators = emptyList()</span>
+                    )
+                )
+            }
+        }
+        
+<span class="nc" id="L165">        return warnings.sortedByDescending { </span>
+            when (it.severity) {
+                com.serenityai.data.models.WarningSeverity.CRITICAL -&gt; 4
+                com.serenityai.data.models.WarningSeverity.HIGH -&gt; 3
+                com.serenityai.data.models.WarningSeverity.MEDIUM -&gt; 2
+                com.serenityai.data.models.WarningSeverity.LOW -&gt; 1
+            }
+        }
+    }
+    
+    /**
+     * Triggers proactive intervention when risk is high
+     * 
+     * @param riskAssessment Current risk assessment
+     * @param safetyPlan User's safety plan
+     * @return InterventionPlan with actions to take
+     */
+    fun triggerIntervention(
+        riskAssessment: RiskAssessment,
+        safetyPlan: SafetyPlan
+    ): InterventionPlan {
+<span class="nc" id="L186">        val actions = mutableListOf&lt;InterventionAction&gt;()</span>
+        
+<span class="nc bnc" id="L188" title="All 4 branches missed.">        when (riskAssessment.overallRiskLevel) {</span>
+            RiskLevel.CRITICAL -&gt; {
+<span class="nc" id="L190">                actions.add(</span>
+<span class="nc" id="L191">                    InterventionAction(</span>
+<span class="nc" id="L192">                        title = &quot;Immediate Support Contact&quot;,</span>
+<span class="nc" id="L193">                        description = &quot;Contact emergency support immediately&quot;,</span>
+<span class="nc" id="L194">                        priority = ActionPriority.CRITICAL,</span>
+<span class="nc" id="L195">                        deadline = Date(System.currentTimeMillis() + 3600000) // 1 hour</span>
+                    )
+                )
+<span class="nc" id="L198">                actions.add(</span>
+<span class="nc" id="L199">                    InterventionAction(</span>
+<span class="nc" id="L200">                        title = &quot;Use Coping Strategies&quot;,</span>
+<span class="nc" id="L201">                        description = &quot;Engage in immediate coping strategies from safety plan&quot;,</span>
+<span class="nc" id="L202">                        priority = ActionPriority.CRITICAL</span>
+                    )
+                )
+<span class="nc" id="L205">                actions.add(</span>
+<span class="nc" id="L206">                    InterventionAction(</span>
+<span class="nc" id="L207">                        title = &quot;Schedule Professional Support&quot;,</span>
+<span class="nc" id="L208">                        description = &quot;Contact therapist or healthcare provider within 24 hours&quot;,</span>
+<span class="nc" id="L209">                        priority = ActionPriority.HIGH,</span>
+<span class="nc" id="L210">                        deadline = Date(System.currentTimeMillis() + 86400000) // 24 hours</span>
+                    )
+                )
+            }
+            RiskLevel.HIGH -&gt; {
+<span class="nc" id="L215">                actions.add(</span>
+<span class="nc" id="L216">                    InterventionAction(</span>
+<span class="nc" id="L217">                        title = &quot;Increase Monitoring&quot;,</span>
+<span class="nc" id="L218">                        description = &quot;Complete daily check-ins and mood assessments&quot;,</span>
+<span class="nc" id="L219">                        priority = ActionPriority.HIGH</span>
+                    )
+                )
+<span class="nc" id="L222">                actions.add(</span>
+<span class="nc" id="L223">                    InterventionAction(</span>
+<span class="nc" id="L224">                        title = &quot;Engage Support Network&quot;,</span>
+<span class="nc" id="L225">                        description = &quot;Contact support person and share concerns&quot;,</span>
+<span class="nc" id="L226">                        priority = ActionPriority.HIGH</span>
+                    )
+                )
+<span class="nc" id="L229">                actions.add(</span>
+<span class="nc" id="L230">                    InterventionAction(</span>
+<span class="nc" id="L231">                        title = &quot;Practice Coping Strategies&quot;,</span>
+<span class="nc" id="L232">                        description = &quot;Use planned coping strategies from safety plan&quot;,</span>
+<span class="nc" id="L233">                        priority = ActionPriority.MEDIUM</span>
+                    )
+                )
+            }
+            RiskLevel.MEDIUM -&gt; {
+<span class="nc" id="L238">                actions.add(</span>
+<span class="nc" id="L239">                    InterventionAction(</span>
+<span class="nc" id="L240">                        title = &quot;Regular Check-ins&quot;,</span>
+<span class="nc" id="L241">                        description = &quot;Complete daily assessments and monitor patterns&quot;,</span>
+<span class="nc" id="L242">                        priority = ActionPriority.MEDIUM</span>
+                    )
+                )
+<span class="nc" id="L245">                actions.add(</span>
+<span class="nc" id="L246">                    InterventionAction(</span>
+<span class="nc" id="L247">                        title = &quot;Preventive Activities&quot;,</span>
+<span class="nc" id="L248">                        description = &quot;Engage in preventive self-care activities&quot;,</span>
+<span class="nc" id="L249">                        priority = ActionPriority.MEDIUM</span>
+                    )
+                )
+            }
+            RiskLevel.LOW -&gt; {
+<span class="nc" id="L254">                actions.add(</span>
+<span class="nc" id="L255">                    InterventionAction(</span>
+<span class="nc" id="L256">                        title = &quot;Continue Monitoring&quot;,</span>
+<span class="nc" id="L257">                        description = &quot;Maintain regular check-ins and awareness&quot;,</span>
+<span class="nc" id="L258">                        priority = ActionPriority.LOW</span>
+                    )
+                )
+            }
+        }
+        
+        // Add specific actions based on early warnings
+<span class="nc" id="L265">        riskAssessment.earlyWarnings.forEach { warning -&gt;</span>
+<span class="nc bnc" id="L266" title="All 2 branches missed.">            if (warning.severity in listOf(com.serenityai.data.models.WarningSeverity.HIGH, com.serenityai.data.models.WarningSeverity.CRITICAL)) {</span>
+<span class="nc" id="L267">                actions.add(</span>
+<span class="nc" id="L268">                    InterventionAction(</span>
+<span class="nc" id="L269">                        title = &quot;Address: ${warning.title}&quot;,</span>
+<span class="nc" id="L270">                        description = warning.recommendedAction,</span>
+<span class="nc bnc" id="L271" title="All 3 branches missed.">                        priority = when (warning.severity) {</span>
+<span class="nc" id="L272">                            com.serenityai.data.models.WarningSeverity.CRITICAL -&gt; ActionPriority.CRITICAL</span>
+<span class="nc" id="L273">                            com.serenityai.data.models.WarningSeverity.HIGH -&gt; ActionPriority.HIGH</span>
+<span class="nc" id="L274">                            else -&gt; ActionPriority.MEDIUM</span>
+                        }
+                    )
+                )
+            }
+<span class="nc" id="L279">        }</span>
+        
+<span class="nc" id="L281">        return InterventionPlan(</span>
+<span class="nc" id="L282">            id = System.currentTimeMillis().toString(),</span>
+<span class="nc" id="L283">            userId = riskAssessment.userId,</span>
+<span class="nc" id="L284">            triggeredAt = Date(),</span>
+<span class="nc" id="L285">            triggerReason = &quot;Risk level: ${riskAssessment.overallRiskLevel}&quot;,</span>
+<span class="nc" id="L286">            riskLevel = riskAssessment.overallRiskLevel,</span>
+<span class="nc" id="L287">            actions = actions,</span>
+<span class="nc" id="L288">            emergencyContacts = safetyPlan.emergencyContacts,</span>
+<span class="nc" id="L289">            status = InterventionStatus.ACTIVE</span>
+        )
+    }
+    
+    /**
+     * Calculates overall risk level from individual risk indicators
+     */
+    private fun calculateOverallRiskLevel(indicators: List&lt;RiskIndicator&gt;): RiskLevel {
+<span class="nc bnc" id="L297" title="All 2 branches missed.">        if (indicators.isEmpty()) return RiskLevel.LOW</span>
+        
+<span class="nc" id="L299">        val averageRisk = indicators.map { it.riskLevel }.average()</span>
+<span class="nc" id="L300">        return when {</span>
+<span class="nc bnc" id="L301" title="All 2 branches missed.">            averageRisk &gt;= 80 -&gt; RiskLevel.CRITICAL</span>
+<span class="nc bnc" id="L302" title="All 2 branches missed.">            averageRisk &gt;= 60 -&gt; RiskLevel.HIGH</span>
+<span class="nc bnc" id="L303" title="All 2 branches missed.">            averageRisk &gt;= 40 -&gt; RiskLevel.MEDIUM</span>
+<span class="nc" id="L304">            else -&gt; RiskLevel.LOW</span>
+        }
+    }
+    
+    /**
+     * Assesses mood-related risk
+     */
+    private fun assessMoodRisk(moodEntries: List&lt;MoodEntry&gt;): RiskIndicator {
+<span class="nc" id="L312">        val recentMoods = moodEntries.takeLast(7).map { it.mood.toFloat() }</span>
+<span class="nc" id="L313">        val averageMood = recentMoods.average()</span>
+<span class="nc" id="L314">        val moodDecline = recentMoods.first() - recentMoods.last()</span>
+        
+<span class="nc" id="L316">        val riskLevel = when {</span>
+<span class="nc bnc" id="L317" title="All 2 branches missed.">            averageMood &lt;= 2.0f -&gt; 90</span>
+<span class="nc bnc" id="L318" title="All 4 branches missed.">            averageMood &lt;= 3.0f &amp;&amp; moodDecline &gt; 1.0f -&gt; 85</span>
+<span class="nc bnc" id="L319" title="All 2 branches missed.">            averageMood &lt;= 3.0f -&gt; 75</span>
+<span class="nc bnc" id="L320" title="All 4 branches missed.">            averageMood &lt;= 3.5f &amp;&amp; moodDecline &gt; 0.5f -&gt; 65</span>
+<span class="nc bnc" id="L321" title="All 2 branches missed.">            averageMood &lt;= 3.5f -&gt; 55</span>
+<span class="nc bnc" id="L322" title="All 4 branches missed.">            averageMood &lt;= 4.0f &amp;&amp; moodDecline &gt; 0.5f -&gt; 45</span>
+<span class="nc" id="L323">            else -&gt; 30</span>
+        }.toInt()
+        
+<span class="nc" id="L326">        val description = when {</span>
+<span class="nc bnc" id="L327" title="All 2 branches missed.">            averageMood &lt;= 2.0f -&gt; &quot;Severe mood decline - immediate attention needed&quot;</span>
+<span class="nc bnc" id="L328" title="All 4 branches missed.">            averageMood &lt;= 3.0f &amp;&amp; moodDecline &gt; 1.0f -&gt; &quot;Significant mood decline detected&quot;</span>
+<span class="nc bnc" id="L329" title="All 2 branches missed.">            averageMood &lt;= 3.0f -&gt; &quot;Low mood levels detected&quot;</span>
+<span class="nc bnc" id="L330" title="All 2 branches missed.">            moodDecline &gt; 1.0f -&gt; &quot;Rapid mood decline pattern&quot;</span>
+<span class="nc" id="L331">            else -&gt; &quot;Mood patterns showing variation&quot;</span>
+        }
+        
+<span class="nc" id="L334">        val trend = when {</span>
+<span class="nc bnc" id="L335" title="All 2 branches missed.">            moodDecline &gt; 1.0f -&gt; RiskTrend.DECLINING</span>
+<span class="nc bnc" id="L336" title="All 2 branches missed.">            moodDecline &gt; 0.5f -&gt; RiskTrend.DECLINING</span>
+<span class="nc bnc" id="L337" title="All 2 branches missed.">            moodDecline &lt; -0.5f -&gt; RiskTrend.IMPROVING</span>
+<span class="nc" id="L338">            else -&gt; RiskTrend.STABLE</span>
+        }
+        
+<span class="nc" id="L341">        return RiskIndicator(</span>
+<span class="nc" id="L342">            name = &quot;Mood Patterns&quot;,</span>
+<span class="nc" id="L343">            riskLevel = riskLevel,</span>
+<span class="nc" id="L344">            description = description,</span>
+<span class="nc" id="L345">            category = RiskCategory.MOOD_PATTERNS,</span>
+<span class="nc" id="L346">            trend = trend</span>
+        )
+    }
+    
+    /**
+     * Assesses sleep-related risk
+     */
+    private fun assessSleepRisk(sleepData: List&lt;SleepData&gt;): RiskIndicator {
+<span class="nc bnc" id="L354" title="All 2 branches missed.">        if (sleepData.isEmpty()) {</span>
+<span class="nc" id="L355">            return RiskIndicator(</span>
+<span class="nc" id="L356">                name = &quot;Sleep Pattern&quot;,</span>
+<span class="nc" id="L357">                riskLevel = 50,</span>
+<span class="nc" id="L358">                description = &quot;Insufficient sleep data&quot;,</span>
+<span class="nc" id="L359">                category = RiskCategory.SLEEP</span>
+            )
+        }
+        
+<span class="nc" id="L363">        val recentSleep = sleepData.takeLast(7)</span>
+<span class="nc" id="L364">        val averageHours = recentSleep.map { it.hours }.average()</span>
+<span class="nc" id="L365">        val irregularity = calculateSleepIrregularity(recentSleep)</span>
+        
+<span class="nc" id="L367">        val riskLevel = when {</span>
+<span class="nc bnc" id="L368" title="All 2 branches missed.">            averageHours &lt; 5.0 -&gt; 90</span>
+<span class="nc bnc" id="L369" title="All 2 branches missed.">            averageHours &lt; 6.0 -&gt; 75</span>
+<span class="nc bnc" id="L370" title="All 4 branches missed.">            averageHours &lt; 7.0 &amp;&amp; irregularity &gt; 2.0 -&gt; 70</span>
+<span class="nc bnc" id="L371" title="All 2 branches missed.">            averageHours &lt; 7.0 -&gt; 60</span>
+<span class="nc bnc" id="L372" title="All 2 branches missed.">            irregularity &gt; 2.5 -&gt; 65</span>
+<span class="nc bnc" id="L373" title="All 2 branches missed.">            irregularity &gt; 1.5 -&gt; 50</span>
+<span class="nc" id="L374">            else -&gt; 30</span>
+        }.toInt()
+        
+<span class="nc" id="L377">        val description = when {</span>
+<span class="nc bnc" id="L378" title="All 2 branches missed.">            averageHours &lt; 5.0 -&gt; &quot;Severe sleep deprivation&quot;</span>
+<span class="nc bnc" id="L379" title="All 2 branches missed.">            averageHours &lt; 6.0 -&gt; &quot;Insufficient sleep - below recommended minimum&quot;</span>
+<span class="nc bnc" id="L380" title="All 2 branches missed.">            irregularity &gt; 2.0 -&gt; &quot;Irregular sleep pattern increases relapse risk&quot;</span>
+<span class="nc" id="L381">            else -&gt; &quot;Sleep patterns within acceptable range&quot;</span>
+        }
+        
+<span class="nc" id="L384">        return RiskIndicator(</span>
+<span class="nc" id="L385">            name = &quot;Sleep Pattern&quot;,</span>
+<span class="nc" id="L386">            riskLevel = riskLevel,</span>
+<span class="nc" id="L387">            description = description,</span>
+<span class="nc" id="L388">            category = RiskCategory.SLEEP,</span>
+<span class="nc bnc" id="L389" title="All 2 branches missed.">            trend = if (irregularity &gt; 2.0) RiskTrend.DECLINING else RiskTrend.STABLE</span>
+        )
+    }
+    
+    /**
+     * Assesses stress-related risk
+     */
+    private fun assessStressRisk(stressData: List&lt;StressData&gt;): RiskIndicator {
+<span class="nc bnc" id="L397" title="All 2 branches missed.">        if (stressData.isEmpty()) {</span>
+<span class="nc" id="L398">            return RiskIndicator(</span>
+<span class="nc" id="L399">                name = &quot;Stress Level&quot;,</span>
+<span class="nc" id="L400">                riskLevel = 40,</span>
+<span class="nc" id="L401">                description = &quot;Insufficient stress data&quot;,</span>
+<span class="nc" id="L402">                category = RiskCategory.STRESS</span>
+            )
+        }
+        
+<span class="nc" id="L406">        val recentStress = stressData.takeLast(7).map { it.level.toFloat() }</span>
+<span class="nc" id="L407">        val averageStress = recentStress.average()</span>
+<span class="nc" id="L408">        val stressIncrease = recentStress.last() - recentStress.first()</span>
+        
+<span class="nc" id="L410">        val riskLevel = when {</span>
+<span class="nc bnc" id="L411" title="All 2 branches missed.">            averageStress &gt;= 8.0f -&gt; 85</span>
+<span class="nc bnc" id="L412" title="All 2 branches missed.">            averageStress &gt;= 7.0f -&gt; 70</span>
+<span class="nc bnc" id="L413" title="All 4 branches missed.">            averageStress &gt;= 6.0f &amp;&amp; stressIncrease &gt; 1.0f -&gt; 65</span>
+<span class="nc bnc" id="L414" title="All 2 branches missed.">            averageStress &gt;= 6.0f -&gt; 55</span>
+<span class="nc bnc" id="L415" title="All 4 branches missed.">            averageStress &gt;= 5.0f &amp;&amp; stressIncrease &gt; 0.5f -&gt; 50</span>
+<span class="nc" id="L416">            else -&gt; 30</span>
+        }.toInt()
+        
+<span class="nc" id="L419">        val description = when {</span>
+<span class="nc bnc" id="L420" title="All 2 branches missed.">            averageStress &gt;= 8.0f -&gt; &quot;Extremely high stress levels detected&quot;</span>
+<span class="nc bnc" id="L421" title="All 2 branches missed.">            averageStress &gt;= 7.0f -&gt; &quot;High stress detected in recent patterns&quot;</span>
+<span class="nc bnc" id="L422" title="All 2 branches missed.">            stressIncrease &gt; 1.0f -&gt; &quot;Rapid stress accumulation&quot;</span>
+<span class="nc" id="L423">            else -&gt; &quot;Stress levels manageable&quot;</span>
+        }
+        
+<span class="nc" id="L426">        return RiskIndicator(</span>
+<span class="nc" id="L427">            name = &quot;Stress Level&quot;,</span>
+<span class="nc" id="L428">            riskLevel = riskLevel,</span>
+<span class="nc" id="L429">            description = description,</span>
+<span class="nc" id="L430">            category = RiskCategory.STRESS,</span>
+<span class="nc bnc" id="L431" title="All 2 branches missed.">            trend = if (stressIncrease &gt; 0.5f) RiskTrend.DECLINING else RiskTrend.STABLE</span>
+        )
+    }
+    
+    /**
+     * Assesses social support risk
+     */
+    private fun assessSocialSupportRisk(moodEntries: List&lt;MoodEntry&gt;): RiskIndicator {
+        // Simplified - would check actual social activity data
+        // Assume low social activity if no recent mood improvement
+<span class="nc" id="L441">        val recentMoods = moodEntries.takeLast(14).map { it.mood.toFloat() }</span>
+<span class="nc bnc" id="L442" title="All 2 branches missed.">        val socialActivityScore = if (recentMoods.isEmpty()) 50.0 else {</span>
+            // Estimate social support based on mood stability/improvement
+<span class="nc" id="L444">            val moodVariance = calculateVariance(recentMoods)</span>
+<span class="nc" id="L445">            val moodTrend = recentMoods.last() - recentMoods.first()</span>
+<span class="nc" id="L446">            (50.0 - moodVariance * 10.0 + moodTrend * 5.0).coerceIn(0.0, 100.0)</span>
+        }
+        
+<span class="nc" id="L449">        val riskLevel = (100 - socialActivityScore).toInt()</span>
+        
+<span class="nc" id="L451">        val description = when {</span>
+<span class="nc bnc" id="L452" title="All 2 branches missed.">            riskLevel &gt;= 70 -&gt; &quot;Limited social interaction - increased isolation risk&quot;</span>
+<span class="nc bnc" id="L453" title="All 2 branches missed.">            riskLevel &gt;= 50 -&gt; &quot;Social support may be limited&quot;</span>
+<span class="nc" id="L454">            else -&gt; &quot;Social support appears adequate&quot;</span>
+        }
+        
+<span class="nc" id="L457">        return RiskIndicator(</span>
+<span class="nc" id="L458">            name = &quot;Social Support&quot;,</span>
+<span class="nc" id="L459">            riskLevel = riskLevel,</span>
+<span class="nc" id="L460">            description = description,</span>
+<span class="nc" id="L461">            category = RiskCategory.SOCIAL_SUPPORT</span>
+        )
+    }
+    
+    /**
+     * Assesses trigger exposure risk
+     */
+    private fun assessTriggerExposureRisk(): RiskIndicator {
+        // Simplified - would check against user's known triggers
+<span class="nc" id="L470">        val riskLevel = (Math.random() * 30 + 20).toInt() // Simulated 20-50 range</span>
+        
+<span class="nc" id="L472">        val description = when {</span>
+<span class="nc bnc" id="L473" title="All 2 branches missed.">            riskLevel &gt;= 40 -&gt; &quot;Some exposure to known triggers detected&quot;</span>
+<span class="nc" id="L474">            else -&gt; &quot;Low exposure to known triggers&quot;</span>
+        }
+        
+<span class="nc" id="L477">        return RiskIndicator(</span>
+<span class="nc" id="L478">            name = &quot;Trigger Exposure&quot;,</span>
+<span class="nc" id="L479">            riskLevel = riskLevel,</span>
+<span class="nc" id="L480">            description = description,</span>
+<span class="nc" id="L481">            category = RiskCategory.TRIGGER_EXPOSURE</span>
+        )
+    }
+    
+    /**
+     * Generates recommendations based on risk assessment
+     */
+    private fun generateRecommendations(
+        riskLevel: RiskLevel,
+        indicators: List&lt;RiskIndicator&gt;
+    ): List&lt;String&gt; {
+<span class="nc" id="L492">        val recommendations = mutableListOf&lt;String&gt;()</span>
+        
+<span class="nc bnc" id="L494" title="All 4 branches missed.">        when (riskLevel) {</span>
+            RiskLevel.CRITICAL -&gt; {
+<span class="nc" id="L496">                recommendations.add(&quot;Contact emergency support immediately&quot;)</span>
+<span class="nc" id="L497">                recommendations.add(&quot;Use safety plan coping strategies&quot;)</span>
+<span class="nc" id="L498">                recommendations.add(&quot;Notify support network&quot;)</span>
+            }
+            RiskLevel.HIGH -&gt; {
+<span class="nc" id="L501">                recommendations.add(&quot;Increase monitoring frequency&quot;)</span>
+<span class="nc" id="L502">                recommendations.add(&quot;Contact support person&quot;)</span>
+<span class="nc" id="L503">                recommendations.add(&quot;Engage in planned coping strategies&quot;)</span>
+            }
+            RiskLevel.MEDIUM -&gt; {
+<span class="nc" id="L506">                recommendations.add(&quot;Continue regular check-ins&quot;)</span>
+<span class="nc" id="L507">                recommendations.add(&quot;Monitor risk factors closely&quot;)</span>
+            }
+            RiskLevel.LOW -&gt; {
+<span class="nc" id="L510">                recommendations.add(&quot;Maintain current prevention strategies&quot;)</span>
+            }
+        }
+        
+        // Add specific recommendations based on high-risk indicators
+<span class="nc bnc" id="L515" title="All 2 branches missed.">        indicators.filter { it.riskLevel &gt;= 70 }.forEach { indicator -&gt;</span>
+<span class="nc bnc" id="L516" title="All 4 branches missed.">            when (indicator.category) {</span>
+<span class="nc" id="L517">                RiskCategory.SLEEP -&gt; recommendations.add(&quot;Prioritize sleep hygiene and consistent schedule&quot;)</span>
+<span class="nc" id="L518">                RiskCategory.STRESS -&gt; recommendations.add(&quot;Practice stress management techniques&quot;)</span>
+<span class="nc" id="L519">                RiskCategory.SOCIAL_SUPPORT -&gt; recommendations.add(&quot;Increase social connections&quot;)</span>
+                else -&gt; {}
+            }
+<span class="nc" id="L522">        }</span>
+        
+<span class="nc" id="L524">        return recommendations.distinct()</span>
+    }
+    
+    // Helper methods
+    private fun calculateSleepIrregularity(sleepData: List&lt;SleepData&gt;): Double {
+<span class="nc bnc" id="L529" title="All 2 branches missed.">        if (sleepData.size &lt; 2) return 0.0</span>
+<span class="nc" id="L530">        val hours = sleepData.map { it.hours }</span>
+<span class="nc" id="L531">        val average = hours.average()</span>
+<span class="nc" id="L532">        val variance = hours.map { (it - average) * (it - average) }.average()</span>
+<span class="nc" id="L533">        return Math.sqrt(variance)</span>
+    }
+    
+    private fun calculateVariance(values: List&lt;Float&gt;): Double {
+<span class="nc bnc" id="L537" title="All 2 branches missed.">        if (values.size &lt; 2) return 0.0</span>
+<span class="nc" id="L538">        val average = values.average()</span>
+<span class="nc" id="L539">        val variance = values.map { (it - average) * (it - average) }.average()</span>
+<span class="nc" id="L540">        return variance</span>
+    }
+}
+
+// Helper data classes for sleep and stress (would come from repositories in real implementation)
+<span class="nc" id="L545">data class SleepData(</span>
+<span class="nc" id="L546">    val date: Date,</span>
+<span class="nc" id="L547">    val hours: Double</span>
+)
+
+<span class="nc" id="L550">data class StressData(</span>
+<span class="nc" id="L551">    val date: Date,</span>
+<span class="nc" id="L552">    val level: Int // 1-10 scale</span>
+)
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

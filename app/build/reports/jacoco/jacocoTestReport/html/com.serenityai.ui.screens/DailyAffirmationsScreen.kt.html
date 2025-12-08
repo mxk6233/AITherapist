@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DailyAffirmationsScreen.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.screens</a> &gt; <span class="el_source">DailyAffirmationsScreen.kt</span></div><h1>DailyAffirmationsScreen.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.screens
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
+import java.text.SimpleDateFormat
+import java.util.*
+
+// Data classes for daily affirmations
+<span class="nc" id="L26">data class Affirmation(</span>
+<span class="nc" id="L27">    val id: String,</span>
+<span class="nc" id="L28">    val text: String,</span>
+<span class="nc" id="L29">    val category: AffirmationCategory,</span>
+<span class="nc" id="L30">    val timestamp: Long = System.currentTimeMillis(),</span>
+<span class="nc" id="L31">    val isFavorite: Boolean = false</span>
+<span class="nc" id="L32">)</span>
+
+<span class="nc" id="L34">enum class AffirmationCategory(</span>
+<span class="nc" id="L35">    val title: String,</span>
+<span class="nc" id="L36">    val icon: androidx.compose.ui.graphics.vector.ImageVector,</span>
+<span class="nc" id="L37">    val color: Color</span>
+) {
+<span class="nc" id="L39">    SELF_LOVE(&quot;Self-Love&quot;, Icons.Default.Favorite, Color(0xFFE91E63)),</span>
+<span class="nc" id="L40">    CONFIDENCE(&quot;Confidence&quot;, Icons.Default.Star, Color(0xFFFF9800)),</span>
+<span class="nc" id="L41">    PEACE(&quot;Peace&quot;, Icons.Default.Psychology, Color(0xFF2196F3)),</span>
+<span class="nc" id="L42">    SUCCESS(&quot;Success&quot;, Icons.Default.TrendingUp, Color(0xFF4CAF50)),</span>
+<span class="nc" id="L43">    GRATITUDE(&quot;Gratitude&quot;, Icons.Default.EmojiEmotions, Color(0xFF9C27B0)),</span>
+<span class="nc" id="L44">    STRENGTH(&quot;Strength&quot;, Icons.Default.FitnessCenter, Color(0xFFF44336)),</span>
+<span class="nc" id="L45">    HEALING(&quot;Healing&quot;, Icons.Default.LocalHospital, Color(0xFF00BCD4)),</span>
+<span class="nc" id="L46">    MINDFULNESS(&quot;Mindfulness&quot;, Icons.Default.Psychology, Color(0xFF8BC34A))</span>
+<span class="nc" id="L47">}</span>
+
+// Wrapper function for backward compatibility
+@Composable
+<span class="nc bnc" id="L51" title="All 10 branches missed.">fun DailyAffirmationsScreen(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">    DailyAffirmationsScreenDetailed(onNavigateBack = onNavigateBack)</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L57" title="All 10 branches missed.">fun DailyAffirmationsScreenDetailed(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc" id="L58">    var selectedCategory by remember { mutableStateOf&lt;AffirmationCategory?&gt;(null) }</span>
+<span class="nc" id="L59">    var currentAffirmation by remember { mutableStateOf&lt;Affirmation?&gt;(null) }</span>
+<span class="nc" id="L60">    var showAllAffirmations by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L61">    var favoriteAffirmations by remember { mutableStateOf&lt;List&lt;Affirmation&gt;&gt;(emptyList()) }</span>
+    
+<span class="nc" id="L63">    val allAffirmations = remember { generateAffirmations() }</span>
+    
+    // Auto-rotate affirmations
+<span class="nc" id="L66">    LaunchedEffect(Unit) {</span>
+<span class="nc" id="L67">        while (true) {</span>
+<span class="nc" id="L68">            delay(10000) // Change every 10 seconds</span>
+<span class="nc bnc" id="L69" title="All 4 branches missed.">            if (!showAllAffirmations &amp;&amp; selectedCategory == null) {</span>
+<span class="nc" id="L70">                currentAffirmation = allAffirmations.random()</span>
+            }
+        }
+    }
+
+<span class="nc bnc" id="L75" title="All 2 branches missed.">    Scaffold(</span>
+<span class="nc" id="L76">        topBar = {</span>
+<span class="nc bnc" id="L77" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L78" title="All 8 branches missed.">                title = { Text(&quot;Daily Affirmations&quot;) },</span>
+<span class="nc" id="L79">                navigationIcon = {</span>
+<span class="nc bnc" id="L80" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L81" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L82">                    }</span>
+<span class="nc" id="L83">                },</span>
+<span class="nc" id="L84">                actions = {</span>
+<span class="nc bnc" id="L85" title="All 10 branches missed.">                    IconButton(onClick = { showAllAffirmations = !showAllAffirmations }) {</span>
+<span class="nc bnc" id="L86" title="All 8 branches missed.">                        Icon(</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">                            if (showAllAffirmations) Icons.Default.Close else Icons.Default.List,</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">                            contentDescription = if (showAllAffirmations) &quot;Close&quot; else &quot;Show All&quot;</span>
+<span class="nc" id="L89">                        )</span>
+<span class="nc" id="L90">                    }</span>
+<span class="nc" id="L91">                },</span>
+<span class="nc" id="L92">                colors = TopAppBarDefaults.topAppBarColors(</span>
+<span class="nc" id="L93">                    containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+                )
+<span class="nc" id="L95">            )</span>
+<span class="nc" id="L96">        }</span>
+<span class="nc" id="L97">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L98" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L99">            modifier = Modifier</span>
+<span class="nc" id="L100">                .fillMaxSize()</span>
+<span class="nc" id="L101">                .padding(paddingValues)</span>
+        ) {
+<span class="nc bnc" id="L103" title="All 2 branches missed.">            if (!showAllAffirmations) {</span>
+                // Category selector
+<span class="nc" id="L105">                CategorySelector(</span>
+<span class="nc" id="L106">                    selectedCategory = selectedCategory,</span>
+<span class="nc" id="L107">                    onCategorySelected = { category -&gt;</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">                        selectedCategory = if (selectedCategory == category) null else category</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">                        currentAffirmation = if (selectedCategory == category) {</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">                            allAffirmations.filter { it.category == category }.random()</span>
+                        } else {
+<span class="nc" id="L112">                            allAffirmations.random()</span>
+                        }
+<span class="nc" id="L114">                    }</span>
+                )
+                
+<span class="nc" id="L117">                Spacer(modifier = Modifier.height(16.dp))</span>
+                
+                // Current affirmation display
+<span class="nc" id="L120">                CurrentAffirmationCard(</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">                    affirmation = currentAffirmation ?: allAffirmations.random(),</span>
+<span class="nc" id="L122">                    onFavoriteToggle = { affirmation -&gt;</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">                        favoriteAffirmations = if (favoriteAffirmations.contains(affirmation)) {</span>
+<span class="nc" id="L124">                            favoriteAffirmations - affirmation</span>
+                        } else {
+<span class="nc" id="L126">                            favoriteAffirmations + affirmation</span>
+                        }
+<span class="nc" id="L128">                    },</span>
+<span class="nc" id="L129">                    isFavorite = favoriteAffirmations.contains(currentAffirmation)</span>
+                )
+                
+<span class="nc" id="L132">                Spacer(modifier = Modifier.height(16.dp))</span>
+                
+                // Action buttons
+<span class="nc" id="L135">                Row(</span>
+<span class="nc" id="L136">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L137">                    horizontalArrangement = Arrangement.SpaceEvenly</span>
+                ) {
+<span class="nc" id="L139">                    Button(</span>
+<span class="nc" id="L140">                        onClick = {</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">                            currentAffirmation = if (selectedCategory != null) {</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">                                allAffirmations.filter { it.category == selectedCategory }.random()</span>
+                            } else {
+<span class="nc" id="L144">                                allAffirmations.random()</span>
+                            }
+<span class="nc" id="L146">                        },</span>
+<span class="nc" id="L147">                        modifier = Modifier.weight(1f)</span>
+<span class="nc" id="L148">                    ) {</span>
+<span class="nc bnc" id="L149" title="All 6 branches missed.">                        Icon(Icons.Default.Refresh, contentDescription = null)</span>
+<span class="nc" id="L150">                        Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">                        Text(&quot;New Affirmation&quot;)</span>
+<span class="nc" id="L152">                    }</span>
+                    
+<span class="nc" id="L154">                    Spacer(modifier = Modifier.width(16.dp))</span>
+                    
+<span class="nc" id="L156">                    OutlinedButton(</span>
+<span class="nc" id="L157">                        onClick = { showAllAffirmations = true },</span>
+<span class="nc" id="L158">                        modifier = Modifier.weight(1f)</span>
+<span class="nc" id="L159">                    ) {</span>
+<span class="nc bnc" id="L160" title="All 6 branches missed.">                        Icon(Icons.Default.List, contentDescription = null)</span>
+<span class="nc" id="L161">                        Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">                        Text(&quot;Browse All&quot;)</span>
+<span class="nc" id="L163">                    }</span>
+<span class="nc" id="L164">                }</span>
+<span class="nc" id="L165">            } else {</span>
+                // All affirmations list
+<span class="nc" id="L167">                AllAffirmationsList(</span>
+<span class="nc" id="L168">                    affirmations = allAffirmations,</span>
+<span class="nc" id="L169">                    favoriteAffirmations = favoriteAffirmations,</span>
+<span class="nc" id="L170">                    onFavoriteToggle = { affirmation -&gt;</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">                        favoriteAffirmations = if (favoriteAffirmations.contains(affirmation)) {</span>
+<span class="nc" id="L172">                            favoriteAffirmations - affirmation</span>
+                        } else {
+<span class="nc" id="L174">                            favoriteAffirmations + affirmation</span>
+                        }
+<span class="nc" id="L176">                    }</span>
+                )
+            }
+<span class="nc" id="L179">        }</span>
+<span class="nc" id="L180">    }</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CategorySelector(
+    selectedCategory: AffirmationCategory?,
+    onCategorySelected: (AffirmationCategory) -&gt; Unit
+<span class="nc bnc" id="L188" title="All 14 branches missed.">) {</span>
+<span class="nc" id="L189">    Column(</span>
+<span class="nc" id="L190">        verticalArrangement = Arrangement.spacedBy(8.dp)</span>
+    ) {
+<span class="nc" id="L192">        val categories = AffirmationCategory.values()</span>
+<span class="nc" id="L193">        val categoryRows = listOf(</span>
+<span class="nc" id="L194">            categories.slice(0..3),</span>
+<span class="nc" id="L195">            categories.slice(4..7)</span>
+        )
+        
+<span class="nc" id="L198">        categoryRows.forEach { categoryRow -&gt;</span>
+<span class="nc" id="L199">            Row(</span>
+<span class="nc" id="L200">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L201">                horizontalArrangement = Arrangement.spacedBy(8.dp)</span>
+            ) {
+<span class="nc" id="L203">                categoryRow.forEach { category -&gt;</span>
+<span class="nc" id="L204">                    FilterChip(</span>
+<span class="nc" id="L205">                        onClick = { onCategorySelected(category) },</span>
+<span class="nc" id="L206">                        label = { </span>
+<span class="nc bnc" id="L207" title="All 6 branches missed.">                            Row(</span>
+<span class="nc" id="L208">                                verticalAlignment = Alignment.CenterVertically</span>
+                            ) {
+<span class="nc" id="L210">                                Icon(</span>
+<span class="nc" id="L211">                                    category.icon,</span>
+<span class="nc" id="L212">                                    contentDescription = null,</span>
+<span class="nc" id="L213">                                    modifier = Modifier.size(16.dp)</span>
+                                )
+<span class="nc" id="L215">                                Spacer(modifier = Modifier.width(4.dp))</span>
+<span class="nc" id="L216">                                Text(category.title)</span>
+<span class="nc" id="L217">                            }</span>
+<span class="nc" id="L218">                        },</span>
+<span class="nc bnc" id="L219" title="All 4 branches missed.">                        selected = selectedCategory == category,</span>
+<span class="nc" id="L220">                        modifier = Modifier.weight(1f)</span>
+                    )
+<span class="nc" id="L222">                }</span>
+<span class="nc" id="L223">            }</span>
+<span class="nc" id="L224">        }</span>
+<span class="nc" id="L225">    }</span>
+<span class="nc bnc" id="L226" title="All 2 branches missed.">}</span>
+
+@Composable
+fun CurrentAffirmationCard(
+    affirmation: Affirmation,
+    onFavoriteToggle: (Affirmation) -&gt; Unit,
+    isFavorite: Boolean
+<span class="nc bnc" id="L233" title="All 18 branches missed.">) {</span>
+<span class="nc bnc" id="L234" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L235">        modifier = Modifier</span>
+<span class="nc" id="L236">            .fillMaxWidth()</span>
+<span class="nc" id="L237">            .padding(16.dp),</span>
+<span class="nc" id="L238">        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)</span>
+<span class="nc" id="L239">    ) {</span>
+<span class="nc bnc" id="L240" title="All 6 branches missed.">        Box(</span>
+<span class="nc" id="L241">            modifier = Modifier</span>
+<span class="nc" id="L242">                .fillMaxWidth()</span>
+<span class="nc" id="L243">                .background(</span>
+<span class="nc" id="L244">                    Brush.verticalGradient(</span>
+<span class="nc" id="L245">                        colors = listOf(</span>
+<span class="nc" id="L246">                            affirmation.category.color.copy(alpha = 0.1f),</span>
+<span class="nc" id="L247">                            affirmation.category.color.copy(alpha = 0.05f)</span>
+                        )
+                    )
+                )
+<span class="nc" id="L251">                .padding(24.dp)</span>
+        ) {
+<span class="nc" id="L253">            Column(</span>
+<span class="nc" id="L254">                horizontalAlignment = Alignment.CenterHorizontally</span>
+            ) {
+                // Category header
+<span class="nc" id="L257">                Row(</span>
+<span class="nc" id="L258">                    verticalAlignment = Alignment.CenterVertically,</span>
+<span class="nc" id="L259">                    modifier = Modifier.padding(bottom = 16.dp)</span>
+                ) {
+<span class="nc" id="L261">                    Icon(</span>
+<span class="nc" id="L262">                        affirmation.category.icon,</span>
+<span class="nc" id="L263">                        contentDescription = null,</span>
+<span class="nc" id="L264">                        tint = affirmation.category.color,</span>
+<span class="nc" id="L265">                        modifier = Modifier.size(20.dp)</span>
+                    )
+<span class="nc" id="L267">                    Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L268">                    Text(</span>
+<span class="nc" id="L269">                        text = affirmation.category.title,</span>
+<span class="nc" id="L270">                        fontSize = 14.sp,</span>
+<span class="nc" id="L271">                        fontWeight = FontWeight.Medium,</span>
+<span class="nc" id="L272">                        color = affirmation.category.color</span>
+                    )
+<span class="nc" id="L274">                }</span>
+                
+                // Affirmation text
+<span class="nc" id="L277">                Text(</span>
+<span class="nc" id="L278">                    text = affirmation.text,</span>
+<span class="nc" id="L279">                    fontSize = 20.sp,</span>
+<span class="nc" id="L280">                    fontWeight = FontWeight.Medium,</span>
+<span class="nc" id="L281">                    textAlign = TextAlign.Center,</span>
+<span class="nc" id="L282">                    lineHeight = 28.sp,</span>
+<span class="nc" id="L283">                    modifier = Modifier.padding(vertical = 16.dp)</span>
+                )
+                
+                // Favorite button
+<span class="nc" id="L287">                IconButton(</span>
+<span class="nc" id="L288">                    onClick = { onFavoriteToggle(affirmation) },</span>
+<span class="nc" id="L289">                    modifier = Modifier.align(Alignment.End)</span>
+<span class="nc" id="L290">                ) {</span>
+<span class="nc bnc" id="L291" title="All 8 branches missed.">                    Icon(</span>
+<span class="nc bnc" id="L292" title="All 2 branches missed.">                        if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,</span>
+<span class="nc bnc" id="L293" title="All 2 branches missed.">                        contentDescription = if (isFavorite) &quot;Remove from favorites&quot; else &quot;Add to favorites&quot;,</span>
+<span class="nc bnc" id="L294" title="All 2 branches missed.">                        tint = if (isFavorite) Color(0xFFE91E63) else MaterialTheme.colorScheme.onSurfaceVariant</span>
+<span class="nc" id="L295">                    )</span>
+<span class="nc" id="L296">                }</span>
+<span class="nc" id="L297">            }</span>
+<span class="nc" id="L298">        }</span>
+<span class="nc" id="L299">    }</span>
+<span class="nc bnc" id="L300" title="All 2 branches missed.">}</span>
+
+@Composable
+fun AllAffirmationsList(
+    affirmations: List&lt;Affirmation&gt;,
+    favoriteAffirmations: List&lt;Affirmation&gt;,
+    onFavoriteToggle: (Affirmation) -&gt; Unit
+<span class="nc bnc" id="L307" title="All 18 branches missed.">) {</span>
+<span class="nc bnc" id="L308" title="All 2 branches missed.">    LazyColumn(</span>
+<span class="nc" id="L309">        modifier = Modifier.padding(16.dp),</span>
+<span class="nc bnc" id="L310" title="All 2 branches missed.">        verticalArrangement = Arrangement.spacedBy(12.dp)</span>
+<span class="nc" id="L311">    ) {</span>
+<span class="nc" id="L312">        val groupedAffirmations = affirmations.groupBy { it.category }</span>
+        
+<span class="nc" id="L314">        groupedAffirmations.forEach { (category, categoryAffirmations) -&gt;</span>
+<span class="nc" id="L315">            item {</span>
+<span class="nc bnc" id="L316" title="All 8 branches missed.">                Text(</span>
+<span class="nc" id="L317">                    text = category.title,</span>
+<span class="nc" id="L318">                    fontSize = 18.sp,</span>
+<span class="nc" id="L319">                    fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L320">                    color = category.color,</span>
+<span class="nc" id="L321">                    modifier = Modifier.padding(vertical = 8.dp)</span>
+<span class="nc" id="L322">                )</span>
+<span class="nc" id="L323">            }</span>
+            
+<span class="nc" id="L325">            items(categoryAffirmations) { affirmation -&gt;</span>
+                AffirmationListItem(
+                    affirmation = affirmation,
+                    isFavorite = favoriteAffirmations.contains(affirmation),
+<span class="nc" id="L329">                    onFavoriteToggle = { onFavoriteToggle(affirmation) }</span>
+                )
+            }
+<span class="nc" id="L332">        }</span>
+<span class="nc" id="L333">    }</span>
+<span class="nc bnc" id="L334" title="All 2 branches missed.">}</span>
+
+@Composable
+fun AffirmationListItem(
+    affirmation: Affirmation,
+    isFavorite: Boolean,
+    onFavoriteToggle: (Affirmation) -&gt; Unit
+<span class="nc bnc" id="L341" title="All 18 branches missed.">) {</span>
+<span class="nc bnc" id="L342" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L343">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L344">        colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L345">            containerColor = MaterialTheme.colorScheme.surface</span>
+        )
+<span class="nc" id="L347">    ) {</span>
+<span class="nc bnc" id="L348" title="All 6 branches missed.">        Row(</span>
+<span class="nc" id="L349">            modifier = Modifier.padding(16.dp),</span>
+<span class="nc" id="L350">            verticalAlignment = Alignment.CenterVertically</span>
+        ) {
+<span class="nc" id="L352">            Icon(</span>
+<span class="nc" id="L353">                affirmation.category.icon,</span>
+<span class="nc" id="L354">                contentDescription = null,</span>
+<span class="nc" id="L355">                tint = affirmation.category.color,</span>
+<span class="nc" id="L356">                modifier = Modifier.size(24.dp)</span>
+            )
+            
+<span class="nc" id="L359">            Spacer(modifier = Modifier.width(12.dp))</span>
+            
+<span class="nc" id="L361">            Text(</span>
+<span class="nc" id="L362">                text = affirmation.text,</span>
+<span class="nc" id="L363">                fontSize = 16.sp,</span>
+<span class="nc" id="L364">                modifier = Modifier.weight(1f)</span>
+            )
+            
+<span class="nc" id="L367">            IconButton(</span>
+<span class="nc" id="L368">                onClick = { onFavoriteToggle(affirmation) }</span>
+<span class="nc" id="L369">            ) {</span>
+<span class="nc bnc" id="L370" title="All 8 branches missed.">                Icon(</span>
+<span class="nc bnc" id="L371" title="All 2 branches missed.">                    if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,</span>
+<span class="nc bnc" id="L372" title="All 2 branches missed.">                    contentDescription = if (isFavorite) &quot;Remove from favorites&quot; else &quot;Add to favorites&quot;,</span>
+<span class="nc bnc" id="L373" title="All 2 branches missed.">                    tint = if (isFavorite) Color(0xFFE91E63) else MaterialTheme.colorScheme.onSurfaceVariant</span>
+<span class="nc" id="L374">                )</span>
+<span class="nc" id="L375">            }</span>
+<span class="nc" id="L376">        }</span>
+<span class="nc" id="L377">    }</span>
+<span class="nc bnc" id="L378" title="All 2 branches missed.">}</span>
+
+fun generateAffirmations(): List&lt;Affirmation&gt; {
+<span class="nc" id="L381">    return listOf(</span>
+        // Self-Love Affirmations
+<span class="nc" id="L383">        Affirmation(&quot;1&quot;, &quot;I am worthy of love and respect.&quot;, AffirmationCategory.SELF_LOVE),</span>
+<span class="nc" id="L384">        Affirmation(&quot;2&quot;, &quot;I accept myself completely as I am.&quot;, AffirmationCategory.SELF_LOVE),</span>
+<span class="nc" id="L385">        Affirmation(&quot;3&quot;, &quot;I am enough, just as I am.&quot;, AffirmationCategory.SELF_LOVE),</span>
+<span class="nc" id="L386">        Affirmation(&quot;4&quot;, &quot;I treat myself with kindness and compassion.&quot;, AffirmationCategory.SELF_LOVE),</span>
+        
+        // Confidence Affirmations
+<span class="nc" id="L389">        Affirmation(&quot;5&quot;, &quot;I believe in my abilities and trust my judgment.&quot;, AffirmationCategory.CONFIDENCE),</span>
+<span class="nc" id="L390">        Affirmation(&quot;6&quot;, &quot;I am capable of achieving my goals.&quot;, AffirmationCategory.CONFIDENCE),</span>
+<span class="nc" id="L391">        Affirmation(&quot;7&quot;, &quot;I face challenges with courage and determination.&quot;, AffirmationCategory.CONFIDENCE),</span>
+<span class="nc" id="L392">        Affirmation(&quot;8&quot;, &quot;I am confident in my unique gifts and talents.&quot;, AffirmationCategory.CONFIDENCE),</span>
+        
+        // Peace Affirmations
+<span class="nc" id="L395">        Affirmation(&quot;9&quot;, &quot;I choose peace over worry and anxiety.&quot;, AffirmationCategory.PEACE),</span>
+<span class="nc" id="L396">        Affirmation(&quot;10&quot;, &quot;I am calm and centered in this moment.&quot;, AffirmationCategory.PEACE),</span>
+<span class="nc" id="L397">        Affirmation(&quot;11&quot;, &quot;I release what I cannot control and focus on what I can.&quot;, AffirmationCategory.PEACE),</span>
+<span class="nc" id="L398">        Affirmation(&quot;12&quot;, &quot;I find peace within myself.&quot;, AffirmationCategory.PEACE),</span>
+        
+        // Success Affirmations
+<span class="nc" id="L401">        Affirmation(&quot;13&quot;, &quot;I am successful in all areas of my life.&quot;, AffirmationCategory.SUCCESS),</span>
+<span class="nc" id="L402">        Affirmation(&quot;14&quot;, &quot;I attract opportunities that align with my goals.&quot;, AffirmationCategory.SUCCESS),</span>
+<span class="nc" id="L403">        Affirmation(&quot;15&quot;, &quot;I am persistent and never give up on my dreams.&quot;, AffirmationCategory.SUCCESS),</span>
+<span class="nc" id="L404">        Affirmation(&quot;16&quot;, &quot;I celebrate my achievements, big and small.&quot;, AffirmationCategory.SUCCESS),</span>
+        
+        // Gratitude Affirmations
+<span class="nc" id="L407">        Affirmation(&quot;17&quot;, &quot;I am grateful for all the blessings in my life.&quot;, AffirmationCategory.GRATITUDE),</span>
+<span class="nc" id="L408">        Affirmation(&quot;18&quot;, &quot;I appreciate the small moments of joy each day.&quot;, AffirmationCategory.GRATITUDE),</span>
+<span class="nc" id="L409">        Affirmation(&quot;19&quot;, &quot;I find something positive in every situation.&quot;, AffirmationCategory.GRATITUDE),</span>
+<span class="nc" id="L410">        Affirmation(&quot;20&quot;, &quot;I am thankful for my growth and learning.&quot;, AffirmationCategory.GRATITUDE),</span>
+        
+        // Strength Affirmations
+<span class="nc" id="L413">        Affirmation(&quot;21&quot;, &quot;I am stronger than I think and braver than I feel.&quot;, AffirmationCategory.STRENGTH),</span>
+<span class="nc" id="L414">        Affirmation(&quot;22&quot;, &quot;I overcome obstacles with resilience and determination.&quot;, AffirmationCategory.STRENGTH),</span>
+<span class="nc" id="L415">        Affirmation(&quot;23&quot;, &quot;I have the power to create positive change.&quot;, AffirmationCategory.STRENGTH),</span>
+<span class="nc" id="L416">        Affirmation(&quot;24&quot;, &quot;I am resilient and bounce back from setbacks.&quot;, AffirmationCategory.STRENGTH),</span>
+        
+        // Healing Affirmations
+<span class="nc" id="L419">        Affirmation(&quot;25&quot;, &quot;I am healing and growing every day.&quot;, AffirmationCategory.HEALING),</span>
+<span class="nc" id="L420">        Affirmation(&quot;26&quot;, &quot;I release past pain and embrace my future.&quot;, AffirmationCategory.HEALING),</span>
+<span class="nc" id="L421">        Affirmation(&quot;27&quot;, &quot;I am worthy of healing and happiness.&quot;, AffirmationCategory.HEALING),</span>
+<span class="nc" id="L422">        Affirmation(&quot;28&quot;, &quot;I trust in my body's ability to heal.&quot;, AffirmationCategory.HEALING),</span>
+        
+        // Mindfulness Affirmations
+<span class="nc" id="L425">        Affirmation(&quot;29&quot;, &quot;I am present in this moment and fully aware.&quot;, AffirmationCategory.MINDFULNESS),</span>
+<span class="nc" id="L426">        Affirmation(&quot;30&quot;, &quot;I observe my thoughts without judgment.&quot;, AffirmationCategory.MINDFULNESS),</span>
+<span class="nc" id="L427">        Affirmation(&quot;31&quot;, &quot;I breathe deeply and find calm within.&quot;, AffirmationCategory.MINDFULNESS),</span>
+<span class="nc" id="L428">        Affirmation(&quot;32&quot;, &quot;I am mindful of my actions and their impact.&quot;, AffirmationCategory.MINDFULNESS)</span>
+    )
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

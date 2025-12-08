@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 1: Friend Management - Validates Core UC31 Functionality" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:07" hostname="Mohammads-MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="UC31-REQ-2: System MUST accept friend requests" classname="com.serenityai.tests.unit.usecases.uc31_social_support.SocialSupportNetworkIntegrationUseCaseUnitTests$FriendManagementTests" time="0.0"/>
+  <testcase name="UC31-REQ-1: System MUST send friend requests" classname="com.serenityai.tests.unit.usecases.uc31_social_support.SocialSupportNetworkIntegrationUseCaseUnitTests$FriendManagementTests" time="0.0"/>
+  <testcase name="UC31-REQ-3: System MUST remove friends" classname="com.serenityai.tests.unit.usecases.uc31_social_support.SocialSupportNetworkIntegrationUseCaseUnitTests$FriendManagementTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

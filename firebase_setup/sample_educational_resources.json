@@ -1,0 +1,179 @@
+[
+  {
+    "title": "Understanding Anxiety: A Comprehensive Guide",
+    "description": "Learn about anxiety disorders, symptoms, and evidence-based treatment approaches. This comprehensive guide covers everything from recognizing anxiety to managing symptoms effectively.",
+    "category": "Anxiety Management",
+    "format": "TEXT",
+    "url": "https://example.com/anxiety-guide",
+    "duration": 15,
+    "tags": ["anxiety", "mental health", "education", "guide", "symptoms", "treatment"],
+    "difficulty": "BEGINNER",
+    "relevanceScore": 85.0
+  },
+  {
+    "title": "Mindfulness Meditation for Beginners",
+    "description": "Step-by-step video guide to starting your mindfulness practice. Learn breathing techniques, body scanning, and present-moment awareness exercises.",
+    "category": "Mindfulness",
+    "format": "VIDEO",
+    "url": "https://example.com/mindfulness-video",
+    "duration": 20,
+    "tags": ["mindfulness", "meditation", "video", "beginners", "breathing", "relaxation"],
+    "difficulty": "BEGINNER",
+    "relevanceScore": 90.0
+  },
+  {
+    "title": "CBT Techniques for Negative Thoughts",
+    "description": "Learn cognitive behavioral therapy techniques to challenge and reframe negative thinking patterns. Includes practical exercises and worksheets.",
+    "category": "Cognitive Behavioral Therapy",
+    "format": "TEXT",
+    "url": "https://example.com/cbt-techniques",
+    "duration": 25,
+    "tags": ["CBT", "cognitive therapy", "negative thoughts", "reframing", "therapy"],
+    "difficulty": "INTERMEDIATE",
+    "relevanceScore": 80.0
+  },
+  {
+    "title": "Guided Breathing Exercise for Stress Relief",
+    "description": "Audio-guided breathing exercise for stress relief and relaxation. Perfect for daily practice to reduce anxiety and improve focus.",
+    "category": "Stress Relief",
+    "format": "AUDIO",
+    "url": "https://example.com/breathing-audio",
+    "duration": 10,
+    "tags": ["breathing", "stress relief", "relaxation", "audio", "meditation"],
+    "difficulty": "BEGINNER",
+    "relevanceScore": 88.0
+  },
+  {
+    "title": "Building a Self-Care Routine",
+    "description": "Practical guide to creating and maintaining a sustainable self-care practice. Learn how to prioritize your wellbeing and build healthy habits.",
+    "category": "Self-Care",
+    "format": "TEXT",
+    "url": "https://example.com/self-care",
+    "duration": 12,
+    "tags": ["self-care", "routine", "wellness", "habits", "mental health"],
+    "difficulty": "BEGINNER",
+    "relevanceScore": 75.0
+  },
+  {
+    "title": "Managing Depression: A Practical Guide",
+    "description": "Comprehensive guide to understanding depression, recognizing symptoms, and exploring treatment options including therapy and lifestyle changes.",
+    "category": "Depression Support",
+    "format": "TEXT",
+    "url": "https://example.com/depression-guide",
+    "duration": 18,
+    "tags": ["depression", "mental health", "treatment", "symptoms", "therapy"],
+    "difficulty": "BEGINNER",
+    "relevanceScore": 82.0
+  },
+  {
+    "title": "Progressive Muscle Relaxation",
+    "description": "Video tutorial on progressive muscle relaxation technique. Learn to systematically tense and relax muscle groups to reduce physical tension and stress.",
+    "category": "Stress Relief",
+    "format": "VIDEO",
+    "url": "https://example.com/muscle-relaxation-video",
+    "duration": 15,
+    "tags": ["relaxation", "muscle relaxation", "stress", "video", "technique"],
+    "difficulty": "BEGINNER",
+    "relevanceScore": 77.0
+  },
+  {
+    "title": "Advanced CBT: Thought Challenging Techniques",
+    "description": "Deep dive into advanced cognitive behavioral therapy techniques for challenging deeply ingrained negative thought patterns.",
+    "category": "Cognitive Behavioral Therapy",
+    "format": "TEXT",
+    "url": "https://example.com/advanced-cbt",
+    "duration": 30,
+    "tags": ["CBT", "advanced", "thought patterns", "therapy", "cognitive"],
+    "difficulty": "ADVANCED",
+    "relevanceScore": 70.0
+  },
+  {
+    "title": "Sleep Hygiene: Improving Your Sleep Quality",
+    "description": "Learn evidence-based strategies for improving sleep quality, including sleep schedules, bedtime routines, and environmental factors.",
+    "category": "Sleep",
+    "format": "TEXT",
+    "url": "https://example.com/sleep-hygiene",
+    "duration": 14,
+    "tags": ["sleep", "sleep hygiene", "wellness", "health", "routine"],
+    "difficulty": "BEGINNER",
+    "relevanceScore": 79.0
+  },
+  {
+    "title": "Mindful Walking Meditation",
+    "description": "Audio guide for mindful walking meditation. Practice mindfulness while moving, perfect for those who find sitting meditation challenging.",
+    "category": "Mindfulness",
+    "format": "AUDIO",
+    "url": "https://example.com/walking-meditation-audio",
+    "duration": 12,
+    "tags": ["mindfulness", "walking", "meditation", "audio", "movement"],
+    "difficulty": "BEGINNER",
+    "relevanceScore": 73.0
+  },
+  {
+    "title": "Building Healthy Relationships",
+    "description": "Guide to developing and maintaining healthy relationships. Learn communication skills, boundary setting, and conflict resolution strategies.",
+    "category": "Relationships",
+    "format": "TEXT",
+    "url": "https://example.com/healthy-relationships",
+    "duration": 20,
+    "tags": ["relationships", "communication", "boundaries", "conflict resolution"],
+    "difficulty": "INTERMEDIATE",
+    "relevanceScore": 76.0
+  },
+  {
+    "title": "Growth Mindset: Developing Resilience",
+    "description": "Learn how to develop a growth mindset and build resilience. Transform challenges into opportunities for personal growth.",
+    "category": "Mindset & Growth",
+    "format": "TEXT",
+    "url": "https://example.com/growth-mindset",
+    "duration": 16,
+    "tags": ["growth mindset", "resilience", "personal growth", "motivation"],
+    "difficulty": "INTERMEDIATE",
+    "relevanceScore": 81.0
+  },
+  {
+    "title": "Coping Strategies for Panic Attacks",
+    "description": "Practical techniques for managing panic attacks in the moment. Learn grounding techniques, breathing exercises, and prevention strategies.",
+    "category": "Anxiety Management",
+    "format": "TEXT",
+    "url": "https://example.com/panic-attacks-coping",
+    "duration": 13,
+    "tags": ["panic attacks", "anxiety", "coping", "grounding", "breathing"],
+    "difficulty": "BEGINNER",
+    "relevanceScore": 87.0
+  },
+  {
+    "title": "Yoga for Mental Health",
+    "description": "Video series demonstrating yoga poses and sequences specifically designed to reduce anxiety, improve mood, and enhance mental wellbeing.",
+    "category": "Self-Care",
+    "format": "VIDEO",
+    "url": "https://example.com/yoga-mental-health-video",
+    "duration": 25,
+    "tags": ["yoga", "mental health", "exercise", "wellness", "video"],
+    "difficulty": "BEGINNER",
+    "relevanceScore": 74.0
+  },
+  {
+    "title": "Journaling for Emotional Processing",
+    "description": "Learn how to use journaling as a tool for emotional processing, self-reflection, and mental clarity. Includes prompts and techniques.",
+    "category": "Self-Care",
+    "format": "TEXT",
+    "url": "https://example.com/journaling-guide",
+    "duration": 10,
+    "tags": ["journaling", "emotional processing", "self-reflection", "writing"],
+    "difficulty": "BEGINNER",
+    "relevanceScore": 72.0
+  },
+  {
+    "title": "Understanding and Managing Stress",
+    "description": "Comprehensive guide to understanding stress, its effects on the body and mind, and evidence-based strategies for stress management.",
+    "category": "Stress Relief",
+    "format": "TEXT",
+    "url": "https://example.com/stress-management",
+    "duration": 17,
+    "tags": ["stress", "stress management", "mental health", "wellness"],
+    "difficulty": "BEGINNER",
+    "relevanceScore": 83.0
+  }
+]
+

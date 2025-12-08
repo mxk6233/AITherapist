@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 4: Circle Management - Validates Circle Retrieval Functionality" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:07" hostname="Mohammads-MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="UC39-REQ-13: System MUST filter circles by topic" classname="com.serenityai.tests.unit.usecases.uc39_community_support.CommunitySupportCirclesUseCaseUnitTests$CircleManagementTests" time="0.0"/>
+  <testcase name="UC39-REQ-11: System MUST retrieve user's support circles" classname="com.serenityai.tests.unit.usecases.uc39_community_support.CommunitySupportCirclesUseCaseUnitTests$CircleManagementTests" time="0.001"/>
+  <testcase name="UC39-REQ-12: System MUST retrieve available public circles" classname="com.serenityai.tests.unit.usecases.uc39_community_support.CommunitySupportCirclesUseCaseUnitTests$CircleManagementTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VoiceEnabledTherapyUseCase.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.usecases</a> &gt; <span class="el_source">VoiceEnabledTherapyUseCase.kt</span></div><h1>VoiceEnabledTherapyUseCase.kt</h1><pre class="source lang-java linenums">package com.serenityai.usecases
+
+import com.serenityai.data.models.*
+import java.util.Date
+
+/** UC38: Voice-enabled therapy and journaling module for voice-based therapy sessions with speech recognition and text-to-speech. */
+<span class="nc" id="L7">class VoiceEnabledTherapyUseCase {</span>
+    
+<span class="nc" id="L9">    private val activeVoiceSessions = mutableMapOf&lt;String, VoiceSession&gt;()</span>
+    
+    /**
+     * Starts a new voice therapy session
+     * 
+     * @param userId User ID
+     * @param language Language code (e.g., &quot;en-US&quot;, &quot;es-ES&quot;)
+     * @return VoiceSession object
+     */
+<span class="nc" id="L18">    fun startVoiceSession(</span>
+        userId: String,
+<span class="nc" id="L20">        language: String = &quot;en-US&quot;</span>
+    ): VoiceSession {
+<span class="nc" id="L22">        val session = VoiceSession(</span>
+<span class="nc" id="L23">            id = &quot;voice_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L24">            userId = userId,</span>
+<span class="nc" id="L25">            language = language,</span>
+<span class="nc" id="L26">            status = VoiceSessionStatus.ACTIVE,</span>
+<span class="nc" id="L27">            startedAt = Date(),</span>
+<span class="nc" id="L28">            messages = emptyList(),</span>
+<span class="nc" id="L29">            duration = 0</span>
+        )
+        
+<span class="nc" id="L32">        activeVoiceSessions[session.id] = session</span>
+<span class="nc" id="L33">        return session</span>
+    }
+    
+    /**
+     * Processes voice input and generates AI response
+     * 
+     * @param sessionId Voice session ID
+     * @param audioData Audio data (in production, would be actual audio bytes)
+     * @return VoiceMessageResponse with transcribed text and AI response
+     */
+    fun processVoiceInput(
+        sessionId: String,
+        audioData: ByteArray
+    ): VoiceMessageResponse {
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        val session = activeVoiceSessions[sessionId]</span>
+<span class="nc" id="L48">            ?: throw IllegalArgumentException(&quot;Voice session not found&quot;)</span>
+        
+<span class="nc bnc" id="L50" title="All 4 branches missed.">        require(session.status == VoiceSessionStatus.ACTIVE) {</span>
+<span class="nc" id="L51">            &quot;Voice session is not active&quot;</span>
+        }
+        
+        // Simulate voice-to-text transcription
+<span class="nc" id="L55">        val transcribedText = transcribeVoiceInput(audioData)</span>
+        
+        // Generate AI response (would integrate with AI service)
+<span class="nc" id="L58">        val aiResponseText = generateAIResponse(transcribedText, session)</span>
+        
+        // Convert AI response to voice (would use text-to-speech)
+<span class="nc" id="L61">        val aiResponseAudio = synthesizeSpeech(aiResponseText, session.language)</span>
+        
+        // Create user message
+<span class="nc" id="L64">        val userMessage = VoiceMessage(</span>
+<span class="nc" id="L65">            id = &quot;msg_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L66">            text = transcribedText,</span>
+<span class="nc" id="L67">            isFromUser = true,</span>
+<span class="nc" id="L68">            audioData = audioData,</span>
+<span class="nc" id="L69">            timestamp = Date()</span>
+        )
+        
+        // Create AI message
+<span class="nc" id="L73">        val aiMessage = VoiceMessage(</span>
+<span class="nc" id="L74">            id = &quot;msg_${System.currentTimeMillis() + 1}&quot;,</span>
+<span class="nc" id="L75">            text = aiResponseText,</span>
+<span class="nc" id="L76">            isFromUser = false,</span>
+<span class="nc" id="L77">            audioData = aiResponseAudio,</span>
+<span class="nc" id="L78">            timestamp = Date()</span>
+        )
+        
+        // Update session
+<span class="nc" id="L82">        val updatedMessages = session.messages + listOf(userMessage, aiMessage)</span>
+<span class="nc" id="L83">        val updatedSession = session.copy(</span>
+<span class="nc" id="L84">            messages = updatedMessages,</span>
+<span class="nc" id="L85">            lastActivityAt = Date()</span>
+        )
+<span class="nc" id="L87">        activeVoiceSessions[sessionId] = updatedSession</span>
+        
+<span class="nc" id="L89">        return VoiceMessageResponse(</span>
+<span class="nc" id="L90">            transcribedText = transcribedText,</span>
+<span class="nc" id="L91">            aiResponseText = aiResponseText,</span>
+<span class="nc" id="L92">            aiResponseAudio = aiResponseAudio,</span>
+<span class="nc" id="L93">            confidence = calculateConfidence(transcribedText)</span>
+        )
+    }
+    
+    /**
+     * Processes text input and converts AI response to voice
+     * 
+     * @param sessionId Voice session ID
+     * @param textInput User's text input
+     * @return VoiceMessageResponse with AI voice response
+     */
+    fun processTextInput(
+        sessionId: String,
+        textInput: String
+    ): VoiceMessageResponse {
+<span class="nc bnc" id="L108" title="All 4 branches missed.">        require(textInput.isNotBlank()) { &quot;Text input cannot be empty&quot; }</span>
+        
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        val session = activeVoiceSessions[sessionId]</span>
+<span class="nc" id="L111">            ?: throw IllegalArgumentException(&quot;Voice session not found&quot;)</span>
+        
+        // Generate AI response
+<span class="nc" id="L114">        val aiResponseText = generateAIResponse(textInput, session)</span>
+        
+        // Convert AI response to voice
+<span class="nc" id="L117">        val aiResponseAudio = synthesizeSpeech(aiResponseText, session.language)</span>
+        
+        // Create user message (text only)
+<span class="nc" id="L120">        val userMessage = VoiceMessage(</span>
+<span class="nc" id="L121">            id = &quot;msg_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L122">            text = textInput,</span>
+<span class="nc" id="L123">            isFromUser = true,</span>
+<span class="nc" id="L124">            audioData = null,</span>
+<span class="nc" id="L125">            timestamp = Date()</span>
+        )
+        
+        // Create AI message (with audio)
+<span class="nc" id="L129">        val aiMessage = VoiceMessage(</span>
+<span class="nc" id="L130">            id = &quot;msg_${System.currentTimeMillis() + 1}&quot;,</span>
+<span class="nc" id="L131">            text = aiResponseText,</span>
+<span class="nc" id="L132">            isFromUser = false,</span>
+<span class="nc" id="L133">            audioData = aiResponseAudio,</span>
+<span class="nc" id="L134">            timestamp = Date()</span>
+        )
+        
+        // Update session
+<span class="nc" id="L138">        val updatedMessages = session.messages + listOf(userMessage, aiMessage)</span>
+<span class="nc" id="L139">        val updatedSession = session.copy(</span>
+<span class="nc" id="L140">            messages = updatedMessages,</span>
+<span class="nc" id="L141">            lastActivityAt = Date()</span>
+        )
+<span class="nc" id="L143">        activeVoiceSessions[sessionId] = updatedSession</span>
+        
+<span class="nc" id="L145">        return VoiceMessageResponse(</span>
+<span class="nc" id="L146">            transcribedText = textInput,</span>
+<span class="nc" id="L147">            aiResponseText = aiResponseText,</span>
+<span class="nc" id="L148">            aiResponseAudio = aiResponseAudio,</span>
+<span class="nc" id="L149">            confidence = 1.0f // Text input has 100% confidence</span>
+        )
+    }
+    
+    /**
+     * Pauses an active voice session
+     * 
+     * @param sessionId Voice session ID
+     * @return Updated VoiceSession object
+     */
+    fun pauseVoiceSession(sessionId: String): VoiceSession {
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        val session = activeVoiceSessions[sessionId]</span>
+<span class="nc" id="L161">            ?: throw IllegalArgumentException(&quot;Voice session not found&quot;)</span>
+        
+<span class="nc" id="L163">        val updatedSession = session.copy(</span>
+<span class="nc" id="L164">            status = VoiceSessionStatus.PAUSED,</span>
+<span class="nc" id="L165">            lastActivityAt = Date()</span>
+        )
+<span class="nc" id="L167">        activeVoiceSessions[sessionId] = updatedSession</span>
+<span class="nc" id="L168">        return updatedSession</span>
+    }
+    
+    /**
+     * Resumes a paused voice session
+     * 
+     * @param sessionId Voice session ID
+     * @return Updated VoiceSession object
+     */
+    fun resumeVoiceSession(sessionId: String): VoiceSession {
+<span class="nc bnc" id="L178" title="All 2 branches missed.">        val session = activeVoiceSessions[sessionId]</span>
+<span class="nc" id="L179">            ?: throw IllegalArgumentException(&quot;Voice session not found&quot;)</span>
+        
+<span class="nc bnc" id="L181" title="All 4 branches missed.">        require(session.status == VoiceSessionStatus.PAUSED) {</span>
+<span class="nc" id="L182">            &quot;Voice session is not paused&quot;</span>
+        }
+        
+<span class="nc" id="L185">        val updatedSession = session.copy(</span>
+<span class="nc" id="L186">            status = VoiceSessionStatus.ACTIVE,</span>
+<span class="nc" id="L187">            lastActivityAt = Date()</span>
+        )
+<span class="nc" id="L189">        activeVoiceSessions[sessionId] = updatedSession</span>
+<span class="nc" id="L190">        return updatedSession</span>
+    }
+    
+    /**
+     * Ends a voice session
+     * 
+     * @param sessionId Voice session ID
+     * @return Updated VoiceSession object
+     */
+    fun endVoiceSession(sessionId: String): VoiceSession {
+<span class="nc bnc" id="L200" title="All 2 branches missed.">        val session = activeVoiceSessions[sessionId]</span>
+<span class="nc" id="L201">            ?: throw IllegalArgumentException(&quot;Voice session not found&quot;)</span>
+        
+<span class="nc" id="L203">        val duration = ((Date().time - session.startedAt.time) / 1000).toInt()</span>
+        
+<span class="nc" id="L205">        val updatedSession = session.copy(</span>
+<span class="nc" id="L206">            status = VoiceSessionStatus.COMPLETED,</span>
+<span class="nc" id="L207">            endedAt = Date(),</span>
+<span class="nc" id="L208">            duration = duration,</span>
+<span class="nc" id="L209">            lastActivityAt = Date()</span>
+        )
+<span class="nc" id="L211">        activeVoiceSessions[sessionId] = updatedSession</span>
+<span class="nc" id="L212">        return updatedSession</span>
+    }
+    
+    /**
+     * Gets voice session history for a user
+     * 
+     * @param userId User ID
+     * @return List of VoiceSession objects
+     */
+    fun getVoiceSessionHistory(userId: String): List&lt;VoiceSession&gt; {
+<span class="nc" id="L222">        return activeVoiceSessions.values</span>
+<span class="nc" id="L223">            .filter { it.userId == userId }</span>
+<span class="nc" id="L224">            .sortedByDescending { it.startedAt }</span>
+    }
+    
+    /**
+     * Gets active voice session for a user
+     * 
+     * @param userId User ID
+     * @return VoiceSession object or null
+     */
+    fun getActiveVoiceSession(userId: String): VoiceSession? {
+<span class="nc" id="L234">        return activeVoiceSessions.values</span>
+<span class="nc bnc" id="L235" title="All 4 branches missed.">            .firstOrNull { it.userId == userId &amp;&amp; it.status == VoiceSessionStatus.ACTIVE }</span>
+    }
+    
+    /**
+     * Handles voice recognition errors
+     * 
+     * @param sessionId Voice session ID
+     * @param error Error message
+     * @return Error handling response
+     */
+    fun handleVoiceRecognitionError(
+        sessionId: String,
+        error: String
+    ): ErrorHandlingResponse {
+<span class="nc bnc" id="L249" title="All 2 branches missed.">        val session = activeVoiceSessions[sessionId]</span>
+<span class="nc" id="L250">            ?: throw IllegalArgumentException(&quot;Voice session not found&quot;)</span>
+        
+<span class="nc" id="L252">        return ErrorHandlingResponse(</span>
+<span class="nc" id="L253">            errorMessage = error,</span>
+<span class="nc" id="L254">            suggestion = &quot;Please try speaking again or use text input&quot;,</span>
+<span class="nc" id="L255">            canRetry = true,</span>
+<span class="nc" id="L256">            alternativeMethods = listOf(&quot;Text input&quot;, &quot;Rephrase your message&quot;)</span>
+        )
+    }
+    
+    /**
+     * Gets supported languages for voice sessions
+     * 
+     * @return List of supported language codes
+     */
+    fun getSupportedLanguages(): List&lt;LanguageSupport&gt; {
+<span class="nc" id="L266">        return listOf(</span>
+<span class="nc" id="L267">            LanguageSupport(&quot;en-US&quot;, &quot;English (US)&quot;, true, true),</span>
+<span class="nc" id="L268">            LanguageSupport(&quot;en-GB&quot;, &quot;English (UK)&quot;, true, true),</span>
+<span class="nc" id="L269">            LanguageSupport(&quot;es-ES&quot;, &quot;Spanish (Spain)&quot;, true, true),</span>
+<span class="nc" id="L270">            LanguageSupport(&quot;es-MX&quot;, &quot;Spanish (Mexico)&quot;, true, true),</span>
+<span class="nc" id="L271">            LanguageSupport(&quot;fr-FR&quot;, &quot;French&quot;, true, true),</span>
+<span class="nc" id="L272">            LanguageSupport(&quot;de-DE&quot;, &quot;German&quot;, true, true),</span>
+<span class="nc" id="L273">            LanguageSupport(&quot;it-IT&quot;, &quot;Italian&quot;, false, true),</span>
+<span class="nc" id="L274">            LanguageSupport(&quot;pt-BR&quot;, &quot;Portuguese (Brazil)&quot;, false, true)</span>
+        )
+    }
+    
+    // Private helper methods
+    
+    /**
+     * Simulates speech-to-text processing for the provided audio payload.
+     *
+     * @param audioData Raw audio bytes captured from the client device.
+     * @return Transcribed textual representation of the audio input.
+     */
+    private fun transcribeVoiceInput(audioData: ByteArray): String {
+        // In production, would use actual speech recognition service
+        // For now, return a simulated transcription
+<span class="nc" id="L289">        return when {</span>
+<span class="nc bnc" id="L290" title="All 2 branches missed.">            audioData.size &gt; 1000 -&gt; &quot;I've been feeling anxious lately about work and relationships.&quot;</span>
+<span class="nc bnc" id="L291" title="All 2 branches missed.">            audioData.size &gt; 500 -&gt; &quot;Can you help me understand my feelings?&quot;</span>
+<span class="nc" id="L292">            else -&gt; &quot;Hello, I need some support today.&quot;</span>
+        }
+    }
+    
+    /**
+     * Produces a contextual AI therapist response tailored to the user's latest message and session state.
+     *
+     * @param userInput Latest input utterance or text message from the user.
+     * @param session Voice session metadata used to provide continuity.
+     * @return AI response text to deliver back to the user.
+     */
+    private fun generateAIResponse(userInput: String, session: VoiceSession): String {
+        // In production, would integrate with AI service
+        // For now, return contextual responses
+<span class="nc" id="L306">        return when {</span>
+<span class="nc bnc" id="L307" title="All 4 branches missed.">            userInput.lowercase().contains(&quot;anxious&quot;) || userInput.lowercase().contains(&quot;anxiety&quot;) -&gt;</span>
+<span class="nc" id="L308">                &quot;I understand that anxiety can be really challenging. Let's explore what's triggering these feelings for you. Can you tell me more about when you notice the anxiety?&quot;</span>
+            
+<span class="nc bnc" id="L310" title="All 4 branches missed.">            userInput.lowercase().contains(&quot;sad&quot;) || userInput.lowercase().contains(&quot;depressed&quot;) -&gt;</span>
+<span class="nc" id="L311">                &quot;I'm sorry to hear you're feeling this way. Depression can be really difficult. You're not alone in this. What's been helpful for you in the past when you've felt this way?&quot;</span>
+            
+<span class="nc bnc" id="L313" title="All 4 branches missed.">            userInput.lowercase().contains(&quot;stress&quot;) || userInput.lowercase().contains(&quot;stressed&quot;) -&gt;</span>
+<span class="nc" id="L314">                &quot;Stress can really impact our wellbeing. Let's talk about what's causing the stress and explore some coping strategies together.&quot;</span>
+            
+<span class="nc bnc" id="L316" title="All 4 branches missed.">            userInput.lowercase().contains(&quot;help&quot;) || userInput.lowercase().contains(&quot;support&quot;) -&gt;</span>
+<span class="nc" id="L317">                &quot;I'm here to support you. What would be most helpful right now? Feel free to share what's on your mind.&quot;</span>
+            
+            else -&gt;
+<span class="nc" id="L320">                &quot;Thank you for sharing that with me. I'm listening, and I want to understand better. Can you tell me more about what you're experiencing?&quot;</span>
+        }
+    }
+    
+    /**
+     * Simulates text-to-speech conversion for a given message in the target language.
+     *
+     * @param text AI response text to vocalize.
+     * @param language Language code guiding voice selection.
+     * @return Byte array representing synthesized audio output.
+     */
+    private fun synthesizeSpeech(text: String, language: String): ByteArray {
+        // In production, would use actual text-to-speech service
+        // For now, return simulated audio data
+<span class="nc" id="L334">        return ByteArray(text.length * 100) // Simulated audio size</span>
+    }
+    
+    /**
+     * Derives a confidence value for a transcription using simple heuristics on the text content.
+     *
+     * @param transcribedText Speech recognition result to evaluate.
+     * @return Confidence score between 0 and 1 indicating reliability of the transcription.
+     */
+    private fun calculateConfidence(transcribedText: String): Float {
+        // In production, would use actual confidence from speech recognition
+        // For now, return based on text length and clarity
+<span class="nc" id="L346">        return when {</span>
+<span class="nc bnc" id="L347" title="All 2 branches missed.">            transcribedText.length &gt; 20 -&gt; 0.9f</span>
+<span class="nc bnc" id="L348" title="All 2 branches missed.">            transcribedText.length &gt; 10 -&gt; 0.8f</span>
+<span class="nc bnc" id="L349" title="All 2 branches missed.">            transcribedText.length &gt; 5 -&gt; 0.7f</span>
+<span class="nc" id="L350">            else -&gt; 0.6f</span>
+        }
+    }
+}
+
+/**
+ * Data class for voice session
+ */
+<span class="nc" id="L358">data class VoiceSession(</span>
+<span class="nc" id="L359">    val id: String,</span>
+<span class="nc" id="L360">    val userId: String,</span>
+<span class="nc" id="L361">    val language: String,</span>
+<span class="nc" id="L362">    val status: VoiceSessionStatus,</span>
+<span class="nc" id="L363">    val startedAt: Date,</span>
+<span class="nc" id="L364">    val endedAt: Date? = null,</span>
+<span class="nc" id="L365">    val messages: List&lt;VoiceMessage&gt;,</span>
+<span class="nc" id="L366">    val duration: Int, // in seconds</span>
+<span class="nc" id="L367">    val lastActivityAt: Date = Date()</span>
+<span class="nc" id="L368">)</span>
+
+/**
+ * Data class for voice message
+ */
+<span class="nc" id="L373">data class VoiceMessage(</span>
+<span class="nc" id="L374">    val id: String,</span>
+<span class="nc" id="L375">    val text: String,</span>
+<span class="nc" id="L376">    val isFromUser: Boolean,</span>
+<span class="nc" id="L377">    val audioData: ByteArray?,</span>
+<span class="nc" id="L378">    val timestamp: Date</span>
+)
+
+/**
+ * Data class for voice message response
+ */
+<span class="nc" id="L384">data class VoiceMessageResponse(</span>
+<span class="nc" id="L385">    val transcribedText: String,</span>
+<span class="nc" id="L386">    val aiResponseText: String,</span>
+<span class="nc" id="L387">    val aiResponseAudio: ByteArray,</span>
+<span class="nc" id="L388">    val confidence: Float // 0-1</span>
+)
+
+/**
+ * Data class for error handling response
+ */
+<span class="nc" id="L394">data class ErrorHandlingResponse(</span>
+<span class="nc" id="L395">    val errorMessage: String,</span>
+<span class="nc" id="L396">    val suggestion: String,</span>
+<span class="nc" id="L397">    val canRetry: Boolean,</span>
+<span class="nc" id="L398">    val alternativeMethods: List&lt;String&gt;</span>
+)
+
+/**
+ * Data class for language support
+ */
+<span class="nc" id="L404">data class LanguageSupport(</span>
+<span class="nc" id="L405">    val code: String,</span>
+<span class="nc" id="L406">    val name: String,</span>
+<span class="nc" id="L407">    val speechRecognitionSupported: Boolean,</span>
+<span class="nc" id="L408">    val textToSpeechSupported: Boolean</span>
+)
+
+/**
+ * Voice session status enum
+ */
+enum class VoiceSessionStatus {
+<span class="nc" id="L415">    ACTIVE, PAUSED, COMPLETED, CANCELLED</span>
+<span class="nc" id="L416">}</span>
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MoodAnalyticsScreens.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.screens</a> &gt; <span class="el_source">MoodAnalyticsScreens.kt</span></div><h1>MoodAnalyticsScreens.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.screens
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.material3.ExperimentalMaterial3Api
+
+@OptIn(ExperimentalMaterial3Api::class)
+<span class="nc" id="L21">data class MoodFeature(</span>
+<span class="nc" id="L22">    val title: String,</span>
+<span class="nc" id="L23">    val description: String,</span>
+<span class="nc" id="L24">    val icon: androidx.compose.ui.graphics.vector.ImageVector,</span>
+<span class="nc" id="L25">    val onClick: () -&gt; Unit</span>
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MoodAnalyticsScreen(
+    onNavigateToMoodLogging: () -&gt; Unit,
+    onNavigateToMoodAnalytics: () -&gt; Unit,
+    onNavigateToMoodForecasting: () -&gt; Unit,
+    onNavigateToBurnoutDetection: () -&gt; Unit,
+    onNavigateToRelapsePrevention: () -&gt; Unit,
+    onNavigateBack: () -&gt; Unit
+<span class="nc bnc" id="L37" title="All 30 branches missed.">) {</span>
+<span class="nc" id="L38">    val moodFeatures = listOf(</span>
+<span class="nc" id="L39">        MoodFeature(</span>
+<span class="nc" id="L40">            title = &quot;Log Daily Mood&quot;,</span>
+<span class="nc" id="L41">            description = &quot;Track your daily emotional state&quot;,</span>
+<span class="nc" id="L42">            icon = Icons.Default.Mood,</span>
+<span class="nc" id="L43">            onClick = onNavigateToMoodLogging</span>
+        ),
+<span class="nc" id="L45">        MoodFeature(</span>
+<span class="nc" id="L46">            title = &quot;Mood Analytics&quot;,</span>
+<span class="nc" id="L47">            description = &quot;View insights and patterns&quot;,</span>
+<span class="nc" id="L48">            icon = Icons.Default.Analytics,</span>
+<span class="nc" id="L49">            onClick = onNavigateToMoodAnalytics</span>
+        ),
+<span class="nc" id="L51">        MoodFeature(</span>
+<span class="nc" id="L52">            title = &quot;Mood Forecasting&quot;,</span>
+<span class="nc" id="L53">            description = &quot;Predict future mood patterns&quot;,</span>
+<span class="nc" id="L54">            icon = Icons.Default.TrendingUp,</span>
+<span class="nc" id="L55">            onClick = onNavigateToMoodForecasting</span>
+        ),
+<span class="nc" id="L57">        MoodFeature(</span>
+<span class="nc" id="L58">            title = &quot;Burnout Detection&quot;,</span>
+<span class="nc" id="L59">            description = &quot;Identify signs of burnout&quot;,</span>
+<span class="nc" id="L60">            icon = Icons.Default.Warning,</span>
+<span class="nc" id="L61">            onClick = onNavigateToBurnoutDetection</span>
+        ),
+<span class="nc" id="L63">        MoodFeature(</span>
+<span class="nc" id="L64">            title = &quot;Relapse Prevention&quot;,</span>
+<span class="nc" id="L65">            description = &quot;Prevent mental health relapses&quot;,</span>
+<span class="nc" id="L66">            icon = Icons.Default.Shield,</span>
+<span class="nc" id="L67">            onClick = onNavigateToRelapsePrevention</span>
+        )
+    )
+    
+<span class="nc" id="L71">    Column(</span>
+<span class="nc" id="L72">        modifier = Modifier</span>
+<span class="nc" id="L73">            .fillMaxSize()</span>
+<span class="nc" id="L74">            .padding(16.dp)</span>
+    ) {
+        // Header
+<span class="nc" id="L77">        Row(</span>
+<span class="nc" id="L78">            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L79">            verticalAlignment = Alignment.CenterVertically</span>
+        ) {
+<span class="nc" id="L81">            IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L82" title="All 8 branches missed.">                Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L83">            }</span>
+<span class="nc" id="L84">            Text(</span>
+<span class="nc" id="L85">                text = &quot;Mood &amp; Analytics&quot;,</span>
+<span class="nc" id="L86">                fontSize = 24.sp,</span>
+<span class="nc" id="L87">                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L88">                modifier = Modifier.padding(start = 8.dp)</span>
+            )
+<span class="nc" id="L90">        }</span>
+        
+<span class="nc" id="L92">        Spacer(modifier = Modifier.height(24.dp))</span>
+        
+        // Current Mood Status
+<span class="nc" id="L95">        Card(</span>
+<span class="nc" id="L96">            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L97">            colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L98">                containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+            )
+<span class="nc" id="L100">        ) {</span>
+<span class="nc bnc" id="L101" title="All 6 branches missed.">            Column(</span>
+<span class="nc" id="L102">                modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L103">                horizontalAlignment = Alignment.CenterHorizontally</span>
+            ) {
+<span class="nc" id="L105">                Text(</span>
+<span class="nc" id="L106">                    text = &quot;Today's Mood&quot;,</span>
+<span class="nc" id="L107">                    fontSize = 18.sp,</span>
+<span class="nc" id="L108">                    fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L109">                    color = MaterialTheme.colorScheme.onPrimaryContainer</span>
+                )
+<span class="nc" id="L111">                Spacer(modifier = Modifier.height(12.dp))</span>
+<span class="nc" id="L112">                Row(</span>
+<span class="nc" id="L113">                    horizontalArrangement = Arrangement.spacedBy(8.dp)</span>
+                ) {
+<span class="nc bnc" id="L115" title="All 2 branches missed.">                    repeat(5) { index -&gt;</span>
+<span class="nc" id="L116">                        Icon(</span>
+<span class="nc" id="L117">                            Icons.Default.SentimentSatisfied,</span>
+<span class="nc" id="L118">                            contentDescription = null,</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">                            tint = if (index &lt; 3) </span>
+<span class="nc" id="L120">                                MaterialTheme.colorScheme.primary </span>
+                            else 
+<span class="nc" id="L122">                                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),</span>
+<span class="nc" id="L123">                            modifier = Modifier.size(32.dp)</span>
+                        )
+<span class="nc" id="L125">                    }</span>
+<span class="nc" id="L126">                }</span>
+<span class="nc" id="L127">                Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L128">                Text(</span>
+<span class="nc" id="L129">                    text = &quot;Good&quot;,</span>
+<span class="nc" id="L130">                    fontSize = 16.sp,</span>
+<span class="nc" id="L131">                    color = MaterialTheme.colorScheme.onPrimaryContainer</span>
+                )
+<span class="nc" id="L133">            }</span>
+<span class="nc" id="L134">        }</span>
+        
+<span class="nc" id="L136">        Spacer(modifier = Modifier.height(24.dp))</span>
+        
+        // Features List
+<span class="nc" id="L139">        LazyColumn(</span>
+<span class="nc" id="L140">            verticalArrangement = Arrangement.spacedBy(12.dp)</span>
+<span class="nc" id="L141">        ) {</span>
+<span class="nc" id="L142">            items(moodFeatures) { feature -&gt;</span>
+                MoodFeatureCard(feature = feature)
+            }
+<span class="nc" id="L145">        }</span>
+<span class="nc" id="L146">    }</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L151" title="All 10 branches missed.">fun MoodFeatureCard(feature: MoodFeature) {</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L153">        onClick = feature.onClick,</span>
+<span class="nc" id="L154">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L155">        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)</span>
+<span class="nc" id="L156">    ) {</span>
+<span class="nc bnc" id="L157" title="All 6 branches missed.">        Row(</span>
+<span class="nc" id="L158">            modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L159">            verticalAlignment = Alignment.CenterVertically</span>
+        ) {
+<span class="nc" id="L161">            Icon(</span>
+<span class="nc" id="L162">                feature.icon,</span>
+<span class="nc" id="L163">                contentDescription = null,</span>
+<span class="nc" id="L164">                modifier = Modifier.size(40.dp),</span>
+<span class="nc" id="L165">                tint = MaterialTheme.colorScheme.primary</span>
+            )
+<span class="nc" id="L167">            Spacer(modifier = Modifier.width(16.dp))</span>
+<span class="nc" id="L168">            Column(</span>
+<span class="nc" id="L169">                modifier = Modifier.weight(1f)</span>
+            ) {
+<span class="nc" id="L171">                Text(</span>
+<span class="nc" id="L172">                    text = feature.title,</span>
+<span class="nc" id="L173">                    fontSize = 18.sp,</span>
+<span class="nc" id="L174">                    fontWeight = FontWeight.Bold</span>
+                )
+<span class="nc" id="L176">                Spacer(modifier = Modifier.height(4.dp))</span>
+<span class="nc" id="L177">                Text(</span>
+<span class="nc" id="L178">                    text = feature.description,</span>
+<span class="nc" id="L179">                    fontSize = 14.sp,</span>
+<span class="nc" id="L180">                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)</span>
+                )
+<span class="nc" id="L182">            }</span>
+<span class="nc" id="L183">            Icon(</span>
+<span class="nc" id="L184">                Icons.Default.ArrowForward,</span>
+<span class="nc" id="L185">                contentDescription = null,</span>
+<span class="nc" id="L186">                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)</span>
+            )
+<span class="nc" id="L188">        }</span>
+<span class="nc" id="L189">    }</span>
+<span class="nc bnc" id="L190" title="All 2 branches missed.">}</span>
+
+// LogDailyMoodScreen is now implemented in MoodLoggingScreen.kt
+// This function is kept for backward compatibility but redirects to the new implementation
+@Composable
+<span class="nc bnc" id="L195" title="All 10 branches missed.">fun LogDailyMoodScreen(onNavigateBack: () -&gt; Unit) {</span>
+    // Use the comprehensive MoodLoggingScreen from MoodLoggingScreen.kt
+<span class="nc bnc" id="L197" title="All 2 branches missed.">    LogDailyMoodScreenDetailed(onNavigateBack = onNavigateBack)</span>
+<span class="nc bnc" id="L198" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L201" title="All 10 branches missed.">fun MoodAnalyticsViewScreen(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc" id="L202">    Column(</span>
+<span class="nc" id="L203">        modifier = Modifier</span>
+<span class="nc" id="L204">            .fillMaxSize()</span>
+<span class="nc" id="L205">            .padding(16.dp)</span>
+    ) {
+<span class="nc" id="L207">        Row(</span>
+<span class="nc" id="L208">            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L209">            verticalAlignment = Alignment.CenterVertically</span>
+        ) {
+<span class="nc" id="L211">            IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L212" title="All 8 branches missed.">                Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L213">            }</span>
+<span class="nc" id="L214">            Text(</span>
+<span class="nc" id="L215">                text = &quot;Mood Analytics&quot;,</span>
+<span class="nc" id="L216">                fontSize = 24.sp,</span>
+<span class="nc" id="L217">                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L218">                modifier = Modifier.padding(start = 8.dp)</span>
+            )
+<span class="nc" id="L220">        }</span>
+        
+<span class="nc" id="L222">        Spacer(modifier = Modifier.height(24.dp))</span>
+        
+<span class="nc" id="L224">        Card(</span>
+<span class="nc" id="L225">            modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L226">        ) {</span>
+<span class="nc bnc" id="L227" title="All 6 branches missed.">            Column(</span>
+<span class="nc" id="L228">                modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L229">                horizontalAlignment = Alignment.CenterHorizontally</span>
+            ) {
+<span class="nc" id="L231">                Text(</span>
+<span class="nc" id="L232">                    text = &quot;Mood Trends&quot;,</span>
+<span class="nc" id="L233">                    fontSize = 18.sp,</span>
+<span class="nc" id="L234">                    fontWeight = FontWeight.Bold</span>
+                )
+<span class="nc" id="L236">                Spacer(modifier = Modifier.height(16.dp))</span>
+<span class="nc" id="L237">                Text(</span>
+<span class="nc" id="L238">                    text = &quot;📈 Chart visualization would go here&quot;,</span>
+<span class="nc" id="L239">                    fontSize = 16.sp,</span>
+<span class="nc" id="L240">                    textAlign = TextAlign.Center</span>
+                )
+<span class="nc" id="L242">                Spacer(modifier = Modifier.height(16.dp))</span>
+<span class="nc" id="L243">                Text(</span>
+<span class="nc" id="L244">                    text = &quot;Your mood has been improving over the past week!&quot;,</span>
+<span class="nc" id="L245">                    fontSize = 14.sp,</span>
+<span class="nc" id="L246">                    color = MaterialTheme.colorScheme.primary,</span>
+<span class="nc" id="L247">                    textAlign = TextAlign.Center</span>
+                )
+<span class="nc" id="L249">            }</span>
+<span class="nc" id="L250">        }</span>
+<span class="nc" id="L251">    }</span>
+<span class="nc bnc" id="L252" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L255" title="All 10 branches missed.">fun MoodForecastingScreen(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc" id="L256">    Column(</span>
+<span class="nc" id="L257">        modifier = Modifier</span>
+<span class="nc" id="L258">            .fillMaxSize()</span>
+<span class="nc" id="L259">            .padding(16.dp)</span>
+    ) {
+<span class="nc" id="L261">        Row(</span>
+<span class="nc" id="L262">            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L263">            verticalAlignment = Alignment.CenterVertically</span>
+        ) {
+<span class="nc" id="L265">            IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L266" title="All 8 branches missed.">                Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L267">            }</span>
+<span class="nc" id="L268">            Text(</span>
+<span class="nc" id="L269">                text = &quot;Mood Forecasting&quot;,</span>
+<span class="nc" id="L270">                fontSize = 24.sp,</span>
+<span class="nc" id="L271">                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L272">                modifier = Modifier.padding(start = 8.dp)</span>
+            )
+<span class="nc" id="L274">        }</span>
+        
+<span class="nc" id="L276">        Spacer(modifier = Modifier.height(24.dp))</span>
+        
+<span class="nc" id="L278">        Card(</span>
+<span class="nc" id="L279">            modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L280">        ) {</span>
+<span class="nc bnc" id="L281" title="All 6 branches missed.">            Column(</span>
+<span class="nc" id="L282">                modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L283">                horizontalAlignment = Alignment.CenterHorizontally</span>
+            ) {
+<span class="nc" id="L285">                Text(</span>
+<span class="nc" id="L286">                    text = &quot;Predicted Mood Trends&quot;,</span>
+<span class="nc" id="L287">                    fontSize = 18.sp,</span>
+<span class="nc" id="L288">                    fontWeight = FontWeight.Bold</span>
+                )
+<span class="nc" id="L290">                Spacer(modifier = Modifier.height(16.dp))</span>
+<span class="nc" id="L291">                Text(</span>
+<span class="nc" id="L292">                    text = &quot;🔮 AI prediction model would analyze patterns here&quot;,</span>
+<span class="nc" id="L293">                    fontSize = 16.sp,</span>
+<span class="nc" id="L294">                    textAlign = TextAlign.Center</span>
+                )
+<span class="nc" id="L296">                Spacer(modifier = Modifier.height(16.dp))</span>
+<span class="nc" id="L297">                Text(</span>
+<span class="nc" id="L298">                    text = &quot;Based on your patterns, you might feel more energetic tomorrow!&quot;,</span>
+<span class="nc" id="L299">                    fontSize = 14.sp,</span>
+<span class="nc" id="L300">                    color = MaterialTheme.colorScheme.primary,</span>
+<span class="nc" id="L301">                    textAlign = TextAlign.Center</span>
+                )
+<span class="nc" id="L303">            }</span>
+<span class="nc" id="L304">        }</span>
+<span class="nc" id="L305">    }</span>
+<span class="nc bnc" id="L306" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L310" title="All 10 branches missed.">fun BurnoutDetectionScreen(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc" id="L311">    var currentRiskLevel by remember { mutableStateOf(&quot;Low&quot;) }</span>
+<span class="nc" id="L312">    var showAssessmentDialog by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L313">    var assessmentResults by remember { mutableStateOf&lt;List&lt;BurnoutIndicator&gt;&gt;(emptyList()) }</span>
+    
+<span class="nc" id="L315">    val burnoutIndicators = listOf(</span>
+<span class="nc" id="L316">        BurnoutIndicator(&quot;Work Overload&quot;, &quot;Feeling overwhelmed by work demands&quot;, 3),</span>
+<span class="nc" id="L317">        BurnoutIndicator(&quot;Emotional Exhaustion&quot;, &quot;Feeling drained and emotionally depleted&quot;, 2),</span>
+<span class="nc" id="L318">        BurnoutIndicator(&quot;Reduced Performance&quot;, &quot;Decreased productivity and effectiveness&quot;, 1),</span>
+<span class="nc" id="L319">        BurnoutIndicator(&quot;Cynicism&quot;, &quot;Negative or detached attitude toward work&quot;, 2),</span>
+<span class="nc" id="L320">        BurnoutIndicator(&quot;Sleep Issues&quot;, &quot;Difficulty sleeping or poor sleep quality&quot;, 3),</span>
+<span class="nc" id="L321">        BurnoutIndicator(&quot;Physical Symptoms&quot;, &quot;Headaches, muscle tension, or other stress symptoms&quot;, 1)</span>
+    )
+
+<span class="nc" id="L324">    Scaffold(</span>
+<span class="nc" id="L325">        topBar = {</span>
+<span class="nc bnc" id="L326" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L327" title="All 8 branches missed.">                title = { Text(&quot;Burnout Risk Assessment&quot;) },</span>
+<span class="nc" id="L328">                navigationIcon = {</span>
+<span class="nc bnc" id="L329" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L330" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L331">                    }</span>
+<span class="nc" id="L332">                }</span>
+<span class="nc" id="L333">            )</span>
+<span class="nc" id="L334">        }</span>
+<span class="nc" id="L335">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L336" title="All 8 branches missed.">        LazyColumn(</span>
+<span class="nc" id="L337">            modifier = Modifier</span>
+<span class="nc" id="L338">                .fillMaxSize()</span>
+<span class="nc" id="L339">                .padding(paddingValues)</span>
+<span class="nc" id="L340">                .padding(16.dp),</span>
+<span class="nc" id="L341">            verticalArrangement = Arrangement.spacedBy(16.dp)</span>
+<span class="nc" id="L342">        ) {</span>
+<span class="nc" id="L343">            item {</span>
+<span class="nc bnc" id="L344" title="All 8 branches missed.">                RiskLevelCard(currentRiskLevel)</span>
+<span class="nc" id="L345">            }</span>
+            
+<span class="nc" id="L347">            item {</span>
+<span class="nc bnc" id="L348" title="All 8 branches missed.">                Button(</span>
+<span class="nc" id="L349">                    onClick = { showAssessmentDialog = true },</span>
+<span class="nc" id="L350">                    modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L351">                ) {</span>
+<span class="nc bnc" id="L352" title="All 8 branches missed.">                    Text(&quot;Take Burnout Assessment&quot;)</span>
+<span class="nc" id="L353">                }</span>
+<span class="nc" id="L354">            }</span>
+            
+<span class="nc" id="L356">            item {</span>
+<span class="nc bnc" id="L357" title="All 8 branches missed.">                Text(</span>
+<span class="nc" id="L358">                    text = &quot;Burnout Prevention Tips&quot;,</span>
+<span class="nc" id="L359">                    style = MaterialTheme.typography.titleLarge,</span>
+<span class="nc" id="L360">                    fontWeight = FontWeight.Bold</span>
+<span class="nc" id="L361">                )</span>
+<span class="nc" id="L362">            }</span>
+            
+<span class="nc" id="L364">            item {</span>
+<span class="nc bnc" id="L365" title="All 8 branches missed.">                PreventionTipsCard()</span>
+<span class="nc" id="L366">            }</span>
+            
+<span class="nc" id="L368">            item {</span>
+<span class="nc bnc" id="L369" title="All 8 branches missed.">                Text(</span>
+<span class="nc" id="L370">                    text = &quot;Recent Patterns&quot;,</span>
+<span class="nc" id="L371">                    style = MaterialTheme.typography.titleLarge,</span>
+<span class="nc" id="L372">                    fontWeight = FontWeight.Bold</span>
+<span class="nc" id="L373">                )</span>
+<span class="nc" id="L374">            }</span>
+            
+<span class="nc" id="L376">            item {</span>
+<span class="nc bnc" id="L377" title="All 8 branches missed.">                BurnoutPatternsCard()</span>
+<span class="nc" id="L378">            }</span>
+<span class="nc" id="L379">        }</span>
+<span class="nc" id="L380">    }</span>
+    
+<span class="nc bnc" id="L382" title="All 2 branches missed.">    if (showAssessmentDialog) {</span>
+<span class="nc bnc" id="L383" title="All 2 branches missed.">        BurnoutAssessmentDialog(</span>
+<span class="nc" id="L384">            indicators = burnoutIndicators,</span>
+<span class="nc" id="L385">            onAssessmentComplete = { results -&gt;</span>
+<span class="nc" id="L386">                assessmentResults = results</span>
+<span class="nc bnc" id="L387" title="All 2 branches missed.">                val totalScore = results.sumOf { it.severity }</span>
+<span class="nc" id="L388">                currentRiskLevel = when {</span>
+<span class="nc bnc" id="L389" title="All 2 branches missed.">                    totalScore &gt;= 15 -&gt; &quot;High&quot;</span>
+<span class="nc bnc" id="L390" title="All 2 branches missed.">                    totalScore &gt;= 10 -&gt; &quot;Medium&quot;</span>
+<span class="nc" id="L391">                    else -&gt; &quot;Low&quot;</span>
+                }
+<span class="nc" id="L393">                showAssessmentDialog = false</span>
+<span class="nc" id="L394">            },</span>
+<span class="nc" id="L395">            onDismiss = { showAssessmentDialog = false }</span>
+        )
+    }
+<span class="nc bnc" id="L398" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L401" title="All 10 branches missed.">fun RiskLevelCard(riskLevel: String) {</span>
+<span class="nc" id="L402">    val color = when (riskLevel) {</span>
+<span class="nc bnc" id="L403" title="All 2 branches missed.">        &quot;High&quot; -&gt; MaterialTheme.colorScheme.errorContainer</span>
+<span class="nc bnc" id="L404" title="All 2 branches missed.">        &quot;Medium&quot; -&gt; MaterialTheme.colorScheme.tertiaryContainer</span>
+<span class="nc" id="L405">        else -&gt; MaterialTheme.colorScheme.primaryContainer</span>
+    }
+    
+<span class="nc" id="L408">    val textColor = when (riskLevel) {</span>
+<span class="nc bnc" id="L409" title="All 2 branches missed.">        &quot;High&quot; -&gt; MaterialTheme.colorScheme.onErrorContainer</span>
+<span class="nc bnc" id="L410" title="All 2 branches missed.">        &quot;Medium&quot; -&gt; MaterialTheme.colorScheme.onTertiaryContainer</span>
+<span class="nc" id="L411">        else -&gt; MaterialTheme.colorScheme.onPrimaryContainer</span>
+    }
+    
+<span class="nc bnc" id="L414" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L415">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L416">        colors = CardDefaults.cardColors(containerColor = color)</span>
+<span class="nc" id="L417">    ) {</span>
+<span class="nc bnc" id="L418" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L419">            modifier = Modifier.padding(16.dp),</span>
+<span class="nc" id="L420">            horizontalAlignment = Alignment.CenterHorizontally</span>
+        ) {
+<span class="nc" id="L422">            Icon(</span>
+<span class="nc" id="L423">                when (riskLevel) {</span>
+<span class="nc bnc" id="L424" title="All 2 branches missed.">                    &quot;High&quot; -&gt; Icons.Default.Warning</span>
+<span class="nc bnc" id="L425" title="All 2 branches missed.">                    &quot;Medium&quot; -&gt; Icons.Default.Info</span>
+<span class="nc" id="L426">                    else -&gt; Icons.Default.CheckCircle</span>
+                },
+<span class="nc" id="L428">                contentDescription = null,</span>
+<span class="nc" id="L429">                modifier = Modifier.size(48.dp),</span>
+<span class="nc" id="L430">                tint = textColor</span>
+            )
+<span class="nc" id="L432">            Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L433">            Text(</span>
+<span class="nc" id="L434">                text = &quot;Current Risk Level: $riskLevel&quot;,</span>
+<span class="nc" id="L435">                style = MaterialTheme.typography.titleLarge,</span>
+<span class="nc" id="L436">                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L437">                color = textColor</span>
+            )
+<span class="nc" id="L439">            Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L440">            Text(</span>
+<span class="nc" id="L441">                text = when (riskLevel) {</span>
+<span class="nc bnc" id="L442" title="All 2 branches missed.">                    &quot;High&quot; -&gt; &quot;Immediate attention recommended. Consider professional support.&quot;</span>
+<span class="nc bnc" id="L443" title="All 2 branches missed.">                    &quot;Medium&quot; -&gt; &quot;Monitor closely. Implement stress management strategies.&quot;</span>
+<span class="nc" id="L444">                    else -&gt; &quot;Good! Continue current self-care practices.&quot;</span>
+                },
+<span class="nc" id="L446">                style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L447">                color = textColor,</span>
+<span class="nc" id="L448">                textAlign = TextAlign.Center</span>
+            )
+<span class="nc" id="L450">        }</span>
+<span class="nc" id="L451">    }</span>
+<span class="nc bnc" id="L452" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L455" title="All 6 branches missed.">fun PreventionTipsCard() {</span>
+<span class="nc" id="L456">    val tips = listOf(</span>
+<span class="nc" id="L457">        &quot;Set clear work-life boundaries&quot;,</span>
+<span class="nc" id="L458">        &quot;Take regular breaks throughout the day&quot;,</span>
+<span class="nc" id="L459">        &quot;Practice stress-reduction techniques&quot;,</span>
+<span class="nc" id="L460">        &quot;Maintain a healthy sleep schedule&quot;,</span>
+<span class="nc" id="L461">        &quot;Stay connected with supportive people&quot;,</span>
+<span class="nc" id="L462">        &quot;Engage in activities you enjoy&quot;</span>
+    )
+    
+<span class="nc bnc" id="L465" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L466">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L467">        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L468">    ) {</span>
+<span class="nc bnc" id="L469" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L470">            modifier = Modifier.padding(16.dp)</span>
+        ) {
+<span class="nc" id="L472">            tips.forEach { tip -&gt;</span>
+<span class="nc" id="L473">                Row(</span>
+<span class="nc" id="L474">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L475">                    verticalAlignment = Alignment.CenterVertically</span>
+                ) {
+<span class="nc" id="L477">                    Icon(</span>
+<span class="nc" id="L478">                        Icons.Default.CheckCircle,</span>
+<span class="nc" id="L479">                        contentDescription = null,</span>
+<span class="nc" id="L480">                        tint = MaterialTheme.colorScheme.primary,</span>
+<span class="nc" id="L481">                        modifier = Modifier.size(20.dp)</span>
+                    )
+<span class="nc" id="L483">                    Spacer(modifier = Modifier.width(12.dp))</span>
+<span class="nc" id="L484">                    Text(</span>
+<span class="nc" id="L485">                        text = tip,</span>
+<span class="nc" id="L486">                        style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L487">                        modifier = Modifier.weight(1f)</span>
+                    )
+<span class="nc" id="L489">                }</span>
+<span class="nc" id="L490">                Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L491">            }</span>
+<span class="nc" id="L492">        }</span>
+<span class="nc" id="L493">    }</span>
+<span class="nc bnc" id="L494" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L497" title="All 6 branches missed.">fun BurnoutPatternsCard() {</span>
+<span class="nc bnc" id="L498" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L499">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L500">        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L501">    ) {</span>
+<span class="nc bnc" id="L502" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L503">            modifier = Modifier.padding(16.dp)</span>
+        ) {
+<span class="nc" id="L505">            Text(</span>
+<span class="nc" id="L506">                text = &quot;Weekly Burnout Indicators&quot;,</span>
+<span class="nc" id="L507">                style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L508">                fontWeight = FontWeight.Bold</span>
+            )
+<span class="nc" id="L510">            Spacer(modifier = Modifier.height(12.dp))</span>
+            
+            // Placeholder for chart
+<span class="nc" id="L513">            Box(</span>
+<span class="nc" id="L514">                modifier = Modifier</span>
+<span class="nc" id="L515">                    .fillMaxWidth()</span>
+<span class="nc" id="L516">                    .height(200.dp)</span>
+<span class="nc" id="L517">                    .background(</span>
+<span class="nc" id="L518">                        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),</span>
+<span class="nc" id="L519">                        RoundedCornerShape(8.dp)</span>
+                    ),
+<span class="nc" id="L521">                contentAlignment = Alignment.Center</span>
+            ) {
+<span class="nc" id="L523">                Text(</span>
+<span class="nc" id="L524">                    text = &quot;Burnout Pattern Chart\n(Last 7 days)&quot;,</span>
+<span class="nc" id="L525">                    style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L526">                    textAlign = TextAlign.Center</span>
+                )
+<span class="nc" id="L528">            }</span>
+<span class="nc" id="L529">        }</span>
+<span class="nc" id="L530">    }</span>
+<span class="nc bnc" id="L531" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BurnoutAssessmentDialog(
+    indicators: List&lt;BurnoutIndicator&gt;,
+    onAssessmentComplete: (List&lt;BurnoutIndicator&gt;) -&gt; Unit,
+    onDismiss: () -&gt; Unit
+<span class="nc bnc" id="L539" title="All 18 branches missed.">) {</span>
+<span class="nc" id="L540">    var currentIndicatorIndex by remember { mutableStateOf(0) }</span>
+<span class="nc" id="L541">    var responses by remember { mutableStateOf&lt;List&lt;BurnoutIndicator&gt;&gt;(emptyList()) }</span>
+    
+<span class="nc bnc" id="L543" title="All 2 branches missed.">    if (currentIndicatorIndex &lt; indicators.size) {</span>
+<span class="nc" id="L544">        val currentIndicator = indicators[currentIndicatorIndex]</span>
+        
+<span class="nc" id="L546">        AlertDialog(</span>
+<span class="nc" id="L547">            onDismissRequest = onDismiss,</span>
+<span class="nc" id="L548">            title = { </span>
+<span class="nc bnc" id="L549" title="All 8 branches missed.">                Text(&quot;Burnout Assessment&quot;) </span>
+<span class="nc" id="L550">            },</span>
+<span class="nc" id="L551">            text = {</span>
+<span class="nc bnc" id="L552" title="All 6 branches missed.">                Column {</span>
+<span class="nc" id="L553">                    Text(</span>
+<span class="nc" id="L554">                        text = &quot;Question ${currentIndicatorIndex + 1} of ${indicators.size}&quot;,</span>
+<span class="nc" id="L555">                        style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L556">                        color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                    )
+<span class="nc" id="L558">                    Spacer(modifier = Modifier.height(16.dp))</span>
+<span class="nc" id="L559">                    Text(</span>
+<span class="nc" id="L560">                        text = currentIndicator.description,</span>
+<span class="nc" id="L561">                        style = MaterialTheme.typography.bodyLarge</span>
+                    )
+<span class="nc" id="L563">                    Spacer(modifier = Modifier.height(16.dp))</span>
+<span class="nc" id="L564">                    Text(</span>
+<span class="nc" id="L565">                        text = &quot;Rate your experience (1-5):&quot;,</span>
+<span class="nc" id="L566">                        style = MaterialTheme.typography.bodyMedium</span>
+                    )
+<span class="nc" id="L568">                    Spacer(modifier = Modifier.height(8.dp))</span>
+                    
+<span class="nc" id="L570">                    Row(</span>
+<span class="nc" id="L571">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L572">                        horizontalArrangement = Arrangement.SpaceEvenly</span>
+                    ) {
+<span class="nc" id="L574">                        (1..5).forEach { rating -&gt;</span>
+<span class="nc" id="L575">                            FilterChip(</span>
+<span class="nc bnc" id="L576" title="All 2 branches missed.">                                selected = currentIndicator.severity == rating,</span>
+<span class="nc" id="L577">                                onClick = { </span>
+<span class="nc" id="L578">                                    val updatedIndicator = currentIndicator.copy(severity = rating)</span>
+<span class="nc" id="L579">                                    responses = responses + updatedIndicator</span>
+<span class="nc" id="L580">                                    currentIndicatorIndex++</span>
+<span class="nc" id="L581">                                },</span>
+<span class="nc bnc" id="L582" title="All 8 branches missed.">                                label = { Text(rating.toString()) }</span>
+                            )
+<span class="nc" id="L584">                        }</span>
+<span class="nc" id="L585">                    }</span>
+<span class="nc" id="L586">                }</span>
+<span class="nc" id="L587">            },</span>
+<span class="nc" id="L588">            confirmButton = {</span>
+<span class="nc bnc" id="L589" title="All 8 branches missed.">                TextButton(</span>
+<span class="nc" id="L590">                    onClick = {</span>
+<span class="nc bnc" id="L591" title="All 2 branches missed.">                        if (currentIndicatorIndex &gt;= indicators.size) {</span>
+<span class="nc" id="L592">                            onAssessmentComplete(responses)</span>
+                        }
+<span class="nc" id="L594">                    }</span>
+<span class="nc" id="L595">                ) {</span>
+<span class="nc bnc" id="L596" title="All 8 branches missed.">                    Text(&quot;Next&quot;)</span>
+<span class="nc" id="L597">                }</span>
+<span class="nc" id="L598">            },</span>
+<span class="nc" id="L599">            dismissButton = {</span>
+<span class="nc bnc" id="L600" title="All 8 branches missed.">                TextButton(onClick = onDismiss) {</span>
+<span class="nc bnc" id="L601" title="All 8 branches missed.">                    Text(&quot;Cancel&quot;)</span>
+<span class="nc" id="L602">                }</span>
+<span class="nc" id="L603">            }</span>
+        )
+<span class="nc bnc" id="L605" title="All 2 branches missed.">    } else {</span>
+        // Assessment complete
+<span class="nc bnc" id="L607" title="All 4 branches missed.">        LaunchedEffect(Unit) {</span>
+<span class="nc" id="L608">            onAssessmentComplete(responses)</span>
+<span class="nc" id="L609">        }</span>
+    }
+<span class="nc bnc" id="L611" title="All 2 branches missed.">}</span>
+
+<span class="nc" id="L613">data class BurnoutIndicator(</span>
+<span class="nc" id="L614">    val name: String,</span>
+<span class="nc" id="L615">    val description: String,</span>
+<span class="nc" id="L616">    var severity: Int // 1-5 scale</span>
+)
+
+@Composable
+<span class="nc bnc" id="L620" title="All 10 branches missed.">fun RelapsePreventionScreen(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc" id="L621">    Column(</span>
+<span class="nc" id="L622">        modifier = Modifier</span>
+<span class="nc" id="L623">            .fillMaxSize()</span>
+<span class="nc" id="L624">            .padding(16.dp)</span>
+    ) {
+<span class="nc" id="L626">        Row(</span>
+<span class="nc" id="L627">            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L628">            verticalAlignment = Alignment.CenterVertically</span>
+        ) {
+<span class="nc" id="L630">            IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L631" title="All 8 branches missed.">                Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L632">            }</span>
+<span class="nc" id="L633">            Text(</span>
+<span class="nc" id="L634">                text = &quot;Relapse Prevention&quot;,</span>
+<span class="nc" id="L635">                fontSize = 24.sp,</span>
+<span class="nc" id="L636">                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L637">                modifier = Modifier.padding(start = 8.dp)</span>
+            )
+<span class="nc" id="L639">        }</span>
+        
+<span class="nc" id="L641">        Spacer(modifier = Modifier.height(24.dp))</span>
+        
+<span class="nc" id="L643">        Card(</span>
+<span class="nc" id="L644">            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L645">            colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L646">                containerColor = MaterialTheme.colorScheme.secondaryContainer</span>
+            )
+<span class="nc" id="L648">        ) {</span>
+<span class="nc bnc" id="L649" title="All 6 branches missed.">            Column(</span>
+<span class="nc" id="L650">                modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L651">                horizontalAlignment = Alignment.CenterHorizontally</span>
+            ) {
+<span class="nc" id="L653">                Icon(</span>
+<span class="nc" id="L654">                    Icons.Default.Shield,</span>
+<span class="nc" id="L655">                    contentDescription = null,</span>
+<span class="nc" id="L656">                    modifier = Modifier.size(48.dp),</span>
+<span class="nc" id="L657">                    tint = MaterialTheme.colorScheme.onSecondaryContainer</span>
+                )
+<span class="nc" id="L659">                Spacer(modifier = Modifier.height(16.dp))</span>
+<span class="nc" id="L660">                Text(</span>
+<span class="nc" id="L661">                    text = &quot;Prevention Strategies&quot;,</span>
+<span class="nc" id="L662">                    fontSize = 18.sp,</span>
+<span class="nc" id="L663">                    fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L664">                    color = MaterialTheme.colorScheme.onSecondaryContainer</span>
+                )
+<span class="nc" id="L666">                Spacer(modifier = Modifier.height(16.dp))</span>
+<span class="nc" id="L667">                Text(</span>
+<span class="nc" id="L668">                    text = &quot;🛡️ AI would monitor for relapse warning signs here&quot;,</span>
+<span class="nc" id="L669">                    fontSize = 16.sp,</span>
+<span class="nc" id="L670">                    textAlign = TextAlign.Center,</span>
+<span class="nc" id="L671">                    color = MaterialTheme.colorScheme.onSecondaryContainer</span>
+                )
+<span class="nc" id="L673">                Spacer(modifier = Modifier.height(16.dp))</span>
+<span class="nc" id="L674">                Text(</span>
+<span class="nc" id="L675">                    text = &quot;Stay strong! You're doing great with your recovery&quot;,</span>
+<span class="nc" id="L676">                    fontSize = 14.sp,</span>
+<span class="nc" id="L677">                    color = MaterialTheme.colorScheme.onSecondaryContainer,</span>
+<span class="nc" id="L678">                    textAlign = TextAlign.Center</span>
+                )
+<span class="nc" id="L680">            }</span>
+<span class="nc" id="L681">        }</span>
+<span class="nc" id="L682">    }</span>
+<span class="nc bnc" id="L683" title="All 2 branches missed.">}</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

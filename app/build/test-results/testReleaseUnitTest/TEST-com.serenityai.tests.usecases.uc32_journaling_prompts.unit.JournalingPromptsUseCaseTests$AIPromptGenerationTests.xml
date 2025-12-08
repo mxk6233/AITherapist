@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 1: AI Prompt Generation and Personalization" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:08" hostname="Mohammads-MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="should generate personalized prompts based on user mood and preferences()" classname="com.serenityai.tests.usecases.uc32_journaling_prompts.unit.JournalingPromptsUseCaseTests$AIPromptGenerationTests" time="0.0"/>
+  <testcase name="should adapt prompt difficulty and duration based on user experience()" classname="com.serenityai.tests.usecases.uc32_journaling_prompts.unit.JournalingPromptsUseCaseTests$AIPromptGenerationTests" time="0.0"/>
+  <testcase name="should track prompt usage and effectiveness for continuous improvement()" classname="com.serenityai.tests.usecases.uc32_journaling_prompts.unit.JournalingPromptsUseCaseTests$AIPromptGenerationTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 2: Spiritual Guidance - Validates Secondary UC40 Functionality" tests="4" skipped="0" failures="0" errors="0" timestamp="2025-12-07T08:20:33" hostname="Mohammads-MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="UC40-REQ-4: System MUST provide spiritual guidance for Christianity" classname="com.serenityai.tests.unit.usecases.uc40_religious_support.ReligiousSupportUseCaseUnitTests$SpiritualGuidanceTests" time="0.0"/>
+  <testcase name="UC40-REQ-6: System MUST validate guidance requests" classname="com.serenityai.tests.unit.usecases.uc40_religious_support.ReligiousSupportUseCaseUnitTests$SpiritualGuidanceTests" time="0.0"/>
+  <testcase name="UC40-REQ-7: System MUST require religious preference for guidance" classname="com.serenityai.tests.unit.usecases.uc40_religious_support.ReligiousSupportUseCaseUnitTests$SpiritualGuidanceTests" time="0.001"/>
+  <testcase name="UC40-REQ-5: System MUST provide spiritual guidance for Islam" classname="com.serenityai.tests.unit.usecases.uc40_religious_support.ReligiousSupportUseCaseUnitTests$SpiritualGuidanceTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

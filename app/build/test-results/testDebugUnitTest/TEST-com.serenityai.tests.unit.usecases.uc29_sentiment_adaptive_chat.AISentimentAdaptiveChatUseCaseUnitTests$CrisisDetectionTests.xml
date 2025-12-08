@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 7: Crisis Detection" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-07T08:20:33" hostname="Mohammads-MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="UC29-REQ-19: System MUST generate crisis response" classname="com.serenityai.tests.unit.usecases.uc29_sentiment_adaptive_chat.AISentimentAdaptiveChatUseCaseUnitTests$CrisisDetectionTests" time="0.0"/>
+  <testcase name="UC29-REQ-18: System MUST escalate crisis situations" classname="com.serenityai.tests.unit.usecases.uc29_sentiment_adaptive_chat.AISentimentAdaptiveChatUseCaseUnitTests$CrisisDetectionTests" time="0.0"/>
+  <testcase name="UC29-REQ-17: System MUST detect crisis indicators" classname="com.serenityai.tests.unit.usecases.uc29_sentiment_adaptive_chat.AISentimentAdaptiveChatUseCaseUnitTests$CrisisDetectionTests" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

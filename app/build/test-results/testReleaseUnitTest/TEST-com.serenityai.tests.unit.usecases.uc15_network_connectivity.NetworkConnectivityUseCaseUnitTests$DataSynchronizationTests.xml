@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 3: Data Queuing and Synchronization" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:07" hostname="Mohammads-MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="UC15-REQ-5: System MUST display appropriate network status to users" classname="com.serenityai.tests.unit.usecases.uc15_network_connectivity.NetworkConnectivityUseCaseUnitTests$DataSynchronizationTests" time="0.0"/>
+  <testcase name="UC15-REQ-3: System MUST queue actions when offline" classname="com.serenityai.tests.unit.usecases.uc15_network_connectivity.NetworkConnectivityUseCaseUnitTests$DataSynchronizationTests" time="0.0"/>
+  <testcase name="UC15-REQ-4: System MUST synchronize data when connectivity returns" classname="com.serenityai.tests.unit.usecases.uc15_network_connectivity.NetworkConnectivityUseCaseUnitTests$DataSynchronizationTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

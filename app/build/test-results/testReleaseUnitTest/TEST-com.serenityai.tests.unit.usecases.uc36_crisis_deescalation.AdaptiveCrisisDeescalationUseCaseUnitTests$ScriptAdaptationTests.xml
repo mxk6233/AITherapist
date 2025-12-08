@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 4: Script Adaptation" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:07" hostname="Mohammads-MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="UC36-REQ-11: System MUST escalate script when crisis worsens" classname="com.serenityai.tests.unit.usecases.uc36_crisis_deescalation.AdaptiveCrisisDeescalationUseCaseUnitTests$ScriptAdaptationTests" time="0.0"/>
+  <testcase name="UC36-REQ-10: System MUST adapt script based on user response" classname="com.serenityai.tests.unit.usecases.uc36_crisis_deescalation.AdaptiveCrisisDeescalationUseCaseUnitTests$ScriptAdaptationTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

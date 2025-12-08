@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 1: Sentiment Analysis - Validates Core UC29 Functionality" tests="4" skipped="0" failures="0" errors="0" timestamp="2025-12-07T08:20:33" hostname="Mohammads-MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="UC29-REQ-2: System MUST analyze negative sentiment" classname="com.serenityai.tests.unit.usecases.uc29_sentiment_adaptive_chat.AISentimentAdaptiveChatUseCaseUnitTests$SentimentAnalysisTests" time="0.0"/>
+  <testcase name="UC29-REQ-1: System MUST analyze positive sentiment" classname="com.serenityai.tests.unit.usecases.uc29_sentiment_adaptive_chat.AISentimentAdaptiveChatUseCaseUnitTests$SentimentAnalysisTests" time="0.0"/>
+  <testcase name="UC29-REQ-4: System MUST detect very negative sentiment" classname="com.serenityai.tests.unit.usecases.uc29_sentiment_adaptive_chat.AISentimentAdaptiveChatUseCaseUnitTests$SentimentAnalysisTests" time="0.0"/>
+  <testcase name="UC29-REQ-3: System MUST analyze neutral sentiment" classname="com.serenityai.tests.unit.usecases.uc29_sentiment_adaptive_chat.AISentimentAdaptiveChatUseCaseUnitTests$SentimentAnalysisTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

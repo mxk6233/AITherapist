@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ChatFeaturesScreen.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.screens</a> &gt; <span class="el_source">ChatFeaturesScreen.kt</span></div><h1>ChatFeaturesScreen.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.screens
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.material3.ExperimentalMaterial3Api
+
+<span class="nc" id="L18">data class ChatFeature(</span>
+<span class="nc" id="L19">    val title: String,</span>
+<span class="nc" id="L20">    val description: String,</span>
+<span class="nc" id="L21">    val icon: androidx.compose.ui.graphics.vector.ImageVector,</span>
+<span class="nc" id="L22">    val onClick: () -&gt; Unit</span>
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ChatFeaturesScreen(
+    onNavigateToAIChat: () -&gt; Unit,
+    onNavigateToChatHistory: () -&gt; Unit,
+    onNavigateToCrisisIntervention: () -&gt; Unit,
+    onNavigateToVoiceTherapy: () -&gt; Unit,
+    onNavigateBack: () -&gt; Unit
+<span class="nc bnc" id="L33" title="All 26 branches missed.">) {</span>
+<span class="nc" id="L34">    val chatFeatures = listOf(</span>
+<span class="nc" id="L35">        ChatFeature(</span>
+<span class="nc" id="L36">            title = &quot;AI Chat Session&quot;,</span>
+<span class="nc" id="L37">            description = &quot;Start a conversation with your AI therapist&quot;,</span>
+<span class="nc" id="L38">            icon = Icons.Default.Chat,</span>
+<span class="nc" id="L39">            onClick = onNavigateToAIChat</span>
+        ),
+<span class="nc" id="L41">        ChatFeature(</span>
+<span class="nc" id="L42">            title = &quot;Voice Therapy&quot;,</span>
+<span class="nc" id="L43">            description = &quot;Have voice-based therapy sessions with speech recognition&quot;,</span>
+<span class="nc" id="L44">            icon = Icons.Default.Mic,</span>
+<span class="nc" id="L45">            onClick = onNavigateToVoiceTherapy</span>
+        ),
+<span class="nc" id="L47">        ChatFeature(</span>
+<span class="nc" id="L48">            title = &quot;Chat History&quot;,</span>
+<span class="nc" id="L49">            description = &quot;Review your previous conversations&quot;,</span>
+<span class="nc" id="L50">            icon = Icons.Default.History,</span>
+<span class="nc" id="L51">            onClick = onNavigateToChatHistory</span>
+        ),
+<span class="nc" id="L53">        ChatFeature(</span>
+<span class="nc" id="L54">            title = &quot;Crisis Intervention&quot;,</span>
+<span class="nc" id="L55">            description = &quot;Get immediate support during difficult times&quot;,</span>
+<span class="nc" id="L56">            icon = Icons.Default.Emergency,</span>
+<span class="nc" id="L57">            onClick = onNavigateToCrisisIntervention</span>
+        )
+    )
+    
+<span class="nc" id="L61">    Column(</span>
+<span class="nc" id="L62">        modifier = Modifier</span>
+<span class="nc" id="L63">            .fillMaxSize()</span>
+<span class="nc" id="L64">            .padding(16.dp)</span>
+    ) {
+        // Header
+<span class="nc" id="L67">        Row(</span>
+<span class="nc" id="L68">            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L69">            verticalAlignment = Alignment.CenterVertically</span>
+        ) {
+<span class="nc" id="L71">            IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L72" title="All 8 branches missed.">                Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L73">            }</span>
+<span class="nc" id="L74">            Text(</span>
+<span class="nc" id="L75">                text = &quot;Chat Features&quot;,</span>
+<span class="nc" id="L76">                fontSize = 24.sp,</span>
+<span class="nc" id="L77">                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L78">                modifier = Modifier.padding(start = 8.dp)</span>
+            )
+<span class="nc" id="L80">        }</span>
+        
+<span class="nc" id="L82">        Spacer(modifier = Modifier.height(24.dp))</span>
+        
+        // Features List
+<span class="nc" id="L85">        LazyColumn(</span>
+<span class="nc" id="L86">            verticalArrangement = Arrangement.spacedBy(16.dp)</span>
+<span class="nc" id="L87">        ) {</span>
+<span class="nc" id="L88">            items(chatFeatures) { feature -&gt;</span>
+                ChatFeatureCard(feature = feature)
+            }
+<span class="nc" id="L91">        }</span>
+        
+<span class="nc" id="L93">        Spacer(modifier = Modifier.height(24.dp))</span>
+        
+        // Quick Start Section
+<span class="nc" id="L96">        Card(</span>
+<span class="nc" id="L97">            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L98">            colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L99">                containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+            )
+<span class="nc" id="L101">        ) {</span>
+<span class="nc bnc" id="L102" title="All 6 branches missed.">            Column(</span>
+<span class="nc" id="L103">                modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L104">                horizontalAlignment = Alignment.CenterHorizontally</span>
+            ) {
+<span class="nc" id="L106">                Icon(</span>
+<span class="nc" id="L107">                    Icons.Default.Psychology,</span>
+<span class="nc" id="L108">                    contentDescription = null,</span>
+<span class="nc" id="L109">                    modifier = Modifier.size(48.dp),</span>
+<span class="nc" id="L110">                    tint = MaterialTheme.colorScheme.onPrimaryContainer</span>
+                )
+<span class="nc" id="L112">                Spacer(modifier = Modifier.height(16.dp))</span>
+<span class="nc" id="L113">                Text(</span>
+<span class="nc" id="L114">                    text = &quot;Ready to Talk?&quot;,</span>
+<span class="nc" id="L115">                    fontSize = 20.sp,</span>
+<span class="nc" id="L116">                    fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L117">                    color = MaterialTheme.colorScheme.onPrimaryContainer</span>
+                )
+<span class="nc" id="L119">                Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L120">                Text(</span>
+<span class="nc" id="L121">                    text = &quot;Start a conversation with your AI therapist whenever you need support&quot;,</span>
+<span class="nc" id="L122">                    fontSize = 14.sp,</span>
+<span class="nc" id="L123">                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),</span>
+<span class="nc" id="L124">                    textAlign = TextAlign.Center</span>
+                )
+<span class="nc" id="L126">                Spacer(modifier = Modifier.height(16.dp))</span>
+<span class="nc" id="L127">                Button(</span>
+<span class="nc" id="L128">                    onClick = onNavigateToAIChat,</span>
+<span class="nc" id="L129">                    modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L130">                ) {</span>
+<span class="nc bnc" id="L131" title="All 8 branches missed.">                    Text(&quot;Start AI Chat&quot;)</span>
+<span class="nc" id="L132">                }</span>
+<span class="nc" id="L133">            }</span>
+<span class="nc" id="L134">        }</span>
+<span class="nc" id="L135">    }</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L140" title="All 10 branches missed.">fun ChatFeatureCard(feature: ChatFeature) {</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L142">        onClick = feature.onClick,</span>
+<span class="nc" id="L143">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L144">        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)</span>
+<span class="nc" id="L145">    ) {</span>
+<span class="nc bnc" id="L146" title="All 6 branches missed.">        Row(</span>
+<span class="nc" id="L147">            modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L148">            verticalAlignment = Alignment.CenterVertically</span>
+        ) {
+<span class="nc" id="L150">            Icon(</span>
+<span class="nc" id="L151">                feature.icon,</span>
+<span class="nc" id="L152">                contentDescription = null,</span>
+<span class="nc" id="L153">                modifier = Modifier.size(40.dp),</span>
+<span class="nc" id="L154">                tint = MaterialTheme.colorScheme.primary</span>
+            )
+<span class="nc" id="L156">            Spacer(modifier = Modifier.width(16.dp))</span>
+<span class="nc" id="L157">            Column(</span>
+<span class="nc" id="L158">                modifier = Modifier.weight(1f)</span>
+            ) {
+<span class="nc" id="L160">                Text(</span>
+<span class="nc" id="L161">                    text = feature.title,</span>
+<span class="nc" id="L162">                    fontSize = 18.sp,</span>
+<span class="nc" id="L163">                    fontWeight = FontWeight.Bold</span>
+                )
+<span class="nc" id="L165">                Spacer(modifier = Modifier.height(4.dp))</span>
+<span class="nc" id="L166">                Text(</span>
+<span class="nc" id="L167">                    text = feature.description,</span>
+<span class="nc" id="L168">                    fontSize = 14.sp,</span>
+<span class="nc" id="L169">                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)</span>
+                )
+<span class="nc" id="L171">            }</span>
+<span class="nc" id="L172">            Icon(</span>
+<span class="nc" id="L173">                Icons.Default.ArrowForward,</span>
+<span class="nc" id="L174">                contentDescription = null,</span>
+<span class="nc" id="L175">                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)</span>
+            )
+<span class="nc" id="L177">        }</span>
+<span class="nc" id="L178">    }</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">}</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

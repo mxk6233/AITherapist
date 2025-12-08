@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Screen.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.navigation</a> &gt; <span class="el_source">Screen.kt</span></div><h1>Screen.kt</h1><pre class="source lang-java linenums">package com.serenityai.navigation
+
+<span class="nc" id="L3">sealed class Screen(val route: String) {</span>
+    // Main Flow
+<span class="nc" id="L5">    object Splash : Screen(&quot;splash&quot;)</span>
+<span class="nc" id="L6">    object Authentication : Screen(&quot;authentication&quot;)</span>
+<span class="nc" id="L7">    object PersonalityOnboarding : Screen(&quot;personality_onboarding&quot;) // UC5</span>
+<span class="nc" id="L8">    object MainDashboard : Screen(&quot;main_dashboard&quot;)</span>
+    
+    // Chat Features
+<span class="nc" id="L11">    object ChatFeatures : Screen(&quot;chat_features&quot;)</span>
+<span class="nc" id="L12">    object AIChatSession : Screen(&quot;ai_chat_session&quot;) // UC1</span>
+<span class="nc" id="L13">    object ChatHistory : Screen(&quot;chat_history&quot;) // UC6</span>
+<span class="nc" id="L14">    object CrisisIntervention : Screen(&quot;crisis_intervention&quot;) // UC2</span>
+<span class="nc" id="L15">    object VoiceTherapy : Screen(&quot;voice_therapy&quot;) // UC38</span>
+    
+    // Mood &amp; Analytics
+<span class="nc" id="L18">    object MoodAnalytics : Screen(&quot;mood_analytics&quot;)</span>
+<span class="nc" id="L19">    object MoodLogging : Screen(&quot;mood_logging&quot;) // UC3</span>
+<span class="nc" id="L20">    object MoodAnalyticsView : Screen(&quot;mood_analytics_view&quot;) // UC9</span>
+<span class="nc" id="L21">    object MoodForecasting : Screen(&quot;mood_forecasting&quot;) // UC26</span>
+<span class="nc" id="L22">    object BurnoutDetection : Screen(&quot;burnout_detection&quot;) // UC37</span>
+<span class="nc" id="L23">    object RelapsePrevention : Screen(&quot;relapse_prevention&quot;) // UC35</span>
+    
+    // Support Tools
+<span class="nc" id="L26">    object SupportTools : Screen(&quot;support_tools&quot;)</span>
+<span class="nc" id="L27">    object CopingExercises : Screen(&quot;coping_exercises&quot;) // UC8</span>
+<span class="nc" id="L28">    object JournalPrompts : Screen(&quot;journal_prompts&quot;) // UC32</span>
+<span class="nc" id="L29">    object EducationalResources : Screen(&quot;educational_resources&quot;) // UC16</span>
+<span class="nc" id="L30">    object UserSupport : Screen(&quot;user_support&quot;) // UC25</span>
+<span class="nc" id="L31">    object GroupTherapy : Screen(&quot;group_therapy&quot;) // UC34</span>
+<span class="nc" id="L32">    object CommunitySupportCircles : Screen(&quot;community_support_circles&quot;) // UC39</span>
+<span class="nc" id="L33">    object ReligiousSupport : Screen(&quot;religious_support&quot;) // UC40</span>
+    
+    // Wellness Activities
+<span class="nc" id="L36">    object WellnessActivities : Screen(&quot;wellness_activities&quot;)</span>
+<span class="nc" id="L37">    object GuidedBreathing : Screen(&quot;guided_breathing&quot;) // UC27</span>
+<span class="nc" id="L38">    object DailyAffirmations : Screen(&quot;daily_affirmations&quot;) // UC14</span>
+    
+    // Settings &amp; Personalization
+<span class="nc" id="L41">    object Settings : Screen(&quot;settings&quot;)</span>
+<span class="nc" id="L42">    object SecurityProtocols : Screen(&quot;security_protocols&quot;) // UC23</span>
+<span class="nc" id="L43">    object Personalization : Screen(&quot;personalization&quot;) // UC24</span>
+<span class="nc" id="L44">    object Accessibility : Screen(&quot;accessibility&quot;) // UC17</span>
+<span class="nc" id="L45">    object Notifications : Screen(&quot;notifications&quot;) // UC18</span>
+<span class="nc" id="L46">    object AppPreferences : Screen(&quot;app_preferences&quot;) // UC13</span>
+<span class="nc" id="L47">    object SystemHealth : Screen(&quot;system_health&quot;) // UC22</span>
+<span class="nc" id="L48">    object ApplicationFeedback : Screen(&quot;application_feedback&quot;) // UC11</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

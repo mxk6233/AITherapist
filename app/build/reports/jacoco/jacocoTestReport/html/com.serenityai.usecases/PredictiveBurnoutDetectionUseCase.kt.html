@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PredictiveBurnoutDetectionUseCase.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.usecases</a> &gt; <span class="el_source">PredictiveBurnoutDetectionUseCase.kt</span></div><h1>PredictiveBurnoutDetectionUseCase.kt</h1><pre class="source lang-java linenums">package com.serenityai.usecases
+
+import com.serenityai.data.models.*
+import java.util.Date
+
+/** UC37: Burnout prediction model that analyzes user behavior patterns, mood trends, and activity levels to detect early signs of burnout risk. */
+<span class="nc" id="L7">class PredictiveBurnoutDetectionUseCase {</span>
+    
+    /**
+     * Assesses burnout risk based on multiple factors
+     * 
+     * @param moodEntries Recent mood entries for trend analysis
+     * @param activityLevels Recent activity levels (app usage, engagement)
+     * @param stressIndicators Recent stress indicators
+     * @param sleepQuality Recent sleep quality data
+     * @return BurnoutRiskAssessment object
+     */
+<span class="nc" id="L18">    fun assessBurnoutRisk(</span>
+        moodEntries: List&lt;MoodEntry&gt;,
+<span class="nc" id="L20">        activityLevels: List&lt;ActivityLevel&gt; = emptyList(),</span>
+<span class="nc" id="L21">        stressIndicators: List&lt;StressIndicator&gt; = emptyList(),</span>
+<span class="nc" id="L22">        sleepQuality: List&lt;SleepQuality&gt; = emptyList()</span>
+    ): BurnoutRiskAssessment {
+<span class="nc" id="L24">        val riskFactors = mutableListOf&lt;BurnoutRiskFactor&gt;()</span>
+        
+        // Analyze mood trends for burnout patterns
+<span class="nc bnc" id="L27" title="All 4 branches missed.">        if (moodEntries.isNotEmpty()) {</span>
+<span class="nc" id="L28">            val moodFactor = analyzeMoodTrends(moodEntries)</span>
+<span class="nc" id="L29">            riskFactors.add(moodFactor)</span>
+        }
+        
+        // Analyze activity levels for disengagement patterns
+<span class="nc bnc" id="L33" title="All 4 branches missed.">        if (activityLevels.isNotEmpty()) {</span>
+<span class="nc" id="L34">            val activityFactor = analyzeActivityLevels(activityLevels)</span>
+<span class="nc" id="L35">            riskFactors.add(activityFactor)</span>
+        }
+        
+        // Analyze stress indicators
+<span class="nc bnc" id="L39" title="All 4 branches missed.">        if (stressIndicators.isNotEmpty()) {</span>
+<span class="nc" id="L40">            val stressFactor = analyzeStressIndicators(stressIndicators)</span>
+<span class="nc" id="L41">            riskFactors.add(stressFactor)</span>
+        }
+        
+        // Analyze sleep quality
+<span class="nc bnc" id="L45" title="All 4 branches missed.">        if (sleepQuality.isNotEmpty()) {</span>
+<span class="nc" id="L46">            val sleepFactor = analyzeSleepQuality(sleepQuality)</span>
+<span class="nc" id="L47">            riskFactors.add(sleepFactor)</span>
+        }
+        
+        // Calculate overall burnout risk score
+<span class="nc" id="L51">        val riskScore = calculateBurnoutRiskScore(riskFactors)</span>
+        
+        // Determine risk level
+<span class="nc" id="L54">        val riskLevel = determineRiskLevel(riskScore)</span>
+        
+        // Detect early warning signs
+<span class="nc" id="L57">        val earlyWarnings = detectBurnoutWarnings(riskFactors, moodEntries)</span>
+        
+        // Generate prevention recommendations
+<span class="nc" id="L60">        val recommendations = generatePreventionRecommendations(riskLevel, riskFactors)</span>
+        
+        // Determine if intervention should be triggered
+<span class="nc" id="L63">        val interventionTriggered = riskLevel in listOf(BurnoutRiskLevel.HIGH, BurnoutRiskLevel.CRITICAL)</span>
+        
+<span class="nc" id="L65">        return BurnoutRiskAssessment(</span>
+<span class="nc" id="L66">            id = System.currentTimeMillis().toString(),</span>
+<span class="nc bnc" id="L67" title="All 4 branches missed.">            userId = moodEntries.firstOrNull()?.userId ?: &quot;&quot;,</span>
+<span class="nc" id="L68">            assessedAt = Date(),</span>
+<span class="nc" id="L69">            riskScore = riskScore,</span>
+<span class="nc" id="L70">            riskLevel = riskLevel,</span>
+<span class="nc" id="L71">            riskFactors = riskFactors,</span>
+<span class="nc" id="L72">            earlyWarnings = earlyWarnings,</span>
+<span class="nc" id="L73">            recommendations = recommendations,</span>
+<span class="nc" id="L74">            interventionTriggered = interventionTriggered</span>
+        )
+    }
+    
+    /**
+     * Detects early warning signs of burnout
+     * 
+     * @param riskFactors Current risk factors
+     * @param moodEntries Recent mood data
+     * @return List of BurnoutWarning objects
+     */
+    fun detectBurnoutWarnings(
+        riskFactors: List&lt;BurnoutRiskFactor&gt;,
+        moodEntries: List&lt;MoodEntry&gt;
+    ): List&lt;BurnoutWarning&gt; {
+<span class="nc" id="L89">        val warnings = mutableListOf&lt;BurnoutWarning&gt;()</span>
+        
+        // Check for mood decline pattern
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        if (moodEntries.size &gt;= 7) {</span>
+<span class="nc" id="L93">            val recentMoods = moodEntries.takeLast(7).map { it.mood.toFloat() }</span>
+<span class="nc" id="L94">            val earlierMoods = moodEntries.dropLast(7).takeLast(7).map { it.mood.toFloat() }</span>
+            
+<span class="nc bnc" id="L96" title="All 6 branches missed.">            if (earlierMoods.isNotEmpty() &amp;&amp; recentMoods.average().toFloat() &lt; earlierMoods.average().toFloat() - 0.5f) {</span>
+<span class="nc" id="L97">                warnings.add(</span>
+<span class="nc" id="L98">                    BurnoutWarning(</span>
+<span class="nc" id="L99">                        type = WarningType.MOOD_DECLINE,</span>
+<span class="nc" id="L100">                        severity = WarningSeverity.MODERATE,</span>
+<span class="nc" id="L101">                        message = &quot;Sustained mood decline detected over the past week&quot;,</span>
+<span class="nc" id="L102">                        detectedAt = Date()</span>
+                    )
+                )
+            }
+        }
+        
+        // Check for activity drop
+<span class="nc bnc" id="L109" title="All 6 branches missed.">        val activityFactor = riskFactors.find { it.factorType == BurnoutFactorType.ACTIVITY_DECLINE }</span>
+<span class="nc bnc" id="L110" title="All 4 branches missed.">        if (activityFactor != null &amp;&amp; activityFactor.severity &gt;= 0.7f) {</span>
+<span class="nc" id="L111">            warnings.add(</span>
+<span class="nc" id="L112">                BurnoutWarning(</span>
+<span class="nc" id="L113">                    type = WarningType.ACTIVITY_DECLINE,</span>
+<span class="nc" id="L114">                    severity = WarningSeverity.HIGH,</span>
+<span class="nc" id="L115">                    message = &quot;Significant decrease in app engagement detected&quot;,</span>
+<span class="nc" id="L116">                    detectedAt = Date()</span>
+                )
+            )
+        }
+        
+        // Check for stress accumulation
+<span class="nc bnc" id="L122" title="All 6 branches missed.">        val stressFactor = riskFactors.find { it.factorType == BurnoutFactorType.STRESS_ACCUMULATION }</span>
+<span class="nc bnc" id="L123" title="All 4 branches missed.">        if (stressFactor != null &amp;&amp; stressFactor.severity &gt;= 0.8f) {</span>
+<span class="nc" id="L124">            warnings.add(</span>
+<span class="nc" id="L125">                BurnoutWarning(</span>
+<span class="nc" id="L126">                    type = WarningType.STRESS_ACCUMULATION,</span>
+<span class="nc" id="L127">                    severity = WarningSeverity.HIGH,</span>
+<span class="nc" id="L128">                    message = &quot;High stress levels detected consistently&quot;,</span>
+<span class="nc" id="L129">                    detectedAt = Date()</span>
+                )
+            )
+        }
+        
+        // Check for sleep disruption
+<span class="nc bnc" id="L135" title="All 6 branches missed.">        val sleepFactor = riskFactors.find { it.factorType == BurnoutFactorType.SLEEP_DISRUPTION }</span>
+<span class="nc bnc" id="L136" title="All 4 branches missed.">        if (sleepFactor != null &amp;&amp; sleepFactor.severity &gt;= 0.7f) {</span>
+<span class="nc" id="L137">            warnings.add(</span>
+<span class="nc" id="L138">                BurnoutWarning(</span>
+<span class="nc" id="L139">                    type = WarningType.SLEEP_DISRUPTION,</span>
+<span class="nc" id="L140">                    severity = WarningSeverity.MODERATE,</span>
+<span class="nc" id="L141">                    message = &quot;Sleep quality issues detected&quot;,</span>
+<span class="nc" id="L142">                    detectedAt = Date()</span>
+                )
+            )
+        }
+        
+<span class="nc" id="L147">        return warnings</span>
+    }
+    
+    /**
+     * Generates personalized prevention recommendations
+     * 
+     * @param riskLevel Current burnout risk level
+     * @param riskFactors Identified risk factors
+     * @return List of prevention recommendations
+     */
+    fun generatePreventionRecommendations(
+        riskLevel: BurnoutRiskLevel,
+        riskFactors: List&lt;BurnoutRiskFactor&gt;
+    ): List&lt;String&gt; {
+<span class="nc" id="L161">        val recommendations = mutableListOf&lt;String&gt;()</span>
+        
+<span class="nc bnc" id="L163" title="All 4 branches missed.">        when (riskLevel) {</span>
+            BurnoutRiskLevel.CRITICAL -&gt; {
+<span class="nc" id="L165">                recommendations.add(&quot;URGENT: Consider taking a break or reducing workload&quot;)</span>
+<span class="nc" id="L166">                recommendations.add(&quot;Prioritize rest and recovery activities&quot;)</span>
+<span class="nc" id="L167">                recommendations.add(&quot;Consider speaking with a mental health professional&quot;)</span>
+<span class="nc" id="L168">                recommendations.add(&quot;Implement stress reduction techniques immediately&quot;)</span>
+            }
+            BurnoutRiskLevel.HIGH -&gt; {
+<span class="nc" id="L171">                recommendations.add(&quot;Take proactive steps to prevent burnout&quot;)</span>
+<span class="nc" id="L172">                recommendations.add(&quot;Increase self-care activities and rest periods&quot;)</span>
+<span class="nc" id="L173">                recommendations.add(&quot;Practice stress management techniques daily&quot;)</span>
+<span class="nc" id="L174">                recommendations.add(&quot;Consider work-life balance adjustments&quot;)</span>
+            }
+            BurnoutRiskLevel.MODERATE -&gt; {
+<span class="nc" id="L177">                recommendations.add(&quot;Monitor your stress levels closely&quot;)</span>
+<span class="nc" id="L178">                recommendations.add(&quot;Maintain regular self-care routines&quot;)</span>
+<span class="nc" id="L179">                recommendations.add(&quot;Take regular breaks throughout the day&quot;)</span>
+<span class="nc" id="L180">                recommendations.add(&quot;Practice mindfulness and relaxation techniques&quot;)</span>
+            }
+            BurnoutRiskLevel.LOW -&gt; {
+<span class="nc" id="L183">                recommendations.add(&quot;Continue current self-care practices&quot;)</span>
+<span class="nc" id="L184">                recommendations.add(&quot;Maintain healthy work-life balance&quot;)</span>
+<span class="nc" id="L185">                recommendations.add(&quot;Stay engaged with supportive activities&quot;)</span>
+            }
+        }
+        
+        // Add specific recommendations based on risk factors
+<span class="nc" id="L190">        riskFactors.forEach { factor -&gt;</span>
+<span class="nc bnc" id="L191" title="All 4 branches missed.">            when (factor.factorType) {</span>
+                BurnoutFactorType.MOOD_DECLINE -&gt; {
+<span class="nc" id="L193">                    recommendations.add(&quot;Focus on mood improvement activities&quot;)</span>
+<span class="nc" id="L194">                    recommendations.add(&quot;Engage in activities that bring joy&quot;)</span>
+                }
+                BurnoutFactorType.ACTIVITY_DECLINE -&gt; {
+<span class="nc" id="L197">                    recommendations.add(&quot;Gradually increase engagement with supportive activities&quot;)</span>
+<span class="nc" id="L198">                    recommendations.add(&quot;Set small, achievable goals&quot;)</span>
+                }
+                BurnoutFactorType.STRESS_ACCUMULATION -&gt; {
+<span class="nc" id="L201">                    recommendations.add(&quot;Practice daily stress reduction techniques&quot;)</span>
+<span class="nc" id="L202">                    recommendations.add(&quot;Identify and address sources of stress&quot;)</span>
+                }
+                BurnoutFactorType.SLEEP_DISRUPTION -&gt; {
+<span class="nc" id="L205">                    recommendations.add(&quot;Improve sleep hygiene practices&quot;)</span>
+<span class="nc" id="L206">                    recommendations.add(&quot;Maintain consistent sleep schedule&quot;)</span>
+                }
+            }
+<span class="nc" id="L209">        }</span>
+        
+<span class="nc" id="L211">        return recommendations.distinct()</span>
+    }
+    
+    /**
+     * Predicts future burnout risk based on current trends
+     * 
+     * @param currentAssessment Current burnout risk assessment
+     * @param daysAhead Number of days to predict (default 7)
+     * @return BurnoutPrediction object
+     */
+<span class="nc" id="L221">    fun predictFutureBurnoutRisk(</span>
+        currentAssessment: BurnoutRiskAssessment,
+<span class="nc" id="L223">        daysAhead: Int = 7</span>
+    ): BurnoutPrediction {
+<span class="nc" id="L225">        val currentScore = currentAssessment.riskScore</span>
+<span class="nc" id="L226">        val trend = analyzeTrend(currentAssessment.riskFactors)</span>
+        
+        // Project future risk based on trend
+<span class="nc bnc" id="L229" title="All 3 branches missed.">        val projectedScore = when (trend) {</span>
+<span class="nc" id="L230">            Trend.INCREASING -&gt; (currentScore * 1.15f).coerceIn(0f, 100f)</span>
+<span class="nc" id="L231">            Trend.DECREASING -&gt; (currentScore * 0.85f).coerceIn(0f, 100f)</span>
+<span class="nc" id="L232">            Trend.STABLE -&gt; currentScore</span>
+        }
+        
+<span class="nc" id="L235">        val projectedRiskLevel = determineRiskLevel(projectedScore)</span>
+        
+<span class="nc" id="L237">        return BurnoutPrediction(</span>
+<span class="nc" id="L238">            id = System.currentTimeMillis().toString(),</span>
+<span class="nc" id="L239">            userId = currentAssessment.userId,</span>
+<span class="nc" id="L240">            predictedAt = Date(),</span>
+<span class="nc" id="L241">            daysAhead = daysAhead,</span>
+<span class="nc" id="L242">            projectedRiskScore = projectedScore,</span>
+<span class="nc" id="L243">            projectedRiskLevel = projectedRiskLevel,</span>
+<span class="nc" id="L244">            trend = trend,</span>
+<span class="nc" id="L245">            confidence = calculatePredictionConfidence(currentAssessment)</span>
+        )
+    }
+    
+    // Private helper methods
+    
+    /**
+     * Derives a burnout risk factor by inspecting recent mood entries for average and directional trends.
+     *
+     * @param moodEntries Chronologically ordered mood history for the user.
+     * @return `BurnoutRiskFactor` quantifying mood-related burnout signals.
+     */
+    private fun analyzeMoodTrends(moodEntries: List&lt;MoodEntry&gt;): BurnoutRiskFactor {
+<span class="nc bnc" id="L258" title="All 2 branches missed.">        if (moodEntries.isEmpty()) {</span>
+<span class="nc" id="L259">            return BurnoutRiskFactor(</span>
+<span class="nc" id="L260">                factorType = BurnoutFactorType.MOOD_DECLINE,</span>
+<span class="nc" id="L261">                severity = 0f,</span>
+<span class="nc" id="L262">                description = &quot;Insufficient mood data&quot;,</span>
+<span class="nc" id="L263">                detectedAt = Date()</span>
+            )
+        }
+        
+<span class="nc" id="L267">        val moods = moodEntries.map { it.mood.toFloat() }</span>
+<span class="nc" id="L268">        val averageMood = moods.average().toFloat()</span>
+<span class="nc bnc" id="L269" title="All 2 branches missed.">        val trend = if (moodEntries.size &gt;= 2) {</span>
+<span class="nc" id="L270">            val recent = moods.takeLast(moodEntries.size / 2).average().toFloat()</span>
+<span class="nc" id="L271">            val earlier = moods.take(moodEntries.size / 2).average().toFloat()</span>
+<span class="nc bnc" id="L272" title="All 4 branches missed.">            if (recent &lt; earlier - 0.3f) Trend.DECREASING else if (recent &gt; earlier + 0.3f) Trend.INCREASING else Trend.STABLE</span>
+<span class="nc" id="L273">        } else Trend.STABLE</span>
+        
+<span class="nc" id="L275">        val severity = when {</span>
+<span class="nc bnc" id="L276" title="All 4 branches missed.">            averageMood &lt; 2.5f &amp;&amp; trend == Trend.DECREASING -&gt; 0.9f</span>
+<span class="nc bnc" id="L277" title="All 4 branches missed.">            averageMood &lt; 3.0f &amp;&amp; trend == Trend.DECREASING -&gt; 0.7f</span>
+<span class="nc bnc" id="L278" title="All 4 branches missed.">            averageMood &lt; 3.5f &amp;&amp; trend == Trend.DECREASING -&gt; 0.5f</span>
+<span class="nc bnc" id="L279" title="All 2 branches missed.">            averageMood &lt; 3.0f -&gt; 0.6f</span>
+<span class="nc" id="L280">            else -&gt; 0.3f</span>
+        }
+        
+<span class="nc" id="L283">        return BurnoutRiskFactor(</span>
+<span class="nc" id="L284">            factorType = BurnoutFactorType.MOOD_DECLINE,</span>
+<span class="nc" id="L285">            severity = severity,</span>
+<span class="nc" id="L286">            description = &quot;Mood trend analysis: ${trend.name.lowercase()}, average mood: ${String.format(&quot;%.1f&quot;, averageMood)}&quot;,</span>
+<span class="nc" id="L287">            detectedAt = Date()</span>
+        )
+    }
+    
+    /**
+     * Evaluates engagement data to detect declines in activity that may signal burnout risk.
+     *
+     * @param activityLevels Recorded engagement intensity values.
+     * @return Activity-based `BurnoutRiskFactor` capturing declines in participation.
+     */
+    private fun analyzeActivityLevels(activityLevels: List&lt;ActivityLevel&gt;): BurnoutRiskFactor {
+<span class="nc bnc" id="L298" title="All 2 branches missed.">        if (activityLevels.isEmpty()) {</span>
+<span class="nc" id="L299">            return BurnoutRiskFactor(</span>
+<span class="nc" id="L300">                factorType = BurnoutFactorType.ACTIVITY_DECLINE,</span>
+<span class="nc" id="L301">                severity = 0f,</span>
+<span class="nc" id="L302">                description = &quot;Insufficient activity data&quot;,</span>
+<span class="nc" id="L303">                detectedAt = Date()</span>
+            )
+        }
+        
+<span class="nc" id="L307">        val activities = activityLevels.map { it.level }</span>
+<span class="nc" id="L308">        val averageActivity = activities.average().toFloat()</span>
+<span class="nc" id="L309">        val recentActivity = activities.takeLast(activities.size / 2).average().toFloat()</span>
+<span class="nc" id="L310">        val earlierActivity = activities.take(activities.size / 2).average().toFloat()</span>
+        
+<span class="nc bnc" id="L312" title="All 2 branches missed.">        val decline = if (earlierActivity &gt; 0f) (earlierActivity - recentActivity) / earlierActivity else 0f</span>
+        
+<span class="nc" id="L314">        val severity = when {</span>
+<span class="nc bnc" id="L315" title="All 2 branches missed.">            decline &gt; 0.5f -&gt; 0.9f</span>
+<span class="nc bnc" id="L316" title="All 2 branches missed.">            decline &gt; 0.3f -&gt; 0.7f</span>
+<span class="nc bnc" id="L317" title="All 2 branches missed.">            decline &gt; 0.15f -&gt; 0.5f</span>
+<span class="nc bnc" id="L318" title="All 2 branches missed.">            averageActivity &lt; 0.3f -&gt; 0.6f</span>
+<span class="nc" id="L319">            else -&gt; 0.3f</span>
+        }
+        
+<span class="nc" id="L322">        return BurnoutRiskFactor(</span>
+<span class="nc" id="L323">            factorType = BurnoutFactorType.ACTIVITY_DECLINE,</span>
+<span class="nc" id="L324">            severity = severity,</span>
+<span class="nc" id="L325">            description = &quot;Activity decline: ${String.format(&quot;%.1f&quot;, decline * 100)}% decrease&quot;,</span>
+<span class="nc" id="L326">            detectedAt = Date()</span>
+        )
+    }
+    
+    /**
+     * Aggregates user-reported stress indicators to determine burnout severity related to stress.
+     *
+     * @param stressIndicators Series of stress measurements on a 0-10 scale.
+     * @return Stress accumulation `BurnoutRiskFactor` reflecting intensity and persistence.
+     */
+    private fun analyzeStressIndicators(stressIndicators: List&lt;StressIndicator&gt;): BurnoutRiskFactor {
+<span class="nc bnc" id="L337" title="All 2 branches missed.">        if (stressIndicators.isEmpty()) {</span>
+<span class="nc" id="L338">            return BurnoutRiskFactor(</span>
+<span class="nc" id="L339">                factorType = BurnoutFactorType.STRESS_ACCUMULATION,</span>
+<span class="nc" id="L340">                severity = 0f,</span>
+<span class="nc" id="L341">                description = &quot;Insufficient stress data&quot;,</span>
+<span class="nc" id="L342">                detectedAt = Date()</span>
+            )
+        }
+        
+<span class="nc" id="L346">        val stressLevels = stressIndicators.map { it.level }</span>
+<span class="nc" id="L347">        val averageStress = stressLevels.average().toFloat()</span>
+<span class="nc bnc" id="L348" title="All 2 branches missed.">        val highStressDays = stressIndicators.count { it.level &gt;= 7 }</span>
+<span class="nc" id="L349">        val totalDays = stressIndicators.size</span>
+        
+<span class="nc" id="L351">        val severity = when {</span>
+<span class="nc bnc" id="L352" title="All 4 branches missed.">            averageStress &gt;= 8.0f &amp;&amp; highStressDays &gt;= totalDays * 0.7f -&gt; 0.9f</span>
+<span class="nc bnc" id="L353" title="All 4 branches missed.">            averageStress &gt;= 7.0f &amp;&amp; highStressDays &gt;= totalDays * 0.5f -&gt; 0.8f</span>
+<span class="nc bnc" id="L354" title="All 2 branches missed.">            averageStress &gt;= 6.0f -&gt; 0.6f</span>
+<span class="nc bnc" id="L355" title="All 2 branches missed.">            averageStress &gt;= 5.0f -&gt; 0.4f</span>
+<span class="nc" id="L356">            else -&gt; 0.2f</span>
+        }
+        
+<span class="nc" id="L359">        return BurnoutRiskFactor(</span>
+<span class="nc" id="L360">            factorType = BurnoutFactorType.STRESS_ACCUMULATION,</span>
+<span class="nc" id="L361">            severity = severity,</span>
+<span class="nc" id="L362">            description = &quot;Average stress level: ${String.format(&quot;%.1f&quot;, averageStress)}/10&quot;,</span>
+<span class="nc" id="L363">            detectedAt = Date()</span>
+        )
+    }
+    
+    /**
+     * Assesses sleep quality patterns to identify potential burnout driven by rest disruptions.
+     *
+     * @param sleepQuality Collection of nightly sleep quality assessments.
+     * @return Sleep disruption `BurnoutRiskFactor` with severity proportional to sleep degradation.
+     */
+    private fun analyzeSleepQuality(sleepQuality: List&lt;SleepQuality&gt;): BurnoutRiskFactor {
+<span class="nc bnc" id="L374" title="All 2 branches missed.">        if (sleepQuality.isEmpty()) {</span>
+<span class="nc" id="L375">            return BurnoutRiskFactor(</span>
+<span class="nc" id="L376">                factorType = BurnoutFactorType.SLEEP_DISRUPTION,</span>
+<span class="nc" id="L377">                severity = 0f,</span>
+<span class="nc" id="L378">                description = &quot;Insufficient sleep data&quot;,</span>
+<span class="nc" id="L379">                detectedAt = Date()</span>
+            )
+        }
+        
+<span class="nc" id="L383">        val qualityScores = sleepQuality.map { it.quality }</span>
+<span class="nc" id="L384">        val averageQuality = qualityScores.average().toFloat()</span>
+<span class="nc bnc" id="L385" title="All 2 branches missed.">        val poorSleepDays = sleepQuality.count { it.quality &lt;= 3 }</span>
+<span class="nc" id="L386">        val totalDays = sleepQuality.size</span>
+        
+<span class="nc" id="L388">        val severity = when {</span>
+<span class="nc bnc" id="L389" title="All 4 branches missed.">            averageQuality &lt;= 2.0f &amp;&amp; poorSleepDays &gt;= totalDays * 0.7f -&gt; 0.9f</span>
+<span class="nc bnc" id="L390" title="All 4 branches missed.">            averageQuality &lt;= 3.0f &amp;&amp; poorSleepDays &gt;= totalDays * 0.5f -&gt; 0.7f</span>
+<span class="nc bnc" id="L391" title="All 2 branches missed.">            averageQuality &lt;= 4.0f -&gt; 0.5f</span>
+<span class="nc bnc" id="L392" title="All 2 branches missed.">            averageQuality &lt;= 5.0f -&gt; 0.3f</span>
+<span class="nc" id="L393">            else -&gt; 0.1f</span>
+        }
+        
+<span class="nc" id="L396">        return BurnoutRiskFactor(</span>
+<span class="nc" id="L397">            factorType = BurnoutFactorType.SLEEP_DISRUPTION,</span>
+<span class="nc" id="L398">            severity = severity,</span>
+<span class="nc" id="L399">            description = &quot;Average sleep quality: ${String.format(&quot;%.1f&quot;, averageQuality)}/10&quot;,</span>
+<span class="nc" id="L400">            detectedAt = Date()</span>
+        )
+    }
+    
+    /**
+     * Consolidates individual risk factors into a single normalized burnout risk score.
+     *
+     * @param riskFactors Factors derived from mood, activity, stress, and sleep analyses.
+     * @return Overall burnout risk score ranging from 0 to 100.
+     */
+    private fun calculateBurnoutRiskScore(riskFactors: List&lt;BurnoutRiskFactor&gt;): Float {
+<span class="nc bnc" id="L411" title="All 2 branches missed.">        if (riskFactors.isEmpty()) return 0f</span>
+        
+        // Weighted average of risk factor severities
+<span class="nc bnc" id="L414" title="All 2 branches missed.">        val weightedSum = riskFactors.sumOf { it.severity.toDouble() }</span>
+<span class="nc" id="L415">        val average = (weightedSum / riskFactors.size).toFloat()</span>
+        
+        // Convert to 0-100 scale
+<span class="nc" id="L418">        return (average * 100f).coerceIn(0f, 100f)</span>
+    }
+    
+    /**
+     * Maps a numeric risk score to the categorical burnout risk level.
+     *
+     * @param riskScore Calculated burnout score on a 0-100 scale.
+     * @return Enumerated burnout risk tier representing severity.
+     */
+    private fun determineRiskLevel(riskScore: Float): BurnoutRiskLevel {
+<span class="nc" id="L428">        return when {</span>
+<span class="nc bnc" id="L429" title="All 2 branches missed.">            riskScore &gt;= 75f -&gt; BurnoutRiskLevel.CRITICAL</span>
+<span class="nc bnc" id="L430" title="All 2 branches missed.">            riskScore &gt;= 50f -&gt; BurnoutRiskLevel.HIGH</span>
+<span class="nc bnc" id="L431" title="All 2 branches missed.">            riskScore &gt;= 25f -&gt; BurnoutRiskLevel.MODERATE</span>
+<span class="nc" id="L432">            else -&gt; BurnoutRiskLevel.LOW</span>
+        }
+    }
+    
+    /**
+     * Synthesizes overall trend direction based on the concentration of high-severity factors.
+     *
+     * @param riskFactors Set of factors from the latest assessment.
+     * @return Directional trend describing whether burnout signals are increasing, decreasing, or stable.
+     */
+    private fun analyzeTrend(riskFactors: List&lt;BurnoutRiskFactor&gt;): Trend {
+        // Simplified trend analysis
+<span class="nc bnc" id="L444" title="All 2 branches missed.">        val highSeverityCount = riskFactors.count { it.severity &gt;= 0.7f }</span>
+<span class="nc" id="L445">        return when {</span>
+<span class="nc bnc" id="L446" title="All 2 branches missed.">            highSeverityCount &gt;= riskFactors.size * 0.7f -&gt; Trend.INCREASING</span>
+<span class="nc bnc" id="L447" title="All 2 branches missed.">            highSeverityCount &lt;= riskFactors.size * 0.3f -&gt; Trend.DECREASING</span>
+<span class="nc" id="L448">            else -&gt; Trend.STABLE</span>
+        }
+    }
+    
+    /**
+     * Estimates confidence for future risk predictions using breadth and intensity of available data.
+     *
+     * @param assessment Latest burnout assessment underpinning the forecast.
+     * @return Confidence percentage (0-100) describing prediction reliability.
+     */
+    private fun calculatePredictionConfidence(assessment: BurnoutRiskAssessment): Float {
+        // Confidence based on number of risk factors and data quality
+<span class="nc" id="L460">        val factorCount = assessment.riskFactors.size</span>
+<span class="nc" id="L461">        val avgSeverity = assessment.riskFactors.map { it.severity }.average().toFloat()</span>
+        
+<span class="nc" id="L463">        return when {</span>
+<span class="nc bnc" id="L464" title="All 4 branches missed.">            factorCount &gt;= 4 &amp;&amp; avgSeverity &gt; 0.5f -&gt; 85f</span>
+<span class="nc bnc" id="L465" title="All 2 branches missed.">            factorCount &gt;= 3 -&gt; 75f</span>
+<span class="nc bnc" id="L466" title="All 2 branches missed.">            factorCount &gt;= 2 -&gt; 65f</span>
+<span class="nc" id="L467">            else -&gt; 50f</span>
+        }
+    }
+}
+
+/**
+ * Data class for burnout risk assessment
+ */
+<span class="nc" id="L475">data class BurnoutRiskAssessment(</span>
+<span class="nc" id="L476">    val id: String,</span>
+<span class="nc" id="L477">    val userId: String,</span>
+<span class="nc" id="L478">    val assessedAt: Date,</span>
+<span class="nc" id="L479">    val riskScore: Float, // 0-100</span>
+<span class="nc" id="L480">    val riskLevel: BurnoutRiskLevel,</span>
+<span class="nc" id="L481">    val riskFactors: List&lt;BurnoutRiskFactor&gt;,</span>
+<span class="nc" id="L482">    val earlyWarnings: List&lt;BurnoutWarning&gt;,</span>
+<span class="nc" id="L483">    val recommendations: List&lt;String&gt;,</span>
+<span class="nc" id="L484">    val interventionTriggered: Boolean</span>
+)
+
+/**
+ * Data class for burnout risk factor
+ */
+<span class="nc" id="L490">data class BurnoutRiskFactor(</span>
+<span class="nc" id="L491">    val factorType: BurnoutFactorType,</span>
+<span class="nc" id="L492">    val severity: Float, // 0-1</span>
+<span class="nc" id="L493">    val description: String,</span>
+<span class="nc" id="L494">    val detectedAt: Date</span>
+)
+
+/**
+ * Data class for burnout warning
+ */
+<span class="nc" id="L500">data class BurnoutWarning(</span>
+<span class="nc" id="L501">    val type: WarningType,</span>
+<span class="nc" id="L502">    val severity: WarningSeverity,</span>
+<span class="nc" id="L503">    val message: String,</span>
+<span class="nc" id="L504">    val detectedAt: Date</span>
+)
+
+/**
+ * Data class for burnout prediction
+ */
+<span class="nc" id="L510">data class BurnoutPrediction(</span>
+<span class="nc" id="L511">    val id: String,</span>
+<span class="nc" id="L512">    val userId: String,</span>
+<span class="nc" id="L513">    val predictedAt: Date,</span>
+<span class="nc" id="L514">    val daysAhead: Int,</span>
+<span class="nc" id="L515">    val projectedRiskScore: Float,</span>
+<span class="nc" id="L516">    val projectedRiskLevel: BurnoutRiskLevel,</span>
+<span class="nc" id="L517">    val trend: Trend,</span>
+<span class="nc" id="L518">    val confidence: Float // 0-100</span>
+)
+
+/**
+ * Data class for activity level
+ */
+<span class="nc" id="L524">data class ActivityLevel(</span>
+<span class="nc" id="L525">    val date: Date,</span>
+<span class="nc" id="L526">    val level: Float // 0-1</span>
+)
+
+/**
+ * Data class for stress indicator
+ */
+<span class="nc" id="L532">data class StressIndicator(</span>
+<span class="nc" id="L533">    val date: Date,</span>
+<span class="nc" id="L534">    val level: Float // 0-10</span>
+)
+
+/**
+ * Data class for sleep quality
+ */
+<span class="nc" id="L540">data class SleepQuality(</span>
+<span class="nc" id="L541">    val date: Date,</span>
+<span class="nc" id="L542">    val quality: Float // 0-10</span>
+)
+
+/**
+ * Burnout risk level enum
+ */
+enum class BurnoutRiskLevel {
+<span class="nc" id="L549">    LOW, MODERATE, HIGH, CRITICAL</span>
+<span class="nc" id="L550">}</span>
+
+/**
+ * Burnout factor type enum
+ */
+enum class BurnoutFactorType {
+<span class="nc" id="L556">    MOOD_DECLINE, ACTIVITY_DECLINE, STRESS_ACCUMULATION, SLEEP_DISRUPTION</span>
+<span class="nc" id="L557">}</span>
+
+/**
+ * Warning type enum
+ */
+enum class WarningType {
+<span class="nc" id="L563">    MOOD_DECLINE, ACTIVITY_DECLINE, STRESS_ACCUMULATION, SLEEP_DISRUPTION</span>
+<span class="nc" id="L564">}</span>
+
+/**
+ * Warning severity enum
+ */
+enum class WarningSeverity {
+<span class="nc" id="L570">    LOW, MODERATE, HIGH, CRITICAL</span>
+<span class="nc" id="L571">}</span>
+
+/**
+ * Trend enum
+ */
+enum class Trend {
+<span class="nc" id="L577">    INCREASING, DECREASING, STABLE</span>
+<span class="nc" id="L578">}</span>
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

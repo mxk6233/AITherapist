@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 1: Personalized Exercise Recommendations" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-06T10:54:08" hostname="Mohammads-MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="should prioritize high-effectiveness exercises for recommendations()" classname="com.serenityai.tests.usecases.uc8_coping_exercises.unit.CopingExercisesUseCaseTests$PersonalizedRecommendationsTests" time="0.0"/>
+  <testcase name="should consider user completion history for recommendations()" classname="com.serenityai.tests.usecases.uc8_coping_exercises.unit.CopingExercisesUseCaseTests$PersonalizedRecommendationsTests" time="0.0"/>
+  <testcase name="should recommend exercises based on user mood()" classname="com.serenityai.tests.usecases.uc8_coping_exercises.unit.CopingExercisesUseCaseTests$PersonalizedRecommendationsTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

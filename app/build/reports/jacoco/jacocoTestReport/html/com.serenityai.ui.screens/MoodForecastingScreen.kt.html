@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MoodForecastingScreen.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.screens</a> &gt; <span class="el_source">MoodForecastingScreen.kt</span></div><h1>MoodForecastingScreen.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.screens
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import kotlin.math.roundToInt
+import com.serenityai.usecases.MoodForecastingUseCase
+import com.serenityai.data.models.*
+import java.util.Calendar
+import java.util.Date
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MoodForecastingScreen(
+    onNavigateBack: () -&gt; Unit,
+    onViewDetailedForecast: () -&gt; Unit
+<span class="nc bnc" id="L32" title="All 14 branches missed.">) {</span>
+<span class="nc" id="L33">    val useCase = remember { MoodForecastingUseCase() }</span>
+<span class="nc" id="L34">    var selectedForecastPeriod by remember { mutableStateOf(&quot;7 Days&quot;) }</span>
+<span class="nc" id="L35">    var showInsightsDialog by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L36">    var moodForecast by remember { mutableStateOf&lt;MoodForecast?&gt;(null) }</span>
+<span class="nc" id="L37">    var isLoading by remember { mutableStateOf(false) }</span>
+    
+<span class="nc" id="L39">    val forecastPeriods = listOf(&quot;7 Days&quot;, &quot;14 Days&quot;, &quot;30 Days&quot;, &quot;90 Days&quot;)</span>
+    
+    // Sample historical mood data - in production would come from repository
+<span class="nc" id="L42">    val historicalMoodData = remember {</span>
+        // Generate sample data for demonstration
+<span class="nc" id="L44">        generateHistoricalMoodData()</span>
+    }
+    
+    // Generate forecast when screen loads
+<span class="nc bnc" id="L48" title="All 2 branches missed.">    LaunchedEffect(Unit) {</span>
+<span class="nc" id="L49">        isLoading = true</span>
+<span class="nc" id="L50">        moodForecast = useCase.generate7DayForecast(historicalMoodData)</span>
+<span class="nc" id="L51">        isLoading = false</span>
+<span class="nc" id="L52">    }</span>
+    
+<span class="nc bnc" id="L54" title="All 4 branches missed.">    val forecastData = moodForecast?.forecastDays?.map { </span>
+<span class="nc" id="L55">        ForecastDay(it.day, it.predictedMood, it.note) </span>
+<span class="nc" id="L56">    } ?: emptyList()</span>
+    
+<span class="nc bnc" id="L58" title="All 4 branches missed.">    val predictions = moodForecast?.predictions?.map {</span>
+<span class="nc" id="L59">        MoodPrediction(it.title, it.description, it.confidence)</span>
+<span class="nc" id="L60">    } ?: emptyList()</span>
+    
+<span class="nc" id="L62">    Scaffold(</span>
+<span class="nc" id="L63">        topBar = {</span>
+<span class="nc bnc" id="L64" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L65" title="All 8 branches missed.">                title = { Text(&quot;Mood Forecasting&quot;) },</span>
+<span class="nc" id="L66">                navigationIcon = {</span>
+<span class="nc bnc" id="L67" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L68" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L69">                    }</span>
+<span class="nc" id="L70">                },</span>
+<span class="nc" id="L71">                actions = {</span>
+<span class="nc bnc" id="L72" title="All 8 branches missed.">                    IconButton(onClick = { showInsightsDialog = true }) {</span>
+<span class="nc bnc" id="L73" title="All 8 branches missed.">                        Icon(Icons.Default.Psychology, contentDescription = &quot;Insights&quot;)</span>
+<span class="nc" id="L74">                    }</span>
+<span class="nc" id="L75">                }</span>
+<span class="nc" id="L76">            )</span>
+<span class="nc" id="L77">        }</span>
+<span class="nc" id="L78">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L79" title="All 8 branches missed.">        LazyColumn(</span>
+<span class="nc" id="L80">            modifier = Modifier</span>
+<span class="nc" id="L81">                .fillMaxSize()</span>
+<span class="nc" id="L82">                .padding(paddingValues)</span>
+<span class="nc" id="L83">                .padding(16.dp),</span>
+<span class="nc" id="L84">            verticalArrangement = Arrangement.spacedBy(16.dp)</span>
+<span class="nc" id="L85">        ) {</span>
+            // Period Selector
+<span class="nc" id="L87">            item {</span>
+<span class="nc bnc" id="L88" title="All 8 branches missed.">                Card(</span>
+<span class="nc" id="L89">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L90">                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L91">                ) {</span>
+<span class="nc bnc" id="L92" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L93">                        modifier = Modifier.padding(16.dp)</span>
+                    ) {
+<span class="nc" id="L95">                        Text(</span>
+<span class="nc" id="L96">                            text = &quot;Forecast Period&quot;,</span>
+<span class="nc" id="L97">                            style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L98">                            fontWeight = FontWeight.Bold</span>
+                        )
+                        
+<span class="nc" id="L101">                        Spacer(modifier = Modifier.height(8.dp))</span>
+                        
+<span class="nc" id="L103">                        LazyRow(</span>
+<span class="nc" id="L104">                            horizontalArrangement = Arrangement.spacedBy(8.dp)</span>
+<span class="nc" id="L105">                        ) {</span>
+<span class="nc" id="L106">                            items(forecastPeriods) { period -&gt;</span>
+                                FilterChip(
+<span class="nc" id="L108">                                    onClick = { selectedForecastPeriod = period },</span>
+<span class="nc bnc" id="L109" title="All 8 branches missed.">                                    label = { Text(period) },</span>
+                                    selected = selectedForecastPeriod == period
+                                )
+                            }
+<span class="nc" id="L113">                        }</span>
+<span class="nc" id="L114">                    }</span>
+<span class="nc" id="L115">                }</span>
+<span class="nc" id="L116">            }</span>
+            
+            // Forecast Summary
+<span class="nc" id="L119">            item {</span>
+<span class="nc bnc" id="L120" title="All 8 branches missed.">                Card(</span>
+<span class="nc" id="L121">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L122">                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L123">                ) {</span>
+<span class="nc bnc" id="L124" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L125">                        modifier = Modifier.padding(16.dp)</span>
+                    ) {
+<span class="nc" id="L127">                        Row(</span>
+<span class="nc" id="L128">                            verticalAlignment = Alignment.CenterVertically</span>
+                        ) {
+<span class="nc" id="L130">                            Icon(</span>
+<span class="nc" id="L131">                                Icons.Default.TrendingUp,</span>
+<span class="nc" id="L132">                                contentDescription = null,</span>
+<span class="nc" id="L133">                                tint = Color(0xFF4CAF50)</span>
+                            )
+<span class="nc" id="L135">                            Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L136">                            Text(</span>
+<span class="nc" id="L137">                                text = &quot;Forecast Summary&quot;,</span>
+<span class="nc" id="L138">                                style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L139">                                fontWeight = FontWeight.Bold</span>
+                            )
+<span class="nc" id="L141">                        }</span>
+                        
+<span class="nc" id="L143">                        Spacer(modifier = Modifier.height(16.dp))</span>
+                        
+<span class="nc" id="L145">                        Row(</span>
+<span class="nc" id="L146">                            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L147">                            horizontalArrangement = Arrangement.SpaceBetween</span>
+                        ) {
+<span class="nc" id="L149">                            ForecastStatCard(</span>
+<span class="nc" id="L150">                                title = &quot;Average Mood&quot;,</span>
+<span class="nc" id="L151">                                value = forecastData.map { it.predictedMood }.average().let { &quot;%.1f&quot;.format(it) },</span>
+<span class="nc" id="L152">                                subtitle = &quot;Expected range&quot;,</span>
+<span class="nc" id="L153">                                color = Color(0xFF2196F3)</span>
+                            )
+                            
+<span class="nc" id="L156">                            ForecastStatCard(</span>
+<span class="nc" id="L157">                                title = &quot;Stability&quot;,</span>
+<span class="nc" id="L158">                                value = &quot;72%&quot;,</span>
+<span class="nc" id="L159">                                subtitle = &quot;Low volatility expected&quot;,</span>
+<span class="nc" id="L160">                                color = Color(0xFF4CAF50)</span>
+                            )
+<span class="nc" id="L162">                        }</span>
+                        
+<span class="nc" id="L164">                        Spacer(modifier = Modifier.height(12.dp))</span>
+                        
+<span class="nc" id="L166">                        Row(</span>
+<span class="nc" id="L167">                            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L168">                            horizontalArrangement = Arrangement.SpaceBetween</span>
+                        ) {
+<span class="nc" id="L170">                            ForecastStatCard(</span>
+<span class="nc" id="L171">                                title = &quot;Improvement Trend&quot;,</span>
+<span class="nc" id="L172">                                value = &quot;+0.3&quot;,</span>
+<span class="nc" id="L173">                                subtitle = &quot;vs current average&quot;,</span>
+<span class="nc" id="L174">                                color = Color(0xFF4CAF50)</span>
+                            )
+                            
+<span class="nc" id="L177">                            ForecastStatCard(</span>
+<span class="nc" id="L178">                                title = &quot;Risk Level&quot;,</span>
+<span class="nc" id="L179">                                value = &quot;Low&quot;,</span>
+<span class="nc" id="L180">                                subtitle = &quot;No alerts expected&quot;,</span>
+<span class="nc" id="L181">                                color = Color(0xFFFF9800)</span>
+                            )
+<span class="nc" id="L183">                        }</span>
+<span class="nc" id="L184">                    }</span>
+<span class="nc" id="L185">                }</span>
+<span class="nc" id="L186">            }</span>
+            
+            // Forecast Chart
+<span class="nc" id="L189">            item {</span>
+<span class="nc bnc" id="L190" title="All 8 branches missed.">                Card(</span>
+<span class="nc" id="L191">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L192">                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L193">                ) {</span>
+<span class="nc bnc" id="L194" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L195">                        modifier = Modifier.padding(16.dp)</span>
+                    ) {
+<span class="nc" id="L197">                        Text(</span>
+<span class="nc" id="L198">                            text = &quot;7-Day Forecast&quot;,</span>
+<span class="nc" id="L199">                            style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L200">                            fontWeight = FontWeight.Bold</span>
+                        )
+                        
+<span class="nc" id="L203">                        Spacer(modifier = Modifier.height(16.dp))</span>
+                        
+<span class="nc" id="L205">                        ForecastChart(forecastData = forecastData)</span>
+<span class="nc" id="L206">                    }</span>
+<span class="nc" id="L207">                }</span>
+<span class="nc" id="L208">            }</span>
+            
+            // Predictions
+<span class="nc" id="L211">            item {</span>
+<span class="nc bnc" id="L212" title="All 8 branches missed.">                Card(</span>
+<span class="nc" id="L213">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L214">                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L215">                ) {</span>
+<span class="nc bnc" id="L216" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L217">                        modifier = Modifier.padding(16.dp)</span>
+                    ) {
+<span class="nc" id="L219">                        Row(</span>
+<span class="nc" id="L220">                            verticalAlignment = Alignment.CenterVertically</span>
+                        ) {
+<span class="nc" id="L222">                            Icon(</span>
+<span class="nc" id="L223">                                Icons.Default.Psychology,</span>
+<span class="nc" id="L224">                                contentDescription = null,</span>
+<span class="nc" id="L225">                                tint = MaterialTheme.colorScheme.primary</span>
+                            )
+<span class="nc" id="L227">                            Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L228">                            Text(</span>
+<span class="nc" id="L229">                                text = &quot;AI Predictions&quot;,</span>
+<span class="nc" id="L230">                                style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L231">                                fontWeight = FontWeight.Bold</span>
+                            )
+<span class="nc" id="L233">                        }</span>
+                        
+<span class="nc" id="L235">                        Spacer(modifier = Modifier.height(12.dp))</span>
+                        
+<span class="nc" id="L237">                        predictions.forEach { prediction -&gt;</span>
+<span class="nc" id="L238">                            PredictionCard(prediction = prediction)</span>
+<span class="nc" id="L239">                            Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L240">                        }</span>
+<span class="nc" id="L241">                    }</span>
+<span class="nc" id="L242">                }</span>
+<span class="nc" id="L243">            }</span>
+            
+            // Detailed Report Button
+<span class="nc" id="L246">            item {</span>
+<span class="nc bnc" id="L247" title="All 8 branches missed.">                Button(</span>
+<span class="nc" id="L248">                    onClick = onViewDetailedForecast,</span>
+<span class="nc" id="L249">                    modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L250">                ) {</span>
+<span class="nc bnc" id="L251" title="All 6 branches missed.">                    Icon(Icons.Default.Analytics, contentDescription = null)</span>
+<span class="nc" id="L252">                    Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">                    Text(&quot;View Detailed Forecast&quot;)</span>
+<span class="nc" id="L254">                }</span>
+<span class="nc" id="L255">            }</span>
+<span class="nc" id="L256">        }</span>
+<span class="nc" id="L257">    }</span>
+    
+    // Insights Dialog
+<span class="nc bnc" id="L260" title="All 2 branches missed.">    if (showInsightsDialog) {</span>
+<span class="nc bnc" id="L261" title="All 2 branches missed.">        AlertDialog(</span>
+<span class="nc" id="L262">            onDismissRequest = { showInsightsDialog = false },</span>
+<span class="nc bnc" id="L263" title="All 8 branches missed.">            title = { Text(&quot;Forecasting Insights&quot;) },</span>
+<span class="nc" id="L264">            text = {</span>
+<span class="nc bnc" id="L265" title="All 6 branches missed.">                Column {</span>
+<span class="nc" id="L266">                    Text(&quot;• Your mood patterns show a positive trend over the next week&quot;)</span>
+<span class="nc" id="L267">                    Text(&quot;• Weekends typically boost your mood by 0.5 points&quot;)</span>
+<span class="nc" id="L268">                    Text(&quot;• Exercise days predict higher mood stability&quot;)</span>
+<span class="nc" id="L269">                    Text(&quot;• Consider planning activities on Wednesday to offset midweek dip&quot;)</span>
+<span class="nc" id="L270">                }</span>
+<span class="nc" id="L271">            },</span>
+<span class="nc" id="L272">            confirmButton = {</span>
+<span class="nc bnc" id="L273" title="All 8 branches missed.">                TextButton(onClick = { showInsightsDialog = false }) {</span>
+<span class="nc bnc" id="L274" title="All 8 branches missed.">                    Text(&quot;Close&quot;)</span>
+<span class="nc" id="L275">                }</span>
+<span class="nc" id="L276">            }</span>
+        )
+    }
+<span class="nc bnc" id="L279" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L282" title="All 10 branches missed.">fun ForecastChart(forecastData: List&lt;ForecastDay&gt;) {</span>
+<span class="nc" id="L283">    val maxValue = 5.0f</span>
+<span class="nc" id="L284">    val minValue = 1.0f</span>
+    
+<span class="nc" id="L286">    Box(</span>
+<span class="nc" id="L287">        modifier = Modifier</span>
+<span class="nc" id="L288">            .fillMaxWidth()</span>
+<span class="nc" id="L289">            .height(150.dp)</span>
+<span class="nc" id="L290">            .background(</span>
+<span class="nc" id="L291">                Color.LightGray.copy(alpha = 0.1f),</span>
+<span class="nc" id="L292">                RoundedCornerShape(8.dp)</span>
+            )
+    ) {
+<span class="nc" id="L295">        Row(</span>
+<span class="nc" id="L296">            modifier = Modifier</span>
+<span class="nc" id="L297">                .fillMaxSize()</span>
+<span class="nc" id="L298">                .padding(8.dp),</span>
+<span class="nc" id="L299">            horizontalArrangement = Arrangement.SpaceEvenly,</span>
+<span class="nc" id="L300">            verticalAlignment = Alignment.Bottom</span>
+        ) {
+<span class="nc" id="L302">            forecastData.forEach { data -&gt;</span>
+<span class="nc" id="L303">                val height = ((data.predictedMood - minValue) / (maxValue - minValue)) * 100</span>
+                
+<span class="nc" id="L305">                Column(</span>
+<span class="nc" id="L306">                    horizontalAlignment = Alignment.CenterHorizontally</span>
+                ) {
+<span class="nc" id="L308">                    Box(</span>
+<span class="nc" id="L309">                        modifier = Modifier</span>
+<span class="nc" id="L310">                            .width(30.dp)</span>
+<span class="nc" id="L311">                            .height(height.dp)</span>
+<span class="nc" id="L312">                            .background(</span>
+<span class="nc" id="L313">                                when {</span>
+<span class="nc bnc" id="L314" title="All 2 branches missed.">                                    data.predictedMood &gt;= 4.0f -&gt; Color(0xFF4CAF50)</span>
+<span class="nc bnc" id="L315" title="All 2 branches missed.">                                    data.predictedMood &gt;= 3.0f -&gt; Color(0xFFFF9800)</span>
+<span class="nc" id="L316">                                    else -&gt; Color(0xFFF44336)</span>
+                                },
+<span class="nc" id="L318">                                RoundedCornerShape(4.dp)</span>
+                            )
+                    )
+                    
+<span class="nc" id="L322">                    Spacer(modifier = Modifier.height(4.dp))</span>
+                    
+<span class="nc" id="L324">                    Text(</span>
+<span class="nc" id="L325">                        text = data.day,</span>
+<span class="nc" id="L326">                        style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L327">                        fontSize = 9.sp</span>
+                    )
+                    
+<span class="nc" id="L330">                    Text(</span>
+<span class="nc" id="L331">                        text = data.predictedMood.toString(),</span>
+<span class="nc" id="L332">                        style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L333">                        fontSize = 8.sp,</span>
+<span class="nc" id="L334">                        color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                    )
+<span class="nc" id="L336">                }</span>
+<span class="nc" id="L337">            }</span>
+<span class="nc" id="L338">        }</span>
+<span class="nc" id="L339">    }</span>
+<span class="nc bnc" id="L340" title="All 2 branches missed.">}</span>
+
+@Composable
+fun ForecastStatCard(
+    title: String,
+    value: String,
+    subtitle: String,
+    color: Color
+<span class="nc bnc" id="L348" title="All 22 branches missed.">) {</span>
+<span class="nc bnc" id="L349" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L350">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L351">        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)</span>
+<span class="nc" id="L352">    ) {</span>
+<span class="nc bnc" id="L353" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L354">            modifier = Modifier.padding(12.dp),</span>
+<span class="nc" id="L355">            horizontalAlignment = Alignment.CenterHorizontally</span>
+        ) {
+<span class="nc" id="L357">            Text(</span>
+<span class="nc" id="L358">                text = title,</span>
+<span class="nc" id="L359">                style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L360">                color = MaterialTheme.colorScheme.onSurfaceVariant,</span>
+<span class="nc" id="L361">                textAlign = TextAlign.Center</span>
+            )
+            
+<span class="nc" id="L364">            Spacer(modifier = Modifier.height(4.dp))</span>
+            
+<span class="nc" id="L366">            Text(</span>
+<span class="nc" id="L367">                text = value,</span>
+<span class="nc" id="L368">                style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L369">                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L370">                color = color,</span>
+<span class="nc" id="L371">                textAlign = TextAlign.Center</span>
+            )
+            
+<span class="nc" id="L374">            Text(</span>
+<span class="nc" id="L375">                text = subtitle,</span>
+<span class="nc" id="L376">                style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L377">                color = MaterialTheme.colorScheme.onSurfaceVariant,</span>
+<span class="nc" id="L378">                textAlign = TextAlign.Center,</span>
+<span class="nc" id="L379">                fontSize = 10.sp</span>
+            )
+<span class="nc" id="L381">        }</span>
+<span class="nc" id="L382">    }</span>
+<span class="nc bnc" id="L383" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L386" title="All 10 branches missed.">fun PredictionCard(prediction: MoodPrediction) {</span>
+<span class="nc bnc" id="L387" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L388">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L389">        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)</span>
+<span class="nc" id="L390">    ) {</span>
+<span class="nc bnc" id="L391" title="All 6 branches missed.">        Row(</span>
+<span class="nc" id="L392">            modifier = Modifier.padding(12.dp),</span>
+<span class="nc" id="L393">            verticalAlignment = Alignment.CenterVertically</span>
+        ) {
+<span class="nc" id="L395">            Box(</span>
+<span class="nc" id="L396">                modifier = Modifier</span>
+<span class="nc" id="L397">                    .size(40.dp)</span>
+<span class="nc" id="L398">                    .clip(RoundedCornerShape(8.dp))</span>
+<span class="nc" id="L399">                    .background(MaterialTheme.colorScheme.primaryContainer),</span>
+<span class="nc" id="L400">                contentAlignment = Alignment.Center</span>
+            ) {
+<span class="nc" id="L402">                Icon(</span>
+<span class="nc" id="L403">                    Icons.Default.Lightbulb,</span>
+<span class="nc" id="L404">                    contentDescription = null,</span>
+<span class="nc" id="L405">                    tint = MaterialTheme.colorScheme.primary</span>
+                )
+<span class="nc" id="L407">            }</span>
+            
+<span class="nc" id="L409">            Spacer(modifier = Modifier.width(12.dp))</span>
+            
+<span class="nc" id="L411">            Column(</span>
+<span class="nc" id="L412">                modifier = Modifier.weight(1f)</span>
+            ) {
+<span class="nc" id="L414">                Row(</span>
+<span class="nc" id="L415">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L416">                    horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L417">                    verticalAlignment = Alignment.CenterVertically</span>
+                ) {
+<span class="nc" id="L419">                    Text(</span>
+<span class="nc" id="L420">                        text = prediction.title,</span>
+<span class="nc" id="L421">                        style = MaterialTheme.typography.titleSmall,</span>
+<span class="nc" id="L422">                        fontWeight = FontWeight.Bold</span>
+                    )
+                    
+<span class="nc" id="L425">                    Text(</span>
+<span class="nc" id="L426">                        text = &quot;${prediction.confidence}%&quot;,</span>
+<span class="nc" id="L427">                        style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L428">                        color = MaterialTheme.colorScheme.primary,</span>
+<span class="nc" id="L429">                        fontWeight = FontWeight.Medium</span>
+                    )
+<span class="nc" id="L431">                }</span>
+                
+<span class="nc" id="L433">                Text(</span>
+<span class="nc" id="L434">                    text = prediction.description,</span>
+<span class="nc" id="L435">                    style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L436">                    color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                )
+<span class="nc" id="L438">            }</span>
+<span class="nc" id="L439">        }</span>
+<span class="nc" id="L440">    }</span>
+<span class="nc bnc" id="L441" title="All 2 branches missed.">}</span>
+
+// Data classes moved to com.serenityai.data.models.MoodForecast
+// Keeping these for backward compatibility with existing code
+<span class="nc" id="L445">data class ForecastDay(</span>
+<span class="nc" id="L446">    val day: String,</span>
+<span class="nc" id="L447">    val predictedMood: Float,</span>
+<span class="nc" id="L448">    val note: String</span>
+)
+
+<span class="nc" id="L451">data class MoodPrediction(</span>
+<span class="nc" id="L452">    val title: String,</span>
+<span class="nc" id="L453">    val description: String,</span>
+<span class="nc" id="L454">    val confidence: Float</span>
+)
+
+// Helper function to generate sample historical data
+private fun generateHistoricalMoodData(): List&lt;com.serenityai.data.models.MoodEntry&gt; {
+<span class="nc" id="L459">    val entries = mutableListOf&lt;com.serenityai.data.models.MoodEntry&gt;()</span>
+<span class="nc" id="L460">    val calendar = Calendar.getInstance()</span>
+    
+    // Generate 30 days of historical data
+<span class="nc bnc" id="L463" title="All 2 branches missed.">    repeat(30) { dayOffset -&gt;</span>
+<span class="nc" id="L464">        calendar.time = Date(System.currentTimeMillis() - (30 - dayOffset) * 86400000L)</span>
+<span class="nc" id="L465">        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)</span>
+        
+        // Simulate weekend boost pattern
+<span class="nc" id="L468">        val baseMood = 3.5</span>
+<span class="nc bnc" id="L469" title="All 3 branches missed.">        val mood = when {</span>
+<span class="nc" id="L470">            dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY -&gt; baseMood + 0.5 + Math.random() * 0.5</span>
+<span class="nc" id="L471">            dayOfWeek == Calendar.WEDNESDAY -&gt; baseMood - 0.3 + Math.random() * 0.3</span>
+<span class="nc" id="L472">            else -&gt; baseMood + Math.random() * 0.5 - 0.25</span>
+<span class="nc" id="L473">        }.coerceIn(1.0, 5.0).toInt()</span>
+        
+<span class="nc" id="L475">        entries.add(</span>
+<span class="nc" id="L476">            com.serenityai.data.models.MoodEntry(</span>
+<span class="nc" id="L477">                id = &quot;entry-$dayOffset&quot;,</span>
+<span class="nc" id="L478">                userId = &quot;user-123&quot;,</span>
+<span class="nc" id="L479">                date = calendar.time,</span>
+<span class="nc" id="L480">                mood = mood,</span>
+<span class="nc" id="L481">                energy = 5,</span>
+<span class="nc" id="L482">                stress = 5,</span>
+<span class="nc" id="L483">                anxiety = 5,</span>
+<span class="nc" id="L484">                sleep = 5</span>
+            )
+        )
+<span class="nc" id="L487">    }</span>
+    
+<span class="nc" id="L489">    return entries</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

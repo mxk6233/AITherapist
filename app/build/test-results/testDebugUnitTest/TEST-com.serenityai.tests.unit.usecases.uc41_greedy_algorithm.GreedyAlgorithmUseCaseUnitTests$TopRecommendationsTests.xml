@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 2: Top Recommendations - Validates Secondary UC41 Functionality" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-12-07T08:20:33" hostname="Mohammads-MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="UC41-REQ-3: System MUST provide top N recommendations" classname="com.serenityai.tests.unit.usecases.uc41_greedy_algorithm.GreedyAlgorithmUseCaseUnitTests$TopRecommendationsTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ChatHistoryScreen.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.screens</a> &gt; <span class="el_source">ChatHistoryScreen.kt</span></div><h1>ChatHistoryScreen.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.screens
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import java.text.SimpleDateFormat
+import java.util.*
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ChatHistoryScreen(
+    onNavigateBack: () -&gt; Unit,
+    onNavigateToChat: (String) -&gt; Unit
+<span class="nc bnc" id="L29" title="All 14 branches missed.">) {</span>
+<span class="nc" id="L30">    var searchQuery by remember { mutableStateOf(&quot;&quot;) }</span>
+<span class="nc" id="L31">    var selectedFilter by remember { mutableStateOf(&quot;All&quot;) }</span>
+<span class="nc" id="L32">    var showExportDialog by remember { mutableStateOf(false) }</span>
+    
+<span class="nc" id="L34">    val chatSessions = remember {</span>
+<span class="nc" id="L35">        listOf(</span>
+<span class="nc" id="L36">            ChatSession(</span>
+<span class="nc" id="L37">                id = &quot;1&quot;,</span>
+<span class="nc" id="L38">                title = &quot;Anxiety Support Session&quot;,</span>
+<span class="nc" id="L39">                lastMessage = &quot;Thank you for the breathing techniques&quot;,</span>
+<span class="nc" id="L40">                timestamp = System.currentTimeMillis() - 86400000, // 1 day ago</span>
+<span class="nc" id="L41">                messageCount = 15,</span>
+<span class="nc" id="L42">                moodLevel = &quot;Anxious&quot;</span>
+            ),
+<span class="nc" id="L44">            ChatSession(</span>
+<span class="nc" id="L45">                id = &quot;2&quot;, </span>
+<span class="nc" id="L46">                title = &quot;Daily Check-in&quot;,</span>
+<span class="nc" id="L47">                lastMessage = &quot;I'm feeling much better today&quot;,</span>
+<span class="nc" id="L48">                timestamp = System.currentTimeMillis() - 172800000, // 2 days ago</span>
+<span class="nc" id="L49">                messageCount = 8,</span>
+<span class="nc" id="L50">                moodLevel = &quot;Good&quot;</span>
+            ),
+<span class="nc" id="L52">            ChatSession(</span>
+<span class="nc" id="L53">                id = &quot;3&quot;,</span>
+<span class="nc" id="L54">                title = &quot;Stress Management&quot;,</span>
+<span class="nc" id="L55">                lastMessage = &quot;The meditation helped a lot&quot;,</span>
+<span class="nc" id="L56">                timestamp = System.currentTimeMillis() - 259200000, // 3 days ago</span>
+<span class="nc" id="L57">                messageCount = 22,</span>
+<span class="nc" id="L58">                moodLevel = &quot;Stressed&quot;</span>
+            ),
+<span class="nc" id="L60">            ChatSession(</span>
+<span class="nc" id="L61">                id = &quot;4&quot;,</span>
+<span class="nc" id="L62">                title = &quot;Crisis Support&quot;,</span>
+<span class="nc" id="L63">                lastMessage = &quot;I'm feeling safer now&quot;,</span>
+<span class="nc" id="L64">                timestamp = System.currentTimeMillis() - 345600000, // 4 days ago</span>
+<span class="nc" id="L65">                messageCount = 35,</span>
+<span class="nc" id="L66">                moodLevel = &quot;Crisis&quot;</span>
+            )
+<span class="nc" id="L68">        )</span>
+    }
+    
+<span class="nc" id="L71">    val filteredSessions = chatSessions.filter { session -&gt;</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        val matchesSearch = session.title.contains(searchQuery, ignoreCase = true) ||</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">                          session.lastMessage.contains(searchQuery, ignoreCase = true)</span>
+<span class="nc bnc" id="L74" title="All 4 branches missed.">        val matchesFilter = selectedFilter == &quot;All&quot; || session.moodLevel == selectedFilter</span>
+<span class="nc bnc" id="L75" title="All 4 branches missed.">        matchesSearch &amp;&amp; matchesFilter</span>
+    }
+    
+<span class="nc" id="L78">    Scaffold(</span>
+<span class="nc" id="L79">        topBar = {</span>
+<span class="nc bnc" id="L80" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L81" title="All 8 branches missed.">                title = { Text(&quot;Chat History&quot;) },</span>
+<span class="nc" id="L82">                navigationIcon = {</span>
+<span class="nc bnc" id="L83" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L84" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L85">                    }</span>
+<span class="nc" id="L86">                },</span>
+<span class="nc" id="L87">                actions = {</span>
+<span class="nc bnc" id="L88" title="All 8 branches missed.">                    IconButton(onClick = { showExportDialog = true }) {</span>
+<span class="nc bnc" id="L89" title="All 8 branches missed.">                        Icon(Icons.Default.Download, contentDescription = &quot;Export&quot;)</span>
+<span class="nc" id="L90">                    }</span>
+<span class="nc" id="L91">                }</span>
+<span class="nc" id="L92">            )</span>
+<span class="nc" id="L93">        }</span>
+<span class="nc" id="L94">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L95" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L96">            modifier = Modifier</span>
+<span class="nc" id="L97">                .fillMaxSize()</span>
+<span class="nc" id="L98">                .padding(paddingValues)</span>
+<span class="nc" id="L99">                .padding(16.dp)</span>
+        ) {
+            // Search and Filter Section
+<span class="nc" id="L102">            Card(</span>
+<span class="nc" id="L103">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L104">                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L105">            ) {</span>
+<span class="nc bnc" id="L106" title="All 6 branches missed.">                Column(</span>
+<span class="nc" id="L107">                    modifier = Modifier.padding(16.dp)</span>
+                ) {
+<span class="nc" id="L109">                    OutlinedTextField(</span>
+<span class="nc" id="L110">                        value = searchQuery,</span>
+<span class="nc" id="L111">                        onValueChange = { searchQuery = it },</span>
+<span class="nc bnc" id="L112" title="All 8 branches missed.">                        label = { Text(&quot;Search conversations&quot;) },</span>
+<span class="nc bnc" id="L113" title="All 8 branches missed.">                        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },</span>
+<span class="nc" id="L114">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L115">                        singleLine = true</span>
+                    )
+                    
+<span class="nc" id="L118">                    Spacer(modifier = Modifier.height(12.dp))</span>
+                    
+<span class="nc" id="L120">                    Text(</span>
+<span class="nc" id="L121">                        text = &quot;Filter by mood:&quot;,</span>
+<span class="nc" id="L122">                        style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L123">                        fontWeight = FontWeight.Medium</span>
+                    )
+                    
+<span class="nc" id="L126">                    Spacer(modifier = Modifier.height(8.dp))</span>
+                    
+<span class="nc" id="L128">                    Row(</span>
+<span class="nc" id="L129">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L130">                        horizontalArrangement = Arrangement.spacedBy(8.dp)</span>
+                    ) {
+<span class="nc" id="L132">                        listOf(&quot;All&quot;, &quot;Good&quot;, &quot;Anxious&quot;, &quot;Stressed&quot;, &quot;Crisis&quot;).forEach { filter -&gt;</span>
+<span class="nc" id="L133">                            FilterChip(</span>
+<span class="nc" id="L134">                                onClick = { selectedFilter = filter },</span>
+<span class="nc bnc" id="L135" title="All 8 branches missed.">                                label = { Text(filter) },</span>
+<span class="nc" id="L136">                                selected = selectedFilter == filter</span>
+                            )
+<span class="nc" id="L138">                        }</span>
+<span class="nc" id="L139">                    }</span>
+<span class="nc" id="L140">                }</span>
+<span class="nc" id="L141">            }</span>
+            
+<span class="nc" id="L143">            Spacer(modifier = Modifier.height(16.dp))</span>
+            
+            // Analytics Section
+<span class="nc" id="L146">            Card(</span>
+<span class="nc" id="L147">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L148">                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L149">            ) {</span>
+<span class="nc bnc" id="L150" title="All 6 branches missed.">                Column(</span>
+<span class="nc" id="L151">                    modifier = Modifier.padding(16.dp)</span>
+                ) {
+<span class="nc" id="L153">                    Text(</span>
+<span class="nc" id="L154">                        text = &quot;Chat Analytics&quot;,</span>
+<span class="nc" id="L155">                        style = MaterialTheme.typography.headlineSmall,</span>
+<span class="nc" id="L156">                        fontWeight = FontWeight.Bold</span>
+                    )
+                    
+<span class="nc" id="L159">                    Spacer(modifier = Modifier.height(16.dp))</span>
+                    
+<span class="nc" id="L161">                    Row(</span>
+<span class="nc" id="L162">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L163">                        horizontalArrangement = Arrangement.SpaceBetween</span>
+                    ) {
+<span class="nc" id="L165">                        AnalyticsCard(</span>
+<span class="nc" id="L166">                            title = &quot;Total Sessions&quot;,</span>
+<span class="nc" id="L167">                            value = &quot;${chatSessions.size}&quot;,</span>
+<span class="nc" id="L168">                            icon = Icons.Default.Chat,</span>
+<span class="nc" id="L169">                            color = MaterialTheme.colorScheme.primary</span>
+                        )
+                        
+<span class="nc" id="L172">                        AnalyticsCard(</span>
+<span class="nc" id="L173">                            title = &quot;Total Messages&quot;,</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">                            value = &quot;${chatSessions.sumOf { it.messageCount }}&quot;,</span>
+<span class="nc" id="L175">                            icon = Icons.Default.Message,</span>
+<span class="nc" id="L176">                            color = MaterialTheme.colorScheme.secondary</span>
+                        )
+<span class="nc" id="L178">                    }</span>
+                    
+<span class="nc" id="L180">                    Spacer(modifier = Modifier.height(12.dp))</span>
+                    
+<span class="nc" id="L182">                    Row(</span>
+<span class="nc" id="L183">                        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L184">                        horizontalArrangement = Arrangement.SpaceBetween</span>
+                    ) {
+<span class="nc" id="L186">                        AnalyticsCard(</span>
+<span class="nc" id="L187">                            title = &quot;Avg. Session&quot;,</span>
+<span class="nc" id="L188">                            value = &quot;${chatSessions.map { it.messageCount }.average().toInt()} msgs&quot;,</span>
+<span class="nc" id="L189">                            icon = Icons.Default.Timer,</span>
+<span class="nc" id="L190">                            color = MaterialTheme.colorScheme.tertiary</span>
+                        )
+                        
+<span class="nc" id="L193">                        AnalyticsCard(</span>
+<span class="nc" id="L194">                            title = &quot;This Week&quot;,</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">                            value = &quot;${chatSessions.count { it.timestamp &gt; System.currentTimeMillis() - 604800000 }}&quot;,</span>
+<span class="nc" id="L196">                            icon = Icons.Default.CalendarToday,</span>
+<span class="nc" id="L197">                            color = MaterialTheme.colorScheme.error</span>
+                        )
+<span class="nc" id="L199">                    }</span>
+<span class="nc" id="L200">                }</span>
+<span class="nc" id="L201">            }</span>
+            
+<span class="nc" id="L203">            Spacer(modifier = Modifier.height(16.dp))</span>
+            
+            // Chat Sessions List
+<span class="nc" id="L206">            Text(</span>
+<span class="nc" id="L207">                text = &quot;Recent Conversations (${filteredSessions.size})&quot;,</span>
+<span class="nc" id="L208">                style = MaterialTheme.typography.headlineSmall,</span>
+<span class="nc" id="L209">                fontWeight = FontWeight.Bold</span>
+            )
+            
+<span class="nc" id="L212">            Spacer(modifier = Modifier.height(8.dp))</span>
+            
+<span class="nc" id="L214">            LazyColumn(</span>
+<span class="nc" id="L215">                verticalArrangement = Arrangement.spacedBy(8.dp)</span>
+<span class="nc" id="L216">            ) {</span>
+<span class="nc" id="L217">                items(filteredSessions) { session -&gt;</span>
+                    ChatSessionCard(
+                        session = session,
+<span class="nc" id="L220">                        onClick = { onNavigateToChat(session.id) }</span>
+                    )
+                }
+<span class="nc" id="L223">            }</span>
+<span class="nc" id="L224">        }</span>
+<span class="nc" id="L225">    }</span>
+    
+    // Export Dialog
+<span class="nc bnc" id="L228" title="All 2 branches missed.">    if (showExportDialog) {</span>
+<span class="nc bnc" id="L229" title="All 2 branches missed.">        AlertDialog(</span>
+<span class="nc" id="L230">            onDismissRequest = { showExportDialog = false },</span>
+<span class="nc bnc" id="L231" title="All 8 branches missed.">            title = { Text(&quot;Export Chat History&quot;) },</span>
+<span class="nc bnc" id="L232" title="All 8 branches missed.">            text = { Text(&quot;Choose export format:&quot;) },</span>
+<span class="nc" id="L233">            confirmButton = {</span>
+<span class="nc bnc" id="L234" title="All 8 branches missed.">                TextButton(onClick = { showExportDialog = false }) {</span>
+<span class="nc bnc" id="L235" title="All 8 branches missed.">                    Text(&quot;PDF&quot;)</span>
+<span class="nc" id="L236">                }</span>
+<span class="nc" id="L237">            },</span>
+<span class="nc" id="L238">            dismissButton = {</span>
+<span class="nc bnc" id="L239" title="All 8 branches missed.">                TextButton(onClick = { showExportDialog = false }) {</span>
+<span class="nc bnc" id="L240" title="All 8 branches missed.">                    Text(&quot;CSV&quot;)</span>
+<span class="nc" id="L241">                }</span>
+<span class="nc" id="L242">            }</span>
+        )
+    }
+<span class="nc bnc" id="L245" title="All 2 branches missed.">}</span>
+
+@Composable
+fun ChatSessionCard(
+    session: ChatSession,
+    onClick: () -&gt; Unit
+<span class="nc bnc" id="L251" title="All 14 branches missed.">) {</span>
+<span class="nc bnc" id="L252" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L253">        modifier = Modifier</span>
+<span class="nc" id="L254">            .fillMaxWidth()</span>
+<span class="nc bnc" id="L255" title="All 2 branches missed.">            .clickable { onClick() },</span>
+<span class="nc" id="L256">        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)</span>
+<span class="nc" id="L257">    ) {</span>
+<span class="nc bnc" id="L258" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L259">            modifier = Modifier.padding(16.dp)</span>
+        ) {
+<span class="nc" id="L261">            Row(</span>
+<span class="nc" id="L262">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L263">                horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L264">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L266">                Text(</span>
+<span class="nc" id="L267">                    text = session.title,</span>
+<span class="nc" id="L268">                    style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L269">                    fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L270">                    modifier = Modifier.weight(1f)</span>
+                )
+                
+<span class="nc" id="L273">                Text(</span>
+<span class="nc" id="L274">                    text = formatTimestamp(session.timestamp),</span>
+<span class="nc" id="L275">                    style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L276">                    color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                )
+<span class="nc" id="L278">            }</span>
+            
+<span class="nc" id="L280">            Spacer(modifier = Modifier.height(8.dp))</span>
+            
+<span class="nc" id="L282">            Text(</span>
+<span class="nc" id="L283">                text = session.lastMessage,</span>
+<span class="nc" id="L284">                style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L285">                color = MaterialTheme.colorScheme.onSurfaceVariant,</span>
+<span class="nc" id="L286">                maxLines = 2,</span>
+<span class="nc" id="L287">                overflow = TextOverflow.Ellipsis</span>
+            )
+            
+<span class="nc" id="L290">            Spacer(modifier = Modifier.height(8.dp))</span>
+            
+<span class="nc" id="L292">            Row(</span>
+<span class="nc" id="L293">                modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L294">                horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L295">                verticalAlignment = Alignment.CenterVertically</span>
+            ) {
+<span class="nc" id="L297">                Row(</span>
+<span class="nc" id="L298">                    verticalAlignment = Alignment.CenterVertically</span>
+                ) {
+<span class="nc" id="L300">                    Icon(</span>
+<span class="nc" id="L301">                        Icons.Default.Message,</span>
+<span class="nc" id="L302">                        contentDescription = null,</span>
+<span class="nc" id="L303">                        modifier = Modifier.size(16.dp),</span>
+<span class="nc" id="L304">                        tint = MaterialTheme.colorScheme.primary</span>
+                    )
+<span class="nc" id="L306">                    Spacer(modifier = Modifier.width(4.dp))</span>
+<span class="nc" id="L307">                    Text(</span>
+<span class="nc" id="L308">                        text = &quot;${session.messageCount} messages&quot;,</span>
+<span class="nc" id="L309">                        style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L310">                        color = MaterialTheme.colorScheme.primary</span>
+                    )
+<span class="nc" id="L312">                }</span>
+                
+<span class="nc" id="L314">                MoodChip(moodLevel = session.moodLevel)</span>
+<span class="nc" id="L315">            }</span>
+<span class="nc" id="L316">        }</span>
+<span class="nc" id="L317">    }</span>
+<span class="nc bnc" id="L318" title="All 2 branches missed.">}</span>
+
+@Composable
+fun AnalyticsCard(
+    title: String,
+    value: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    color: Color
+<span class="nc bnc" id="L326" title="All 22 branches missed.">) {</span>
+<span class="nc bnc" id="L327" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L328">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L329">        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)</span>
+<span class="nc" id="L330">    ) {</span>
+<span class="nc bnc" id="L331" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L332">            modifier = Modifier.padding(12.dp),</span>
+<span class="nc" id="L333">            horizontalAlignment = Alignment.CenterHorizontally</span>
+        ) {
+<span class="nc" id="L335">            Icon(</span>
+<span class="nc" id="L336">                imageVector = icon,</span>
+<span class="nc" id="L337">                contentDescription = null,</span>
+<span class="nc" id="L338">                tint = color,</span>
+<span class="nc" id="L339">                modifier = Modifier.size(24.dp)</span>
+            )
+            
+<span class="nc" id="L342">            Spacer(modifier = Modifier.height(8.dp))</span>
+            
+<span class="nc" id="L344">            Text(</span>
+<span class="nc" id="L345">                text = value,</span>
+<span class="nc" id="L346">                style = MaterialTheme.typography.titleLarge,</span>
+<span class="nc" id="L347">                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L348">                color = color</span>
+            )
+            
+<span class="nc" id="L351">            Text(</span>
+<span class="nc" id="L352">                text = title,</span>
+<span class="nc" id="L353">                style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L354">                color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+            )
+<span class="nc" id="L356">        }</span>
+<span class="nc" id="L357">    }</span>
+<span class="nc bnc" id="L358" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L361" title="All 10 branches missed.">fun MoodChip(moodLevel: String) {</span>
+<span class="nc bnc" id="L362" title="All 13 branches missed.">    val color = when (moodLevel.lowercase()) {</span>
+<span class="nc" id="L363">        &quot;good&quot; -&gt; Color(0xFF4CAF50)</span>
+<span class="nc" id="L364">        &quot;anxious&quot; -&gt; Color(0xFFFF9800)</span>
+<span class="nc" id="L365">        &quot;stressed&quot; -&gt; Color(0xFFFF5722)</span>
+<span class="nc" id="L366">        &quot;crisis&quot; -&gt; Color(0xFFF44336)</span>
+<span class="nc" id="L367">        else -&gt; MaterialTheme.colorScheme.primary</span>
+    }
+    
+<span class="nc" id="L370">    Box(</span>
+<span class="nc" id="L371">        modifier = Modifier</span>
+<span class="nc" id="L372">            .clip(RoundedCornerShape(12.dp))</span>
+<span class="nc" id="L373">            .background(color.copy(alpha = 0.1f))</span>
+<span class="nc" id="L374">            .padding(horizontal = 8.dp, vertical = 4.dp)</span>
+    ) {
+<span class="nc" id="L376">        Text(</span>
+<span class="nc" id="L377">            text = moodLevel,</span>
+<span class="nc" id="L378">            style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L379">            color = color,</span>
+<span class="nc" id="L380">            fontWeight = FontWeight.Medium</span>
+        )
+<span class="nc" id="L382">    }</span>
+<span class="nc bnc" id="L383" title="All 2 branches missed.">}</span>
+
+fun formatTimestamp(timestamp: Long): String {
+<span class="nc" id="L386">    val now = System.currentTimeMillis()</span>
+<span class="nc" id="L387">    val diff = now - timestamp</span>
+    
+<span class="nc" id="L389">    return when {</span>
+<span class="nc bnc" id="L390" title="All 2 branches missed.">        diff &lt; 3600000 -&gt; &quot;${diff / 60000}m ago&quot; // Less than 1 hour</span>
+<span class="nc bnc" id="L391" title="All 2 branches missed.">        diff &lt; 86400000 -&gt; &quot;${diff / 3600000}h ago&quot; // Less than 1 day</span>
+<span class="nc bnc" id="L392" title="All 2 branches missed.">        diff &lt; 604800000 -&gt; &quot;${diff / 86400000}d ago&quot; // Less than 1 week</span>
+<span class="nc" id="L393">        else -&gt; SimpleDateFormat(&quot;MMM dd&quot;, Locale.getDefault()).format(Date(timestamp))</span>
+    }
+}
+
+<span class="nc" id="L397">data class ChatSession(</span>
+<span class="nc" id="L398">    val id: String,</span>
+<span class="nc" id="L399">    val title: String,</span>
+<span class="nc" id="L400">    val lastMessage: String,</span>
+<span class="nc" id="L401">    val timestamp: Long,</span>
+<span class="nc" id="L402">    val messageCount: Int,</span>
+<span class="nc" id="L403">    val moodLevel: String</span>
+)
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

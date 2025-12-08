@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EducationalResourcesUseCase.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.usecases</a> &gt; <span class="el_source">EducationalResourcesUseCase.kt</span></div><h1>EducationalResourcesUseCase.kt</h1><pre class="source lang-java linenums">package com.serenityai.usecases
+
+import com.serenityai.data.models.*
+import com.serenityai.data.remote.FirebaseSource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.util.Date
+
+/** UC16: Educational resource library with search and filtering capabilities that provides access to mental health educational content from Firebase. */
+<span class="nc" id="L10">class EducationalResourcesUseCase(</span>
+<span class="nc" id="L11">    private val firebaseSource: FirebaseSource = FirebaseSource()</span>
+<span class="nc" id="L12">) {</span>
+    
+    /**
+     * Retrieves educational resources based on category and user preferences
+     * 
+     * @param category Category of resources (e.g., &quot;anxiety&quot;, &quot;depression&quot;, &quot;mindfulness&quot;)
+     * @param userId User ID for personalization
+     * @param format Content format preference (text, video, audio, all)
+     * @return List of EducationalResource objects
+     */
+<span class="nc" id="L22">    suspend fun getEducationalResources(</span>
+<span class="nc" id="L23">        category: String? = null,</span>
+<span class="nc" id="L24">        userId: String? = null,</span>
+<span class="nc" id="L25">        format: ContentFormat = ContentFormat.ALL</span>
+<span class="nc" id="L26">    ): List&lt;EducationalResource&gt; = withContext(Dispatchers.IO) {</span>
+<span class="nc" id="L27">        try {</span>
+            // Try to fetch from Firebase
+<span class="nc bnc" id="L29" title="All 2 branches missed.">            val formatString = if (format != ContentFormat.ALL) format.name else null</span>
+<span class="nc bnc" id="L30" title="All 2 branches missed.">            val result = firebaseSource.getEducationalResources(category, formatString)</span>
+            
+            // Log Firebase connection status
+<span class="nc bnc" id="L33" title="All 2 branches missed.">            if (result.isSuccess) {</span>
+<span class="nc bnc" id="L34" title="All 4 branches missed.">                val firebaseResources = result.getOrNull() ?: emptyList()</span>
+<span class="nc" id="L35">                android.util.Log.d(&quot;EducationalResources&quot;, &quot;Firebase connection: SUCCESS - Found ${firebaseResources.size} resources&quot;)</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">                if (firebaseResources.isEmpty()) {</span>
+<span class="nc" id="L37">                    android.util.Log.d(&quot;EducationalResources&quot;, &quot;Firebase collection is empty, using fallback data&quot;)</span>
+                }
+            } else {
+<span class="nc bnc" id="L40" title="All 2 branches missed.">                android.util.Log.w(&quot;EducationalResources&quot;, &quot;Firebase connection: FAILED - ${result.exceptionOrNull()?.message}&quot;)</span>
+<span class="nc" id="L41">                android.util.Log.d(&quot;EducationalResources&quot;, &quot;Using fallback hardcoded data&quot;)</span>
+            }
+            
+            // Use Firebase data if available and not empty, otherwise use fallback
+<span class="nc bnc" id="L45" title="All 10 branches missed.">            val allResources = result.getOrNull()?.takeIf { it.isNotEmpty() } </span>
+<span class="nc" id="L46">                ?: generateEducationalResources()</span>
+            
+            // Filter by category (if not already filtered by Firebase)
+<span class="nc bnc" id="L49" title="All 12 branches missed.">            val filteredByCategory = if (category != null &amp;&amp; (result.isFailure || result.getOrNull()?.isEmpty() == true)) {</span>
+<span class="nc" id="L50">                allResources.filter { it.category.equals(category, ignoreCase = true) }</span>
+            } else {
+<span class="nc" id="L52">                allResources</span>
+            }
+            
+            // Filter by format (if not already filtered by Firebase)
+<span class="nc bnc" id="L56" title="All 12 branches missed.">            val filteredByFormat = if (format != ContentFormat.ALL &amp;&amp; (result.isFailure || result.getOrNull()?.isEmpty() == true)) {</span>
+<span class="nc bnc" id="L57" title="All 4 branches missed.">                when (format) {</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">                    ContentFormat.TEXT -&gt; filteredByCategory.filter { it.format == ContentFormat.TEXT }</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">                    ContentFormat.VIDEO -&gt; filteredByCategory.filter { it.format == ContentFormat.VIDEO }</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">                    ContentFormat.AUDIO -&gt; filteredByCategory.filter { it.format == ContentFormat.AUDIO }</span>
+<span class="nc" id="L61">                    ContentFormat.ALL -&gt; filteredByCategory</span>
+                }
+            } else {
+<span class="nc" id="L64">                filteredByCategory</span>
+            }
+            
+            // Personalize based on user needs (if userId provided)
+<span class="nc bnc" id="L68" title="All 2 branches missed.">            val personalizedResources = if (userId != null) {</span>
+<span class="nc" id="L69">                personalizeResources(filteredByFormat, userId)</span>
+            } else {
+<span class="nc" id="L71">                filteredByFormat</span>
+            }
+            
+<span class="nc" id="L74">            personalizedResources.sortedByDescending { it.relevanceScore }</span>
+<span class="nc" id="L75">        } catch (e: Exception) {</span>
+            // Fallback to hardcoded data on any error
+<span class="nc" id="L77">            val allResources = generateEducationalResources()</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">            val filteredByCategory = if (category != null) {</span>
+<span class="nc" id="L79">                allResources.filter { it.category.equals(category, ignoreCase = true) }</span>
+            } else {
+<span class="nc" id="L81">                allResources</span>
+            }
+            
+<span class="nc bnc" id="L84" title="All 4 branches missed.">            val filteredByFormat = when (format) {</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">                ContentFormat.TEXT -&gt; filteredByCategory.filter { it.format == ContentFormat.TEXT }</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">                ContentFormat.VIDEO -&gt; filteredByCategory.filter { it.format == ContentFormat.VIDEO }</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">                ContentFormat.AUDIO -&gt; filteredByCategory.filter { it.format == ContentFormat.AUDIO }</span>
+<span class="nc" id="L88">                ContentFormat.ALL -&gt; filteredByCategory</span>
+            }
+            
+<span class="nc bnc" id="L91" title="All 2 branches missed.">            if (userId != null) {</span>
+<span class="nc" id="L92">                personalizeResources(filteredByFormat, userId).sortedByDescending { it.relevanceScore }</span>
+            } else {
+<span class="nc" id="L94">                filteredByFormat.sortedByDescending { it.relevanceScore }</span>
+            }
+<span class="nc" id="L96">        }</span>
+<span class="nc" id="L97">    }</span>
+    
+    /**
+     * Searches educational resources by keyword
+     * 
+     * @param query Search query string
+     * @param userId User ID for personalization
+     * @return List of matching EducationalResource objects
+     */
+<span class="nc" id="L106">    suspend fun searchEducationalResources(</span>
+        query: String,
+<span class="nc" id="L108">        userId: String? = null</span>
+<span class="nc" id="L109">    ): List&lt;EducationalResource&gt; = withContext(Dispatchers.IO) {</span>
+<span class="nc bnc" id="L110" title="All 4 branches missed.">        require(query.isNotBlank()) { &quot;Search query cannot be empty&quot; }</span>
+        
+<span class="nc" id="L112">        try {</span>
+            // Try to search in Firebase
+<span class="nc bnc" id="L114" title="All 2 branches missed.">            val result = firebaseSource.searchEducationalResources(query)</span>
+            // Use Firebase results if available and not empty, otherwise search fallback data
+<span class="nc bnc" id="L116" title="All 10 branches missed.">            val matchingResources = result.getOrNull()?.takeIf { it.isNotEmpty() } ?: run {</span>
+<span class="nc" id="L117">                val allResources = generateEducationalResources()</span>
+<span class="nc" id="L118">                val lowerQuery = query.lowercase()</span>
+<span class="nc" id="L119">                allResources.filter { resource -&gt;</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">                    resource.title.lowercase().contains(lowerQuery) ||</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">                    resource.description.lowercase().contains(lowerQuery) ||</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">                    resource.tags.any { it.lowercase().contains(lowerQuery) }</span>
+<span class="nc" id="L123">                }</span>
+            }
+            
+            // Personalize results if userId provided
+<span class="nc bnc" id="L127" title="All 2 branches missed.">            if (userId != null) {</span>
+<span class="nc" id="L128">                personalizeResources(matchingResources, userId).sortedByDescending { it.relevanceScore }</span>
+            } else {
+<span class="nc" id="L130">                matchingResources.sortedByDescending { it.relevanceScore }</span>
+            }
+<span class="nc" id="L132">        } catch (e: Exception) {</span>
+            // Fallback to hardcoded data search on any error
+<span class="nc" id="L134">            val allResources = generateEducationalResources()</span>
+<span class="nc" id="L135">            val lowerQuery = query.lowercase()</span>
+<span class="nc" id="L136">            val matchingResources = allResources.filter { resource -&gt;</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">                resource.title.lowercase().contains(lowerQuery) ||</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">                resource.description.lowercase().contains(lowerQuery) ||</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">                resource.tags.any { it.lowercase().contains(lowerQuery) }</span>
+            }
+            
+<span class="nc bnc" id="L142" title="All 2 branches missed.">            if (userId != null) {</span>
+<span class="nc" id="L143">                personalizeResources(matchingResources, userId).sortedByDescending { it.relevanceScore }</span>
+            } else {
+<span class="nc" id="L145">                matchingResources.sortedByDescending { it.relevanceScore }</span>
+            }
+<span class="nc" id="L147">        }</span>
+<span class="nc" id="L148">    }</span>
+    
+    /**
+     * Gets recommended resources for a user based on their profile and history
+     * 
+     * @param userId User ID
+     * @param limit Maximum number of recommendations
+     * @return List of recommended EducationalResource objects
+     */
+<span class="nc" id="L157">    suspend fun getRecommendedResources(</span>
+        userId: String,
+<span class="nc" id="L159">        limit: Int = 10</span>
+<span class="nc" id="L160">    ): List&lt;EducationalResource&gt; = withContext(Dispatchers.IO) {</span>
+<span class="nc" id="L161">        try {</span>
+            // Try to fetch from Firebase
+<span class="nc bnc" id="L163" title="All 2 branches missed.">            val result = firebaseSource.getEducationalResources()</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">            val allResources = result.getOrElse {</span>
+                // Fallback to hardcoded data if Firebase fails
+<span class="nc" id="L166">                generateEducationalResources()</span>
+            }
+            
+            // Personalize based on user profile
+<span class="nc" id="L170">            val personalized = personalizeResources(allResources, userId)</span>
+            
+            // Sort by relevance and return top N
+<span class="nc" id="L173">            personalized</span>
+<span class="nc" id="L174">                .sortedByDescending { it.relevanceScore }</span>
+<span class="nc" id="L175">                .take(limit)</span>
+<span class="nc" id="L176">        } catch (e: Exception) {</span>
+            // Fallback to hardcoded data on any error
+<span class="nc" id="L178">            val allResources = generateEducationalResources()</span>
+<span class="nc" id="L179">            val personalized = personalizeResources(allResources, userId)</span>
+<span class="nc" id="L180">            personalized</span>
+<span class="nc" id="L181">                .sortedByDescending { it.relevanceScore }</span>
+<span class="nc" id="L182">                .take(limit)</span>
+<span class="nc" id="L183">        }</span>
+<span class="nc" id="L184">    }</span>
+    
+    /**
+     * Marks a resource as completed by the user
+     * 
+     * @param resourceId Resource ID
+     * @param userId User ID
+     * @return LearningProgress object tracking completion
+     */
+    suspend fun markResourceAsCompleted(
+        resourceId: String,
+        userId: String
+<span class="nc" id="L196">    ): LearningProgress = withContext(Dispatchers.IO) {</span>
+<span class="nc" id="L197">        val progress = LearningProgress(</span>
+<span class="nc" id="L198">            id = System.currentTimeMillis().toString(),</span>
+<span class="nc" id="L199">            userId = userId,</span>
+<span class="nc" id="L200">            resourceId = resourceId,</span>
+<span class="nc" id="L201">            completedAt = Date(),</span>
+<span class="nc" id="L202">            progress = 100,</span>
+<span class="nc" id="L203">            timeSpent = estimateTimeSpent(resourceId),</span>
+<span class="nc" id="L204">            notes = null</span>
+        )
+        
+        // Save to Firebase
+<span class="nc bnc" id="L208" title="All 4 branches missed.">        firebaseSource.saveLearningProgress(progress).getOrElse {</span>
+            // If Firebase save fails, still return the progress object
+<span class="nc" id="L210">            progress</span>
+<span class="nc" id="L211">        }</span>
+<span class="nc" id="L212">    }</span>
+    
+    /**
+     * Tracks learning progress for a resource
+     * 
+     * @param resourceId Resource ID
+     * @param userId User ID
+     * @param progress Progress percentage (0-100)
+     * @return LearningProgress object
+     */
+    suspend fun trackLearningProgress(
+        resourceId: String,
+        userId: String,
+        progress: Int
+<span class="nc" id="L226">    ): LearningProgress = withContext(Dispatchers.IO) {</span>
+<span class="nc bnc" id="L227" title="All 6 branches missed.">        require(progress in 0..100) { &quot;Progress must be between 0 and 100&quot; }</span>
+        
+        // Check if progress already exists
+<span class="nc bnc" id="L230" title="All 2 branches missed.">        val existingProgressResult = firebaseSource.getLearningProgress(userId, resourceId)</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">        val existingProgress = existingProgressResult.getOrNull()</span>
+        
+<span class="nc bnc" id="L233" title="All 2 branches missed.">        val progressObj = if (existingProgress != null) {</span>
+            // Update existing progress
+<span class="nc" id="L235">            existingProgress.copy(</span>
+<span class="nc" id="L236">                progress = progress,</span>
+<span class="nc bnc" id="L237" title="All 2 branches missed.">                completedAt = if (progress == 100) Date() else existingProgress.completedAt,</span>
+<span class="nc" id="L238">                timeSpent = estimateTimeSpent(resourceId) * (progress / 100f)</span>
+            )
+        } else {
+            // Create new progress
+<span class="nc" id="L242">            LearningProgress(</span>
+<span class="nc" id="L243">                id = &quot;&quot;,</span>
+<span class="nc" id="L244">                userId = userId,</span>
+<span class="nc" id="L245">                resourceId = resourceId,</span>
+<span class="nc bnc" id="L246" title="All 2 branches missed.">                completedAt = if (progress == 100) Date() else null,</span>
+<span class="nc" id="L247">                progress = progress,</span>
+<span class="nc" id="L248">                timeSpent = estimateTimeSpent(resourceId) * (progress / 100f),</span>
+<span class="nc" id="L249">                notes = null</span>
+            )
+        }
+        
+        // Save to Firebase
+<span class="nc bnc" id="L254" title="All 4 branches missed.">        firebaseSource.saveLearningProgress(progressObj).getOrElse {</span>
+            // If Firebase save fails, still return the progress object
+<span class="nc" id="L256">            progressObj</span>
+<span class="nc" id="L257">        }</span>
+<span class="nc" id="L258">    }</span>
+    
+    /**
+     * Gets user's learning history
+     * 
+     * @param userId User ID
+     * @return List of LearningProgress objects
+     */
+<span class="nc" id="L266">    suspend fun getLearningHistory(userId: String): List&lt;LearningProgress&gt; = withContext(Dispatchers.IO) {</span>
+<span class="nc" id="L267">        try {</span>
+<span class="nc bnc" id="L268" title="All 4 branches missed.">            firebaseSource.getLearningHistory(userId).getOrElse {</span>
+<span class="nc" id="L269">                emptyList()</span>
+            }
+<span class="nc" id="L271">        } catch (e: Exception) {</span>
+<span class="nc" id="L272">            emptyList()</span>
+<span class="nc" id="L273">        }</span>
+<span class="nc" id="L274">    }</span>
+    
+    /**
+     * Gets available resource categories
+     * 
+     * @return List of category names
+     */
+<span class="nc" id="L281">    suspend fun getResourceCategories(): List&lt;String&gt; = withContext(Dispatchers.IO) {</span>
+<span class="nc" id="L282">        try {</span>
+            // Try to fetch categories from Firebase
+<span class="nc bnc" id="L284" title="All 4 branches missed.">            firebaseSource.getResourceCategories().getOrElse {</span>
+                // Fallback to hardcoded categories if Firebase fails
+<span class="nc" id="L286">                listOf(</span>
+<span class="nc" id="L287">                    &quot;Anxiety Management&quot;,</span>
+<span class="nc" id="L288">                    &quot;Depression Support&quot;,</span>
+<span class="nc" id="L289">                    &quot;Stress Relief&quot;,</span>
+<span class="nc" id="L290">                    &quot;Mindfulness&quot;,</span>
+<span class="nc" id="L291">                    &quot;Cognitive Behavioral Therapy&quot;,</span>
+<span class="nc" id="L292">                    &quot;Self-Care&quot;,</span>
+<span class="nc" id="L293">                    &quot;Coping Strategies&quot;,</span>
+<span class="nc" id="L294">                    &quot;Relationships&quot;,</span>
+<span class="nc" id="L295">                    &quot;Sleep&quot;,</span>
+<span class="nc" id="L296">                    &quot;Mindset &amp; Growth&quot;</span>
+<span class="nc" id="L297">                )</span>
+            }
+<span class="nc" id="L299">        } catch (e: Exception) {</span>
+            // Fallback to hardcoded categories on any error
+<span class="nc" id="L301">            listOf(</span>
+<span class="nc" id="L302">                &quot;Anxiety Management&quot;,</span>
+<span class="nc" id="L303">                &quot;Depression Support&quot;,</span>
+<span class="nc" id="L304">                &quot;Stress Relief&quot;,</span>
+<span class="nc" id="L305">                &quot;Mindfulness&quot;,</span>
+<span class="nc" id="L306">                &quot;Cognitive Behavioral Therapy&quot;,</span>
+<span class="nc" id="L307">                &quot;Self-Care&quot;,</span>
+<span class="nc" id="L308">                &quot;Coping Strategies&quot;,</span>
+<span class="nc" id="L309">                &quot;Relationships&quot;,</span>
+<span class="nc" id="L310">                &quot;Sleep&quot;,</span>
+<span class="nc" id="L311">                &quot;Mindset &amp; Growth&quot;</span>
+            )
+<span class="nc" id="L313">        }</span>
+<span class="nc" id="L314">    }</span>
+    
+    // Private helper methods
+    
+    /**
+     * Builds the in-memory catalog of educational resources used for testing and preview scenarios.
+     *
+     * @return Seeded list of `EducationalResource` entries spanning multiple categories and formats.
+     */
+    private fun generateEducationalResources(): List&lt;EducationalResource&gt; {
+<span class="nc" id="L324">        return listOf(</span>
+<span class="nc" id="L325">            EducationalResource(</span>
+<span class="nc" id="L326">                id = &quot;res_001&quot;,</span>
+<span class="nc" id="L327">                title = &quot;Understanding Anxiety: A Comprehensive Guide&quot;,</span>
+<span class="nc" id="L328">                description = &quot;Learn about anxiety disorders, symptoms, and evidence-based treatment approaches.&quot;,</span>
+<span class="nc" id="L329">                category = &quot;Anxiety Management&quot;,</span>
+<span class="nc" id="L330">                format = ContentFormat.TEXT,</span>
+<span class="nc" id="L331">                url = &quot;https://example.com/anxiety-guide&quot;,</span>
+<span class="nc" id="L332">                duration = 15,</span>
+<span class="nc" id="L333">                tags = listOf(&quot;anxiety&quot;, &quot;mental health&quot;, &quot;education&quot;, &quot;guide&quot;),</span>
+<span class="nc" id="L334">                difficulty = DifficultyLevel.BEGINNER,</span>
+<span class="nc" id="L335">                relevanceScore = 85f,</span>
+<span class="nc" id="L336">                createdAt = Date()</span>
+            ),
+<span class="nc" id="L338">            EducationalResource(</span>
+<span class="nc" id="L339">                id = &quot;res_002&quot;,</span>
+<span class="nc" id="L340">                title = &quot;Mindfulness Meditation for Beginners&quot;,</span>
+<span class="nc" id="L341">                description = &quot;Step-by-step video guide to starting your mindfulness practice.&quot;,</span>
+<span class="nc" id="L342">                category = &quot;Mindfulness&quot;,</span>
+<span class="nc" id="L343">                format = ContentFormat.VIDEO,</span>
+<span class="nc" id="L344">                url = &quot;https://example.com/mindfulness-video&quot;,</span>
+<span class="nc" id="L345">                duration = 20,</span>
+<span class="nc" id="L346">                tags = listOf(&quot;mindfulness&quot;, &quot;meditation&quot;, &quot;video&quot;, &quot;beginners&quot;),</span>
+<span class="nc" id="L347">                difficulty = DifficultyLevel.BEGINNER,</span>
+<span class="nc" id="L348">                relevanceScore = 90f,</span>
+<span class="nc" id="L349">                createdAt = Date()</span>
+            ),
+<span class="nc" id="L351">            EducationalResource(</span>
+<span class="nc" id="L352">                id = &quot;res_003&quot;,</span>
+<span class="nc" id="L353">                title = &quot;CBT Techniques for Negative Thoughts&quot;,</span>
+<span class="nc" id="L354">                description = &quot;Learn cognitive behavioral therapy techniques to challenge and reframe negative thinking patterns.&quot;,</span>
+<span class="nc" id="L355">                category = &quot;Cognitive Behavioral Therapy&quot;,</span>
+<span class="nc" id="L356">                format = ContentFormat.TEXT,</span>
+<span class="nc" id="L357">                url = &quot;https://example.com/cbt-techniques&quot;,</span>
+<span class="nc" id="L358">                duration = 25,</span>
+<span class="nc" id="L359">                tags = listOf(&quot;CBT&quot;, &quot;cognitive therapy&quot;, &quot;negative thoughts&quot;, &quot;reframing&quot;),</span>
+<span class="nc" id="L360">                difficulty = DifficultyLevel.INTERMEDIATE,</span>
+<span class="nc" id="L361">                relevanceScore = 80f,</span>
+<span class="nc" id="L362">                createdAt = Date()</span>
+            ),
+<span class="nc" id="L364">            EducationalResource(</span>
+<span class="nc" id="L365">                id = &quot;res_004&quot;,</span>
+<span class="nc" id="L366">                title = &quot;Guided Breathing Exercise&quot;,</span>
+<span class="nc" id="L367">                description = &quot;Audio-guided breathing exercise for stress relief and relaxation.&quot;,</span>
+<span class="nc" id="L368">                category = &quot;Stress Relief&quot;,</span>
+<span class="nc" id="L369">                format = ContentFormat.AUDIO,</span>
+<span class="nc" id="L370">                url = &quot;https://example.com/breathing-audio&quot;,</span>
+<span class="nc" id="L371">                duration = 10,</span>
+<span class="nc" id="L372">                tags = listOf(&quot;breathing&quot;, &quot;stress relief&quot;, &quot;relaxation&quot;, &quot;audio&quot;),</span>
+<span class="nc" id="L373">                difficulty = DifficultyLevel.BEGINNER,</span>
+<span class="nc" id="L374">                relevanceScore = 88f,</span>
+<span class="nc" id="L375">                createdAt = Date()</span>
+            ),
+<span class="nc" id="L377">            EducationalResource(</span>
+<span class="nc" id="L378">                id = &quot;res_005&quot;,</span>
+<span class="nc" id="L379">                title = &quot;Building a Self-Care Routine&quot;,</span>
+<span class="nc" id="L380">                description = &quot;Practical guide to creating and maintaining a sustainable self-care practice.&quot;,</span>
+<span class="nc" id="L381">                category = &quot;Self-Care&quot;,</span>
+<span class="nc" id="L382">                format = ContentFormat.TEXT,</span>
+<span class="nc" id="L383">                url = &quot;https://example.com/self-care&quot;,</span>
+<span class="nc" id="L384">                duration = 12,</span>
+<span class="nc" id="L385">                tags = listOf(&quot;self-care&quot;, &quot;routine&quot;, &quot;wellness&quot;, &quot;habits&quot;),</span>
+<span class="nc" id="L386">                difficulty = DifficultyLevel.BEGINNER,</span>
+<span class="nc" id="L387">                relevanceScore = 75f,</span>
+<span class="nc" id="L388">                createdAt = Date()</span>
+            )
+        )
+    }
+    
+    /**
+     * Applies lightweight personalization to the supplied resources for the given user.
+     *
+     * @param resources Candidate resources before personalization.
+     * @param userId Identifier for the user requesting content.
+     * @return List of resources with adjusted relevance scores for the user.
+     */
+    private fun personalizeResources(
+        resources: List&lt;EducationalResource&gt;,
+        userId: String
+    ): List&lt;EducationalResource&gt; {
+        // In production, would analyze user profile, mood history, preferences
+        // For now, return resources with adjusted relevance scores
+<span class="nc" id="L406">        return resources.map { resource -&gt;</span>
+<span class="nc" id="L407">            resource.copy(relevanceScore = resource.relevanceScore * 1.1f) // Slight boost for personalization</span>
+        }
+    }
+    
+    /**
+     * Estimates the amount of time a user typically spends on a resource based on its format.
+     *
+     * @param resourceId Identifier for the resource whose engagement time is being estimated.
+     * @return Estimated consumption time in seconds.
+     */
+    private fun estimateTimeSpent(resourceId: String): Float {
+        // In production, would calculate based on resource duration and format
+<span class="nc" id="L419">        return when {</span>
+<span class="nc bnc" id="L420" title="All 2 branches missed.">            resourceId.contains(&quot;video&quot;) -&gt; 1200f // 20 minutes in seconds</span>
+<span class="nc bnc" id="L421" title="All 2 branches missed.">            resourceId.contains(&quot;audio&quot;) -&gt; 600f // 10 minutes</span>
+<span class="nc" id="L422">            else -&gt; 900f // 15 minutes for text</span>
+        }
+    }
+}
+
+/**
+ * Data class for educational resources
+ */
+<span class="nc" id="L430">data class EducationalResource(</span>
+<span class="nc" id="L431">    val id: String,</span>
+<span class="nc" id="L432">    val title: String,</span>
+<span class="nc" id="L433">    val description: String,</span>
+<span class="nc" id="L434">    val category: String,</span>
+<span class="nc" id="L435">    val format: ContentFormat,</span>
+<span class="nc" id="L436">    val url: String,</span>
+<span class="nc" id="L437">    val duration: Int, // in minutes</span>
+<span class="nc" id="L438">    val tags: List&lt;String&gt;,</span>
+<span class="nc" id="L439">    val difficulty: DifficultyLevel,</span>
+<span class="nc" id="L440">    val relevanceScore: Float, // 0-100</span>
+<span class="nc" id="L441">    val createdAt: Date</span>
+)
+
+/**
+ * Data class for learning progress
+ */
+<span class="nc" id="L447">data class LearningProgress(</span>
+<span class="nc" id="L448">    val id: String,</span>
+<span class="nc" id="L449">    val userId: String,</span>
+<span class="nc" id="L450">    val resourceId: String,</span>
+<span class="nc" id="L451">    val completedAt: Date?,</span>
+<span class="nc" id="L452">    val progress: Int, // 0-100</span>
+<span class="nc" id="L453">    val timeSpent: Float, // in seconds</span>
+<span class="nc" id="L454">    val notes: String?</span>
+)
+
+/**
+ * Content format enum
+ */
+enum class ContentFormat {
+<span class="nc" id="L461">    TEXT, VIDEO, AUDIO, ALL</span>
+<span class="nc" id="L462">}</span>
+
+/**
+ * Difficulty level enum
+ */
+enum class DifficultyLevel {
+<span class="nc" id="L468">    BEGINNER, INTERMEDIATE, ADVANCED</span>
+<span class="nc" id="L469">}</span>
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

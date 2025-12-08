@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MoodAnalyticsScreen.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.screens</a> &gt; <span class="el_source">MoodAnalyticsScreen.kt</span></div><h1>MoodAnalyticsScreen.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.screens
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import kotlin.math.roundToInt
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MoodAnalyticsScreen(
+    onNavigateBack: () -&gt; Unit,
+    onViewDetailedReport: () -&gt; Unit
+<span class="nc bnc" id="L28" title="All 14 branches missed.">) {</span>
+<span class="nc" id="L29">    var selectedTimeRange by remember { mutableStateOf(&quot;Week&quot;) }</span>
+<span class="nc" id="L30">    var showInsightsDialog by remember { mutableStateOf(false) }</span>
+    
+<span class="nc" id="L32">    val timeRanges = listOf(&quot;Week&quot;, &quot;Month&quot;, &quot;3 Months&quot;, &quot;Year&quot;)</span>
+    
+<span class="nc" id="L34">    val moodData = remember {</span>
+<span class="nc" id="L35">        listOf(</span>
+<span class="nc" id="L36">            MoodDataPoint(&quot;Mon&quot;, 3.5f, &quot;Work stress&quot;),</span>
+<span class="nc" id="L37">            MoodDataPoint(&quot;Tue&quot;, 4.2f, &quot;Good workout&quot;),</span>
+<span class="nc" id="L38">            MoodDataPoint(&quot;Wed&quot;, 2.8f, &quot;Difficult meeting&quot;),</span>
+<span class="nc" id="L39">            MoodDataPoint(&quot;Thu&quot;, 4.0f, &quot;Friend visit&quot;),</span>
+<span class="nc" id="L40">            MoodDataPoint(&quot;Fri&quot;, 4.5f, &quot;Weekend plans&quot;),</span>
+<span class="nc" id="L41">            MoodDataPoint(&quot;Sat&quot;, 4.8f, &quot;Relaxing day&quot;),</span>
+<span class="nc" id="L42">            MoodDataPoint(&quot;Sun&quot;, 3.2f, &quot;Sunday blues&quot;)</span>
+<span class="nc" id="L43">        )</span>
+    }
+    
+<span class="nc" id="L46">    val moodPatterns = remember {</span>
+<span class="nc" id="L47">        listOf(</span>
+<span class="nc" id="L48">            MoodPattern(&quot;Work Stress&quot;, &quot;High stress on Mondays and Wednesdays&quot;, &quot;Consider meditation before work&quot;),</span>
+<span class="nc" id="L49">            MoodPattern(&quot;Weekend Boost&quot;, &quot;Mood improves significantly on weekends&quot;, &quot;Plan more weekend activities&quot;),</span>
+<span class="nc" id="L50">            MoodPattern(&quot;Exercise Impact&quot;, &quot;Mood improves after physical activity&quot;, &quot;Schedule regular workouts&quot;)</span>
+<span class="nc" id="L51">        )</span>
+    }
+    
+<span class="nc" id="L54">    Scaffold(</span>
+<span class="nc" id="L55">        topBar = {</span>
+<span class="nc bnc" id="L56" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L57" title="All 8 branches missed.">                title = { Text(&quot;Mood Analytics&quot;) },</span>
+<span class="nc" id="L58">                navigationIcon = {</span>
+<span class="nc bnc" id="L59" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L60" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L61">                    }</span>
+<span class="nc" id="L62">                },</span>
+<span class="nc" id="L63">                actions = {</span>
+<span class="nc bnc" id="L64" title="All 8 branches missed.">                    IconButton(onClick = { showInsightsDialog = true }) {</span>
+<span class="nc bnc" id="L65" title="All 8 branches missed.">                        Icon(Icons.Default.Insights, contentDescription = &quot;Insights&quot;)</span>
+<span class="nc" id="L66">                    }</span>
+<span class="nc" id="L67">                }</span>
+<span class="nc" id="L68">            )</span>
+<span class="nc" id="L69">        }</span>
+<span class="nc" id="L70">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L71" title="All 8 branches missed.">        LazyColumn(</span>
+<span class="nc" id="L72">            modifier = Modifier</span>
+<span class="nc" id="L73">                .fillMaxSize()</span>
+<span class="nc" id="L74">                .padding(paddingValues)</span>
+<span class="nc" id="L75">                .padding(16.dp),</span>
+<span class="nc" id="L76">            verticalArrangement = Arrangement.spacedBy(16.dp)</span>
+<span class="nc" id="L77">        ) {</span>
+            // Time Range Selector
+<span class="nc" id="L79">            item {</span>
+<span class="nc bnc" id="L80" title="All 8 branches missed.">                Card(</span>
+<span class="nc" id="L81">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L82">                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L83">                ) {</span>
+<span class="nc bnc" id="L84" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L85">                        modifier = Modifier.padding(16.dp)</span>
+                    ) {
+<span class="nc" id="L87">                        Text(</span>
+<span class="nc" id="L88">                            text = &quot;Time Range&quot;,</span>
+<span class="nc" id="L89">                            style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L90">                            fontWeight = FontWeight.Bold</span>
+                        )
+                        
+<span class="nc" id="L93">                        Spacer(modifier = Modifier.height(8.dp))</span>
+                        
+<span class="nc" id="L95">                        LazyRow(</span>
+<span class="nc" id="L96">                            horizontalArrangement = Arrangement.spacedBy(8.dp)</span>
+<span class="nc" id="L97">                        ) {</span>
+<span class="nc" id="L98">                            items(timeRanges) { range -&gt;</span>
+                                FilterChip(
+<span class="nc" id="L100">                                    onClick = { selectedTimeRange = range },</span>
+<span class="nc bnc" id="L101" title="All 8 branches missed.">                                    label = { Text(range) },</span>
+                                    selected = selectedTimeRange == range
+                                )
+                            }
+<span class="nc" id="L105">                        }</span>
+<span class="nc" id="L106">                    }</span>
+<span class="nc" id="L107">                }</span>
+<span class="nc" id="L108">            }</span>
+            
+            // Mood Trend Chart
+<span class="nc" id="L111">            item {</span>
+<span class="nc bnc" id="L112" title="All 8 branches missed.">                Card(</span>
+<span class="nc" id="L113">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L114">                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L115">                ) {</span>
+<span class="nc bnc" id="L116" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L117">                        modifier = Modifier.padding(16.dp)</span>
+                    ) {
+<span class="nc" id="L119">                        Text(</span>
+<span class="nc" id="L120">                            text = &quot;Mood Trend&quot;,</span>
+<span class="nc" id="L121">                            style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L122">                            fontWeight = FontWeight.Bold</span>
+                        )
+                        
+<span class="nc" id="L125">                        Spacer(modifier = Modifier.height(16.dp))</span>
+                        
+<span class="nc" id="L127">                        MoodChart(moodData = moodData)</span>
+                        
+<span class="nc" id="L129">                        Spacer(modifier = Modifier.height(16.dp))</span>
+                        
+<span class="nc" id="L131">                        Row(</span>
+<span class="nc" id="L132">                            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L133">                            horizontalArrangement = Arrangement.SpaceBetween</span>
+                        ) {
+<span class="nc" id="L135">                            Text(</span>
+<span class="nc" id="L136">                                text = &quot;Average: ${moodData.map { it.value }.average().let { &quot;%.1f&quot;.format(it) }}/5.0&quot;,</span>
+<span class="nc" id="L137">                                style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L138">                                fontWeight = FontWeight.Medium</span>
+                            )
+                            
+<span class="nc" id="L141">                            Text(</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">                                text = &quot;Trend: ${if (moodData.last().value &gt; moodData.first().value) &quot;↗ Improving&quot; else &quot;↘ Declining&quot;}&quot;,</span>
+<span class="nc" id="L143">                                style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">                                color = if (moodData.last().value &gt; moodData.first().value) Color(0xFF4CAF50) else Color(0xFFF44336)</span>
+                            )
+<span class="nc" id="L146">                        }</span>
+<span class="nc" id="L147">                    }</span>
+<span class="nc" id="L148">                }</span>
+<span class="nc" id="L149">            }</span>
+            
+            // Mood Statistics
+<span class="nc" id="L152">            item {</span>
+<span class="nc bnc" id="L153" title="All 8 branches missed.">                Card(</span>
+<span class="nc" id="L154">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L155">                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L156">                ) {</span>
+<span class="nc bnc" id="L157" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L158">                        modifier = Modifier.padding(16.dp)</span>
+                    ) {
+<span class="nc" id="L160">                        Text(</span>
+<span class="nc" id="L161">                            text = &quot;Mood Statistics&quot;,</span>
+<span class="nc" id="L162">                            style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L163">                            fontWeight = FontWeight.Bold</span>
+                        )
+                        
+<span class="nc" id="L166">                        Spacer(modifier = Modifier.height(16.dp))</span>
+                        
+<span class="nc" id="L168">                        Row(</span>
+<span class="nc" id="L169">                            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L170">                            horizontalArrangement = Arrangement.SpaceBetween</span>
+                        ) {
+<span class="nc" id="L172">                            StatCard(</span>
+<span class="nc" id="L173">                                title = &quot;Best Day&quot;,</span>
+<span class="nc" id="L174">                                value = &quot;Saturday&quot;,</span>
+<span class="nc" id="L175">                                subtitle = &quot;4.8/5.0&quot;,</span>
+<span class="nc" id="L176">                                icon = Icons.Default.TrendingUp,</span>
+<span class="nc" id="L177">                                color = Color(0xFF4CAF50)</span>
+                            )
+                            
+<span class="nc" id="L180">                            StatCard(</span>
+<span class="nc" id="L181">                                title = &quot;Challenging Day&quot;,</span>
+<span class="nc" id="L182">                                value = &quot;Wednesday&quot;,</span>
+<span class="nc" id="L183">                                subtitle = &quot;2.8/5.0&quot;,</span>
+<span class="nc" id="L184">                                icon = Icons.Default.TrendingDown,</span>
+<span class="nc" id="L185">                                color = Color(0xFFF44336)</span>
+                            )
+<span class="nc" id="L187">                        }</span>
+                        
+<span class="nc" id="L189">                        Spacer(modifier = Modifier.height(12.dp))</span>
+                        
+<span class="nc" id="L191">                        Row(</span>
+<span class="nc" id="L192">                            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L193">                            horizontalArrangement = Arrangement.SpaceBetween</span>
+                        ) {
+<span class="nc" id="L195">                            StatCard(</span>
+<span class="nc" id="L196">                                title = &quot;Consistency&quot;,</span>
+<span class="nc" id="L197">                                value = &quot;75%&quot;,</span>
+<span class="nc" id="L198">                                subtitle = &quot;Stable mood&quot;,</span>
+<span class="nc" id="L199">                                icon = Icons.Default.Straighten,</span>
+<span class="nc" id="L200">                                color = Color(0xFF2196F3)</span>
+                            )
+                            
+<span class="nc" id="L203">                            StatCard(</span>
+<span class="nc" id="L204">                                title = &quot;Improvement&quot;,</span>
+<span class="nc" id="L205">                                value = &quot;+0.7&quot;,</span>
+<span class="nc" id="L206">                                subtitle = &quot;vs last week&quot;,</span>
+<span class="nc" id="L207">                                icon = Icons.Default.ShowChart,</span>
+<span class="nc" id="L208">                                color = Color(0xFF4CAF50)</span>
+                            )
+<span class="nc" id="L210">                        }</span>
+<span class="nc" id="L211">                    }</span>
+<span class="nc" id="L212">                }</span>
+<span class="nc" id="L213">            }</span>
+            
+            // Mood Patterns
+<span class="nc" id="L216">            item {</span>
+<span class="nc bnc" id="L217" title="All 8 branches missed.">                Card(</span>
+<span class="nc" id="L218">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L219">                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L220">                ) {</span>
+<span class="nc bnc" id="L221" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L222">                        modifier = Modifier.padding(16.dp)</span>
+                    ) {
+<span class="nc" id="L224">                        Text(</span>
+<span class="nc" id="L225">                            text = &quot;Mood Patterns&quot;,</span>
+<span class="nc" id="L226">                            style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L227">                            fontWeight = FontWeight.Bold</span>
+                        )
+                        
+<span class="nc" id="L230">                        Spacer(modifier = Modifier.height(8.dp))</span>
+                        
+<span class="nc" id="L232">                        Text(</span>
+<span class="nc" id="L233">                            text = &quot;AI-detected patterns in your mood data&quot;,</span>
+<span class="nc" id="L234">                            style = MaterialTheme.typography.bodyMedium,</span>
+<span class="nc" id="L235">                            color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                        )
+                        
+<span class="nc" id="L238">                        Spacer(modifier = Modifier.height(12.dp))</span>
+                        
+<span class="nc" id="L240">                        moodPatterns.forEach { pattern -&gt;</span>
+<span class="nc" id="L241">                            PatternCard(pattern = pattern)</span>
+<span class="nc" id="L242">                            Spacer(modifier = Modifier.height(8.dp))</span>
+<span class="nc" id="L243">                        }</span>
+<span class="nc" id="L244">                    }</span>
+<span class="nc" id="L245">                }</span>
+<span class="nc" id="L246">            }</span>
+            
+            // Recommendations
+<span class="nc" id="L249">            item {</span>
+<span class="nc bnc" id="L250" title="All 8 branches missed.">                Card(</span>
+<span class="nc" id="L251">                    modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L252">                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)</span>
+<span class="nc" id="L253">                ) {</span>
+<span class="nc bnc" id="L254" title="All 6 branches missed.">                    Column(</span>
+<span class="nc" id="L255">                        modifier = Modifier.padding(16.dp)</span>
+                    ) {
+<span class="nc" id="L257">                        Row(</span>
+<span class="nc" id="L258">                            verticalAlignment = Alignment.CenterVertically</span>
+                        ) {
+<span class="nc" id="L260">                            Icon(</span>
+<span class="nc" id="L261">                                Icons.Default.Recommend,</span>
+<span class="nc" id="L262">                                contentDescription = null,</span>
+<span class="nc" id="L263">                                tint = MaterialTheme.colorScheme.primary</span>
+                            )
+<span class="nc" id="L265">                            Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc" id="L266">                            Text(</span>
+<span class="nc" id="L267">                                text = &quot;Personalized Recommendations&quot;,</span>
+<span class="nc" id="L268">                                style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L269">                                fontWeight = FontWeight.Bold</span>
+                            )
+<span class="nc" id="L271">                        }</span>
+                        
+<span class="nc" id="L273">                        Spacer(modifier = Modifier.height(12.dp))</span>
+                        
+<span class="nc" id="L275">                        RecommendationItem(</span>
+<span class="nc" id="L276">                            title = &quot;Morning Meditation&quot;,</span>
+<span class="nc" id="L277">                            description = &quot;Start your day with 10 minutes of meditation to improve Monday mood&quot;,</span>
+<span class="nc" id="L278">                            priority = &quot;High&quot;</span>
+                        )
+                        
+<span class="nc" id="L281">                        Spacer(modifier = Modifier.height(8.dp))</span>
+                        
+<span class="nc" id="L283">                        RecommendationItem(</span>
+<span class="nc" id="L284">                            title = &quot;Exercise Schedule&quot;,</span>
+<span class="nc" id="L285">                            description = &quot;Plan workouts on Tuesday and Thursday to maintain positive mood&quot;,</span>
+<span class="nc" id="L286">                            priority = &quot;Medium&quot;</span>
+                        )
+                        
+<span class="nc" id="L289">                        Spacer(modifier = Modifier.height(8.dp))</span>
+                        
+<span class="nc" id="L291">                        RecommendationItem(</span>
+<span class="nc" id="L292">                            title = &quot;Weekend Planning&quot;,</span>
+<span class="nc" id="L293">                            description = &quot;Schedule more social activities on weekends to boost mood&quot;,</span>
+<span class="nc" id="L294">                            priority = &quot;Low&quot;</span>
+                        )
+<span class="nc" id="L296">                    }</span>
+<span class="nc" id="L297">                }</span>
+<span class="nc" id="L298">            }</span>
+            
+            // Detailed Report Button
+<span class="nc" id="L301">            item {</span>
+<span class="nc bnc" id="L302" title="All 8 branches missed.">                Button(</span>
+<span class="nc" id="L303">                    onClick = onViewDetailedReport,</span>
+<span class="nc" id="L304">                    modifier = Modifier.fillMaxWidth()</span>
+<span class="nc" id="L305">                ) {</span>
+<span class="nc bnc" id="L306" title="All 6 branches missed.">                    Icon(Icons.Default.Assessment, contentDescription = null)</span>
+<span class="nc" id="L307">                    Spacer(modifier = Modifier.width(8.dp))</span>
+<span class="nc bnc" id="L308" title="All 2 branches missed.">                    Text(&quot;View Detailed Report&quot;)</span>
+<span class="nc" id="L309">                }</span>
+<span class="nc" id="L310">            }</span>
+<span class="nc" id="L311">        }</span>
+<span class="nc" id="L312">    }</span>
+    
+    // Insights Dialog
+<span class="nc bnc" id="L315" title="All 2 branches missed.">    if (showInsightsDialog) {</span>
+<span class="nc bnc" id="L316" title="All 2 branches missed.">        AlertDialog(</span>
+<span class="nc" id="L317">            onDismissRequest = { showInsightsDialog = false },</span>
+<span class="nc bnc" id="L318" title="All 8 branches missed.">            title = { Text(&quot;Mood Insights&quot;) },</span>
+<span class="nc" id="L319">            text = {</span>
+<span class="nc bnc" id="L320" title="All 6 branches missed.">                Column {</span>
+<span class="nc" id="L321">                    Text(&quot;• Your mood is most stable on weekends&quot;)</span>
+<span class="nc" id="L322">                    Text(&quot;• Work stress affects Monday and Wednesday moods&quot;)</span>
+<span class="nc" id="L323">                    Text(&quot;• Exercise has a positive impact on your mood&quot;)</span>
+<span class="nc" id="L324">                    Text(&quot;• Consider meditation to improve morning mood&quot;)</span>
+<span class="nc" id="L325">                }</span>
+<span class="nc" id="L326">            },</span>
+<span class="nc" id="L327">            confirmButton = {</span>
+<span class="nc bnc" id="L328" title="All 8 branches missed.">                TextButton(onClick = { showInsightsDialog = false }) {</span>
+<span class="nc bnc" id="L329" title="All 8 branches missed.">                    Text(&quot;Close&quot;)</span>
+<span class="nc" id="L330">                }</span>
+<span class="nc" id="L331">            }</span>
+        )
+    }
+<span class="nc bnc" id="L334" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L337" title="All 10 branches missed.">fun MoodChart(moodData: List&lt;MoodDataPoint&gt;) {</span>
+<span class="nc" id="L338">    val maxValue = 5.0f</span>
+<span class="nc" id="L339">    val minValue = 1.0f</span>
+    
+<span class="nc" id="L341">    Column {</span>
+        // Chart Area
+<span class="nc" id="L343">        Box(</span>
+<span class="nc" id="L344">            modifier = Modifier</span>
+<span class="nc" id="L345">                .fillMaxWidth()</span>
+<span class="nc" id="L346">                .height(120.dp)</span>
+<span class="nc" id="L347">                .background(</span>
+<span class="nc" id="L348">                    Color.LightGray.copy(alpha = 0.1f),</span>
+<span class="nc" id="L349">                    RoundedCornerShape(8.dp)</span>
+                )
+        ) {
+            // Simple bar chart representation
+<span class="nc" id="L353">            Row(</span>
+<span class="nc" id="L354">                modifier = Modifier</span>
+<span class="nc" id="L355">                    .fillMaxSize()</span>
+<span class="nc" id="L356">                    .padding(8.dp),</span>
+<span class="nc" id="L357">                horizontalArrangement = Arrangement.SpaceEvenly,</span>
+<span class="nc" id="L358">                verticalAlignment = Alignment.Bottom</span>
+            ) {
+<span class="nc" id="L360">                moodData.forEach { dataPoint -&gt;</span>
+<span class="nc" id="L361">                    val height = ((dataPoint.value - minValue) / (maxValue - minValue)) * 100</span>
+                    
+<span class="nc" id="L363">                    Column(</span>
+<span class="nc" id="L364">                        horizontalAlignment = Alignment.CenterHorizontally</span>
+                    ) {
+<span class="nc" id="L366">                        Box(</span>
+<span class="nc" id="L367">                            modifier = Modifier</span>
+<span class="nc" id="L368">                                .width(20.dp)</span>
+<span class="nc" id="L369">                                .height(height.dp)</span>
+<span class="nc" id="L370">                                .background(</span>
+<span class="nc" id="L371">                                    when {</span>
+<span class="nc bnc" id="L372" title="All 2 branches missed.">                                        dataPoint.value &gt;= 4.0f -&gt; Color(0xFF4CAF50)</span>
+<span class="nc bnc" id="L373" title="All 2 branches missed.">                                        dataPoint.value &gt;= 3.0f -&gt; Color(0xFFFF9800)</span>
+<span class="nc" id="L374">                                        else -&gt; Color(0xFFF44336)</span>
+                                    },
+<span class="nc" id="L376">                                    RoundedCornerShape(4.dp)</span>
+                                )
+                        )
+                        
+<span class="nc" id="L380">                        Spacer(modifier = Modifier.height(4.dp))</span>
+                        
+<span class="nc" id="L382">                        Text(</span>
+<span class="nc" id="L383">                            text = dataPoint.day,</span>
+<span class="nc" id="L384">                            style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L385">                            fontSize = 10.sp</span>
+                        )
+                        
+<span class="nc" id="L388">                        Text(</span>
+<span class="nc" id="L389">                            text = dataPoint.value.toString(),</span>
+<span class="nc" id="L390">                            style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L391">                            fontSize = 8.sp,</span>
+<span class="nc" id="L392">                            color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                        )
+<span class="nc" id="L394">                    }</span>
+<span class="nc" id="L395">                }</span>
+<span class="nc" id="L396">            }</span>
+<span class="nc" id="L397">        }</span>
+<span class="nc" id="L398">    }</span>
+<span class="nc bnc" id="L399" title="All 2 branches missed.">}</span>
+
+@Composable
+fun StatCard(
+    title: String,
+    value: String,
+    subtitle: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    color: Color
+<span class="nc bnc" id="L408" title="All 26 branches missed.">) {</span>
+<span class="nc bnc" id="L409" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L410">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L411">        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)</span>
+<span class="nc" id="L412">    ) {</span>
+<span class="nc bnc" id="L413" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L414">            modifier = Modifier.padding(12.dp),</span>
+<span class="nc" id="L415">            horizontalAlignment = Alignment.CenterHorizontally</span>
+        ) {
+<span class="nc" id="L417">            Icon(</span>
+<span class="nc" id="L418">                imageVector = icon,</span>
+<span class="nc" id="L419">                contentDescription = null,</span>
+<span class="nc" id="L420">                tint = color,</span>
+<span class="nc" id="L421">                modifier = Modifier.size(24.dp)</span>
+            )
+            
+<span class="nc" id="L424">            Spacer(modifier = Modifier.height(8.dp))</span>
+            
+<span class="nc" id="L426">            Text(</span>
+<span class="nc" id="L427">                text = title,</span>
+<span class="nc" id="L428">                style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L429">                color = MaterialTheme.colorScheme.onSurfaceVariant,</span>
+<span class="nc" id="L430">                textAlign = TextAlign.Center</span>
+            )
+            
+<span class="nc" id="L433">            Text(</span>
+<span class="nc" id="L434">                text = value,</span>
+<span class="nc" id="L435">                style = MaterialTheme.typography.titleMedium,</span>
+<span class="nc" id="L436">                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L437">                color = color,</span>
+<span class="nc" id="L438">                textAlign = TextAlign.Center</span>
+            )
+            
+<span class="nc" id="L441">            Text(</span>
+<span class="nc" id="L442">                text = subtitle,</span>
+<span class="nc" id="L443">                style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L444">                color = MaterialTheme.colorScheme.onSurfaceVariant,</span>
+<span class="nc" id="L445">                textAlign = TextAlign.Center</span>
+            )
+<span class="nc" id="L447">        }</span>
+<span class="nc" id="L448">    }</span>
+<span class="nc bnc" id="L449" title="All 2 branches missed.">}</span>
+
+@Composable
+<span class="nc bnc" id="L452" title="All 10 branches missed.">fun PatternCard(pattern: MoodPattern) {</span>
+<span class="nc bnc" id="L453" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L454">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L455">        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)</span>
+<span class="nc" id="L456">    ) {</span>
+<span class="nc bnc" id="L457" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L458">            modifier = Modifier.padding(12.dp)</span>
+        ) {
+<span class="nc" id="L460">            Text(</span>
+<span class="nc" id="L461">                text = pattern.title,</span>
+<span class="nc" id="L462">                style = MaterialTheme.typography.titleSmall,</span>
+<span class="nc" id="L463">                fontWeight = FontWeight.Bold</span>
+            )
+            
+<span class="nc" id="L466">            Spacer(modifier = Modifier.height(4.dp))</span>
+            
+<span class="nc" id="L468">            Text(</span>
+<span class="nc" id="L469">                text = pattern.description,</span>
+<span class="nc" id="L470">                style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L471">                color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+            )
+            
+<span class="nc" id="L474">            Spacer(modifier = Modifier.height(4.dp))</span>
+            
+<span class="nc" id="L476">            Text(</span>
+<span class="nc" id="L477">                text = &quot;💡 ${pattern.recommendation}&quot;,</span>
+<span class="nc" id="L478">                style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L479">                color = MaterialTheme.colorScheme.primary,</span>
+<span class="nc" id="L480">                fontWeight = FontWeight.Medium</span>
+            )
+<span class="nc" id="L482">        }</span>
+<span class="nc" id="L483">    }</span>
+<span class="nc bnc" id="L484" title="All 2 branches missed.">}</span>
+
+@Composable
+fun RecommendationItem(
+    title: String,
+    description: String,
+    priority: String
+<span class="nc bnc" id="L491" title="All 18 branches missed.">) {</span>
+<span class="nc" id="L492">    Row(</span>
+<span class="nc" id="L493">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L494">        verticalAlignment = Alignment.CenterVertically</span>
+    ) {
+<span class="nc bnc" id="L496" title="All 4 branches missed.">        val priorityColor = when (priority.lowercase()) {</span>
+<span class="nc" id="L497">            &quot;high&quot; -&gt; Color(0xFFF44336)</span>
+<span class="nc" id="L498">            &quot;medium&quot; -&gt; Color(0xFFFF9800)</span>
+<span class="nc" id="L499">            &quot;low&quot; -&gt; Color(0xFF4CAF50)</span>
+<span class="nc" id="L500">            else -&gt; MaterialTheme.colorScheme.primary</span>
+        }
+        
+<span class="nc" id="L503">        Box(</span>
+<span class="nc" id="L504">            modifier = Modifier</span>
+<span class="nc" id="L505">                .size(8.dp)</span>
+<span class="nc" id="L506">                .background(priorityColor, RoundedCornerShape(4.dp))</span>
+        )
+        
+<span class="nc" id="L509">        Spacer(modifier = Modifier.width(12.dp))</span>
+        
+<span class="nc" id="L511">        Column(</span>
+<span class="nc" id="L512">            modifier = Modifier.weight(1f)</span>
+        ) {
+<span class="nc" id="L514">            Text(</span>
+<span class="nc" id="L515">                text = title,</span>
+<span class="nc" id="L516">                style = MaterialTheme.typography.titleSmall,</span>
+<span class="nc" id="L517">                fontWeight = FontWeight.Medium</span>
+            )
+            
+<span class="nc" id="L520">            Text(</span>
+<span class="nc" id="L521">                text = description,</span>
+<span class="nc" id="L522">                style = MaterialTheme.typography.bodySmall,</span>
+<span class="nc" id="L523">                color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+            )
+<span class="nc" id="L525">        }</span>
+<span class="nc" id="L526">    }</span>
+<span class="nc bnc" id="L527" title="All 2 branches missed.">}</span>
+
+<span class="nc" id="L529">data class MoodDataPoint(</span>
+<span class="nc" id="L530">    val day: String,</span>
+<span class="nc" id="L531">    val value: Float,</span>
+<span class="nc" id="L532">    val note: String</span>
+)
+
+<span class="nc" id="L535">data class MoodPattern(</span>
+<span class="nc" id="L536">    val title: String,</span>
+<span class="nc" id="L537">    val description: String,</span>
+<span class="nc" id="L538">    val recommendation: String</span>
+)
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

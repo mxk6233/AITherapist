@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GuidedBreathingScreen.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.ui.screens</a> &gt; <span class="el_source">GuidedBreathingScreen.kt</span></div><h1>GuidedBreathingScreen.kt</h1><pre class="source lang-java linenums">package com.serenityai.ui.screens
+
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
+import kotlin.math.cos
+import kotlin.math.sin
+
+// Data classes for breathing sessions
+<span class="nc" id="L30">data class BreathingSession(</span>
+<span class="nc" id="L31">    val id: String,</span>
+<span class="nc" id="L32">    val name: String,</span>
+<span class="nc" id="L33">    val description: String,</span>
+<span class="nc" id="L34">    val duration: Int, // in minutes</span>
+<span class="nc" id="L35">    val inhaleTime: Int, // in seconds</span>
+<span class="nc" id="L36">    val holdTime: Int, // in seconds</span>
+<span class="nc" id="L37">    val exhaleTime: Int, // in seconds</span>
+<span class="nc" id="L38">    val color: Color,</span>
+<span class="nc" id="L39">    val icon: androidx.compose.ui.graphics.vector.ImageVector</span>
+)
+
+enum class BreathingPhase {
+<span class="nc" id="L43">    INHALE, HOLD, EXHALE, REST</span>
+<span class="nc" id="L44">}</span>
+
+// Wrapper function for backward compatibility
+@Composable
+<span class="nc bnc" id="L48" title="All 10 branches missed.">fun GuidedBreathingScreen(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">    GuidedBreathingScreenDetailed(onNavigateBack = onNavigateBack)</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">}</span>
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+<span class="nc bnc" id="L54" title="All 10 branches missed.">fun GuidedBreathingScreenDetailed(onNavigateBack: () -&gt; Unit) {</span>
+<span class="nc" id="L55">    var selectedSession by remember { mutableStateOf&lt;BreathingSession?&gt;(null) }</span>
+<span class="nc" id="L56">    var isSessionActive by remember { mutableStateOf(false) }</span>
+<span class="nc" id="L57">    var currentPhase by remember { mutableStateOf(BreathingPhase.INHALE) }</span>
+<span class="nc" id="L58">    var timeRemaining by remember { mutableStateOf(0) }</span>
+<span class="nc" id="L59">    var sessionDuration by remember { mutableStateOf(0) }</span>
+    
+<span class="nc" id="L61">    val breathingSessions = remember { generateBreathingSessions() }</span>
+    
+    // Breathing animation
+<span class="nc" id="L64">    val infiniteTransition = rememberInfiniteTransition(label = &quot;breathing&quot;)</span>
+<span class="nc" id="L65">    val scale by infiniteTransition.animateFloat(</span>
+<span class="nc" id="L66">        initialValue = 0.8f,</span>
+<span class="nc" id="L67">        targetValue = 1.2f,</span>
+<span class="nc" id="L68">        animationSpec = infiniteRepeatable(</span>
+<span class="nc" id="L69">            animation = tween(4000, easing = EaseInOut),</span>
+<span class="nc" id="L70">            repeatMode = RepeatMode.Reverse</span>
+        ),
+<span class="nc" id="L72">        label = &quot;scale&quot;</span>
+    )
+    
+    // Phase timing
+<span class="nc" id="L76">    LaunchedEffect(isSessionActive, selectedSession) {</span>
+<span class="nc bnc" id="L77" title="All 4 branches missed.">        if (isSessionActive &amp;&amp; selectedSession != null) {</span>
+<span class="nc" id="L78">            val session = selectedSession!!</span>
+<span class="nc" id="L79">            sessionDuration = session.duration * 60 // Convert to seconds</span>
+            
+<span class="nc bnc" id="L81" title="All 2 branches missed.">            while (sessionDuration &gt; 0) {</span>
+                // Inhale phase
+<span class="nc" id="L83">                currentPhase = BreathingPhase.INHALE</span>
+<span class="nc" id="L84">                timeRemaining = session.inhaleTime</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">                while (timeRemaining &gt; 0) {</span>
+<span class="nc" id="L86">                    delay(1000)</span>
+<span class="nc" id="L87">                    timeRemaining--</span>
+<span class="nc" id="L88">                    sessionDuration--</span>
+                }
+                
+<span class="nc bnc" id="L91" title="All 2 branches missed.">                if (sessionDuration &lt;= 0) break</span>
+                
+                // Hold phase
+<span class="nc" id="L94">                currentPhase = BreathingPhase.HOLD</span>
+<span class="nc" id="L95">                timeRemaining = session.holdTime</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">                while (timeRemaining &gt; 0) {</span>
+<span class="nc" id="L97">                    delay(1000)</span>
+<span class="nc" id="L98">                    timeRemaining--</span>
+<span class="nc" id="L99">                    sessionDuration--</span>
+                }
+                
+<span class="nc bnc" id="L102" title="All 2 branches missed.">                if (sessionDuration &lt;= 0) break</span>
+                
+                // Exhale phase
+<span class="nc" id="L105">                currentPhase = BreathingPhase.EXHALE</span>
+<span class="nc" id="L106">                timeRemaining = session.exhaleTime</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">                while (timeRemaining &gt; 0) {</span>
+<span class="nc" id="L108">                    delay(1000)</span>
+<span class="nc" id="L109">                    timeRemaining--</span>
+<span class="nc" id="L110">                    sessionDuration--</span>
+                }
+                
+<span class="nc bnc" id="L113" title="All 2 branches missed.">                if (sessionDuration &lt;= 0) break</span>
+                
+                // Rest phase
+<span class="nc" id="L116">                currentPhase = BreathingPhase.REST</span>
+<span class="nc" id="L117">                timeRemaining = 2</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">                while (timeRemaining &gt; 0) {</span>
+<span class="nc" id="L119">                    delay(1000)</span>
+<span class="nc" id="L120">                    timeRemaining--</span>
+<span class="nc" id="L121">                    sessionDuration--</span>
+                }
+            }
+            
+<span class="nc" id="L125">            isSessionActive = false</span>
+<span class="nc" id="L126">            currentPhase = BreathingPhase.INHALE</span>
+        }
+<span class="nc" id="L128">    }</span>
+
+<span class="nc bnc" id="L130" title="All 2 branches missed.">    Scaffold(</span>
+<span class="nc" id="L131">        topBar = {</span>
+<span class="nc bnc" id="L132" title="All 8 branches missed.">            TopAppBar(</span>
+<span class="nc bnc" id="L133" title="All 8 branches missed.">                title = { Text(&quot;Guided Breathing&quot;) },</span>
+<span class="nc" id="L134">                navigationIcon = {</span>
+<span class="nc bnc" id="L135" title="All 8 branches missed.">                    IconButton(onClick = onNavigateBack) {</span>
+<span class="nc bnc" id="L136" title="All 8 branches missed.">                        Icon(Icons.Default.ArrowBack, contentDescription = &quot;Back&quot;)</span>
+<span class="nc" id="L137">                    }</span>
+<span class="nc" id="L138">                },</span>
+<span class="nc" id="L139">                colors = TopAppBarDefaults.topAppBarColors(</span>
+<span class="nc" id="L140">                    containerColor = MaterialTheme.colorScheme.primaryContainer</span>
+                )
+<span class="nc" id="L142">            )</span>
+<span class="nc" id="L143">        }</span>
+<span class="nc" id="L144">    ) { paddingValues -&gt;</span>
+<span class="nc bnc" id="L145" title="All 6 branches missed.">        Column(</span>
+<span class="nc" id="L146">            modifier = Modifier</span>
+<span class="nc" id="L147">                .fillMaxSize()</span>
+<span class="nc" id="L148">                .padding(paddingValues)</span>
+        ) {
+<span class="nc bnc" id="L150" title="All 2 branches missed.">            if (selectedSession == null) {</span>
+                // Session selection
+<span class="nc" id="L152">                SessionSelection(</span>
+<span class="nc" id="L153">                    sessions = breathingSessions,</span>
+<span class="nc" id="L154">                    onSessionSelected = { selectedSession = it }</span>
+                )
+<span class="nc bnc" id="L156" title="All 2 branches missed.">            } else if (!isSessionActive) {</span>
+                // Session preview
+<span class="nc" id="L158">                SessionPreview(</span>
+<span class="nc" id="L159">                    session = selectedSession!!,</span>
+<span class="nc" id="L160">                    onStartSession = { isSessionActive = true },</span>
+<span class="nc" id="L161">                    onBackToSelection = { selectedSession = null }</span>
+                )
+<span class="nc" id="L163">            } else {</span>
+                // Active breathing session
+<span class="nc" id="L165">                ActiveBreathingSession(</span>
+<span class="nc" id="L166">                    session = selectedSession!!,</span>
+<span class="nc" id="L167">                    currentPhase = currentPhase,</span>
+<span class="nc" id="L168">                    timeRemaining = timeRemaining,</span>
+<span class="nc" id="L169">                    sessionDuration = sessionDuration,</span>
+<span class="nc" id="L170">                    scale = scale,</span>
+<span class="nc" id="L171">                    onStopSession = { </span>
+<span class="nc" id="L172">                        isSessionActive = false</span>
+<span class="nc" id="L173">                        selectedSession = null</span>
+<span class="nc" id="L174">                    }</span>
+                )
+            }
+<span class="nc" id="L177">        }</span>
+<span class="nc" id="L178">    }</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">}</span>
+
+@Composable
+fun SessionSelection(
+    sessions: List&lt;BreathingSession&gt;,
+    onSessionSelected: (BreathingSession) -&gt; Unit
+<span class="nc bnc" id="L185" title="All 14 branches missed.">) {</span>
+<span class="nc" id="L186">    Column(</span>
+<span class="nc" id="L187">        modifier = Modifier.padding(16.dp)</span>
+    ) {
+<span class="nc" id="L189">        Text(</span>
+<span class="nc" id="L190">            text = &quot;Choose a Breathing Exercise&quot;,</span>
+<span class="nc" id="L191">            fontSize = 24.sp,</span>
+<span class="nc" id="L192">            fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L193">            modifier = Modifier.padding(bottom = 16.dp)</span>
+        )
+        
+<span class="nc" id="L196">        LazyColumn(</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">            verticalArrangement = Arrangement.spacedBy(12.dp)</span>
+<span class="nc" id="L198">        ) {</span>
+<span class="nc" id="L199">            items(sessions) { session -&gt;</span>
+                BreathingSessionCard(
+                    session = session,
+<span class="nc" id="L202">                    onClick = { onSessionSelected(session) }</span>
+                )
+            }
+<span class="nc" id="L205">        }</span>
+<span class="nc" id="L206">    }</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">}</span>
+
+@Composable
+fun BreathingSessionCard(
+    session: BreathingSession,
+    onClick: () -&gt; Unit
+<span class="nc bnc" id="L213" title="All 14 branches missed.">) {</span>
+<span class="nc bnc" id="L214" title="All 2 branches missed.">    Card(</span>
+<span class="nc" id="L215">        onClick = onClick,</span>
+<span class="nc" id="L216">        modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L217">        colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L218">            containerColor = session.color.copy(alpha = 0.1f)</span>
+        )
+<span class="nc" id="L220">    ) {</span>
+<span class="nc bnc" id="L221" title="All 6 branches missed.">        Row(</span>
+<span class="nc" id="L222">            modifier = Modifier.padding(16.dp),</span>
+<span class="nc" id="L223">            verticalAlignment = Alignment.CenterVertically</span>
+        ) {
+<span class="nc" id="L225">            Icon(</span>
+<span class="nc" id="L226">                session.icon,</span>
+<span class="nc" id="L227">                contentDescription = null,</span>
+<span class="nc" id="L228">                tint = session.color,</span>
+<span class="nc" id="L229">                modifier = Modifier.size(40.dp)</span>
+            )
+            
+<span class="nc" id="L232">            Spacer(modifier = Modifier.width(16.dp))</span>
+            
+<span class="nc" id="L234">            Column(modifier = Modifier.weight(1f)) {</span>
+<span class="nc" id="L235">                Text(</span>
+<span class="nc" id="L236">                    text = session.name,</span>
+<span class="nc" id="L237">                    fontSize = 18.sp,</span>
+<span class="nc" id="L238">                    fontWeight = FontWeight.Bold</span>
+                )
+<span class="nc" id="L240">                Text(</span>
+<span class="nc" id="L241">                    text = session.description,</span>
+<span class="nc" id="L242">                    fontSize = 14.sp,</span>
+<span class="nc" id="L243">                    color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                )
+<span class="nc" id="L245">                Text(</span>
+<span class="nc" id="L246">                    text = &quot;${session.duration} minutes • ${session.inhaleTime}-${session.holdTime}-${session.exhaleTime} pattern&quot;,</span>
+<span class="nc" id="L247">                    fontSize = 12.sp,</span>
+<span class="nc" id="L248">                    color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+                )
+<span class="nc" id="L250">            }</span>
+            
+<span class="nc" id="L252">            Icon(</span>
+<span class="nc" id="L253">                Icons.Default.ArrowForwardIos,</span>
+<span class="nc" id="L254">                contentDescription = &quot;Start session&quot;,</span>
+<span class="nc" id="L255">                modifier = Modifier.size(20.dp),</span>
+<span class="nc" id="L256">                tint = MaterialTheme.colorScheme.onSurfaceVariant</span>
+            )
+<span class="nc" id="L258">        }</span>
+<span class="nc" id="L259">    }</span>
+<span class="nc bnc" id="L260" title="All 2 branches missed.">}</span>
+
+@Composable
+fun SessionPreview(
+    session: BreathingSession,
+    onStartSession: () -&gt; Unit,
+    onBackToSelection: () -&gt; Unit
+<span class="nc bnc" id="L267" title="All 18 branches missed.">) {</span>
+<span class="nc" id="L268">    Column(</span>
+<span class="nc" id="L269">        modifier = Modifier</span>
+<span class="nc" id="L270">            .fillMaxSize()</span>
+<span class="nc" id="L271">            .padding(16.dp),</span>
+<span class="nc" id="L272">        horizontalAlignment = Alignment.CenterHorizontally</span>
+    ) {
+<span class="nc" id="L274">        Text(</span>
+<span class="nc" id="L275">            text = session.name,</span>
+<span class="nc" id="L276">            fontSize = 24.sp,</span>
+<span class="nc" id="L277">            fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L278">            textAlign = TextAlign.Center,</span>
+<span class="nc" id="L279">            modifier = Modifier.padding(bottom = 8.dp)</span>
+        )
+        
+<span class="nc" id="L282">        Text(</span>
+<span class="nc" id="L283">            text = session.description,</span>
+<span class="nc" id="L284">            fontSize = 16.sp,</span>
+<span class="nc" id="L285">            textAlign = TextAlign.Center,</span>
+<span class="nc" id="L286">            color = MaterialTheme.colorScheme.onSurfaceVariant,</span>
+<span class="nc" id="L287">            modifier = Modifier.padding(bottom = 24.dp)</span>
+        )
+        
+        // Breathing pattern preview
+<span class="nc" id="L291">        Card(</span>
+<span class="nc" id="L292">            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L293">            colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L294">                containerColor = session.color.copy(alpha = 0.1f)</span>
+            )
+<span class="nc" id="L296">        ) {</span>
+<span class="nc bnc" id="L297" title="All 6 branches missed.">            Column(</span>
+<span class="nc" id="L298">                modifier = Modifier.padding(20.dp),</span>
+<span class="nc" id="L299">                horizontalAlignment = Alignment.CenterHorizontally</span>
+            ) {
+<span class="nc" id="L301">                Text(</span>
+<span class="nc" id="L302">                    text = &quot;Breathing Pattern&quot;,</span>
+<span class="nc" id="L303">                    fontSize = 18.sp,</span>
+<span class="nc" id="L304">                    fontWeight = FontWeight.Medium,</span>
+<span class="nc" id="L305">                    modifier = Modifier.padding(bottom = 16.dp)</span>
+                )
+                
+<span class="nc" id="L308">                Row(</span>
+<span class="nc" id="L309">                    horizontalArrangement = Arrangement.SpaceEvenly,</span>
+<span class="nc" id="L310">                    modifier = Modifier.fillMaxWidth()</span>
+                ) {
+<span class="nc" id="L312">                    BreathingPhasePreview(&quot;Inhale&quot;, session.inhaleTime, session.color)</span>
+<span class="nc" id="L313">                    BreathingPhasePreview(&quot;Hold&quot;, session.holdTime, session.color)</span>
+<span class="nc" id="L314">                    BreathingPhasePreview(&quot;Exhale&quot;, session.exhaleTime, session.color)</span>
+<span class="nc" id="L315">                }</span>
+<span class="nc" id="L316">            }</span>
+<span class="nc" id="L317">        }</span>
+        
+<span class="nc" id="L319">        Spacer(modifier = Modifier.weight(1f))</span>
+        
+<span class="nc" id="L321">        Row(</span>
+<span class="nc" id="L322">            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L323">            horizontalArrangement = Arrangement.spacedBy(16.dp)</span>
+        ) {
+<span class="nc" id="L325">            OutlinedButton(</span>
+<span class="nc" id="L326">                onClick = onBackToSelection,</span>
+<span class="nc" id="L327">                modifier = Modifier.weight(1f)</span>
+<span class="nc" id="L328">            ) {</span>
+<span class="nc bnc" id="L329" title="All 8 branches missed.">                Text(&quot;Back&quot;)</span>
+<span class="nc" id="L330">            }</span>
+            
+<span class="nc" id="L332">            Button(</span>
+<span class="nc" id="L333">                onClick = onStartSession,</span>
+<span class="nc" id="L334">                modifier = Modifier.weight(1f),</span>
+<span class="nc" id="L335">                colors = ButtonDefaults.buttonColors(</span>
+<span class="nc" id="L336">                    containerColor = session.color</span>
+                )
+<span class="nc" id="L338">            ) {</span>
+<span class="nc bnc" id="L339" title="All 8 branches missed.">                Text(&quot;Start Session&quot;)</span>
+<span class="nc" id="L340">            }</span>
+<span class="nc" id="L341">        }</span>
+<span class="nc" id="L342">    }</span>
+<span class="nc bnc" id="L343" title="All 2 branches missed.">}</span>
+
+@Composable
+fun BreathingPhasePreview(
+    phase: String,
+    duration: Int,
+    color: Color
+<span class="nc bnc" id="L350" title="All 18 branches missed.">) {</span>
+<span class="nc" id="L351">    Column(</span>
+<span class="nc" id="L352">        horizontalAlignment = Alignment.CenterHorizontally</span>
+    ) {
+<span class="nc" id="L354">        Box(</span>
+<span class="nc" id="L355">            modifier = Modifier</span>
+<span class="nc" id="L356">                .size(60.dp)</span>
+<span class="nc" id="L357">                .clip(CircleShape)</span>
+<span class="nc" id="L358">                .background(color.copy(alpha = 0.3f)),</span>
+<span class="nc" id="L359">            contentAlignment = Alignment.Center</span>
+        ) {
+<span class="nc" id="L361">            Text(</span>
+<span class="nc" id="L362">                text = duration.toString(),</span>
+<span class="nc" id="L363">                fontSize = 18.sp,</span>
+<span class="nc" id="L364">                fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L365">                color = color</span>
+            )
+<span class="nc" id="L367">        }</span>
+<span class="nc" id="L368">        Text(</span>
+<span class="nc" id="L369">            text = phase,</span>
+<span class="nc" id="L370">            fontSize = 12.sp,</span>
+<span class="nc" id="L371">            modifier = Modifier.padding(top = 8.dp)</span>
+        )
+<span class="nc" id="L373">    }</span>
+<span class="nc bnc" id="L374" title="All 2 branches missed.">}</span>
+
+@Composable
+fun ActiveBreathingSession(
+    session: BreathingSession,
+    currentPhase: BreathingPhase,
+    timeRemaining: Int,
+    sessionDuration: Int,
+    scale: Float,
+    onStopSession: () -&gt; Unit
+<span class="nc bnc" id="L384" title="All 30 branches missed.">) {</span>
+<span class="nc" id="L385">    Column(</span>
+<span class="nc" id="L386">        modifier = Modifier</span>
+<span class="nc" id="L387">            .fillMaxSize()</span>
+<span class="nc" id="L388">            .padding(16.dp),</span>
+<span class="nc" id="L389">        horizontalAlignment = Alignment.CenterHorizontally</span>
+    ) {
+        // Session info
+<span class="nc" id="L392">        Row(</span>
+<span class="nc" id="L393">            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L394">            horizontalArrangement = Arrangement.SpaceBetween,</span>
+<span class="nc" id="L395">            verticalAlignment = Alignment.CenterVertically</span>
+        ) {
+<span class="nc" id="L397">            Text(</span>
+<span class="nc" id="L398">                text = session.name,</span>
+<span class="nc" id="L399">                fontSize = 20.sp,</span>
+<span class="nc" id="L400">                fontWeight = FontWeight.Bold</span>
+            )
+            
+<span class="nc" id="L403">            IconButton(onClick = onStopSession) {</span>
+<span class="nc bnc" id="L404" title="All 8 branches missed.">                Icon(Icons.Default.Close, contentDescription = &quot;Stop session&quot;)</span>
+<span class="nc" id="L405">            }</span>
+<span class="nc" id="L406">        }</span>
+        
+<span class="nc" id="L408">        Spacer(modifier = Modifier.height(32.dp))</span>
+        
+        // Breathing circle
+<span class="nc" id="L411">        Box(</span>
+<span class="nc" id="L412">            modifier = Modifier.size(300.dp),</span>
+<span class="nc" id="L413">            contentAlignment = Alignment.Center</span>
+        ) {
+<span class="nc" id="L415">            Canvas(</span>
+<span class="nc bnc" id="L416" title="All 4 branches missed.">                modifier = Modifier.fillMaxSize()</span>
+<span class="nc" id="L417">            ) {</span>
+<span class="nc" id="L418">                val center = Offset(size.width / 2, size.height / 2)</span>
+<span class="nc" id="L419">                val radius = (size.minDimension / 2) * scale</span>
+                
+<span class="nc" id="L421">                drawCircle(</span>
+<span class="nc" id="L422">                    color = session.color.copy(alpha = 0.3f),</span>
+<span class="nc" id="L423">                    radius = radius,</span>
+<span class="nc" id="L424">                    center = center</span>
+                )
+                
+<span class="nc" id="L427">                drawCircle(</span>
+<span class="nc" id="L428">                    color = session.color,</span>
+<span class="nc" id="L429">                    radius = radius * 0.7f,</span>
+<span class="nc" id="L430">                    center = center</span>
+                )
+<span class="nc" id="L432">            }</span>
+            
+<span class="nc" id="L434">            Column(</span>
+<span class="nc" id="L435">                horizontalAlignment = Alignment.CenterHorizontally</span>
+            ) {
+<span class="nc" id="L437">                Text(</span>
+<span class="nc bnc" id="L438" title="All 4 branches missed.">                    text = when (currentPhase) {</span>
+<span class="nc" id="L439">                        BreathingPhase.INHALE -&gt; &quot;Breathe In&quot;</span>
+<span class="nc" id="L440">                        BreathingPhase.HOLD -&gt; &quot;Hold&quot;</span>
+<span class="nc" id="L441">                        BreathingPhase.EXHALE -&gt; &quot;Breathe Out&quot;</span>
+<span class="nc" id="L442">                        BreathingPhase.REST -&gt; &quot;Rest&quot;</span>
+                    },
+<span class="nc" id="L444">                    fontSize = 24.sp,</span>
+<span class="nc" id="L445">                    fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L446">                    color = session.color</span>
+                )
+                
+<span class="nc" id="L449">                Text(</span>
+<span class="nc" id="L450">                    text = timeRemaining.toString(),</span>
+<span class="nc" id="L451">                    fontSize = 48.sp,</span>
+<span class="nc" id="L452">                    fontWeight = FontWeight.Bold,</span>
+<span class="nc" id="L453">                    color = session.color</span>
+                )
+<span class="nc" id="L455">            }</span>
+<span class="nc" id="L456">        }</span>
+        
+<span class="nc" id="L458">        Spacer(modifier = Modifier.height(32.dp))</span>
+        
+        // Progress
+<span class="nc" id="L461">        Text(</span>
+<span class="nc" id="L462">            text = &quot;Session Progress&quot;,</span>
+<span class="nc" id="L463">            fontSize = 16.sp,</span>
+<span class="nc" id="L464">            fontWeight = FontWeight.Medium</span>
+        )
+        
+<span class="nc" id="L467">        LinearProgressIndicator(</span>
+<span class="nc" id="L468">            progress = (session.duration * 60 - sessionDuration).toFloat() / (session.duration * 60),</span>
+<span class="nc" id="L469">            modifier = Modifier</span>
+<span class="nc" id="L470">                .fillMaxWidth()</span>
+<span class="nc" id="L471">                .padding(vertical = 8.dp),</span>
+<span class="nc" id="L472">            color = session.color</span>
+        )
+        
+<span class="nc" id="L475">        Text(</span>
+<span class="nc" id="L476">            text = &quot;${sessionDuration / 60}:${String.format(&quot;%02d&quot;, sessionDuration % 60)} remaining&quot;,</span>
+<span class="nc" id="L477">            fontSize = 14.sp,</span>
+<span class="nc" id="L478">            color = MaterialTheme.colorScheme.onSurfaceVariant</span>
+        )
+        
+<span class="nc" id="L481">        Spacer(modifier = Modifier.weight(1f))</span>
+        
+        // Instructions
+<span class="nc" id="L484">        Card(</span>
+<span class="nc" id="L485">            modifier = Modifier.fillMaxWidth(),</span>
+<span class="nc" id="L486">            colors = CardDefaults.cardColors(</span>
+<span class="nc" id="L487">                containerColor = MaterialTheme.colorScheme.surfaceVariant</span>
+            )
+<span class="nc" id="L489">        ) {</span>
+<span class="nc bnc" id="L490" title="All 8 branches missed.">            Text(</span>
+<span class="nc bnc" id="L491" title="All 4 branches missed.">                text = when (currentPhase) {</span>
+<span class="nc" id="L492">                    BreathingPhase.INHALE -&gt; &quot;Slowly inhale through your nose, filling your lungs completely.&quot;</span>
+<span class="nc" id="L493">                    BreathingPhase.HOLD -&gt; &quot;Hold your breath gently, feeling the stillness within.&quot;</span>
+<span class="nc" id="L494">                    BreathingPhase.EXHALE -&gt; &quot;Slowly exhale through your mouth, releasing all tension.&quot;</span>
+<span class="nc" id="L495">                    BreathingPhase.REST -&gt; &quot;Take a moment to rest and prepare for the next cycle.&quot;</span>
+                },
+<span class="nc" id="L497">                fontSize = 16.sp,</span>
+<span class="nc" id="L498">                textAlign = TextAlign.Center,</span>
+<span class="nc" id="L499">                modifier = Modifier.padding(16.dp)</span>
+<span class="nc" id="L500">            )</span>
+<span class="nc" id="L501">        }</span>
+<span class="nc" id="L502">    }</span>
+<span class="nc bnc" id="L503" title="All 2 branches missed.">}</span>
+
+fun generateBreathingSessions(): List&lt;BreathingSession&gt; {
+<span class="nc" id="L506">    return listOf(</span>
+<span class="nc" id="L507">        BreathingSession(</span>
+<span class="nc" id="L508">            id = &quot;1&quot;,</span>
+<span class="nc" id="L509">            name = &quot;4-7-8 Breathing&quot;,</span>
+<span class="nc" id="L510">            description = &quot;Calming technique for stress relief and better sleep&quot;,</span>
+<span class="nc" id="L511">            duration = 5,</span>
+<span class="nc" id="L512">            inhaleTime = 4,</span>
+<span class="nc" id="L513">            holdTime = 7,</span>
+<span class="nc" id="L514">            exhaleTime = 8,</span>
+<span class="nc" id="L515">            color = Color(0xFF2196F3),</span>
+<span class="nc" id="L516">            icon = Icons.Default.NightsStay</span>
+        ),
+<span class="nc" id="L518">        BreathingSession(</span>
+<span class="nc" id="L519">            id = &quot;2&quot;,</span>
+<span class="nc" id="L520">            name = &quot;Box Breathing&quot;,</span>
+<span class="nc" id="L521">            description = &quot;Military technique for focus and concentration&quot;,</span>
+<span class="nc" id="L522">            duration = 10,</span>
+<span class="nc" id="L523">            inhaleTime = 4,</span>
+<span class="nc" id="L524">            holdTime = 4,</span>
+<span class="nc" id="L525">            exhaleTime = 4,</span>
+<span class="nc" id="L526">            color = Color(0xFF4CAF50),</span>
+<span class="nc" id="L527">            icon = Icons.Default.FitnessCenter</span>
+        ),
+<span class="nc" id="L529">        BreathingSession(</span>
+<span class="nc" id="L530">            id = &quot;3&quot;,</span>
+<span class="nc" id="L531">            name = &quot;Deep Breathing&quot;,</span>
+<span class="nc" id="L532">            description = &quot;Simple deep breathing for relaxation&quot;,</span>
+<span class="nc" id="L533">            duration = 5,</span>
+<span class="nc" id="L534">            inhaleTime = 4,</span>
+<span class="nc" id="L535">            holdTime = 2,</span>
+<span class="nc" id="L536">            exhaleTime = 6,</span>
+<span class="nc" id="L537">            color = Color(0xFF9C27B0),</span>
+<span class="nc" id="L538">            icon = Icons.Default.Psychology</span>
+        ),
+<span class="nc" id="L540">        BreathingSession(</span>
+<span class="nc" id="L541">            id = &quot;4&quot;,</span>
+<span class="nc" id="L542">            name = &quot;Triangle Breathing&quot;,</span>
+<span class="nc" id="L543">            description = &quot;Equal timing for balance and harmony&quot;,</span>
+<span class="nc" id="L544">            duration = 8,</span>
+<span class="nc" id="L545">            inhaleTime = 4,</span>
+<span class="nc" id="L546">            holdTime = 4,</span>
+<span class="nc" id="L547">            exhaleTime = 4,</span>
+<span class="nc" id="L548">            color = Color(0xFFFF9800),</span>
+<span class="nc" id="L549">            icon = Icons.Default.Psychology</span>
+        ),
+<span class="nc" id="L551">        BreathingSession(</span>
+<span class="nc" id="L552">            id = &quot;5&quot;,</span>
+<span class="nc" id="L553">            name = &quot;Morning Energizer&quot;,</span>
+<span class="nc" id="L554">            description = &quot;Quick energizing breath for morning routine&quot;,</span>
+<span class="nc" id="L555">            duration = 3,</span>
+<span class="nc" id="L556">            inhaleTime = 2,</span>
+<span class="nc" id="L557">            holdTime = 1,</span>
+<span class="nc" id="L558">            exhaleTime = 2,</span>
+<span class="nc" id="L559">            color = Color(0xFFE91E63),</span>
+<span class="nc" id="L560">            icon = Icons.Default.WbSunny</span>
+        ),
+<span class="nc" id="L562">        BreathingSession(</span>
+<span class="nc" id="L563">            id = &quot;6&quot;,</span>
+<span class="nc" id="L564">            name = &quot;Anxiety Relief&quot;,</span>
+<span class="nc" id="L565">            description = &quot;Extended exhale to activate relaxation response&quot;,</span>
+<span class="nc" id="L566">            duration = 7,</span>
+<span class="nc" id="L567">            inhaleTime = 3,</span>
+<span class="nc" id="L568">            holdTime = 2,</span>
+<span class="nc" id="L569">            exhaleTime = 6,</span>
+<span class="nc" id="L570">            color = Color(0xFF00BCD4),</span>
+<span class="nc" id="L571">            icon = Icons.Default.Favorite</span>
+        )
+    )
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

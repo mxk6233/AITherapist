@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 6: Progress Monitoring" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-12-07T08:20:33" hostname="Mohammads-MacBook-Pro.local" time="0.002">
+  <properties/>
+  <testcase name="UC36-REQ-14: System MUST monitor deescalation progress" classname="com.serenityai.tests.unit.usecases.uc36_crisis_deescalation.AdaptiveCrisisDeescalationUseCaseUnitTests$ProgressMonitoringTests" time="0.002"/>
+  <testcase name="UC36-REQ-15: System MUST track progress improvement" classname="com.serenityai.tests.unit.usecases.uc36_crisis_deescalation.AdaptiveCrisisDeescalationUseCaseUnitTests$ProgressMonitoringTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

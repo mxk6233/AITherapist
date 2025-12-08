@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JournalingPromptsUseCase.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.usecases</a> &gt; <span class="el_source">JournalingPromptsUseCase.kt</span></div><h1>JournalingPromptsUseCase.kt</h1><pre class="source lang-java linenums">package com.serenityai.usecases
+
+import com.serenityai.data.models.*
+import java.util.Date
+import kotlin.random.Random
+
+/**
+ * UC32: AI-Generated Journaling Prompts - Use Case
+ * 
+ * Use Case Goal: Generate personalized journaling prompts using AI based on user mood,
+ * preferences, and journaling history to encourage meaningful reflection.
+ * 
+ * Responsibilities:
+ * - Generate AI-powered journaling prompts
+ * - Personalize prompts based on user mood and patterns
+ * - Filter prompts by category, mood, and difficulty
+ * - Track prompt usage and effectiveness
+ * - Provide recommendations based on user history
+ */
+<span class="nc" id="L20">class JournalingPromptsUseCase {</span>
+    
+    /**
+     * Generates personalized journaling prompts based on user request
+     * 
+     * @param request Prompt generation request with user preferences
+     * @param recentMoodEntries Recent mood entries for personalization
+     * @param journalingHistory User's journaling history for pattern analysis
+     * @return List of personalized JournalingPrompt objects
+     */
+<span class="nc" id="L30">    fun generatePersonalizedPrompts(</span>
+        request: PromptGenerationRequest,
+<span class="nc" id="L32">        recentMoodEntries: List&lt;MoodEntry&gt; = emptyList(),</span>
+<span class="nc" id="L33">        journalingHistory: List&lt;JournalEntry&gt; = emptyList()</span>
+    ): List&lt;JournalingPrompt&gt; {
+<span class="nc" id="L35">        val prompts = mutableListOf&lt;JournalingPrompt&gt;()</span>
+        
+        // Get base prompts from library
+<span class="nc" id="L38">        val basePrompts = getPromptLibrary()</span>
+        
+        // Filter and personalize
+<span class="nc" id="L41">        val filteredPrompts = basePrompts.filter { prompt -&gt;</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">            val matchesCategory = request.preferredCategory == null || </span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">                prompt.category == request.preferredCategory || </span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">                request.preferredCategory == PromptCategory.ALL</span>
+            
+<span class="nc bnc" id="L46" title="All 2 branches missed.">            val matchesDifficulty = request.preferredDifficulty == null || </span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">                prompt.difficulty == request.preferredDifficulty</span>
+            
+<span class="nc bnc" id="L49" title="All 2 branches missed.">            val matchesTime = request.maxTimeMinutes == null || </span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">                prompt.estimatedTime &lt;= request.maxTimeMinutes</span>
+            
+<span class="nc bnc" id="L52" title="All 2 branches missed.">            val matchesMood = request.moodTags.isEmpty() || </span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">                request.moodTags.any { it in prompt.moodTags } ||</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">                prompt.moodTags.contains(MoodTag.ALL)</span>
+            
+<span class="nc bnc" id="L56" title="All 4 branches missed.">            val notUsed = !request.excludeUsedPrompts || prompt.timesUsed == 0</span>
+            
+<span class="nc bnc" id="L58" title="All 10 branches missed.">            matchesCategory &amp;&amp; matchesDifficulty &amp;&amp; matchesTime &amp;&amp; matchesMood &amp;&amp; notUsed</span>
+        }
+        
+        // Personalize prompts based on user data
+<span class="nc" id="L62">        filteredPrompts.forEach { prompt -&gt;</span>
+<span class="nc" id="L63">            val personalizedPrompt = personalizePrompt(</span>
+<span class="nc" id="L64">                prompt = prompt,</span>
+<span class="nc" id="L65">                userId = request.userId,</span>
+<span class="nc" id="L66">                currentMood = request.currentMood,</span>
+<span class="nc" id="L67">                recentMoodEntries = recentMoodEntries,</span>
+<span class="nc" id="L68">                journalingHistory = journalingHistory,</span>
+<span class="nc" id="L69">                customTheme = request.customTheme</span>
+            )
+<span class="nc" id="L71">            prompts.add(personalizedPrompt)</span>
+<span class="nc" id="L72">        }</span>
+        
+        // Sort by personalization score and relevance
+<span class="nc" id="L75">        return prompts.sortedByDescending { </span>
+            it.effectivenessScore + calculateRelevanceScore(it, request)
+<span class="nc" id="L77">        }.take(20) // Return top 20</span>
+    }
+    
+    /**
+     * Gets recommended prompts for the user
+     * 
+     * @param userId User ID
+     * @param currentMood Current mood (1-10)
+     * @param recentMoodEntries Recent mood entries
+     * @param journalingHistory Journaling history
+     * @return PromptRecommendation with top prompts and reasons
+     */
+<span class="nc" id="L89">    fun getRecommendedPrompts(</span>
+        userId: String,
+<span class="nc" id="L91">        currentMood: Int? = null,</span>
+<span class="nc" id="L92">        recentMoodEntries: List&lt;MoodEntry&gt; = emptyList(),</span>
+<span class="nc" id="L93">        journalingHistory: List&lt;JournalEntry&gt; = emptyList()</span>
+    ): PromptRecommendation {
+<span class="nc" id="L95">        val request = PromptGenerationRequest(</span>
+<span class="nc" id="L96">            userId = userId,</span>
+<span class="nc" id="L97">            currentMood = currentMood,</span>
+<span class="nc" id="L98">            moodTags = extractMoodTags(currentMood, recentMoodEntries),</span>
+<span class="nc" id="L99">            excludeUsedPrompts = false</span>
+        )
+        
+<span class="nc" id="L102">        val prompts = generatePersonalizedPrompts(</span>
+<span class="nc" id="L103">            request = request,</span>
+<span class="nc" id="L104">            recentMoodEntries = recentMoodEntries,</span>
+<span class="nc" id="L105">            journalingHistory = journalingHistory</span>
+        )
+        
+<span class="nc" id="L108">        val recommended = prompts.take(5)</span>
+<span class="nc" id="L109">        val personalizationScore = recommended.map { it.effectivenessScore }.average().toFloat()</span>
+<span class="nc" id="L110">        val reasons = generateRecommendationReasons(recommended, currentMood, recentMoodEntries)</span>
+        
+<span class="nc" id="L112">        return PromptRecommendation(</span>
+<span class="nc" id="L113">            userId = userId,</span>
+<span class="nc" id="L114">            recommendedPrompts = recommended,</span>
+<span class="nc" id="L115">            reasons = reasons,</span>
+<span class="nc" id="L116">            personalizationScore = personalizationScore,</span>
+<span class="nc" id="L117">            generatedAt = Date()</span>
+        )
+    }
+    
+    /**
+     * Filters prompts by category and mood
+     * 
+     * @param prompts List of prompts to filter
+     * @param category Category filter (null = all)
+     * @param moodTags Mood tags filter (empty = all)
+     * @return Filtered list of prompts
+     */
+<span class="nc" id="L129">    fun filterPrompts(</span>
+        prompts: List&lt;JournalingPrompt&gt;,
+<span class="nc" id="L131">        category: PromptCategory? = null,</span>
+<span class="nc" id="L132">        moodTags: List&lt;MoodTag&gt; = emptyList()</span>
+    ): List&lt;JournalingPrompt&gt; {
+<span class="nc" id="L134">        return prompts.filter { prompt -&gt;</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">            val matchesCategory = category == null || </span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">                prompt.category == category || </span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">                category == PromptCategory.ALL</span>
+            
+<span class="nc bnc" id="L139" title="All 2 branches missed.">            val matchesMood = moodTags.isEmpty() || </span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">                moodTags.any { it in prompt.moodTags } ||</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">                prompt.moodTags.contains(MoodTag.ALL)</span>
+            
+<span class="nc bnc" id="L143" title="All 4 branches missed.">            matchesCategory &amp;&amp; matchesMood</span>
+        }
+    }
+    
+    /**
+     * Tracks prompt usage and updates effectiveness
+     * 
+     * @param promptId Prompt ID that was used
+     * @param journalEntry Created journal entry
+     * @return Updated prompt with new usage count
+     */
+    fun trackPromptUsage(
+        promptId: String,
+        journalEntry: JournalEntry
+    ): JournalingPrompt {
+        // In production, would fetch from repository and update
+        // For now, create updated version
+<span class="nc bnc" id="L160" title="All 6 branches missed.">        val basePrompt = getPromptLibrary().find { it.id == promptId }</span>
+<span class="nc" id="L161">            ?: throw IllegalArgumentException(&quot;Prompt not found: $promptId&quot;)</span>
+        
+        // Calculate effectiveness based on entry quality
+<span class="nc" id="L164">        val effectivenessScore = calculateEffectivenessScore(journalEntry)</span>
+        
+<span class="nc" id="L166">        return basePrompt.copy(</span>
+<span class="nc" id="L167">            timesUsed = basePrompt.timesUsed + 1,</span>
+<span class="nc" id="L168">            effectivenessScore = (basePrompt.effectivenessScore * basePrompt.timesUsed + effectivenessScore) / (basePrompt.timesUsed + 1)</span>
+        )
+    }
+    
+    // Private helper methods
+    
+    private fun getPromptLibrary(): List&lt;JournalingPrompt&gt; {
+<span class="nc" id="L175">        return listOf(</span>
+<span class="nc" id="L176">            JournalingPrompt(</span>
+<span class="nc" id="L177">                id = &quot;1&quot;,</span>
+<span class="nc" id="L178">                title = &quot;Daily Reflection&quot;,</span>
+<span class="nc" id="L179">                prompt = &quot;What was the most meaningful moment of your day? How did it make you feel?&quot;,</span>
+<span class="nc" id="L180">                category = PromptCategory.REFLECTION,</span>
+<span class="nc" id="L181">                moodTags = listOf(MoodTag.ALL),</span>
+<span class="nc" id="L182">                difficulty = PromptDifficulty.EASY,</span>
+<span class="nc" id="L183">                estimatedTime = 8,</span>
+<span class="nc" id="L184">                isAIGenerated = true,</span>
+<span class="nc" id="L185">                timesUsed = 3</span>
+            ),
+<span class="nc" id="L187">            JournalingPrompt(</span>
+<span class="nc" id="L188">                id = &quot;2&quot;,</span>
+<span class="nc" id="L189">                title = &quot;Gratitude Practice&quot;,</span>
+<span class="nc" id="L190">                prompt = &quot;Write about three things you're grateful for today. What makes each one special?&quot;,</span>
+<span class="nc" id="L191">                category = PromptCategory.GRATITUDE,</span>
+<span class="nc" id="L192">                moodTags = listOf(MoodTag.HAPPY, MoodTag.GRATEFUL),</span>
+<span class="nc" id="L193">                difficulty = PromptDifficulty.EASY,</span>
+<span class="nc" id="L194">                estimatedTime = 5,</span>
+<span class="nc" id="L195">                isAIGenerated = true,</span>
+<span class="nc" id="L196">                timesUsed = 7</span>
+            ),
+<span class="nc" id="L198">            JournalingPrompt(</span>
+<span class="nc" id="L199">                id = &quot;3&quot;,</span>
+<span class="nc" id="L200">                title = &quot;Growth Mindset&quot;,</span>
+<span class="nc" id="L201">                prompt = &quot;Describe a challenge you faced recently. What did you learn from it? How did it help you grow?&quot;,</span>
+<span class="nc" id="L202">                category = PromptCategory.GROWTH,</span>
+<span class="nc" id="L203">                moodTags = listOf(MoodTag.MOTIVATED, MoodTag.STRESSED),</span>
+<span class="nc" id="L204">                difficulty = PromptDifficulty.MEDIUM,</span>
+<span class="nc" id="L205">                estimatedTime = 12,</span>
+<span class="nc" id="L206">                isAIGenerated = true,</span>
+<span class="nc" id="L207">                timesUsed = 2</span>
+            ),
+<span class="nc" id="L209">            JournalingPrompt(</span>
+<span class="nc" id="L210">                id = &quot;4&quot;,</span>
+<span class="nc" id="L211">                title = &quot;Relationship Reflection&quot;,</span>
+<span class="nc" id="L212">                prompt = &quot;Think about a recent interaction with someone important to you. What went well? What would you do differently?&quot;,</span>
+<span class="nc" id="L213">                category = PromptCategory.RELATIONSHIPS,</span>
+<span class="nc" id="L214">                moodTags = listOf(MoodTag.ALL),</span>
+<span class="nc" id="L215">                difficulty = PromptDifficulty.MEDIUM,</span>
+<span class="nc" id="L216">                estimatedTime = 10,</span>
+<span class="nc" id="L217">                isAIGenerated = true,</span>
+<span class="nc" id="L218">                timesUsed = 1</span>
+            ),
+<span class="nc" id="L220">            JournalingPrompt(</span>
+<span class="nc" id="L221">                id = &quot;5&quot;,</span>
+<span class="nc" id="L222">                title = &quot;Goal Setting&quot;,</span>
+<span class="nc" id="L223">                prompt = &quot;What is one goal you want to achieve this week? What steps will you take to make it happen?&quot;,</span>
+<span class="nc" id="L224">                category = PromptCategory.GOALS,</span>
+<span class="nc" id="L225">                moodTags = listOf(MoodTag.MOTIVATED, MoodTag.HAPPY),</span>
+<span class="nc" id="L226">                difficulty = PromptDifficulty.EASY,</span>
+<span class="nc" id="L227">                estimatedTime = 8,</span>
+<span class="nc" id="L228">                isAIGenerated = true,</span>
+<span class="nc" id="L229">                timesUsed = 4</span>
+            ),
+<span class="nc" id="L231">            JournalingPrompt(</span>
+<span class="nc" id="L232">                id = &quot;6&quot;,</span>
+<span class="nc" id="L233">                title = &quot;Emotional Processing&quot;,</span>
+<span class="nc" id="L234">                prompt = &quot;Describe a recent emotion you experienced. What triggered it? How did you respond? What would you do differently next time?&quot;,</span>
+<span class="nc" id="L235">                category = PromptCategory.EMOTIONAL_PROCESSING,</span>
+<span class="nc" id="L236">                moodTags = listOf(MoodTag.SAD, MoodTag.ANXIOUS, MoodTag.STRESSED),</span>
+<span class="nc" id="L237">                difficulty = PromptDifficulty.MEDIUM,</span>
+<span class="nc" id="L238">                estimatedTime = 13,</span>
+<span class="nc" id="L239">                isAIGenerated = true,</span>
+<span class="nc" id="L240">                timesUsed = 2</span>
+            ),
+<span class="nc" id="L242">            JournalingPrompt(</span>
+<span class="nc" id="L243">                id = &quot;7&quot;,</span>
+<span class="nc" id="L244">                title = &quot;Morning Intention&quot;,</span>
+<span class="nc" id="L245">                prompt = &quot;What intention do you want to set for today? How will you embody it?&quot;,</span>
+<span class="nc" id="L246">                category = PromptCategory.DAILY_CHECK_IN,</span>
+<span class="nc" id="L247">                moodTags = listOf(MoodTag.CALM, MoodTag.MOTIVATED),</span>
+<span class="nc" id="L248">                difficulty = PromptDifficulty.EASY,</span>
+<span class="nc" id="L249">                estimatedTime = 5,</span>
+<span class="nc" id="L250">                isAIGenerated = true,</span>
+<span class="nc" id="L251">                timesUsed = 5</span>
+            ),
+<span class="nc" id="L253">            JournalingPrompt(</span>
+<span class="nc" id="L254">                id = &quot;8&quot;,</span>
+<span class="nc" id="L255">                title = &quot;Overcoming Obstacles&quot;,</span>
+<span class="nc" id="L256">                prompt = &quot;Think about a recent obstacle. What strategies did you use to overcome it? What strengths did you discover?&quot;,</span>
+<span class="nc" id="L257">                category = PromptCategory.CHALLENGES,</span>
+<span class="nc" id="L258">                moodTags = listOf(MoodTag.STRESSED, MoodTag.OVERWHELMED),</span>
+<span class="nc" id="L259">                difficulty = PromptDifficulty.MEDIUM,</span>
+<span class="nc" id="L260">                estimatedTime = 10,</span>
+<span class="nc" id="L261">                isAIGenerated = true,</span>
+<span class="nc" id="L262">                timesUsed = 1</span>
+            ),
+<span class="nc" id="L264">            JournalingPrompt(</span>
+<span class="nc" id="L265">                id = &quot;9&quot;,</span>
+<span class="nc" id="L266">                title = &quot;Self-Compassion&quot;,</span>
+<span class="nc" id="L267">                prompt = &quot;Write a compassionate letter to yourself. What do you need to hear right now?&quot;,</span>
+<span class="nc" id="L268">                category = PromptCategory.EMOTIONAL_PROCESSING,</span>
+<span class="nc" id="L269">                moodTags = listOf(MoodTag.SAD, MoodTag.ANXIOUS, MoodTag.STRESSED),</span>
+<span class="nc" id="L270">                difficulty = PromptDifficulty.MEDIUM,</span>
+<span class="nc" id="L271">                estimatedTime = 12,</span>
+<span class="nc" id="L272">                isAIGenerated = true,</span>
+<span class="nc" id="L273">                timesUsed = 0</span>
+            ),
+<span class="nc" id="L275">            JournalingPrompt(</span>
+<span class="nc" id="L276">                id = &quot;10&quot;,</span>
+<span class="nc" id="L277">                title = &quot;Future Self&quot;,</span>
+<span class="nc" id="L278">                prompt = &quot;Write a letter to your future self. What advice would you give? What do you hope for?&quot;,</span>
+<span class="nc" id="L279">                category = PromptCategory.REFLECTION,</span>
+<span class="nc" id="L280">                moodTags = listOf(MoodTag.MOTIVATED, MoodTag.HAPPY),</span>
+<span class="nc" id="L281">                difficulty = PromptDifficulty.HARD,</span>
+<span class="nc" id="L282">                estimatedTime = 15,</span>
+<span class="nc" id="L283">                isAIGenerated = true,</span>
+<span class="nc" id="L284">                timesUsed = 1</span>
+            )
+        )
+    }
+    
+    private fun personalizePrompt(
+        prompt: JournalingPrompt,
+        userId: String,
+        currentMood: Int?,
+        recentMoodEntries: List&lt;MoodEntry&gt;,
+        journalingHistory: List&lt;JournalEntry&gt;,
+        customTheme: String?
+    ): JournalingPrompt {
+<span class="nc" id="L297">        val factors = mutableListOf&lt;PersonalizationFactor&gt;()</span>
+<span class="nc" id="L298">        var effectivenessScore = prompt.effectivenessScore</span>
+        
+        // Factor 1: Current mood match
+<span class="nc bnc" id="L301" title="All 2 branches missed.">        if (currentMood != null) {</span>
+<span class="nc" id="L302">            val moodMatch = calculateMoodMatch(currentMood, prompt.moodTags)</span>
+<span class="nc bnc" id="L303" title="All 2 branches missed.">            if (moodMatch &gt; 0) {</span>
+<span class="nc" id="L304">                effectivenessScore += 0.3f * moodMatch</span>
+<span class="nc" id="L305">                factors.add(</span>
+<span class="nc" id="L306">                    PersonalizationFactor(</span>
+<span class="nc" id="L307">                        type = FactorType.RECENT_MOOD,</span>
+<span class="nc" id="L308">                        value = &quot;Mood score: $currentMood&quot;,</span>
+<span class="nc" id="L309">                        weight = moodMatch</span>
+                    )
+                )
+            }
+        }
+        
+        // Factor 2: Journaling history pattern
+<span class="nc bnc" id="L316" title="All 4 branches missed.">        if (journalingHistory.isNotEmpty()) {</span>
+<span class="nc" id="L317">            val categoryFrequency = journalingHistory</span>
+<span class="nc" id="L318">                .groupBy { it.type }</span>
+<span class="nc" id="L319">                .mapValues { it.value.size }</span>
+<span class="nc bnc" id="L320" title="All 10 branches missed.">            val preferredCategory = categoryFrequency.maxByOrNull { it.value }?.key</span>
+<span class="nc bnc" id="L321" title="All 4 branches missed.">            if (preferredCategory != null &amp;&amp; matchesCategory(prompt.category, preferredCategory)) {</span>
+<span class="nc" id="L322">                effectivenessScore += 0.2f</span>
+<span class="nc" id="L323">                factors.add(</span>
+<span class="nc" id="L324">                    PersonalizationFactor(</span>
+<span class="nc" id="L325">                        type = FactorType.JOURNALING_HISTORY,</span>
+<span class="nc" id="L326">                        value = &quot;You often write about ${preferredCategory.name}&quot;,</span>
+<span class="nc" id="L327">                        weight = 0.2f</span>
+                    )
+                )
+            }
+        }
+        
+        // Factor 3: Recent mood pattern
+<span class="nc bnc" id="L334" title="All 2 branches missed.">        if (recentMoodEntries.size &gt;= 3) {</span>
+<span class="nc" id="L335">            val averageMood = recentMoodEntries.map { it.mood.toFloat() }.average().toFloat()</span>
+<span class="nc" id="L336">            val moodTag = determineMoodTagFromValue(averageMood.toInt())</span>
+<span class="nc bnc" id="L337" title="All 4 branches missed.">            if (moodTag in prompt.moodTags || prompt.moodTags.contains(MoodTag.ALL)) {</span>
+<span class="nc" id="L338">                effectivenessScore += 0.2f</span>
+<span class="nc" id="L339">                factors.add(</span>
+<span class="nc" id="L340">                    PersonalizationFactor(</span>
+<span class="nc" id="L341">                        type = FactorType.MOOD_PATTERN,</span>
+<span class="nc" id="L342">                        value = &quot;Your recent average mood aligns with this prompt&quot;,</span>
+<span class="nc" id="L343">                        weight = 0.2f</span>
+                    )
+                )
+            }
+        }
+        
+        // Factor 4: Custom theme match
+<span class="nc bnc" id="L350" title="All 4 branches missed.">        if (customTheme != null &amp;&amp; prompt.prompt.contains(customTheme, ignoreCase = true)) {</span>
+<span class="nc" id="L351">            effectivenessScore += 0.3f</span>
+<span class="nc" id="L352">            factors.add(</span>
+<span class="nc" id="L353">                PersonalizationFactor(</span>
+<span class="nc" id="L354">                    type = FactorType.USER_PREFERENCE,</span>
+<span class="nc" id="L355">                    value = &quot;Matches your requested theme: $customTheme&quot;,</span>
+<span class="nc" id="L356">                    weight = 0.3f</span>
+                )
+            )
+        }
+        
+        // Factor 5: Usage frequency (prefer moderately used prompts)
+<span class="nc" id="L362">        when {</span>
+<span class="nc bnc" id="L363" title="All 2 branches missed.">            prompt.timesUsed == 0 -&gt; effectivenessScore += 0.1f // Try new prompts</span>
+<span class="nc bnc" id="L364" title="All 6 branches missed.">            prompt.timesUsed in 1..5 -&gt; effectivenessScore += 0.2f // Well-tested prompts</span>
+<span class="nc" id="L365">            else -&gt; effectivenessScore -= 0.1f // Overused prompts</span>
+        }
+        
+<span class="nc" id="L368">        return prompt.copy(</span>
+<span class="nc" id="L369">            personalizedFor = userId,</span>
+<span class="nc" id="L370">            personalizationFactors = factors,</span>
+<span class="nc" id="L371">            effectivenessScore = effectivenessScore.coerceIn(0f, 1f)</span>
+        )
+    }
+    
+    private fun calculateMoodMatch(mood: Int, moodTags: List&lt;MoodTag&gt;): Float {
+<span class="nc bnc" id="L376" title="All 2 branches missed.">        if (moodTags.contains(MoodTag.ALL)) return 1.0f</span>
+        
+<span class="nc" id="L378">        val moodTag = determineMoodTagFromValue(mood)</span>
+<span class="nc bnc" id="L379" title="All 2 branches missed.">        return if (moodTag in moodTags) 1.0f else 0.0f</span>
+    }
+    
+    private fun determineMoodTagFromValue(mood: Int): MoodTag {
+<span class="nc" id="L383">        return when {</span>
+<span class="nc bnc" id="L384" title="All 2 branches missed.">            mood &gt;= 8 -&gt; MoodTag.HAPPY</span>
+<span class="nc bnc" id="L385" title="All 2 branches missed.">            mood &gt;= 7 -&gt; MoodTag.GRATEFUL</span>
+<span class="nc bnc" id="L386" title="All 2 branches missed.">            mood &gt;= 6 -&gt; MoodTag.CALM</span>
+<span class="nc bnc" id="L387" title="All 2 branches missed.">            mood &gt;= 5 -&gt; MoodTag.MOTIVATED</span>
+<span class="nc bnc" id="L388" title="All 2 branches missed.">            mood &gt;= 4 -&gt; MoodTag.STRESSED</span>
+<span class="nc bnc" id="L389" title="All 2 branches missed.">            mood &gt;= 3 -&gt; MoodTag.SAD</span>
+<span class="nc bnc" id="L390" title="All 2 branches missed.">            mood &gt;= 2 -&gt; MoodTag.ANXIOUS</span>
+<span class="nc" id="L391">            else -&gt; MoodTag.OVERWHELMED</span>
+        }
+    }
+    
+    private fun matchesCategory(promptCategory: PromptCategory, journalType: JournalType): Boolean {
+<span class="nc bnc" id="L396" title="All 5 branches missed.">        return when (journalType) {</span>
+<span class="nc bnc" id="L397" title="All 2 branches missed.">            JournalType.GRATITUDE -&gt; promptCategory == PromptCategory.GRATITUDE</span>
+<span class="nc bnc" id="L398" title="All 2 branches missed.">            JournalType.REFLECTION -&gt; promptCategory == PromptCategory.REFLECTION</span>
+<span class="nc bnc" id="L399" title="All 2 branches missed.">            JournalType.GOAL_REVIEW -&gt; promptCategory == PromptCategory.GOALS</span>
+<span class="nc bnc" id="L400" title="All 2 branches missed.">            JournalType.CHALLENGE_REFLECTION -&gt; promptCategory == PromptCategory.CHALLENGES</span>
+<span class="nc" id="L401">            else -&gt; false</span>
+        }
+    }
+    
+    private fun extractMoodTags(currentMood: Int?, recentMoodEntries: List&lt;MoodEntry&gt;): List&lt;MoodTag&gt; {
+<span class="nc" id="L406">        val tags = mutableListOf&lt;MoodTag&gt;()</span>
+        
+<span class="nc bnc" id="L408" title="All 2 branches missed.">        currentMood?.let {</span>
+<span class="nc" id="L409">            tags.add(determineMoodTagFromValue(it))</span>
+        }
+        
+<span class="nc bnc" id="L412" title="All 4 branches missed.">        if (recentMoodEntries.isNotEmpty()) {</span>
+<span class="nc" id="L413">            val averageMood = recentMoodEntries.map { it.mood }.average().toInt()</span>
+<span class="nc" id="L414">            tags.add(determineMoodTagFromValue(averageMood))</span>
+        }
+        
+<span class="nc" id="L417">        return tags.distinct()</span>
+    }
+    
+    private fun calculateRelevanceScore(prompt: JournalingPrompt, request: PromptGenerationRequest): Float {
+<span class="nc" id="L421">        var score = 0f</span>
+        
+<span class="nc bnc" id="L423" title="All 4 branches missed.">        if (request.preferredCategory != null &amp;&amp; prompt.category == request.preferredCategory) {</span>
+<span class="nc" id="L424">            score += 0.3f</span>
+        }
+        
+<span class="nc bnc" id="L427" title="All 4 branches missed.">        if (request.preferredDifficulty != null &amp;&amp; prompt.difficulty == request.preferredDifficulty) {</span>
+<span class="nc" id="L428">            score += 0.2f</span>
+        }
+        
+<span class="nc bnc" id="L431" title="All 6 branches missed.">        if (request.moodTags.isNotEmpty() &amp;&amp; request.moodTags.any { it in prompt.moodTags }) {</span>
+<span class="nc" id="L432">            score += 0.3f</span>
+        }
+        
+<span class="nc" id="L435">        return score</span>
+    }
+    
+    private fun calculateEffectivenessScore(journalEntry: JournalEntry): Float {
+<span class="nc" id="L439">        var score = 0.5f // Base score</span>
+        
+        // Longer entries suggest more engagement
+<span class="nc bnc" id="L442" title="All 2 branches missed.">        if (journalEntry.content.length &gt; 200) score += 0.2f</span>
+<span class="nc bnc" id="L443" title="All 2 branches missed.">        if (journalEntry.content.length &gt; 500) score += 0.1f</span>
+        
+        // Entries with mood tags suggest emotional processing
+<span class="nc bnc" id="L446" title="All 2 branches missed.">        if (journalEntry.mood != null) score += 0.1f</span>
+        
+        // Entries with multiple tags suggest depth
+<span class="nc bnc" id="L449" title="All 2 branches missed.">        if (journalEntry.tags.size &gt; 2) score += 0.1f</span>
+        
+<span class="nc" id="L451">        return score.coerceIn(0f, 1f)</span>
+    }
+    
+    private fun generateRecommendationReasons(
+        prompts: List&lt;JournalingPrompt&gt;,
+        currentMood: Int?,
+        recentMoodEntries: List&lt;MoodEntry&gt;
+    ): List&lt;String&gt; {
+<span class="nc" id="L459">        val reasons = mutableListOf&lt;String&gt;()</span>
+        
+<span class="nc bnc" id="L461" title="All 2 branches missed.">        if (currentMood != null) {</span>
+<span class="nc" id="L462">            val moodTag = determineMoodTagFromValue(currentMood)</span>
+<span class="nc" id="L463">            reasons.add(&quot;Based on your current mood, we think you'd enjoy reflecting on ${moodTag.name.lowercase()} themes&quot;)</span>
+        }
+        
+<span class="nc bnc" id="L466" title="All 4 branches missed.">        if (recentMoodEntries.isNotEmpty()) {</span>
+<span class="nc" id="L467">            reasons.add(&quot;These prompts align with your recent mood patterns&quot;)</span>
+        }
+        
+<span class="nc bnc" id="L470" title="All 4 branches missed.">        if (prompts.any { it.timesUsed &gt; 0 }) {</span>
+<span class="nc" id="L471">            reasons.add(&quot;Includes prompts you've found helpful before&quot;)</span>
+        }
+        
+<span class="nc bnc" id="L474" title="All 4 branches missed.">        if (prompts.any { it.timesUsed == 0 }) {</span>
+<span class="nc" id="L475">            reasons.add(&quot;Includes new prompts to explore&quot;)</span>
+        }
+        
+<span class="nc" id="L478">        return reasons</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

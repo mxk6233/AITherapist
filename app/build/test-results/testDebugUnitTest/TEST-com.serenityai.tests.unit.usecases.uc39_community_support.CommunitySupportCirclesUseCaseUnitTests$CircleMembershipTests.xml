@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 2: Circle Membership - Validates Secondary UC39 Functionality" tests="4" skipped="0" failures="0" errors="0" timestamp="2025-12-07T08:20:33" hostname="Mohammads-MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="UC39-REQ-4: System MUST enforce private circle invitations" classname="com.serenityai.tests.unit.usecases.uc39_community_support.CommunitySupportCirclesUseCaseUnitTests$CircleMembershipTests" time="0.0"/>
+  <testcase name="UC39-REQ-6: System MUST prevent creator from leaving circle" classname="com.serenityai.tests.unit.usecases.uc39_community_support.CommunitySupportCirclesUseCaseUnitTests$CircleMembershipTests" time="0.0"/>
+  <testcase name="UC39-REQ-3: System MUST allow users to join support circles" classname="com.serenityai.tests.unit.usecases.uc39_community_support.CommunitySupportCirclesUseCaseUnitTests$CircleMembershipTests" time="0.0"/>
+  <testcase name="UC39-REQ-5: System MUST allow users to leave support circles" classname="com.serenityai.tests.unit.usecases.uc39_community_support.CommunitySupportCirclesUseCaseUnitTests$CircleMembershipTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

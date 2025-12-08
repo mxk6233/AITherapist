@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 1: Theme and Appearance Customization" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-12-07T08:20:33" hostname="Mohammads-MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="should apply theme preferences correctly()" classname="com.serenityai.tests.usecases.uc24_personalization.unit.PersonalizationUseCaseTests$ThemeAndAppearanceTests" time="0.0"/>
+  <testcase name="should handle font size preferences()" classname="com.serenityai.tests.usecases.uc24_personalization.unit.PersonalizationUseCaseTests$ThemeAndAppearanceTests" time="0.0"/>
+  <testcase name="should validate theme switching functionality()" classname="com.serenityai.tests.usecases.uc24_personalization.unit.PersonalizationUseCaseTests$ThemeAndAppearanceTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

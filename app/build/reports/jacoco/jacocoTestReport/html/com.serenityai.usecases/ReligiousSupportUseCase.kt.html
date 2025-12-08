@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReligiousSupportUseCase.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.usecases</a> &gt; <span class="el_source">ReligiousSupportUseCase.kt</span></div><h1>ReligiousSupportUseCase.kt</h1><pre class="source lang-java linenums">package com.serenityai.usecases
+
+import com.serenityai.data.models.*
+import java.util.Date
+
+/** UC40: Religious support by person's religion providing faith-based guidance and religious resources tailored to the user's specific religion. */
+<span class="nc" id="L7">class ReligiousSupportUseCase {</span>
+    
+<span class="nc" id="L9">    private val userReligiousPreferences = mutableMapOf&lt;String, Religion&gt;() // userId -&gt; religion</span>
+<span class="nc" id="L10">    private val religiousResources = mutableMapOf&lt;Religion, MutableList&lt;ReligiousResource&gt;&gt;()</span>
+<span class="nc" id="L11">    private val prayerRequests = mutableMapOf&lt;String, MutableList&lt;PrayerRequest&gt;&gt;() // userId -&gt; requests</span>
+<span class="nc" id="L12">    private val spiritualGuidance = mutableMapOf&lt;String, MutableList&lt;SpiritualGuidance&gt;&gt;() // userId -&gt; guidance</span>
+    
+<span class="nc" id="L14">    init {</span>
+        // Initialize religious resources for each religion
+<span class="nc" id="L16">        initializeReligiousResources()</span>
+<span class="nc" id="L17">    }</span>
+    
+    /**
+     * Sets user's religious preference
+     * 
+     * @param userId User ID
+     * @param religion Religion preference
+     */
+    fun setReligiousPreference(userId: String, religion: Religion) {
+<span class="nc bnc" id="L26" title="All 4 branches missed.">        require(userId.isNotBlank()) { &quot;User ID cannot be empty&quot; }</span>
+<span class="nc" id="L27">        userReligiousPreferences[userId] = religion</span>
+<span class="nc" id="L28">    }</span>
+    
+    /**
+     * Gets user's religious preference
+     * 
+     * @param userId User ID
+     * @return Religion preference or null if not set
+     */
+    fun getReligiousPreference(userId: String): Religion? {
+<span class="nc" id="L37">        return userReligiousPreferences[userId]</span>
+    }
+    
+    /**
+     * Provides faith-based guidance based on user's religion
+     * 
+     * @param userId User ID
+     * @param context Context or situation for guidance
+     * @return SpiritualGuidance object
+     */
+    fun provideSpiritualGuidance(userId: String, context: String): SpiritualGuidance {
+<span class="nc bnc" id="L48" title="All 4 branches missed.">        require(context.isNotBlank()) { &quot;Context cannot be empty&quot; }</span>
+        
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        val religion = userReligiousPreferences[userId] </span>
+<span class="nc" id="L51">            ?: throw IllegalArgumentException(&quot;User religious preference not set&quot;)</span>
+        
+<span class="nc" id="L53">        val guidance = generateGuidance(religion, context)</span>
+        
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        val guidanceList = spiritualGuidance[userId] ?: mutableListOf()</span>
+<span class="nc" id="L56">        guidanceList.add(guidance)</span>
+<span class="nc" id="L57">        spiritualGuidance[userId] = guidanceList</span>
+        
+<span class="nc" id="L59">        return guidance</span>
+    }
+    
+    /**
+     * Gets religious resources for user's religion
+     * 
+     * @param userId User ID
+     * @param category Optional resource category filter
+     * @return List of ReligiousResource objects
+     */
+<span class="nc" id="L69">    fun getReligiousResources(userId: String, category: ResourceCategory? = null): List&lt;ReligiousResource&gt; {</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        val religion = userReligiousPreferences[userId] </span>
+<span class="nc" id="L71">            ?: throw IllegalArgumentException(&quot;User religious preference not set&quot;)</span>
+        
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        val resources = religiousResources[religion] ?: emptyList()</span>
+        
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        return if (category != null) {</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">            resources.filter { it.category == category }</span>
+        } else {
+<span class="nc" id="L78">            resources</span>
+        }
+    }
+    
+    /**
+     * Submits a prayer request
+     * 
+     * @param userId User ID
+     * @param request Prayer request content
+     * @param isPrivate Whether the request is private
+     * @return PrayerRequest object
+     */
+<span class="nc" id="L90">    fun submitPrayerRequest(</span>
+        userId: String,
+        request: String,
+<span class="nc" id="L93">        isPrivate: Boolean = true</span>
+    ): PrayerRequest {
+<span class="nc bnc" id="L95" title="All 4 branches missed.">        require(request.isNotBlank()) { &quot;Prayer request cannot be empty&quot; }</span>
+        
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        val religion = userReligiousPreferences[userId] </span>
+<span class="nc" id="L98">            ?: throw IllegalArgumentException(&quot;User religious preference not set&quot;)</span>
+        
+<span class="nc" id="L100">        val prayerRequest = PrayerRequest(</span>
+<span class="nc" id="L101">            id = &quot;prayer_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L102">            userId = userId,</span>
+<span class="nc" id="L103">            religion = religion,</span>
+<span class="nc" id="L104">            request = request,</span>
+<span class="nc" id="L105">            isPrivate = isPrivate,</span>
+<span class="nc" id="L106">            status = PrayerStatus.PENDING,</span>
+<span class="nc" id="L107">            createdAt = Date()</span>
+        )
+        
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        val requests = prayerRequests[userId] ?: mutableListOf()</span>
+<span class="nc" id="L111">        requests.add(prayerRequest)</span>
+<span class="nc" id="L112">        prayerRequests[userId] = requests</span>
+        
+<span class="nc" id="L114">        return prayerRequest</span>
+    }
+    
+    /**
+     * Gets user's prayer requests
+     * 
+     * @param userId User ID
+     * @return List of PrayerRequest objects
+     */
+    fun getPrayerRequests(userId: String): List&lt;PrayerRequest&gt; {
+<span class="nc bnc" id="L124" title="All 4 branches missed.">        return prayerRequests[userId]?.sortedByDescending { it.createdAt } ?: emptyList()</span>
+    }
+    
+    /**
+     * Gets spiritual guidance history for user
+     * 
+     * @param userId User ID
+     * @return List of SpiritualGuidance objects
+     */
+    fun getSpiritualGuidanceHistory(userId: String): List&lt;SpiritualGuidance&gt; {
+<span class="nc bnc" id="L134" title="All 4 branches missed.">        return spiritualGuidance[userId]?.sortedByDescending { it.createdAt } ?: emptyList()</span>
+    }
+    
+    /**
+     * Provides daily religious reflection based on user's religion
+     * 
+     * @param userId User ID
+     * @return Daily reflection text
+     */
+    fun getDailyReflection(userId: String): String {
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        val religion = userReligiousPreferences[userId] </span>
+<span class="nc" id="L145">            ?: throw IllegalArgumentException(&quot;User religious preference not set&quot;)</span>
+        
+<span class="nc bnc" id="L147" title="All 8 branches missed.">        return when (religion) {</span>
+<span class="nc" id="L148">            Religion.CHRISTIANITY -&gt; &quot;Today, remember that you are loved and valued. Take time for prayer and reflection on the blessings in your life.&quot;</span>
+<span class="nc" id="L149">            Religion.ISLAM -&gt; &quot;As-Salamu Alaykum. Today, seek peace and guidance through prayer. Remember that Allah is with you in every moment.&quot;</span>
+<span class="nc" id="L150">            Religion.JUDAISM -&gt; &quot;Shalom. Today, reflect on gratitude and the teachings that guide you. May you find strength in your faith.&quot;</span>
+<span class="nc" id="L151">            Religion.BUDDHISM -&gt; &quot;Today, practice mindfulness and compassion. Remember that suffering is temporary and inner peace is within reach.&quot;</span>
+<span class="nc" id="L152">            Religion.HINDUISM -&gt; &quot;Namaste. Today, honor the divine within yourself and others. Practice dharma and seek inner harmony.&quot;</span>
+<span class="nc" id="L153">            Religion.SIKHISM -&gt; &quot;Sat Sri Akal. Today, remember Waheguru's presence in all things. Practice seva (selfless service) and meditation.&quot;</span>
+<span class="nc" id="L154">            Religion.OTHER -&gt; &quot;Today, connect with your spiritual beliefs. Take time for reflection and find peace in your faith tradition.&quot;</span>
+<span class="nc" id="L155">            Religion.NONE -&gt; throw IllegalArgumentException(&quot;User has no religious preference set&quot;)</span>
+        }
+    }
+    
+    /**
+     * Provides religious quotes based on user's religion
+     * 
+     * @param userId User ID
+     * @param topic Optional topic for quote
+     * @return Religious quote
+     */
+<span class="nc" id="L166">    fun getReligiousQuote(userId: String, topic: String? = null): String {</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">        val religion = userReligiousPreferences[userId] </span>
+<span class="nc" id="L168">            ?: throw IllegalArgumentException(&quot;User religious preference not set&quot;)</span>
+        
+<span class="nc" id="L170">        val quotes = getQuotesForReligion(religion, topic)</span>
+<span class="nc" id="L171">        return quotes.random()</span>
+    }
+    
+    /**
+     * Generates guidance based on religion and context
+     */
+    private fun generateGuidance(religion: Religion, context: String): SpiritualGuidance {
+<span class="nc bnc" id="L178" title="All 8 branches missed.">        val guidanceText = when (religion) {</span>
+<span class="nc" id="L179">            Religion.CHRISTIANITY -&gt; generateChristianGuidance(context)</span>
+<span class="nc" id="L180">            Religion.ISLAM -&gt; generateIslamicGuidance(context)</span>
+<span class="nc" id="L181">            Religion.JUDAISM -&gt; generateJewishGuidance(context)</span>
+<span class="nc" id="L182">            Religion.BUDDHISM -&gt; generateBuddhistGuidance(context)</span>
+<span class="nc" id="L183">            Religion.HINDUISM -&gt; generateHinduGuidance(context)</span>
+<span class="nc" id="L184">            Religion.SIKHISM -&gt; generateSikhGuidance(context)</span>
+<span class="nc" id="L185">            Religion.OTHER -&gt; generateGenericGuidance(context)</span>
+<span class="nc" id="L186">            Religion.NONE -&gt; throw IllegalArgumentException(&quot;Invalid religion&quot;)</span>
+        }
+        
+<span class="nc" id="L189">        return SpiritualGuidance(</span>
+<span class="nc" id="L190">            id = &quot;guidance_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L191">            religion = religion,</span>
+<span class="nc" id="L192">            guidance = guidanceText,</span>
+<span class="nc" id="L193">            context = context,</span>
+<span class="nc" id="L194">            createdAt = Date()</span>
+        )
+    }
+    
+    private fun generateChristianGuidance(context: String): String {
+<span class="nc" id="L199">        return &quot;In this moment of $context, remember that you are never alone. &quot; +</span>
+                &quot;Take comfort in prayer and know that God's love surrounds you. &quot; +
+                &quot;Consider reading scripture or spending time in quiet reflection.&quot;
+    }
+    
+    private fun generateIslamicGuidance(context: String): String {
+<span class="nc" id="L205">        return &quot;As you navigate $context, remember that Allah is Al-Rahman (The Most Merciful). &quot; +</span>
+                &quot;Turn to prayer (Salah) and seek guidance through the Quran. &quot; +
+                &quot;Trust in Allah's plan and find peace in submission to His will.&quot;
+    }
+    
+    private fun generateJewishGuidance(context: String): String {
+<span class="nc" id="L211">        return &quot;In facing $context, draw strength from Jewish teachings and community. &quot; +</span>
+                &quot;Consider the wisdom of the Torah and the support of your community. &quot; +
+                &quot;Remember that tikkun olam (repairing the world) begins with caring for yourself.&quot;
+    }
+    
+    private fun generateBuddhistGuidance(context: String): String {
+<span class="nc" id="L217">        return &quot;As you experience $context, practice mindfulness and compassion. &quot; +</span>
+                &quot;Remember the Four Noble Truths and the Eightfold Path. &quot; +
+                &quot;Meditation can help you find inner peace and clarity.&quot;
+    }
+    
+    private fun generateHinduGuidance(context: String): String {
+<span class="nc" id="L223">        return &quot;In this time of $context, remember your dharma (duty) and seek inner peace. &quot; +</span>
+                &quot;Practice yoga and meditation to connect with the divine within. &quot; +
+                &quot;Trust in the cycle of karma and the path to moksha (liberation).&quot;
+    }
+    
+    private fun generateSikhGuidance(context: String): String {
+<span class="nc" id="L229">        return &quot;As you face $context, remember Waheguru's presence. &quot; +</span>
+                &quot;Practice meditation (Simran) and selfless service (Seva). &quot; +
+                &quot;Draw strength from the Guru Granth Sahib and the Sikh community.&quot;
+    }
+    
+    private fun generateGenericGuidance(context: String): String {
+<span class="nc" id="L235">        return &quot;In this moment of $context, connect with your spiritual beliefs. &quot; +</span>
+                &quot;Take time for reflection, prayer, or meditation as appropriate to your faith. &quot; +
+                &quot;Remember that spiritual support is available to you.&quot;
+    }
+    
+    private fun getQuotesForReligion(religion: Religion, topic: String?): List&lt;String&gt; {
+<span class="nc bnc" id="L241" title="All 8 branches missed.">        val quotes = when (religion) {</span>
+<span class="nc" id="L242">            Religion.CHRISTIANITY -&gt; listOf(</span>
+<span class="nc" id="L243">                &quot;For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future. - Jeremiah 29:11&quot;,</span>
+<span class="nc" id="L244">                &quot;Cast all your anxiety on him because he cares for you. - 1 Peter 5:7&quot;,</span>
+<span class="nc" id="L245">                &quot;I can do all this through him who gives me strength. - Philippians 4:13&quot;</span>
+            )
+<span class="nc" id="L247">            Religion.ISLAM -&gt; listOf(</span>
+<span class="nc" id="L248">                &quot;And whoever relies upon Allah - then He is sufficient for him. - Quran 65:3&quot;,</span>
+<span class="nc" id="L249">                &quot;Verily, with hardship comes ease. - Quran 94:5&quot;,</span>
+<span class="nc" id="L250">                &quot;Allah does not burden a soul beyond that it can bear. - Quran 2:286&quot;</span>
+            )
+<span class="nc" id="L252">            Religion.JUDAISM -&gt; listOf(</span>
+<span class="nc" id="L253">                &quot;The Lord is my shepherd; I shall not want. - Psalm 23:1&quot;,</span>
+<span class="nc" id="L254">                &quot;Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go. - Joshua 1:9&quot;,</span>
+<span class="nc" id="L255">                &quot;This too shall pass. - Jewish Proverb&quot;</span>
+            )
+<span class="nc" id="L257">            Religion.BUDDHISM -&gt; listOf(</span>
+<span class="nc" id="L258">                &quot;Peace comes from within. Do not seek it without. - Buddha&quot;,</span>
+<span class="nc" id="L259">                &quot;You yourself, as much as anybody in the entire universe, deserve your love and affection. - Buddha&quot;,</span>
+<span class="nc" id="L260">                &quot;The mind is everything. What you think you become. - Buddha&quot;</span>
+            )
+<span class="nc" id="L262">            Religion.HINDUISM -&gt; listOf(</span>
+<span class="nc" id="L263">                &quot;You are what your deep, driving desire is. As your desire is, so is your will. As your will is, so is your deed. - Upanishads&quot;,</span>
+<span class="nc" id="L264">                &quot;The soul is neither born, and nor does it die. - Bhagavad Gita&quot;,</span>
+<span class="nc" id="L265">                &quot;You have the right to work, but never to the fruit of work. - Bhagavad Gita&quot;</span>
+            )
+<span class="nc" id="L267">            Religion.SIKHISM -&gt; listOf(</span>
+<span class="nc" id="L268">                &quot;Without the Guru, none have crossed over. - Guru Granth Sahib&quot;,</span>
+<span class="nc" id="L269">                &quot;By the karma of past actions, the robe of this physical body is obtained. - Guru Granth Sahib&quot;,</span>
+<span class="nc" id="L270">                &quot;One who calls himself a Sikh of the True Guru shall rise in the early morning hours and meditate on the Lord's Name. - Guru Granth Sahib&quot;</span>
+            )
+<span class="nc" id="L272">            Religion.OTHER -&gt; listOf(</span>
+<span class="nc" id="L273">                &quot;Faith is taking the first step even when you don't see the whole staircase. - Martin Luther King Jr.&quot;,</span>
+<span class="nc" id="L274">                &quot;The best way out is always through. - Robert Frost&quot;,</span>
+<span class="nc" id="L275">                &quot;You are braver than you believe, stronger than you seem, and smarter than you think. - A.A. Milne&quot;</span>
+            )
+<span class="nc" id="L277">            Religion.NONE -&gt; emptyList()</span>
+        }
+        
+<span class="nc bnc" id="L280" title="All 2 branches missed.">        return if (topic != null) {</span>
+<span class="nc" id="L281">            quotes.filter { it.contains(topic, ignoreCase = true) }</span>
+        } else {
+<span class="nc" id="L283">            quotes</span>
+        }
+    }
+    
+    /**
+     * Initializes religious resources for each religion
+     */
+    private fun initializeReligiousResources() {
+        // Christianity resources
+<span class="nc" id="L292">        religiousResources[Religion.CHRISTIANITY] = mutableListOf(</span>
+<span class="nc" id="L293">            ReligiousResource(</span>
+<span class="nc" id="L294">                id = &quot;chr_001&quot;,</span>
+<span class="nc" id="L295">                title = &quot;Daily Bible Reading&quot;,</span>
+<span class="nc" id="L296">                description = &quot;Read daily scripture passages&quot;,</span>
+<span class="nc" id="L297">                category = ResourceCategory.SCRIPTURE,</span>
+<span class="nc" id="L298">                religion = Religion.CHRISTIANITY</span>
+            ),
+<span class="nc" id="L300">            ReligiousResource(</span>
+<span class="nc" id="L301">                id = &quot;chr_002&quot;,</span>
+<span class="nc" id="L302">                title = &quot;Prayer Guide&quot;,</span>
+<span class="nc" id="L303">                description = &quot;Guidance on Christian prayer practices&quot;,</span>
+<span class="nc" id="L304">                category = ResourceCategory.PRAYER,</span>
+<span class="nc" id="L305">                religion = Religion.CHRISTIANITY</span>
+            )
+        )
+        
+        // Islam resources
+<span class="nc" id="L310">        religiousResources[Religion.ISLAM] = mutableListOf(</span>
+<span class="nc" id="L311">            ReligiousResource(</span>
+<span class="nc" id="L312">                id = &quot;isl_001&quot;,</span>
+<span class="nc" id="L313">                title = &quot;Quran Reading&quot;,</span>
+<span class="nc" id="L314">                description = &quot;Daily Quran verses and reflections&quot;,</span>
+<span class="nc" id="L315">                category = ResourceCategory.SCRIPTURE,</span>
+<span class="nc" id="L316">                religion = Religion.ISLAM</span>
+            ),
+<span class="nc" id="L318">            ReligiousResource(</span>
+<span class="nc" id="L319">                id = &quot;isl_002&quot;,</span>
+<span class="nc" id="L320">                title = &quot;Salah Guide&quot;,</span>
+<span class="nc" id="L321">                description = &quot;Guide to performing daily prayers&quot;,</span>
+<span class="nc" id="L322">                category = ResourceCategory.PRAYER,</span>
+<span class="nc" id="L323">                religion = Religion.ISLAM</span>
+            )
+        )
+        
+        // Judaism resources
+<span class="nc" id="L328">        religiousResources[Religion.JUDAISM] = mutableListOf(</span>
+<span class="nc" id="L329">            ReligiousResource(</span>
+<span class="nc" id="L330">                id = &quot;jud_001&quot;,</span>
+<span class="nc" id="L331">                title = &quot;Torah Study&quot;,</span>
+<span class="nc" id="L332">                description = &quot;Weekly Torah portions and commentary&quot;,</span>
+<span class="nc" id="L333">                category = ResourceCategory.SCRIPTURE,</span>
+<span class="nc" id="L334">                religion = Religion.JUDAISM</span>
+            ),
+<span class="nc" id="L336">            ReligiousResource(</span>
+<span class="nc" id="L337">                id = &quot;jud_002&quot;,</span>
+<span class="nc" id="L338">                title = &quot;Prayer Resources&quot;,</span>
+<span class="nc" id="L339">                description = &quot;Jewish prayer guides and resources&quot;,</span>
+<span class="nc" id="L340">                category = ResourceCategory.PRAYER,</span>
+<span class="nc" id="L341">                religion = Religion.JUDAISM</span>
+            )
+        )
+        
+        // Buddhism resources
+<span class="nc" id="L346">        religiousResources[Religion.BUDDHISM] = mutableListOf(</span>
+<span class="nc" id="L347">            ReligiousResource(</span>
+<span class="nc" id="L348">                id = &quot;bud_001&quot;,</span>
+<span class="nc" id="L349">                title = &quot;Dharma Teachings&quot;,</span>
+<span class="nc" id="L350">                description = &quot;Buddhist teachings and sutras&quot;,</span>
+<span class="nc" id="L351">                category = ResourceCategory.SCRIPTURE,</span>
+<span class="nc" id="L352">                religion = Religion.BUDDHISM</span>
+            ),
+<span class="nc" id="L354">            ReligiousResource(</span>
+<span class="nc" id="L355">                id = &quot;bud_002&quot;,</span>
+<span class="nc" id="L356">                title = &quot;Meditation Guide&quot;,</span>
+<span class="nc" id="L357">                description = &quot;Buddhist meditation practices&quot;,</span>
+<span class="nc" id="L358">                category = ResourceCategory.MEDITATION,</span>
+<span class="nc" id="L359">                religion = Religion.BUDDHISM</span>
+            )
+        )
+        
+        // Hinduism resources
+<span class="nc" id="L364">        religiousResources[Religion.HINDUISM] = mutableListOf(</span>
+<span class="nc" id="L365">            ReligiousResource(</span>
+<span class="nc" id="L366">                id = &quot;hin_001&quot;,</span>
+<span class="nc" id="L367">                title = &quot;Bhagavad Gita Study&quot;,</span>
+<span class="nc" id="L368">                description = &quot;Teachings from the Bhagavad Gita&quot;,</span>
+<span class="nc" id="L369">                category = ResourceCategory.SCRIPTURE,</span>
+<span class="nc" id="L370">                religion = Religion.HINDUISM</span>
+            ),
+<span class="nc" id="L372">            ReligiousResource(</span>
+<span class="nc" id="L373">                id = &quot;hin_002&quot;,</span>
+<span class="nc" id="L374">                title = &quot;Yoga and Meditation&quot;,</span>
+<span class="nc" id="L375">                description = &quot;Hindu spiritual practices&quot;,</span>
+<span class="nc" id="L376">                category = ResourceCategory.MEDITATION,</span>
+<span class="nc" id="L377">                religion = Religion.HINDUISM</span>
+            )
+        )
+        
+        // Sikhism resources
+<span class="nc" id="L382">        religiousResources[Religion.SIKHISM] = mutableListOf(</span>
+<span class="nc" id="L383">            ReligiousResource(</span>
+<span class="nc" id="L384">                id = &quot;sik_001&quot;,</span>
+<span class="nc" id="L385">                title = &quot;Guru Granth Sahib&quot;,</span>
+<span class="nc" id="L386">                description = &quot;Teachings from the Guru Granth Sahib&quot;,</span>
+<span class="nc" id="L387">                category = ResourceCategory.SCRIPTURE,</span>
+<span class="nc" id="L388">                religion = Religion.SIKHISM</span>
+            ),
+<span class="nc" id="L390">            ReligiousResource(</span>
+<span class="nc" id="L391">                id = &quot;sik_002&quot;,</span>
+<span class="nc" id="L392">                title = &quot;Simran and Seva&quot;,</span>
+<span class="nc" id="L393">                description = &quot;Sikh meditation and service practices&quot;,</span>
+<span class="nc" id="L394">                category = ResourceCategory.MEDITATION,</span>
+<span class="nc" id="L395">                religion = Religion.SIKHISM</span>
+            )
+        )
+<span class="nc" id="L398">    }</span>
+}
+
+/**
+ * Enum for religions
+ */
+enum class Religion {
+<span class="nc" id="L405">    CHRISTIANITY,</span>
+<span class="nc" id="L406">    ISLAM,</span>
+<span class="nc" id="L407">    JUDAISM,</span>
+<span class="nc" id="L408">    BUDDHISM,</span>
+<span class="nc" id="L409">    HINDUISM,</span>
+<span class="nc" id="L410">    SIKHISM,</span>
+<span class="nc" id="L411">    OTHER,</span>
+<span class="nc" id="L412">    NONE</span>
+<span class="nc" id="L413">}</span>
+
+/**
+ * Enum for resource categories
+ */
+enum class ResourceCategory {
+<span class="nc" id="L419">    SCRIPTURE,</span>
+<span class="nc" id="L420">    PRAYER,</span>
+<span class="nc" id="L421">    MEDITATION,</span>
+<span class="nc" id="L422">    TEACHING,</span>
+<span class="nc" id="L423">    COMMUNITY,</span>
+<span class="nc" id="L424">    RITUAL</span>
+<span class="nc" id="L425">}</span>
+
+/**
+ * Data class for religious resources
+ */
+<span class="nc" id="L430">data class ReligiousResource(</span>
+<span class="nc" id="L431">    val id: String,</span>
+<span class="nc" id="L432">    val title: String,</span>
+<span class="nc" id="L433">    val description: String,</span>
+<span class="nc" id="L434">    val category: ResourceCategory,</span>
+<span class="nc" id="L435">    val religion: Religion,</span>
+<span class="nc" id="L436">    val url: String? = null,</span>
+<span class="nc" id="L437">    val isRecommended: Boolean = false</span>
+<span class="nc" id="L438">)</span>
+
+/**
+ * Data class for prayer requests
+ */
+<span class="nc" id="L443">data class PrayerRequest(</span>
+<span class="nc" id="L444">    val id: String,</span>
+<span class="nc" id="L445">    val userId: String,</span>
+<span class="nc" id="L446">    val religion: Religion,</span>
+<span class="nc" id="L447">    val request: String,</span>
+<span class="nc" id="L448">    val isPrivate: Boolean = true,</span>
+<span class="nc" id="L449">    val status: PrayerStatus = PrayerStatus.PENDING,</span>
+<span class="nc" id="L450">    val createdAt: Date</span>
+<span class="nc" id="L451">)</span>
+
+enum class PrayerStatus {
+<span class="nc" id="L454">    PENDING,</span>
+<span class="nc" id="L455">    ANSWERED,</span>
+<span class="nc" id="L456">    ARCHIVED</span>
+<span class="nc" id="L457">}</span>
+
+/**
+ * Data class for spiritual guidance
+ */
+<span class="nc" id="L462">data class SpiritualGuidance(</span>
+<span class="nc" id="L463">    val id: String,</span>
+<span class="nc" id="L464">    val religion: Religion,</span>
+<span class="nc" id="L465">    val guidance: String,</span>
+<span class="nc" id="L466">    val context: String,</span>
+<span class="nc" id="L467">    val createdAt: Date</span>
+)
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

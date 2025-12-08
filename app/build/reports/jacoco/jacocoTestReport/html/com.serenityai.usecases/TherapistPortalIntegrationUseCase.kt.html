@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TherapistPortalIntegrationUseCase.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.usecases</a> &gt; <span class="el_source">TherapistPortalIntegrationUseCase.kt</span></div><h1>TherapistPortalIntegrationUseCase.kt</h1><pre class="source lang-java linenums">package com.serenityai.usecases
+
+import com.serenityai.data.models.*
+import java.util.Date
+
+/** UC28: Therapist portal integration system enabling therapists to access patient data, monitor progress, and manage therapeutic relationships. */
+<span class="nc" id="L7">class TherapistPortalIntegrationUseCase {</span>
+    
+<span class="nc" id="L9">    private val therapistPatients = mutableMapOf&lt;String, List&lt;String&gt;&gt;() // therapistId -&gt; patientIds</span>
+<span class="nc" id="L10">    private val therapistNotes = mutableMapOf&lt;String, MutableList&lt;TherapistNote&gt;&gt;() // patientId -&gt; notes</span>
+<span class="nc" id="L11">    private val therapistAssignments = mutableMapOf&lt;String, String&gt;() // patientId -&gt; therapistId</span>
+    
+    /**
+     * Assigns a patient to a therapist
+     * 
+     * @param therapistId Therapist ID
+     * @param patientId Patient ID
+     * @return True if assignment successful
+     */
+    fun assignPatientToTherapist(
+        therapistId: String,
+        patientId: String
+    ): Boolean {
+<span class="nc bnc" id="L24" title="All 4 branches missed.">        require(therapistId.isNotBlank()) { &quot;Therapist ID cannot be empty&quot; }</span>
+<span class="nc bnc" id="L25" title="All 4 branches missed.">        require(patientId.isNotBlank()) { &quot;Patient ID cannot be empty&quot; }</span>
+        
+        // Check if patient is already assigned
+<span class="nc bnc" id="L28" title="All 2 branches missed.">        if (therapistAssignments.containsKey(patientId)) {</span>
+<span class="nc" id="L29">            return false</span>
+        }
+        
+<span class="nc" id="L32">        therapistAssignments[patientId] = therapistId</span>
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        val currentPatients = therapistPatients[therapistId] ?: emptyList()</span>
+<span class="nc" id="L34">        therapistPatients[therapistId] = currentPatients + patientId</span>
+        
+<span class="nc" id="L36">        return true</span>
+    }
+    
+    /**
+     * Unassigns a patient from a therapist
+     * 
+     * @param therapistId Therapist ID
+     * @param patientId Patient ID
+     * @return True if unassignment successful
+     */
+    fun unassignPatientFromTherapist(
+        therapistId: String,
+        patientId: String
+    ): Boolean {
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if (therapistAssignments[patientId] != therapistId) {</span>
+<span class="nc" id="L51">            return false</span>
+        }
+        
+<span class="nc" id="L54">        therapistAssignments.remove(patientId)</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        val currentPatients = therapistPatients[therapistId] ?: emptyList()</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        therapistPatients[therapistId] = currentPatients.filter { it != patientId }</span>
+        
+<span class="nc" id="L58">        return true</span>
+    }
+    
+    /**
+     * Gets list of patients assigned to a therapist
+     * 
+     * @param therapistId Therapist ID
+     * @return List of patient IDs
+     */
+    fun getTherapistPatients(therapistId: String): List&lt;String&gt; {
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        return therapistPatients[therapistId] ?: emptyList()</span>
+    }
+    
+    /**
+     * Gets therapist assigned to a patient
+     * 
+     * @param patientId Patient ID
+     * @return Therapist ID or null if not assigned
+     */
+    fun getPatientTherapist(patientId: String): String? {
+<span class="nc" id="L78">        return therapistAssignments[patientId]</span>
+    }
+    
+    /**
+     * Adds a therapist note for a patient
+     * 
+     * @param therapistId Therapist ID
+     * @param patientId Patient ID
+     * @param noteContent Note content
+     * @param noteType Note type (observation, recommendation, etc.)
+     * @return TherapistNote object
+     */
+<span class="nc" id="L90">    fun addTherapistNote(</span>
+        therapistId: String,
+        patientId: String,
+        noteContent: String,
+<span class="nc" id="L94">        noteType: String = &quot;observation&quot;</span>
+    ): TherapistNote {
+<span class="nc bnc" id="L96" title="All 4 branches missed.">        require(noteContent.isNotBlank()) { &quot;Note content cannot be empty&quot; }</span>
+        
+        // Verify therapist has access to patient
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (therapistAssignments[patientId] != therapistId) {</span>
+<span class="nc" id="L100">            throw IllegalArgumentException(&quot;Therapist does not have access to this patient&quot;)</span>
+        }
+        
+<span class="nc" id="L103">        val note = TherapistNote(</span>
+<span class="nc" id="L104">            id = &quot;note_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L105">            therapistId = therapistId,</span>
+<span class="nc" id="L106">            patientId = patientId,</span>
+<span class="nc" id="L107">            content = noteContent,</span>
+<span class="nc" id="L108">            noteType = noteType,</span>
+<span class="nc" id="L109">            createdAt = Date()</span>
+        )
+        
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        val notes = therapistNotes[patientId] ?: mutableListOf()</span>
+<span class="nc" id="L113">        notes.add(note)</span>
+<span class="nc" id="L114">        therapistNotes[patientId] = notes</span>
+        
+<span class="nc" id="L116">        return note</span>
+    }
+    
+    /**
+     * Gets therapist notes for a patient
+     * 
+     * @param therapistId Therapist ID
+     * @param patientId Patient ID
+     * @return List of TherapistNote objects
+     */
+    fun getTherapistNotes(
+        therapistId: String,
+        patientId: String
+    ): List&lt;TherapistNote&gt; {
+        // Verify therapist has access to patient
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (therapistAssignments[patientId] != therapistId) {</span>
+<span class="nc" id="L132">            return emptyList()</span>
+        }
+        
+<span class="nc bnc" id="L135" title="All 2 branches missed.">        return therapistNotes[patientId]?.filter { it.therapistId == therapistId } ?: emptyList()</span>
+    }
+    
+    /**
+     * Gets patient mood history for therapist review
+     * 
+     * @param therapistId Therapist ID
+     * @param patientId Patient ID
+     * @param startDate Start date for history range
+     * @param endDate End date for history range
+     * @return List of MoodEntry objects
+     */
+    fun getPatientMoodHistory(
+        therapistId: String,
+        patientId: String,
+        startDate: Date,
+        endDate: Date
+    ): List&lt;MoodEntry&gt; {
+        // Verify therapist has access to patient
+<span class="nc bnc" id="L154" title="All 2 branches missed.">        if (therapistAssignments[patientId] != therapistId) {</span>
+<span class="nc" id="L155">            return emptyList()</span>
+        }
+        
+        // In a real implementation, this would fetch from database
+        // For now, return empty list as placeholder
+<span class="nc" id="L160">        return emptyList()</span>
+    }
+    
+    /**
+     * Generates patient progress report
+     * 
+     * @param therapistId Therapist ID
+     * @param patientId Patient ID
+     * @param startDate Start date for report period
+     * @param endDate End date for report period
+     * @return PatientProgressReport object
+     */
+    fun generatePatientProgressReport(
+        therapistId: String,
+        patientId: String,
+        startDate: Date,
+        endDate: Date
+    ): PatientProgressReport {
+        // Verify therapist has access to patient
+<span class="nc bnc" id="L179" title="All 2 branches missed.">        if (therapistAssignments[patientId] != therapistId) {</span>
+<span class="nc" id="L180">            throw IllegalArgumentException(&quot;Therapist does not have access to this patient&quot;)</span>
+        }
+        
+<span class="nc" id="L183">        val moodHistory = getPatientMoodHistory(therapistId, patientId, startDate, endDate)</span>
+<span class="nc" id="L184">        val notes = getTherapistNotes(therapistId, patientId)</span>
+        
+<span class="nc bnc" id="L186" title="All 4 branches missed.">        val averageMood = if (moodHistory.isNotEmpty()) {</span>
+<span class="nc" id="L187">            moodHistory.map { it.mood }.average().toFloat()</span>
+        } else {
+<span class="nc" id="L189">            0f</span>
+        }
+        
+<span class="nc" id="L192">        return PatientProgressReport(</span>
+<span class="nc" id="L193">            patientId = patientId,</span>
+<span class="nc" id="L194">            therapistId = therapistId,</span>
+<span class="nc" id="L195">            startDate = startDate,</span>
+<span class="nc" id="L196">            endDate = endDate,</span>
+<span class="nc" id="L197">            averageMood = averageMood,</span>
+<span class="nc" id="L198">            totalMoodEntries = moodHistory.size,</span>
+<span class="nc" id="L199">            totalTherapistNotes = notes.size,</span>
+<span class="nc" id="L200">            generatedAt = Date()</span>
+        )
+    }
+}
+
+/**
+ * Data class for therapist notes
+ */
+<span class="nc" id="L208">data class TherapistNote(</span>
+<span class="nc" id="L209">    val id: String,</span>
+<span class="nc" id="L210">    val therapistId: String,</span>
+<span class="nc" id="L211">    val patientId: String,</span>
+<span class="nc" id="L212">    val content: String,</span>
+<span class="nc" id="L213">    val noteType: String,</span>
+<span class="nc" id="L214">    val createdAt: Date</span>
+)
+
+/**
+ * Data class for patient progress report
+ */
+<span class="nc" id="L220">data class PatientProgressReport(</span>
+<span class="nc" id="L221">    val patientId: String,</span>
+<span class="nc" id="L222">    val therapistId: String,</span>
+<span class="nc" id="L223">    val startDate: Date,</span>
+<span class="nc" id="L224">    val endDate: Date,</span>
+<span class="nc" id="L225">    val averageMood: Float,</span>
+<span class="nc" id="L226">    val totalMoodEntries: Int,</span>
+<span class="nc" id="L227">    val totalTherapistNotes: Int,</span>
+<span class="nc" id="L228">    val generatedAt: Date</span>
+)
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

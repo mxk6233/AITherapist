@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test Case 1: Optimal Strategy Selection - Validates Core UC41 Functionality" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-12-07T08:20:33" hostname="Mohammads-MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="UC41-REQ-2: System MUST validate constraints" classname="com.serenityai.tests.unit.usecases.uc41_greedy_algorithm.GreedyAlgorithmUseCaseUnitTests$OptimalSelectionTests" time="0.0"/>
+  <testcase name="UC41-REQ-1: System MUST select optimal strategies using greedy algorithm" classname="com.serenityai.tests.unit.usecases.uc41_greedy_algorithm.GreedyAlgorithmUseCaseUnitTests$OptimalSelectionTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

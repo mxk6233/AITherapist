@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GroupTherapySimulationModeUseCase.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.serenityai.usecases</a> &gt; <span class="el_source">GroupTherapySimulationModeUseCase.kt</span></div><h1>GroupTherapySimulationModeUseCase.kt</h1><pre class="source lang-java linenums">package com.serenityai.usecases
+
+import com.serenityai.data.models.*
+import java.util.Date
+
+/** UC34: Group therapy simulation providing simulated group therapy sessions using AI-powered virtual participants. */
+<span class="nc" id="L7">class GroupTherapySimulationModeUseCase {</span>
+    
+<span class="nc" id="L9">    private val activeSessions = mutableMapOf&lt;String, GroupSession&gt;()</span>
+<span class="nc" id="L10">    private val virtualParticipants = mutableMapOf&lt;String, List&lt;VirtualParticipant&gt;&gt;()</span>
+    
+    /**
+     * Creates a new group therapy session
+     * 
+     * @param sessionName Name of the session
+     * @param facilitatorId User ID of the facilitator
+     * @param maxParticipants Maximum number of participants
+     * @param topic Optional topic/focus area
+     * @return GroupSession object
+     */
+<span class="nc" id="L21">    fun createGroupSession(</span>
+        sessionName: String,
+        facilitatorId: String,
+<span class="nc" id="L24">        maxParticipants: Int = 8,</span>
+<span class="nc" id="L25">        topic: String? = null</span>
+    ): GroupSession {
+<span class="nc bnc" id="L27" title="All 4 branches missed.">        require(sessionName.isNotBlank()) { &quot;Session name cannot be empty&quot; }</span>
+<span class="nc bnc" id="L28" title="All 4 branches missed.">        require(maxParticipants &gt; 0) { &quot;Max participants must be greater than 0&quot; }</span>
+        
+<span class="nc" id="L30">        val session = GroupSession(</span>
+<span class="nc" id="L31">            id = &quot;session_${System.currentTimeMillis()}&quot;,</span>
+<span class="nc" id="L32">            name = sessionName,</span>
+<span class="nc" id="L33">            facilitatorId = facilitatorId,</span>
+<span class="nc" id="L34">            participants = listOf(facilitatorId),</span>
+<span class="nc" id="L35">            maxParticipants = maxParticipants,</span>
+<span class="nc" id="L36">            status = SessionStatus.ACTIVE,</span>
+<span class="nc" id="L37">            topic = topic,</span>
+<span class="nc" id="L38">            createdAt = Date(),</span>
+<span class="nc" id="L39">            updatedAt = Date()</span>
+        )
+        
+<span class="nc" id="L42">        activeSessions[session.id] = session</span>
+<span class="nc" id="L43">        return session</span>
+    }
+    
+    /**
+     * Joins a user to a group session
+     * 
+     * @param sessionId Session ID
+     * @param userId User ID joining the session
+     * @return Boolean indicating success
+     */
+    fun joinGroupSession(sessionId: String, userId: String): Boolean {
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        val session = activeSessions[sessionId] ?: return false</span>
+        
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (session.participants.size &gt;= session.maxParticipants) {</span>
+<span class="nc" id="L57">            return false // Session is full</span>
+        }
+        
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (session.participants.contains(userId)) {</span>
+<span class="nc" id="L61">            return true // Already in session</span>
+        }
+        
+<span class="nc" id="L64">        val updatedSession = session.copy(</span>
+<span class="nc" id="L65">            participants = session.participants + userId,</span>
+<span class="nc" id="L66">            updatedAt = Date()</span>
+        )
+<span class="nc" id="L68">        activeSessions[sessionId] = updatedSession</span>
+<span class="nc" id="L69">        return true</span>
+    }
+    
+    /**
+     * Removes a user from a group session
+     * 
+     * @param sessionId Session ID
+     * @param userId User ID leaving the session
+     * @return Boolean indicating success
+     */
+    fun leaveGroupSession(sessionId: String, userId: String): Boolean {
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        val session = activeSessions[sessionId] ?: return false</span>
+        
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        if (userId == session.facilitatorId) {</span>
+<span class="nc" id="L83">            return false // Facilitator cannot leave</span>
+        }
+        
+<span class="nc" id="L86">        val updatedSession = session.copy(</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">            participants = session.participants.filter { it != userId },</span>
+<span class="nc" id="L88">            updatedAt = Date()</span>
+        )
+<span class="nc" id="L90">        activeSessions[sessionId] = updatedSession</span>
+<span class="nc" id="L91">        return true</span>
+    }
+    
+    /**
+     * Gets active group sessions for a user
+     * 
+     * @param userId User ID
+     * @return List of GroupSession objects
+     */
+    fun getActiveGroupSessions(userId: String): List&lt;GroupSession&gt; {
+<span class="nc" id="L101">        return activeSessions.values.filter { session -&gt;</span>
+<span class="nc bnc" id="L102" title="All 4 branches missed.">            session.participants.contains(userId) &amp;&amp; session.status == SessionStatus.ACTIVE</span>
+        }
+    }
+    
+    /**
+     * Creates virtual participants for a session
+     * 
+     * @param sessionId Session ID
+     * @param participantCount Number of virtual participants to create
+     * @return List of VirtualParticipant objects
+     */
+<span class="nc" id="L113">    fun createVirtualParticipants(</span>
+        sessionId: String,
+<span class="nc" id="L115">        participantCount: Int = 5</span>
+    ): List&lt;VirtualParticipant&gt; {
+<span class="nc bnc" id="L117" title="All 4 branches missed.">        require(participantCount &gt; 0) { &quot;Participant count must be greater than 0&quot; }</span>
+        
+<span class="nc" id="L119">        val personalities = listOf(&quot;supportive&quot;, &quot;analytical&quot;, &quot;empathetic&quot;, &quot;encouraging&quot;, &quot;practical&quot;)</span>
+<span class="nc" id="L120">        val experiences = listOf(&quot;experienced&quot;, &quot;moderate&quot;, &quot;beginner&quot;)</span>
+<span class="nc" id="L121">        val responseStyles = listOf(&quot;concise&quot;, &quot;detailed&quot;, &quot;storytelling&quot;)</span>
+        
+<span class="nc" id="L123">        val participants = (1..participantCount).map { index -&gt;</span>
+<span class="nc" id="L124">            VirtualParticipant(</span>
+<span class="nc" id="L125">                id = &quot;virtual_${sessionId}_$index&quot;,</span>
+<span class="nc" id="L126">                name = &quot;Virtual Participant ${index}&quot;,</span>
+<span class="nc" id="L127">                personality = personalities[index % personalities.size],</span>
+<span class="nc" id="L128">                experience = experiences[index % experiences.size],</span>
+<span class="nc" id="L129">                responseStyle = responseStyles[index % responseStyles.size]</span>
+<span class="nc" id="L130">            )</span>
+        }
+        
+<span class="nc" id="L133">        virtualParticipants[sessionId] = participants</span>
+<span class="nc" id="L134">        return participants</span>
+    }
+    
+    /**
+     * Facilitates a group discussion on a topic
+     * 
+     * @param sessionId Session ID
+     * @param topic Discussion topic
+     * @return List of discussion prompts/responses
+     */
+    fun facilitateGroupDiscussion(sessionId: String, topic: String): List&lt;String&gt; {
+<span class="nc bnc" id="L145" title="All 4 branches missed.">        require(topic.isNotBlank()) { &quot;Topic cannot be empty&quot; }</span>
+        
+<span class="nc bnc" id="L147" title="All 2 branches missed.">        val participants = virtualParticipants[sessionId] ?: emptyList()</span>
+        
+<span class="nc" id="L149">        return listOf(</span>
+<span class="nc" id="L150">            &quot;Facilitator: Let's discuss $topic. Who would like to share their thoughts?&quot;,</span>
+<span class="nc" id="L151">            &quot;Virtual Participant 1: I've found that ${topic.lowercase()} can be challenging, but I've learned some strategies.&quot;,</span>
+<span class="nc" id="L152">            &quot;Virtual Participant 2: That's interesting. I've had a similar experience.&quot;,</span>
+<span class="nc" id="L153">            &quot;Facilitator: Thank you for sharing. What strategies have worked for you?&quot;,</span>
+<span class="nc" id="L154">            &quot;Virtual Participant 3: I think it's important to take things one step at a time.&quot;,</span>
+<span class="nc" id="L155">            &quot;Feel free to share your own experiences or thoughts on this topic.&quot;</span>
+        )
+    }
+    
+    /**
+     * Conducts a group exercise
+     * 
+     * @param sessionId Session ID
+     * @param exerciseType Type of exercise (breathing, mindfulness, etc.)
+     * @return Map containing exercise instructions and details
+     */
+    fun conductGroupExercise(sessionId: String, exerciseType: String): Map&lt;String, Any&gt; {
+<span class="nc" id="L167">        return when (exerciseType.lowercase()) {</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">            &quot;breathing&quot; -&gt; mapOf(</span>
+<span class="nc" id="L169">                &quot;instructions&quot; to &quot;Let's do a group breathing exercise. Inhale for 4 counts, hold for 4, exhale for 4.&quot;,</span>
+<span class="nc" id="L170">                &quot;duration&quot; to 5,</span>
+<span class="nc" id="L171">                &quot;steps&quot; to listOf(&quot;Find comfortable position&quot;, &quot;Close eyes&quot;, &quot;Follow breathing pattern&quot;, &quot;Focus on breath&quot;)</span>
+            )
+<span class="nc bnc" id="L173" title="All 2 branches missed.">            &quot;mindfulness&quot; -&gt; mapOf(</span>
+<span class="nc" id="L174">                &quot;instructions&quot; to &quot;Let's practice mindfulness together. Focus on the present moment without judgment.&quot;,</span>
+<span class="nc" id="L175">                &quot;duration&quot; to 10,</span>
+<span class="nc" id="L176">                &quot;steps&quot; to listOf(&quot;Get comfortable&quot;, &quot;Notice your breath&quot;, &quot;Observe thoughts&quot;, &quot;Return to present&quot;)</span>
+            )
+<span class="nc" id="L178">            else -&gt; mapOf(</span>
+<span class="nc" id="L179">                &quot;instructions&quot; to &quot;Let's engage in a group exercise to support each other.&quot;,</span>
+<span class="nc" id="L180">                &quot;duration&quot; to 5,</span>
+<span class="nc" id="L181">                &quot;steps&quot; to listOf(&quot;Prepare&quot;, &quot;Follow instructions&quot;, &quot;Share experience&quot;)</span>
+            )
+        }
+    }
+    
+    /**
+     * Generates participant responses based on topic
+     * 
+     * @param sessionId Session ID
+     * @param topic Topic for responses
+     * @return List of participant responses
+     */
+    fun generateParticipantResponses(sessionId: String, topic: String): List&lt;String&gt; {
+<span class="nc bnc" id="L194" title="All 2 branches missed.">        val participants = virtualParticipants[sessionId] ?: emptyList()</span>
+        
+<span class="nc" id="L196">        return participants.mapIndexed { index, participant -&gt;</span>
+<span class="nc bnc" id="L197" title="All 5 branches missed.">            when (participant.personality) {</span>
+<span class="nc" id="L198">                &quot;supportive&quot; -&gt; &quot;I understand what you're going through. You're not alone in this.&quot;</span>
+<span class="nc" id="L199">                &quot;analytical&quot; -&gt; &quot;Let's think about $topic from different perspectives. What patterns do you notice?&quot;</span>
+<span class="nc" id="L200">                &quot;empathetic&quot; -&gt; &quot;That sounds really difficult. I can relate to feeling that way.&quot;</span>
+<span class="nc" id="L201">                &quot;encouraging&quot; -&gt; &quot;You're making progress, even if it doesn't feel like it. Keep going!&quot;</span>
+<span class="nc" id="L202">                else -&gt; &quot;Thank you for sharing. I appreciate your openness.&quot;</span>
+<span class="nc" id="L203">            }</span>
+        }
+    }
+    
+    /**
+     * Simulates group dynamics for the session
+     * 
+     * @param sessionId Session ID
+     * @param currentTopic Current discussion topic
+     * @return Map containing group dynamics metrics
+     */
+    fun simulateGroupDynamics(sessionId: String, currentTopic: String): Map&lt;String, Any&gt; {
+<span class="nc" id="L215">        val session = activeSessions[sessionId]</span>
+<span class="nc bnc" id="L216" title="All 2 branches missed.">        val participants = virtualParticipants[sessionId] ?: emptyList()</span>
+        
+<span class="nc" id="L218">        val participationLevel = when {</span>
+<span class="nc bnc" id="L219" title="All 6 branches missed.">            session?.participants?.size ?: 0 &gt;= 5 -&gt; &quot;high&quot;</span>
+<span class="nc bnc" id="L220" title="All 6 branches missed.">            session?.participants?.size ?: 0 &gt;= 3 -&gt; &quot;moderate&quot;</span>
+<span class="nc" id="L221">            else -&gt; &quot;low&quot;</span>
+        }
+        
+<span class="nc" id="L224">        val groupCohesion = when {</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">            participants.size &gt;= 4 -&gt; 0.85f</span>
+<span class="nc bnc" id="L226" title="All 2 branches missed.">            participants.size &gt;= 2 -&gt; 0.70f</span>
+<span class="nc" id="L227">            else -&gt; 0.50f</span>
+        }
+        
+<span class="nc" id="L230">        return mapOf(</span>
+<span class="nc" id="L231">            &quot;participation_level&quot; to participationLevel,</span>
+<span class="nc" id="L232">            &quot;group_cohesion&quot; to groupCohesion,</span>
+<span class="nc bnc" id="L233" title="All 4 branches missed.">            &quot;active_participants&quot; to (session?.participants?.size ?: 0),</span>
+<span class="nc" id="L234">            &quot;virtual_participants&quot; to participants.size,</span>
+<span class="nc" id="L235">            &quot;engagement_score&quot; to (participationLevel.length * 15 + groupCohesion * 50).toInt()</span>
+        )
+    }
+    
+    /**
+     * Provides peer support responses
+     * 
+     * @param sessionId Session ID
+     * @param supportRequest User's support request
+     * @return List of supportive responses
+     */
+    fun providePeerSupport(sessionId: String, supportRequest: String): List&lt;String&gt; {
+<span class="nc" id="L247">        return listOf(</span>
+<span class="nc" id="L248">            &quot;Virtual Participant 1: I hear you. That sounds really difficult.&quot;,</span>
+<span class="nc" id="L249">            &quot;Virtual Participant 2: You're showing courage by sharing this. Thank you.&quot;,</span>
+<span class="nc" id="L250">            &quot;Virtual Participant 3: I've been there too. It's okay to feel this way.&quot;,</span>
+<span class="nc" id="L251">            &quot;Facilitator: How can we support you right now? What would be most helpful?&quot;</span>
+        )
+    }
+    
+    /**
+     * Facilitates group validation
+     * 
+     * @param sessionId Session ID
+     * @param userInput User's input to validate
+     * @return List of validating responses
+     */
+    fun facilitateGroupValidation(sessionId: String, userInput: String): List&lt;String&gt; {
+<span class="nc" id="L263">        return listOf(</span>
+<span class="nc" id="L264">            &quot;Virtual Participant 1: Your feelings are valid. It's okay to struggle.&quot;,</span>
+<span class="nc" id="L265">            &quot;Virtual Participant 2: I appreciate your honesty. That takes strength.&quot;,</span>
+<span class="nc" id="L266">            &quot;Virtual Participant 3: You're not alone in experiencing this. We're here for you.&quot;,</span>
+<span class="nc" id="L267">            &quot;Facilitator: Thank you for trusting us with your experience. How are you feeling now?&quot;</span>
+        )
+    }
+    
+    /**
+     * Encourages group participation
+     * 
+     * @param sessionId Session ID
+     * @param participantId Participant ID to encourage
+     * @return Encouraging message
+     */
+    fun encourageGroupParticipation(sessionId: String, participantId: String): String {
+<span class="nc" id="L279">        return &quot;Facilitator: We'd love to hear from you. Your perspective is valuable. Feel free to share when you're ready.&quot;</span>
+    }
+    
+    /**
+     * Facilitates group learning on a topic
+     * 
+     * @param sessionId Session ID
+     * @param learningTopic Topic to learn about
+     * @return Map containing learning content and activities
+     */
+    fun facilitateGroupLearning(sessionId: String, learningTopic: String): Map&lt;String, Any&gt; {
+<span class="nc" id="L290">        return when (learningTopic.lowercase()) {</span>
+<span class="nc bnc" id="L291" title="All 2 branches missed.">            &quot;mindfulness&quot; -&gt; mapOf(</span>
+<span class="nc" id="L292">                &quot;content&quot; to &quot;Introduction to mindfulness practices&quot;,</span>
+<span class="nc" id="L293">                &quot;activities&quot; to listOf(&quot;Mindfulness meditation&quot;, &quot;Body scan&quot;, &quot;Breathing exercises&quot;),</span>
+<span class="nc" id="L294">                &quot;resources&quot; to listOf(&quot;Mindfulness apps&quot;, &quot;Guided meditations&quot;, &quot;Books on mindfulness&quot;)</span>
+            )
+<span class="nc bnc" id="L296" title="All 2 branches missed.">            &quot;anxiety management&quot; -&gt; mapOf(</span>
+<span class="nc" id="L297">                &quot;content&quot; to &quot;Understanding anxiety and coping strategies&quot;,</span>
+<span class="nc" id="L298">                &quot;activities&quot; to listOf(&quot;Anxiety tracking&quot;, &quot;Relaxation techniques&quot;, &quot;Cognitive restructuring&quot;),</span>
+<span class="nc" id="L299">                &quot;resources&quot; to listOf(&quot;Anxiety workbooks&quot;, &quot;Relaxation apps&quot;, &quot;Support groups&quot;)</span>
+            )
+<span class="nc" id="L301">            else -&gt; mapOf(</span>
+<span class="nc" id="L302">                &quot;content&quot; to &quot;General mental health education&quot;,</span>
+<span class="nc" id="L303">                &quot;activities&quot; to listOf(&quot;Group discussions&quot;, &quot;Skill-building exercises&quot;, &quot;Peer support&quot;),</span>
+<span class="nc" id="L304">                &quot;resources&quot; to listOf(&quot;Educational materials&quot;, &quot;Support resources&quot;, &quot;Community resources&quot;)</span>
+            )
+        }
+    }
+    
+    /**
+     * Conducts group reflection
+     * 
+     * @param sessionId Session ID
+     * @param reflectionTopic Topic for reflection
+     * @return List of reflection prompts
+     */
+    fun conductGroupReflection(sessionId: String, reflectionTopic: String): List&lt;String&gt; {
+<span class="nc" id="L317">        return when (reflectionTopic.lowercase()) {</span>
+<span class="nc bnc" id="L318" title="All 2 branches missed.">            &quot;session progress&quot; -&gt; listOf(</span>
+<span class="nc" id="L319">                &quot;What have you learned from today's session?&quot;,</span>
+<span class="nc" id="L320">                &quot;How do you feel about your progress?&quot;,</span>
+<span class="nc" id="L321">                &quot;What would you like to work on next?&quot;</span>
+            )
+<span class="nc bnc" id="L323" title="All 2 branches missed.">            &quot;group dynamics&quot; -&gt; listOf(</span>
+<span class="nc" id="L324">                &quot;How are you feeling about the group?&quot;,</span>
+<span class="nc" id="L325">                &quot;What's been most helpful about our sessions?&quot;,</span>
+<span class="nc" id="L326">                &quot;How can we improve our group experience?&quot;</span>
+            )
+<span class="nc" id="L328">            else -&gt; listOf(</span>
+<span class="nc" id="L329">                &quot;Let's reflect on our time together&quot;,</span>
+<span class="nc" id="L330">                &quot;What insights have you gained?&quot;,</span>
+<span class="nc" id="L331">                &quot;How are you feeling about your journey?&quot;</span>
+            )
+        }
+    }
+    
+    /**
+     * Facilitates group goal setting
+     * 
+     * @param sessionId Session ID
+     * @param goalCategory Category of goals
+     * @return List of goal-setting prompts
+     */
+    fun facilitateGroupGoalSetting(sessionId: String, goalCategory: String): List&lt;String&gt; {
+<span class="nc" id="L344">        return listOf(</span>
+<span class="nc" id="L345">            &quot;What are your goals related to $goalCategory?&quot;,</span>
+<span class="nc" id="L346">            &quot;What steps can you take this week to work toward your goals?&quot;,</span>
+<span class="nc" id="L347">            &quot;How can the group support you in achieving your goals?&quot;,</span>
+<span class="nc" id="L348">            &quot;What would success look like for you?&quot;</span>
+        )
+    }
+}
+
+/**
+ * Data class for group sessions
+ */
+<span class="nc" id="L356">data class GroupSession(</span>
+<span class="nc" id="L357">    val id: String,</span>
+<span class="nc" id="L358">    val name: String,</span>
+<span class="nc" id="L359">    val facilitatorId: String,</span>
+<span class="nc" id="L360">    val participants: List&lt;String&gt;,</span>
+<span class="nc" id="L361">    val maxParticipants: Int,</span>
+<span class="nc" id="L362">    val status: SessionStatus,</span>
+<span class="nc" id="L363">    val topic: String?,</span>
+<span class="nc" id="L364">    val createdAt: Date,</span>
+<span class="nc" id="L365">    val updatedAt: Date</span>
+)
+
+/**
+ * Data class for virtual participants
+ */
+<span class="nc" id="L371">data class VirtualParticipant(</span>
+<span class="nc" id="L372">    val id: String,</span>
+<span class="nc" id="L373">    val name: String,</span>
+<span class="nc" id="L374">    val personality: String,</span>
+<span class="nc" id="L375">    val experience: String,</span>
+<span class="nc" id="L376">    val responseStyle: String</span>
+)
+
+/**
+ * Session status enum
+ */
+enum class SessionStatus {
+<span class="nc" id="L383">    ACTIVE, PAUSED, COMPLETED, CANCELLED</span>
+<span class="nc" id="L384">}</span>
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
