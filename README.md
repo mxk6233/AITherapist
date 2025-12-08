@@ -6,6 +6,67 @@ A comprehensive Android mental health support application providing accessible, 
 
 AI Therapist is a mobile Android application designed to democratize mental health support by providing 24/7 accessible, confidential, and personalized therapeutic assistance. The application combines AI-powered conversations, comprehensive mood tracking, educational resources, and community support to create a holistic mental wellness platform.
 
+## Download from Google Play Store
+
+### For Android Users
+
+**Download AI Therapist from Google Play Store:**
+
+1. **Open Google Play Store** on your Android device
+2. **Search** for "AI Therapist" in the search bar
+3. **Tap** on the AI Therapist app from the search results
+4. **Tap** the "Install" button
+5. **Wait** for the installation to complete
+6. **Open** the app and follow the setup instructions
+
+**Direct Link:** [Download AI Therapist on Google Play Store](https://play.google.com/store/apps/details?id=com.serenityai)
+
+**System Requirements:**
+- Android 7.0 (API Level 24) or higher
+- Internet connection for full functionality
+- Google Play Services
+
+**Alternative Installation Methods:**
+- **APK Installation**: Download the APK file from the releases section (for advanced users)
+- **Beta Testing**: Join the beta program through Google Play Store
+
+## Screenshots
+
+### Main Dashboard
+The main dashboard provides quick access to all features with a clean, modern interface. Users can navigate to Chat Features, Mood & Analytics, Support Tools, Wellness Activities, and Settings.
+
+![Main Dashboard](screenshots/main_dashboard.png)
+
+### Mood & Analytics
+Comprehensive mood tracking interface showing today's mood selection and access to analytics, forecasting, burnout detection, and relapse prevention features.
+
+![Mood & Analytics](screenshots/mood_analytics.png)
+
+### Mood Analytics
+Visual representation of mood trends over time with insights and patterns to help users understand their emotional patterns.
+
+![Mood Analytics](screenshots/mood_analytics_detail.png)
+
+### Mood Forecasting
+AI-powered mood forecasting with customizable forecast periods (7, 14, 30, 90 days) and forecast summary showing average mood and expected range.
+
+![Mood Forecasting](screenshots/mood_forecasting.png)
+
+### Burnout Risk Assessment
+Comprehensive burnout risk assessment with current risk level display, prevention tips, and recent pattern analysis.
+
+![Burnout Risk Assessment](screenshots/burnout_assessment.png)
+
+### Relapse Prevention
+Early warning system for relapse prevention with current risk indicators, impact levels, and AI-detected patterns with recommended actions.
+
+![Relapse Prevention](screenshots/relapse_prevention.png)
+
+### Chat History
+View and manage past chat conversations with search functionality, mood-based filters, and chat analytics including total sessions.
+
+![Chat History](screenshots/chat_history.png)
+
 ## Key Features
 
 ### AI-Powered Therapy
