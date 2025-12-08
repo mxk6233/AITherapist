@@ -34,40 +34,58 @@ AI Therapist is a mobile Android application designed to democratize mental heal
 
 The following screenshots showcase key features of the AI Therapist application:
 
-### Main Dashboard
-The main dashboard provides quick access to all features with a clean, modern interface. Users can navigate to Chat Features, Mood & Analytics, Support Tools, Wellness Activities, and Settings. The dashboard includes a welcome message, quick action cards, and a daily check-in prompt.
-
-![Main Dashboard](screenshots/main_dashboard.png)
-
-### Mood & Analytics
-Comprehensive mood tracking interface showing today's mood selection and access to analytics, forecasting, burnout detection, and relapse prevention features. Users can quickly select their current mood using intuitive smiley face icons.
-
-![Mood & Analytics](screenshots/mood_analytics.png)
-
-### Mood Analytics Detail
-Visual representation of mood trends over time with insights and patterns to help users understand their emotional patterns. The analytics screen displays charts and trend information with positive feedback messages.
-
-![Mood Analytics Detail](screenshots/mood_analytics_detail.png)
-
-### Mood Forecasting
-AI-powered mood forecasting with customizable forecast periods (7, 14, 30, 90 days) and forecast summary showing average mood and expected range. Users can select different time periods to view predictions based on their historical mood data.
-
-![Mood Forecasting](screenshots/mood_forecasting.png)
-
-### Burnout Risk Assessment
-Comprehensive burnout risk assessment with current risk level display, prevention tips, and recent pattern analysis. The screen shows risk level indicators, actionable prevention tips, and weekly burnout pattern charts.
-
-![Burnout Risk Assessment](screenshots/burnout_assessment.png)
-
-### Relapse Prevention
-Early warning system for relapse prevention with current risk indicators, impact levels, and AI-detected patterns with recommended actions. The interface displays risk factors with color-coded impact levels and provides proactive recommendations.
-
-![Relapse Prevention](screenshots/relapse_prevention.png)
-
-### Chat History
-View and manage past chat conversations with search functionality, mood-based filters, and chat analytics including total sessions. Users can search conversations, filter by mood, and view session statistics.
-
-![Chat History](screenshots/chat_history.png)
+<table>
+<tr>
+<td width="50%">
+<strong>Main Dashboard</strong><br>
+The main dashboard provides quick access to all features with a clean, modern interface. Users can navigate to Chat Features, Mood & Analytics, Support Tools, Wellness Activities, and Settings.
+<br><br>
+<img src="screenshots/main_dashboard.png" alt="Main Dashboard" width="100%"/>
+</td>
+<td width="50%">
+<strong>Mood & Analytics</strong><br>
+Comprehensive mood tracking interface showing today's mood selection and access to analytics, forecasting, burnout detection, and relapse prevention features.
+<br><br>
+<img src="screenshots/mood_analytics.png" alt="Mood & Analytics" width="100%"/>
+</td>
+</tr>
+<tr>
+<td width="50%">
+<strong>Mood Analytics Detail</strong><br>
+Visual representation of mood trends over time with insights and patterns to help users understand their emotional patterns.
+<br><br>
+<img src="screenshots/mood_analytics_detail.png" alt="Mood Analytics Detail" width="100%"/>
+</td>
+<td width="50%">
+<strong>Mood Forecasting</strong><br>
+AI-powered mood forecasting with customizable forecast periods (7, 14, 30, 90 days) and forecast summary showing average mood and expected range.
+<br><br>
+<img src="screenshots/mood_forecasting.png" alt="Mood Forecasting" width="100%"/>
+</td>
+</tr>
+<tr>
+<td width="50%">
+<strong>Burnout Risk Assessment</strong><br>
+Comprehensive burnout risk assessment with current risk level display, prevention tips, and recent pattern analysis.
+<br><br>
+<img src="screenshots/burnout_assessment.png" alt="Burnout Risk Assessment" width="100%"/>
+</td>
+<td width="50%">
+<strong>Relapse Prevention</strong><br>
+Early warning system for relapse prevention with current risk indicators, impact levels, and AI-detected patterns with recommended actions.
+<br><br>
+<img src="screenshots/relapse_prevention.png" alt="Relapse Prevention" width="100%"/>
+</td>
+</tr>
+<tr>
+<td width="50%" colspan="2">
+<strong>Chat History</strong><br>
+View and manage past chat conversations with search functionality, mood-based filters, and chat analytics including total sessions.
+<br><br>
+<img src="screenshots/chat_history.png" alt="Chat History" width="100%"/>
+</td>
+</tr>
+</table>
 
 ## Key Features
 
