@@ -8,20 +8,20 @@ AI Therapist is a mobile Android application designed to democratize mental heal
 
 ## Key Features
 
-### 🤖 AI-Powered Therapy
+### AI-Powered Therapy
 - **AI Chat Sessions**: Conversational AI therapist for emotional support and guidance
 - **Voice Therapy**: Voice-enabled therapy sessions with speech-to-text and text-to-speech
 - **Crisis Intervention**: Automatic detection and response to crisis situations
 - **Chat History**: View and search past conversations
 
-### 📊 Mood Tracking & Analytics
+### Mood Tracking & Analytics
 - **Daily Mood Logging**: Track mood, energy, stress, anxiety, and sleep levels
 - **Mood Analytics**: Visualize trends and patterns over time
 - **Mood Forecasting**: AI-powered predictions of future mood trends
 - **Burnout Detection**: Early detection of burnout risk through behavior analysis
 - **Relapse Prevention**: Monitoring and alerts for relapse indicators
 
-### 🛠️ Support Tools
+### Support Tools
 - **Coping Exercises**: Personalized coping exercise recommendations using Greedy Algorithm
 - **Educational Resources**: Access to mental health educational content
 - **Journaling Prompts**: AI-generated journaling prompts for therapeutic writing
@@ -29,11 +29,11 @@ AI Therapist is a mobile Android application designed to democratize mental heal
 - **Community Support Circles**: Peer support communities and support groups
 - **Religious Support**: Faith-based guidance tailored to user's religion
 
-### 🌟 Wellness Activities
+### Wellness Activities
 - **Daily Affirmations**: Personalized daily affirmations
 - **Guided Breathing**: Multiple breathing exercise patterns (4-7-8, Box Breathing, etc.)
 
-### ⚙️ Settings & Personalization
+### Settings & Personalization
 - **User Profile Management**: Profile editing, XP tracking, achievements
 - **Application Preferences**: Theme, language, notification settings
 - **Accessibility Features**: WCAG AA compliant, screen reader support, text scaling
@@ -267,12 +267,12 @@ Comprehensive documentation is available:
 
 The architecture addresses all major non-functional requirements:
 
-- ✅ **Performance**: Response time, throughput, resource usage
-- ✅ **Reliability**: Availability (99.9%), fault tolerance, data integrity
-- ✅ **Security**: Authentication, data protection, compliance (HIPAA, GDPR)
-- ✅ **Usability**: Accessibility (WCAG AA), UX, internationalization
-- ✅ **Scalability**: User scalability (100K+), performance scalability
-- ✅ **Maintainability**: Code quality, modularity, documentation
+- **Performance**: Response time, throughput, resource usage
+- **Reliability**: Availability (99.9%), fault tolerance, data integrity
+- **Security**: Authentication, data protection, compliance (HIPAA, GDPR)
+- **Usability**: Accessibility (WCAG AA), UX, internationalization
+- **Scalability**: User scalability (100K+), performance scalability
+- **Maintainability**: Code quality, modularity, documentation
 
 ## Contributing
 
