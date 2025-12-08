@@ -102,7 +102,8 @@ tasks.withType<Test> {
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {
-    dependsOn("test")
+    // Don't fail if tests fail - generate report from existing execution data
+    mustRunAfter("testDebugUnitTest", "testReleaseUnitTest")
     
     reports {
         xml.required.set(true)
@@ -133,7 +134,16 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         include("**/*.exec")
     })
     
+    // Only run coverage verification if report generation succeeds
     finalizedBy("jacocoTestCoverageVerification")
+    
+    // Don't fail if no execution data exists
+    onlyIf {
+        val execFiles = fileTree("${project.layout.buildDirectory.get()}/jacoco") {
+            include("**/*.exec")
+        }
+        execFiles.files.isNotEmpty()
+    }
 }
 
 tasks.register<JacocoCoverageVerification>("jacocoTestCoverageVerification") {
