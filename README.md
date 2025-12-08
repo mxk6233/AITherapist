@@ -34,30 +34,22 @@ AI Therapist is a mobile Android application designed to democratize mental heal
 
 The following screenshots showcase key features of the AI Therapist application:
 
+> **Note**: Screenshot images will be added to the `screenshots/` directory. Once added, they will be displayed here.
+
 ### Main Dashboard
 The main dashboard provides quick access to all features with a clean, modern interface. Users can navigate to Chat Features, Mood & Analytics, Support Tools, Wellness Activities, and Settings. The dashboard includes a welcome message, quick action cards, and a daily check-in prompt.
-
-![Main Dashboard](screenshots/main_dashboard.png)
 
 ### Mood & Analytics
 Comprehensive mood tracking interface showing today's mood selection and access to analytics, forecasting, burnout detection, and relapse prevention features. Users can quickly select their current mood using intuitive smiley face icons.
 
-![Mood & Analytics](screenshots/mood_analytics.png)
-
 ### Mood Forecasting
 AI-powered mood forecasting with customizable forecast periods (7, 14, 30, 90 days) and forecast summary showing average mood and expected range. Users can select different time periods to view predictions based on their historical mood data.
-
-![Mood Forecasting](screenshots/mood_forecasting.png)
 
 ### Burnout Risk Assessment
 Comprehensive burnout risk assessment with current risk level display, prevention tips, and recent pattern analysis. The screen shows risk level indicators, actionable prevention tips, and weekly burnout pattern charts.
 
-![Burnout Risk Assessment](screenshots/burnout_assessment.png)
-
 ### Chat History
 View and manage past chat conversations with search functionality, mood-based filters, and chat analytics including total sessions. Users can search conversations, filter by mood, and view session statistics.
-
-![Chat History](screenshots/chat_history.png)
 
 ## Key Features
 
@@ -272,6 +264,38 @@ The application implements **31 use cases** covering:
 - **Settings & Personalization** (UC13, UC17, UC18, UC22, UC23, UC24)
 - **Advanced Features** (UC28, UC31, UC41)
 
+### Key Use Cases with Comprehensive Test Coverage
+
+#### UC24: Personalize User Experience
+Allows users to customize their app experience including:
+- **Theme Customization**: Light, Dark, and System theme options
+- **Font Size Preferences**: Small, Medium, Large, Extra Large, and Huge options
+- **AI Personality Selection**: Supportive, Professional, Friendly, Direct, and Empathetic personalities
+- **Content Preferences**: Customizable content categories and notification styles
+- **Language Settings**: Multi-language support
+
+**Test Coverage**: 3 comprehensive test cases covering theme/appearance, AI personality, and content personalization
+
+#### UC27: Guided Breathing & Meditation Sessions
+Provides guided wellness sessions including:
+- **Breathing Exercises**: 4-7-8, Box Breathing, Deep Belly, Alternate Nostril, Coherent Breathing
+- **Meditation Sessions**: Mindfulness, Body Scan, Loving Kindness, Walking Meditation, Breath Awareness
+- **Session Customization**: Duration, background sounds, voice guidance, difficulty levels
+- **Progress Tracking**: Session history, completion rates, effectiveness metrics
+- **Accessibility Features**: Audio descriptions, adjustable playback, haptic feedback
+
+**Test Coverage**: 3 comprehensive test cases covering exercise management, session management, and customization
+
+#### UC17: Implement Accessibility Features
+Ensures the app is accessible to all users:
+- **Screen Reader Support**: Content descriptions, navigation announcements, focus management
+- **Visual Accessibility**: High contrast mode, large text, color blind support, dark mode
+- **Motor Accessibility**: Large touch targets, gesture alternatives, extended timeouts
+- **Cognitive Accessibility**: Clear language, consistent navigation, progress indicators
+- **WCAG Compliance**: AA and AAA color contrast standards, keyboard navigation
+
+**Test Coverage**: 3 comprehensive test cases covering screen reader support, visual accessibility, and motor/cognitive accessibility
+
 ## Algorithmic Components
 
 ### Greedy Coping Strategy Selection Algorithm (UC41)
@@ -289,15 +313,49 @@ See `ALGORITHM_IMPLEMENTATION_DOCUMENTATION.md` for detailed algorithm specifica
 
 The project includes comprehensive testing:
 
-- **73 Total Tests** (UC34, UC39, UC40)
-  - 39 Unit Tests (53.4%)
-  - 9 Integration Tests (12.3%)
-  - 25 UAT Tests (34.2%)
+- **279 Total Tests** (including UC6, UC8, UC9, UC26, UC32, UC35, UC24, UC27, UC17)
+  - Unit Tests for all major use cases
+  - Integration Tests for workflow validation
+  - UAT Tests for user acceptance scenarios
 - **Code Coverage**: ~100% for use cases
 - **Requirements Coverage**: 100% for tested use cases
 
-Test structure:
+### Recently Added Test Cases
+
+#### UC24: Personalize User Experience - 3 Test Cases
+1. **Theme and Appearance Customization** - Tests theme preferences, font size options, and theme switching functionality
+2. **AI Personality Customization** - Tests AI personality settings, response adaptation, and effectiveness metrics
+3. **Content and Feature Personalization** - Tests content preferences, notification styles, and settings persistence
+
+**Test File**: `app/src/test/java/com/serenityai/test/usecases/PersonalizationUseCaseTests.kt`
+
+#### UC27: Guided Breathing & Meditation Sessions - 3 Test Cases
+1. **Breathing Exercise Management** - Tests exercise types, session progress tracking, and effectiveness validation
+2. **Meditation Session Management** - Tests meditation types, progress statistics, and personalized recommendations
+3. **Session Customization and User Experience** - Tests parameter customization, engagement tracking, and accessibility features
+
+**Test File**: `app/src/test/java/com/serenityai/test/usecases/GuidedBreathingUseCaseTests.kt`
+
+#### UC17: Implement Accessibility Features - 3 Test Cases
+1. **Screen Reader and Navigation Support** - Tests screen reader features, content descriptions, and keyboard navigation
+2. **Visual Accessibility Features** - Tests visual accessibility options, color contrast compliance (WCAG AA/AAA), and font size customization
+3. **Motor and Cognitive Accessibility** - Tests motor accessibility requirements, cognitive support, and settings validation
+
+**Test File**: `app/src/test/java/com/serenityai/test/usecases/AccessibilityUseCaseTests.kt`
+
+### Test Structure
 ```
+app/src/test/java/com/serenityai/test/usecases/
+├── PersonalizationUseCaseTests.kt      # UC24 tests
+├── GuidedBreathingUseCaseTests.kt      # UC27 tests
+├── AccessibilityUseCaseTests.kt        # UC17 tests
+├── ChatHistoryUseCaseTests.kt          # UC6 tests
+├── CopingExercisesUseCaseTests.kt      # UC8 tests
+├── MoodAnalyticsUseCaseTests.kt        # UC9 tests
+├── MoodForecastingUseCaseTests.kt      # UC26 tests
+├── JournalingPromptsUseCaseTests.kt    # UC32 tests
+└── RelapsePreventionUseCaseTests.kt    # UC35 tests
+
 tests/
 ├── unit/usecases/          # Unit tests for use cases
 ├── integration/usecases/   # Integration tests
