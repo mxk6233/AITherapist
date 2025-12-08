@@ -32,38 +32,40 @@ AI Therapist is a mobile Android application designed to democratize mental heal
 
 ## Screenshots
 
+The following screenshots showcase key features of the AI Therapist application:
+
 ### Main Dashboard
-The main dashboard provides quick access to all features with a clean, modern interface. Users can navigate to Chat Features, Mood & Analytics, Support Tools, Wellness Activities, and Settings.
+The main dashboard provides quick access to all features with a clean, modern interface. Users can navigate to Chat Features, Mood & Analytics, Support Tools, Wellness Activities, and Settings. The dashboard includes a welcome message, quick action cards, and a daily check-in prompt.
 
 ![Main Dashboard](screenshots/main_dashboard.png)
 
 ### Mood & Analytics
-Comprehensive mood tracking interface showing today's mood selection and access to analytics, forecasting, burnout detection, and relapse prevention features.
+Comprehensive mood tracking interface showing today's mood selection and access to analytics, forecasting, burnout detection, and relapse prevention features. Users can quickly select their current mood using intuitive smiley face icons.
 
 ![Mood & Analytics](screenshots/mood_analytics.png)
 
-### Mood Analytics
-Visual representation of mood trends over time with insights and patterns to help users understand their emotional patterns.
+### Mood Analytics Detail
+Visual representation of mood trends over time with insights and patterns to help users understand their emotional patterns. The analytics screen displays charts and trend information with positive feedback messages.
 
-![Mood Analytics](screenshots/mood_analytics_detail.png)
+![Mood Analytics Detail](screenshots/mood_analytics_detail.png)
 
 ### Mood Forecasting
-AI-powered mood forecasting with customizable forecast periods (7, 14, 30, 90 days) and forecast summary showing average mood and expected range.
+AI-powered mood forecasting with customizable forecast periods (7, 14, 30, 90 days) and forecast summary showing average mood and expected range. Users can select different time periods to view predictions based on their historical mood data.
 
 ![Mood Forecasting](screenshots/mood_forecasting.png)
 
 ### Burnout Risk Assessment
-Comprehensive burnout risk assessment with current risk level display, prevention tips, and recent pattern analysis.
+Comprehensive burnout risk assessment with current risk level display, prevention tips, and recent pattern analysis. The screen shows risk level indicators, actionable prevention tips, and weekly burnout pattern charts.
 
 ![Burnout Risk Assessment](screenshots/burnout_assessment.png)
 
 ### Relapse Prevention
-Early warning system for relapse prevention with current risk indicators, impact levels, and AI-detected patterns with recommended actions.
+Early warning system for relapse prevention with current risk indicators, impact levels, and AI-detected patterns with recommended actions. The interface displays risk factors with color-coded impact levels and provides proactive recommendations.
 
 ![Relapse Prevention](screenshots/relapse_prevention.png)
 
 ### Chat History
-View and manage past chat conversations with search functionality, mood-based filters, and chat analytics including total sessions.
+View and manage past chat conversations with search functionality, mood-based filters, and chat analytics including total sessions. Users can search conversations, filter by mood, and view session statistics.
 
 ![Chat History](screenshots/chat_history.png)
 
