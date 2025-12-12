@@ -2,7 +2,7 @@
 
 A comprehensive Android mental health support application powered by AI, providing 24/7 accessible therapy sessions, mood tracking, analytics, and wellness tools.
 
-## 📱 Project Overview
+## Project Overview
 
 The AI Therapist application is an Android-based mental health support platform that leverages artificial intelligence to provide personalized therapeutic experiences. The application offers:
 
@@ -12,7 +12,7 @@ The AI Therapist application is an Android-based mental health support platform 
 - **Wellness Activities**: Daily affirmations, guided breathing exercises
 - **Advanced Features**: Therapist portal, social support network, greedy algorithm for optimal recommendations
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -45,7 +45,7 @@ The AI Therapist application is an Android-based mental health support platform 
    ./gradlew installDebug
    ```
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Language**: Kotlin
 - **UI Framework**: Jetpack Compose with Material Design 3
@@ -60,7 +60,7 @@ The AI Therapist application is an Android-based mental health support platform 
   - Espresso (UI Testing)
   - JaCoCo (Code Coverage)
 
-## ✨ Key Features
+## Key Features
 
 ### Authentication & User Management
 - User Registration (UC4)
@@ -103,7 +103,7 @@ The AI Therapist application is an Android-based mental health support platform 
 - Social Support Network (UC31)
 - Greedy Algorithm for Optimal Recommendations (UC41)
 
-## 🧪 Testing
+## Testing
 
 ### Test Coverage
 
@@ -228,7 +228,7 @@ The following use cases have been recently implemented with comprehensive test c
     - Categorization tests
     - Custom generation tests
 
-## 📋 User Stories
+## User Stories
 
 ### Week 7: October 6 - October 12
 
@@ -367,7 +367,7 @@ The following use cases have been recently implemented with comprehensive test c
 
 **Test Cases**: 3 test cases covering AI prompt generation, categorization, and custom generation.
 
-## 📊 Project Structure
+## Project Structure
 
 ```
 AITherapist/
@@ -390,7 +390,7 @@ AITherapist/
 └── firebase_setup/                  # Firebase setup files
 ```
 
-## 🔧 Development
+## Development
 
 ### Building the Project
 
@@ -412,21 +412,4 @@ The project uses JaCoCo for code coverage reporting. Coverage reports are genera
 app/build/reports/jacoco/jacocoTestReport/html/index.html
 ```
 
-## 📝 License
-
-[Add your license information here]
-
-## 🤝 Contributing
-
-[Add contribution guidelines here]
-
-## 📞 Support
-
-For support and questions, please refer to the user support system within the application (UC25).
-
----
-
-**Version**: 1.0  
-**Last Updated**: Based on current implementation  
-**Platform**: Android (API Level 24+)
 
